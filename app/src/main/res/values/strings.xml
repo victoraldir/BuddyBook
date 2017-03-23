@@ -5,4 +5,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_sign_out">Sign Out</string>
+
+    <string name="success_sign_in">You\'re now signed in!</string>
+
+    <string name="facebook_application_id" translatable="false">260358024375061</string>
+    <!-- Facebook Application ID, prefixed by 'fb'.  Enables Chrome Custom tabs. -->
+    <string name="facebook_login_protocol_scheme" translatable="false">fb260358024375061</string>
+
 </resources>
