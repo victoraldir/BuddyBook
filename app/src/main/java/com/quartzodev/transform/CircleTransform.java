@@ -1,4 +1,4 @@
-package com.quartzo.transform;
+package com.quartzodev.transform;
 
 import android.content.Context;
 import android.graphics.Bitmap;

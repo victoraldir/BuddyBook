@@ -13,4 +13,7 @@
     <!-- Facebook Application ID, prefixed by 'fb'.  Enables Chrome Custom tabs. -->
     <string name="facebook_login_protocol_scheme" translatable="false">fb260358024375061</string>
 
+    <string name="tab_top_books">Top books</string>
+    <string name="tab_my_books">My books</string>
+
 </resources>

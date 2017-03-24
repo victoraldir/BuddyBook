@@ -5,16 +5,16 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,16 +23,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
-import com.quartzo.transform.CircleTransform;
+import com.quartzodev.transform.CircleTransform;
+
 
 import java.util.Arrays;
 
@@ -42,11 +38,17 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final int NUM_PAGES = 2;
+
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 1;
 
-    @BindView(R.id.main_layout)
-    ConstraintLayout mConstraintLayout;
+    @BindView(R.id.pager)
+    ViewPager mViewPager;
+    private ViewPagerAdapter mViewPagerAdapter;
+
+    @BindView(R.id.main_coordinator)
+    CoordinatorLayout mCoordinatorLayout;
     private ImageView mImageViewProfile;
     private TextView mTextViewUsername;
     private TextView mTextViewTextEmail;
@@ -72,6 +74,9 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         mContext = this;
+
+        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
+        mViewPager.setAdapter(mViewPagerAdapter);
 
         LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
         mImageViewProfile = (ImageView) linearLayout.findViewById(R.id.main_imageview_user_photo);
@@ -155,7 +160,7 @@ public class MainActivity extends AppCompatActivity
                 .transform(new CircleTransform(mContext))
                 .into(mImageViewProfile);
 
-        Snackbar.make(mConstraintLayout,getText(R.string.success_sign_in),Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mCoordinatorLayout,getText(R.string.success_sign_in),Snackbar.LENGTH_SHORT).show();
 
     }
 

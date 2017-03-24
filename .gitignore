@@ -9,3 +9,4 @@
 .externalNativeBuild
 app/google-services.json
 .idea
+gradle.properties
