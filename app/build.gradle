@@ -16,7 +16,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        buildTypes.each {
+            it.buildConfigField 'String', 'GOOGLE_BOOK_API_KEY', GOOGLE_BOOK_API_KEY
+        }
     }
+
+
 }
 
 dependencies {
@@ -37,6 +43,8 @@ dependencies {
 
     compile 'com.jakewharton:butterknife:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
 
     testCompile 'junit:junit:4.12'
 }

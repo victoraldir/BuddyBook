@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity
     private TextView mTextViewUsername;
     private TextView mTextViewTextEmail;
 
+
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
 
