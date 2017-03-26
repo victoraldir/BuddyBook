@@ -4,6 +4,7 @@ import com.quartzodev.buddybook.BuildConfig;
 import com.quartzodev.data.BookResponse;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -48,10 +49,14 @@ public class APIService {
         return sMinstance;
     }
 
-    public void getBooks(String query, Callback<BookResponse> callback) throws IOException {
+    public void getBooks(String query, Callback<BookResponse> callback){
 
         mService.getBooks(query, BuildConfig.GOOGLE_BOOK_API_KEY).enqueue(callback);
 
+    }
+
+    public Call<BookResponse> getBooks(String query){
+        return mService.getBooks(query, BuildConfig.GOOGLE_BOOK_API_KEY);
     }
 
     interface IGoogleBookAPI{

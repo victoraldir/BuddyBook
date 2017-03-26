@@ -2,8 +2,8 @@ package com.quartzodev.buddybook;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -26,7 +26,9 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.quartzodev.data.User;
 import com.quartzodev.transform.CircleTransform;
 
 
@@ -38,10 +40,10 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    public static final int NUM_PAGES = 2;
-
     private static final String TAG = MainActivity.class.getSimpleName();
+    public static final int NUM_PAGES = 2;
     private static final int RC_SIGN_IN = 1;
+    private static final String KEY_PARCEABLE_USER = "userKey";
 
     @BindView(R.id.pager)
     ViewPager mViewPager;
@@ -57,14 +59,15 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
 
-    private String mUserEmail;
-    private String mUsername;
+    private User mUser;
 
     private Context mContext;
 
     //Authentication entities
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mDatabaseReference;
 
 
     @Override
@@ -85,6 +88,8 @@ public class MainActivity extends AppCompatActivity
 
         //Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mDatabaseReference = mFirebaseDatabase.getReference().child("users");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -134,34 +139,32 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void onSignedIn(FirebaseUser user){
+    public void onSignedIn(FirebaseUser firebaseUser){
 
-        mUserEmail = user.getEmail();
-        mUsername = user.getDisplayName();
-        Uri profileUri = user.getPhotoUrl();
-
-        //Try to find user photo profile on UserInfo
-        if(profileUri == null){
-            for (UserInfo userInfo : user.getProviderData()) {
-                if (profileUri == null && userInfo.getPhotoUrl() != null) {
-                    profileUri = userInfo.getPhotoUrl();
-                    break;
-                }
-            }
+        if(mUser == null) {
+            mUser = User.parseToUser(firebaseUser);
+            registerUserDatabase();
+            Snackbar.make(mCoordinatorLayout,getText(R.string.success_sign_in),Snackbar.LENGTH_SHORT).show();
         }
 
-        mTextViewTextEmail.setText(mUserEmail);
-        mTextViewUsername.setText(mUsername);
+        loadProfileOnDrawer();
+    }
+
+    private void loadProfileOnDrawer(){
+
+        mTextViewTextEmail.setText(mUser.getEmail());
+        mTextViewUsername.setText(mUser.getUsername());
 
         Glide.with(this)
-                .load(profileUri)
+                .load(mUser.getPhotoUrl())
                 .centerCrop()
                 .placeholder(android.R.drawable.sym_def_app_icon)
                 .transform(new CircleTransform(mContext))
                 .into(mImageViewProfile);
+    }
 
-        Snackbar.make(mCoordinatorLayout,getText(R.string.success_sign_in),Snackbar.LENGTH_SHORT).show();
-
+    public void registerUserDatabase(){
+        mDatabaseReference.child(mUser.getUid()).setValue(mUser);
     }
 
     public void onSignedOut(){
@@ -175,6 +178,21 @@ public class MainActivity extends AppCompatActivity
         if(requestCode == RC_SIGN_IN){
             if(resultCode == RESULT_CANCELED) finish();
         }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        if(savedInstanceState.containsKey(KEY_PARCEABLE_USER)){
+            mUser = (User) savedInstanceState.get(KEY_PARCEABLE_USER);
+        }
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(KEY_PARCEABLE_USER, mUser);
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override

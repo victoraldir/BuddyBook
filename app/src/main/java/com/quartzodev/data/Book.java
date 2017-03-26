@@ -19,7 +19,7 @@ public class Book {
     @SerializedName("volumeInfo")
     public VolumeInfo volumeInfo;
 
-    class VolumeInfo {
+    public class VolumeInfo {
 
         @SerializedName("title")
         public String title;
@@ -35,5 +35,17 @@ public class Book {
 
         @SerializedName("description")
         public String description;
+
+        @SerializedName("imageLinks")
+        public ImageLink imageLink;
+
+        public class ImageLink{
+
+            @SerializedName("smallThumbnail")
+            public String smallThumbnail;
+
+            @SerializedName("thumbnail")
+            public String thumbnail;
+        }
     }
 }
