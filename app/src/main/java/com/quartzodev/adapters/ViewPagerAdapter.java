@@ -1,9 +1,13 @@
-package com.quartzodev.buddybook;
+package com.quartzodev.adapters;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.quartzodev.buddybook.MainActivity;
+import com.quartzodev.buddybook.R;
+import com.quartzodev.fragments.GridBookFragment;
 
 /**
  * Created by victoraldir on 24/03/2017.
@@ -23,7 +27,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return BookDetailFragment.newInstance(position, mUserId);
+        return GridBookFragment.newInstance(position, mUserId);
     }
     @Override
     public int getCount() {

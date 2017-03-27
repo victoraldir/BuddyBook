@@ -1,4 +1,4 @@
-package com.quartzodev.buddybook;
+package com.quartzodev.widgets;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;

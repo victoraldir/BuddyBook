@@ -1,4 +1,4 @@
-package com.quartzodev.buddybook;
+package com.quartzodev.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Folder;
 import com.quartzodev.task.FetchFolderTask;
 
@@ -28,7 +29,7 @@ import butterknife.ButterKnife;
  * Created by victoraldir on 24/03/2017.
  */
 
-public class BookDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Folder> {
+public class GridBookFragment extends Fragment implements LoaderManager.LoaderCallbacks<Folder> {
 
     private static final int LOADER_ID_LIST_BOOKS = 1;
     private static final String ARG_POSITION_ID = "itemId";
@@ -43,11 +44,11 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
     private String userId;
     private long itemId;
 
-    public static BookDetailFragment newInstance(long positionId,String userId) {
+    public static GridBookFragment newInstance(long positionId, String userId) {
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_POSITION_ID, positionId);
         arguments.putString(ARG_USER_ID, userId);
-        BookDetailFragment fragment = new BookDetailFragment();
+        GridBookFragment fragment = new GridBookFragment();
         fragment.setArguments(arguments);
         return fragment;
     }

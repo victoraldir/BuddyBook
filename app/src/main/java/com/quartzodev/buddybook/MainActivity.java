@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,16 +40,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.quartzodev.adapters.ViewPagerAdapter;
 import com.quartzodev.data.User;
 import com.quartzodev.provider.SuggestionProvider;
-import com.quartzodev.transform.CircleTransform;
+import com.quartzodev.widgets.CircleTransform;
 import com.quartzodev.utils.DateUtils;
 
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final int NUM_PAGES = 2;
     private static final int RC_SIGN_IN = 1;
-    private static final String KEY_PARCEABLE_USER = "userKey";
+    private static final String KEY_PARCELABLE_USER = "userKey";
 
     @BindView(R.id.pager)
     ViewPager mViewPager;
@@ -97,6 +98,25 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         mContext = this;
+
+        //MenuItem myMoveGroupItem = mNavigationView.getMenu().getItem(0);
+
+        final Menu menu = mNavigationView.getMenu();
+        final SubMenu subMenu = menu.getItem(0).getSubMenu();
+
+        final MenuItem menuItem = (MenuItem) mNavigationView.getMenu().findItem(R.id.nav_add_folder);
+
+        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                Toast.makeText(mContext, " " + menuItem.getOrder() + " " + menuItem.getItemId(),Toast.LENGTH_LONG).show();
+
+                subMenu.add("Folder created").setIcon(R.drawable.ic_folder_black_24dp);
+
+                return true;
+            }
+        });
 
         mSimpleCursorAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_list_item_1,
@@ -221,7 +241,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onSignedOut(){
-
     }
 
     @Override
@@ -235,15 +254,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        if(savedInstanceState.containsKey(KEY_PARCEABLE_USER)){
-            mUser = (User) savedInstanceState.get(KEY_PARCEABLE_USER);
+        if(savedInstanceState.containsKey(KEY_PARCELABLE_USER)){
+            mUser = (User) savedInstanceState.get(KEY_PARCELABLE_USER);
         }
         super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(KEY_PARCEABLE_USER, mUser);
+        outState.putParcelable(KEY_PARCELABLE_USER, mUser);
 
         super.onSaveInstanceState(outState);
     }
@@ -306,21 +325,6 @@ public class MainActivity extends AppCompatActivity
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
 
-        //searchView.setSuggestionsAdapter(new Simpl);
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                Toast.makeText(mContext,query,Toast.LENGTH_SHORT).show();
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                Toast.makeText(mContext,newText,Toast.LENGTH_SHORT).show();
-//                return false;
-//            }
-//        });
-
         return true;
 
     }
@@ -356,17 +360,9 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        if (id == R.id.nav_my_books) {
 
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 
