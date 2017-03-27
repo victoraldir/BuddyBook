@@ -15,5 +15,7 @@
 
     <string name="tab_top_books">Top books</string>
     <string name="tab_my_books">My books</string>
+    <string name="app_label">BuddyBook</string>
+    <string name="search_hint">Book tittle, author...</string>
 
 </resources>

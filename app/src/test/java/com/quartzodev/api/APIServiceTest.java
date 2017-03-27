@@ -1,11 +1,6 @@
 package com.quartzodev.api;
 
-import android.content.Intent;
-import android.provider.Settings;
 import android.util.Log;
-
-import com.facebook.CallbackManager;
-import com.quartzodev.data.BookResponse;
 
 import org.junit.Test;
 
@@ -14,8 +9,6 @@ import java.io.IOException;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by victoraldir on 24/03/2017.

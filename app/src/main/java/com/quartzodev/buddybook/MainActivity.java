@@ -1,38 +1,54 @@
 package com.quartzodev.buddybook;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.quartzodev.data.User;
+import com.quartzodev.provider.SuggestionProvider;
 import com.quartzodev.transform.CircleTransform;
+import com.quartzodev.utils.DateUtils;
 
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,8 +76,12 @@ public class MainActivity extends AppCompatActivity
     NavigationView mNavigationView;
 
     private User mUser;
+    private String userId;
 
     private Context mContext;
+
+    private SimpleCursorAdapter mSimpleCursorAdapter;
+    private Cursor mSuggestionCursor;
 
     //Authentication entities
     private FirebaseAuth mFirebaseAuth;
@@ -78,8 +98,12 @@ public class MainActivity extends AppCompatActivity
 
         mContext = this;
 
-        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
-        mViewPager.setAdapter(mViewPagerAdapter);
+        mSimpleCursorAdapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_list_item_1,
+                null,
+                new String[]{"name"},
+                new int[]{android.R.layout.simple_list_item_1},
+                0);
 
         LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
         mImageViewProfile = (ImageView) linearLayout.findViewById(R.id.main_imageview_user_photo);
@@ -139,15 +163,44 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void onSignedIn(FirebaseUser firebaseUser){
+    public void onSignedIn(final FirebaseUser firebaseUser){
+
+        userId = firebaseUser.getUid();
 
         if(mUser == null) {
-            mUser = User.parseToUser(firebaseUser);
-            registerUserDatabase();
-            Snackbar.make(mCoordinatorLayout,getText(R.string.success_sign_in),Snackbar.LENGTH_SHORT).show();
-        }
+            mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
-        loadProfileOnDrawer();
+                    if (dataSnapshot.hasChild(userId)) {
+
+                        Log.d(TAG,"User is already in database");
+                        mUser = dataSnapshot.child(userId).getValue(User.class);
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("lastActivity", DateUtils.getCurrentTimeString());
+                        mDatabaseReference.child(mUser.getUid()).updateChildren(map);
+
+                    }else{
+
+                        Log.d(TAG,"User's first login");
+                        mUser = User.setupUserFirstTime(firebaseUser,mContext);
+                        registerUserDatabase();
+
+                    }
+
+                    mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mUser.getUid(),mContext);
+                    mViewPager.setAdapter(mViewPagerAdapter);
+                    loadProfileOnDrawer();
+                    Snackbar.make(mCoordinatorLayout,getText(R.string.success_sign_in),Snackbar.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG,"onCancelled fired");
+                }
+            });
+
+        }
     }
 
     private void loadProfileOnDrawer(){
@@ -217,11 +270,59 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+
+    private void handleIntent(Intent intent){
+
+        if(intent.getAction().equals(Intent.ACTION_SEARCH)){
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            //TODO do my query
+            Toast.makeText(mContext,query,Toast.LENGTH_SHORT).show();
+
+            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                    SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
+            suggestions.saveRecentQuery(query, null);
+        }
+
+    }
+
+
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        // Retrieve the SearchView and plug it into SearchManager
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+
+        ComponentName componentName = new ComponentName(mContext,MainActivity.class);
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
+
+        //searchView.setSuggestionsAdapter(new Simpl);
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                Toast.makeText(mContext,query,Toast.LENGTH_SHORT).show();
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                Toast.makeText(mContext,newText,Toast.LENGTH_SHORT).show();
+//                return false;
+//            }
+//        });
+
         return true;
+
     }
 
     @Override

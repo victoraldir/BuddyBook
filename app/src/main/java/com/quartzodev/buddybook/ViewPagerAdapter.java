@@ -12,16 +12,18 @@ import android.support.v4.app.FragmentPagerAdapter;
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     private Context mContext;
+    private String mUserId;
 
-    public ViewPagerAdapter(FragmentManager fm, Context context) {
+    public ViewPagerAdapter(FragmentManager fm, String userId, Context context) {
         super(fm);
 
         mContext = context;
+        this.mUserId = userId;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return BookDetailFragment.newInstance(position);
+        return BookDetailFragment.newInstance(position, mUserId);
     }
     @Override
     public int getCount() {

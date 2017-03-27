@@ -1,10 +1,6 @@
 package com.quartzodev.api;
 
 import com.quartzodev.buddybook.BuildConfig;
-import com.quartzodev.data.BookResponse;
-
-import java.io.IOException;
-import java.util.List;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -12,7 +8,6 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**

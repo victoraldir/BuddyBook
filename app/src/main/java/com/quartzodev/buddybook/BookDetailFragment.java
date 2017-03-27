@@ -15,9 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.quartzodev.data.Book;
-import com.quartzodev.task.FetchMoviesTask;
-import com.quartzodev.transform.CircleTransform;
+import com.quartzodev.data.Folder;
+import com.quartzodev.task.FetchFolderTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,22 +28,41 @@ import butterknife.ButterKnife;
  * Created by victoraldir on 24/03/2017.
  */
 
-public class BookDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Book>> {
+public class BookDetailFragment extends Fragment implements LoaderManager.LoaderCallbacks<Folder> {
 
     private static final int LOADER_ID_LIST_BOOKS = 1;
+    private static final String ARG_POSITION_ID = "itemId";
+    private static final String ARG_USER_ID = "userId";
+
+    private static final int TOP_BOOKS_ITEM_ID = 1;
+    private static final int MY_BOOKS_ITEM_ID = 0;
 
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
     private Adapter mAdapter;
+    private String userId;
+    private long itemId;
 
-
-    public static BookDetailFragment newInstance(long movieId) {
-        return new BookDetailFragment();
+    public static BookDetailFragment newInstance(long positionId,String userId) {
+        Bundle arguments = new Bundle();
+        arguments.putLong(ARG_POSITION_ID, positionId);
+        arguments.putString(ARG_USER_ID, userId);
+        BookDetailFragment fragment = new BookDetailFragment();
+        fragment.setArguments(arguments);
+        return fragment;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(getArguments().containsKey(ARG_USER_ID)){
+            userId = getArguments().getString(ARG_USER_ID);
+        }
+
+        if(getArguments().containsKey(ARG_POSITION_ID)){
+            itemId = getArguments().getLong(ARG_POSITION_ID);
+        }
 
     }
 
@@ -61,7 +79,7 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
         View rootView = inflater.inflate(R.layout.fragment_content_main, container, false);
         ButterKnife.bind(this, rootView);
 
-        mAdapter = new Adapter(getActivity(),new ArrayList<Book>());
+        mAdapter = new Adapter(getActivity(),new ArrayList<com.quartzodev.data.Book>());
         mRecyclerView.setAdapter(mAdapter);
 
         int columnCount = getResources().getInteger(R.integer.list_column_count);
@@ -73,26 +91,36 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
     }
 
     @Override
-    public Loader<List<Book>> onCreateLoader(int id, Bundle args) {
-        return new FetchMoviesTask(getActivity());
+    public Loader<Folder> onCreateLoader(int id, Bundle args) {
+
+        FetchFolderTask task = null;
+
+        //TODO create constants here!
+        if(itemId == MY_BOOKS_ITEM_ID){
+            task = new FetchFolderTask(userId, null, getActivity(), FetchFolderTask.FETCH_POPULAR_FOLDER);
+        }else if(itemId == TOP_BOOKS_ITEM_ID) {
+            task = new FetchFolderTask(userId, null, getActivity(), FetchFolderTask.FETCH_MY_BOOKS_FOLDER);
+        }
+
+        return task;
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Book>> loader, List<Book> data) {
+    public void onLoadFinished(Loader<Folder> loader, Folder data) {
         mAdapter.swap(data);
     }
 
     @Override
-    public void onLoaderReset(Loader<List<Book>> loader) {
+    public void onLoaderReset(Loader<Folder> loader) {
 
     }
 
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
 
         private Context mContext;
-        private List<Book> bookList;
+        private List<com.quartzodev.data.Book> bookList;
 
-        public Adapter(Context mContext, List<Book> bookList) {
+        public Adapter(Context mContext, List<com.quartzodev.data.Book> bookList) {
             this.mContext = mContext;
             this.bookList = bookList;
         }
@@ -106,9 +134,9 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
             return vh;
         }
 
-        public void swap(List<Book> bookList){
-            if(bookList != null) {
-                this.bookList = bookList;
+        public void swap(Folder folder){
+            if(folder != null && folder.getBooks() != null) {
+                this.bookList = new ArrayList<>(folder.getBooks().values());
                 notifyDataSetChanged();
             }
         }
@@ -116,16 +144,16 @@ public class BookDetailFragment extends Fragment implements LoaderManager.Loader
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
 
-            Book book = bookList.get(position);
-            Book.VolumeInfo bookVolumeInfo = book.volumeInfo;
+            com.quartzodev.data.Book book = bookList.get(position);
+            //Book.VolumeInfo bookVolumeInfo = book.volumeInfo;
 
-            holder.textViewBookTitte.setText(bookVolumeInfo.title);
-            if(bookVolumeInfo.authors != null)
-            holder.textViewBookAuthor.setText(bookVolumeInfo.authors.get(0));
+            holder.textViewBookTitte.setText(book.tittle);
+            //if(bookVolumeInfo.authors != null)
+            holder.textViewBookAuthor.setText(book.author);
 
-            if(book.volumeInfo.imageLink != null) {
+            if(book.photoUrl != null) {
                 Glide.with(mContext)
-                        .load(book.volumeInfo.imageLink.thumbnail)
+                        .load(book.photoUrl)
                         .centerCrop()
                         .placeholder(android.R.drawable.sym_def_app_icon)
                         .error(android.R.drawable.ic_dialog_alert)

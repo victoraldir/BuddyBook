@@ -1,51 +1,28 @@
 package com.quartzodev.data;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
-
 /**
- * Created by victoraldir on 23/03/2017.
+ * Created by victoraldir on 26/03/2017.
  */
 
 public class Book {
 
-    @SerializedName("id")
-    private String id;
+    public String photoUrl;
+    public String tittle;
+    public String author;
+    public String description;
 
-    @SerializedName("kind")
-    public String kind;
+    public static Book newFirebaseBook(com.quartzodev.api.Book book){
 
-    @SerializedName("volumeInfo")
-    public VolumeInfo volumeInfo;
+        Book newBook = new Book();
 
-    public class VolumeInfo {
+        com.quartzodev.api.Book.VolumeInfo volumeInfo = book.volumeInfo;
 
-        @SerializedName("title")
-        public String title;
+        newBook.photoUrl = volumeInfo.imageLink.thumbnail;
+        newBook.tittle = volumeInfo.title;
+        newBook.author = volumeInfo.authors != null ? volumeInfo.authors.get(0) : null;
+        newBook.description = volumeInfo.description;
 
-        @SerializedName("authors")
-        public List<String> authors;
-
-        @SerializedName("publisher")
-        public String publisher;
-
-        @SerializedName("publishedDate")
-        public String publishedDate;
-
-        @SerializedName("description")
-        public String description;
-
-        @SerializedName("imageLinks")
-        public ImageLink imageLink;
-
-        public class ImageLink{
-
-            @SerializedName("smallThumbnail")
-            public String smallThumbnail;
-
-            @SerializedName("thumbnail")
-            public String thumbnail;
-        }
+        return newBook;
     }
+
 }

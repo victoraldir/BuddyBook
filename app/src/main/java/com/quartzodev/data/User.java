@@ -1,11 +1,17 @@
 package com.quartzodev.data;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.quartzodev.buddybook.R;
 import com.quartzodev.utils.DateUtils;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by victoraldir on 25/03/2017.
@@ -18,6 +24,8 @@ public class User implements Parcelable {
     private String username;
     private String photoUrl;
     private String lastActivity;
+    private Folder myBooksFolder;
+    private Map<String, Folder> folders;
 
     public User() {
 
@@ -31,7 +39,7 @@ public class User implements Parcelable {
         this.lastActivity = lastActivity;
     }
 
-    public static User parseToUser(FirebaseUser firebaseUser){
+    public static User setupUserFirstTime(FirebaseUser firebaseUser, Context context){
 
         User user = new User(firebaseUser.getUid(),
                 firebaseUser.getEmail(),
@@ -51,6 +59,16 @@ public class User implements Parcelable {
         }catch (Exception ex){
 
         }
+
+        Folder myBooksFolder = new Folder(context.getResources().getString(R.string.tab_my_books));
+
+//        Book book = new Book();
+//        book.photoUrl = "";
+//        book.description = "book test";
+//        book.author = "Author test";
+//        myBooksFolder.setBooks(Collections.singletonMap("My book",book));
+
+        user.setMyBooksFolder(myBooksFolder);
 
         return  user;
 
@@ -84,6 +102,18 @@ public class User implements Parcelable {
         return photoUrl;
     }
 
+    public Folder getMyBooksFolder() {
+        return myBooksFolder;
+    }
+
+    public void setMyBooksFolder(Folder myBooksFolder) {
+        this.myBooksFolder = myBooksFolder;
+    }
+
+
+
+
+
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
@@ -108,6 +138,8 @@ public class User implements Parcelable {
         out.writeString(username);
         out.writeString(photoUrl);
         out.writeString(lastActivity);
+        out.writeParcelable(myBooksFolder,flags);
+        //out.writeList(folders);
     }
 
     public static final Parcelable.Creator<User> CREATOR
@@ -127,5 +159,7 @@ public class User implements Parcelable {
         username = in.readString();
         photoUrl = in.readString();
         lastActivity = in.readString();
+
+
     }
 }

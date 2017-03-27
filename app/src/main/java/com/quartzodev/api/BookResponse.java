@@ -1,4 +1,4 @@
-package com.quartzodev.data;
+package com.quartzodev.api;
 
 import com.google.gson.annotations.SerializedName;
 
