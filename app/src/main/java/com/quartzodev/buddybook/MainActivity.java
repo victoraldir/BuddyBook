@@ -1,12 +1,14 @@
 package com.quartzodev.buddybook;
 
+import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -43,6 +45,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.quartzodev.adapters.ViewPagerAdapter;
 import com.quartzodev.data.User;
 import com.quartzodev.provider.SuggestionProvider;
+import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.widgets.CircleTransform;
 import com.quartzodev.utils.DateUtils;
 
@@ -82,7 +85,8 @@ public class MainActivity extends AppCompatActivity
     private Context mContext;
 
     private SimpleCursorAdapter mSimpleCursorAdapter;
-    private Cursor mSuggestionCursor;
+
+    Map<String, Integer> folderMap;
 
     //Authentication entities
     private FirebaseAuth mFirebaseAuth;
@@ -90,6 +94,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
 
+    static int value = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity
 
         mContext = this;
 
-        //MenuItem myMoveGroupItem = mNavigationView.getMenu().getItem(0);
+        folderMap = new HashMap<>();
 
         final Menu menu = mNavigationView.getMenu();
         final SubMenu subMenu = menu.getItem(0).getSubMenu();
@@ -108,11 +113,43 @@ public class MainActivity extends AppCompatActivity
 
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public boolean onMenuItemClick(final MenuItem item) {
 
                 Toast.makeText(mContext, " " + menuItem.getOrder() + " " + menuItem.getItemId(),Toast.LENGTH_LONG).show();
 
-                subMenu.add("Folder created").setIcon(R.drawable.ic_folder_black_24dp);
+
+                String myKey = "MyKey" + System.currentTimeMillis();
+
+                ImageView deleteImageview =  new ImageView(mContext);
+                deleteImageview.setImageResource(R.drawable.ic_delete_black_24dp);
+                //deleteImageview.setTag(myKey);
+
+                int id = View.generateViewId();
+
+                subMenu.add("Folder created " + value++)
+                        .setIcon(R.drawable.ic_folder_black_24dp)
+                        .setActionView(deleteImageview)
+                        .getActionView()
+                        .setId(R.id.folders);
+
+                MenuItem menuItemCurr = subMenu.getItem(subMenu.size() - 2);
+
+                deleteImageview.setTag(menuItemCurr);
+
+                menuItemCurr.getActionView().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        MenuItem folderId = (MenuItem) v.getTag();
+
+                        folderId.setEnabled(false);
+
+
+                        DialogUtils.alertDialogDeleteFolder(mContext,folderId.getItemId(),subMenu);
+                    }
+                });
+
+               // folderMap.put(myKey,menuItemCurr.getOrder());
 
                 return true;
             }
@@ -182,6 +219,13 @@ public class MainActivity extends AppCompatActivity
         };
     }
 
+//    private DialogInterface.OnClickListener mOnClickListenerDeleteFolder = new DialogInterface.OnClickListener() {
+//        @Override
+//        public void onClick(DialogInterface dialog, int which) {
+//
+//            Toast.makeText(mContext,"Delete folder ID: " + customAlertDialog.getTag(),Toast.LENGTH_LONG).show();
+//        }
+//    };
 
     public void onSignedIn(final FirebaseUser firebaseUser){
 
