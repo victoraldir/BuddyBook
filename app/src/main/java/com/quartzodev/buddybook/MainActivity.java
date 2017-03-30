@@ -35,6 +35,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.quartzodev.adapters.ViewPagerAdapter;
 import com.quartzodev.data.FirebaseDatabaseHelper;
+import com.quartzodev.data.Folder;
 import com.quartzodev.data.User;
 import com.quartzodev.fragments.FolderFragment;
 import com.quartzodev.fragments.dummy.DummyContent;
@@ -286,8 +287,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
-        Toast.makeText(mContext, item.toString(), Toast.LENGTH_SHORT).show();
+    public void onListFragmentInteraction(Folder folder) {
+        Toast.makeText(mContext, folder.toString(), Toast.LENGTH_SHORT).show();
     }
 
     @Override

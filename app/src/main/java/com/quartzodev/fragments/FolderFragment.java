@@ -11,9 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.Folder;
 import com.quartzodev.fragments.dummy.DummyContent;
 import com.quartzodev.fragments.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -70,7 +72,7 @@ public class FolderFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyFolderRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new MyFolderRecyclerViewAdapter(new ArrayList<Folder>(), mListener));
         }
         return view;
     }
@@ -105,6 +107,6 @@ public class FolderFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(Folder folder);
     }
 }
