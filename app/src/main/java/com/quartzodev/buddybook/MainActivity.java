@@ -1,14 +1,11 @@
 package com.quartzodev.buddybook;
 
-import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -18,7 +15,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -26,7 +22,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,27 +33,24 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.quartzodev.adapters.ViewPagerAdapter;
+import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.User;
+import com.quartzodev.fragments.FolderFragment;
+import com.quartzodev.fragments.dummy.DummyContent;
 import com.quartzodev.provider.SuggestionProvider;
-import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.widgets.CircleTransform;
-import com.quartzodev.utils.DateUtils;
-
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        FolderFragment.OnListFragmentInteractionListener,
+        FirebaseAuth.AuthStateListener,
+        FirebaseDatabaseHelper.OnDataSnapshotListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final int NUM_PAGES = 2;
@@ -67,34 +59,22 @@ public class MainActivity extends AppCompatActivity
 
     @BindView(R.id.pager)
     ViewPager mViewPager;
-    private ViewPagerAdapter mViewPagerAdapter;
-
     @BindView(R.id.main_coordinator)
     CoordinatorLayout mCoordinatorLayout;
+    @BindView(R.id.nav_view)
+    NavigationView mNavigationView;
+
+    private ViewPagerAdapter mViewPagerAdapter;
     private ImageView mImageViewProfile;
     private TextView mTextViewUsername;
     private TextView mTextViewTextEmail;
 
-
-    @BindView(R.id.nav_view)
-    NavigationView mNavigationView;
-
     private User mUser;
-    private String userId;
-
     private Context mContext;
-
-    private SimpleCursorAdapter mSimpleCursorAdapter;
-
-    Map<String, Integer> folderMap;
 
     //Authentication entities
     private FirebaseAuth mFirebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthStateListener;
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDatabaseReference;
-
-    static int value = 1;
+    private FirebaseDatabaseHelper firebaseDatabaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,64 +84,6 @@ public class MainActivity extends AppCompatActivity
 
         mContext = this;
 
-        folderMap = new HashMap<>();
-
-        final Menu menu = mNavigationView.getMenu();
-        final SubMenu subMenu = menu.getItem(0).getSubMenu();
-
-        final MenuItem menuItem = (MenuItem) mNavigationView.getMenu().findItem(R.id.nav_add_folder);
-
-        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(final MenuItem item) {
-
-                Toast.makeText(mContext, " " + menuItem.getOrder() + " " + menuItem.getItemId(),Toast.LENGTH_LONG).show();
-
-
-                String myKey = "MyKey" + System.currentTimeMillis();
-
-                ImageView deleteImageview =  new ImageView(mContext);
-                deleteImageview.setImageResource(R.drawable.ic_delete_black_24dp);
-                //deleteImageview.setTag(myKey);
-
-                int id = View.generateViewId();
-
-                subMenu.add("Folder created " + value++)
-                        .setIcon(R.drawable.ic_folder_black_24dp)
-                        .setActionView(deleteImageview)
-                        .getActionView()
-                        .setId(R.id.folders);
-
-                MenuItem menuItemCurr = subMenu.getItem(subMenu.size() - 2);
-
-                deleteImageview.setTag(menuItemCurr);
-
-                menuItemCurr.getActionView().setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        MenuItem folderId = (MenuItem) v.getTag();
-
-                        folderId.setEnabled(false);
-
-
-                        DialogUtils.alertDialogDeleteFolder(mContext,folderId.getItemId(),subMenu);
-                    }
-                });
-
-               // folderMap.put(myKey,menuItemCurr.getOrder());
-
-                return true;
-            }
-        });
-
-        mSimpleCursorAdapter = new SimpleCursorAdapter(this,
-                android.R.layout.simple_list_item_1,
-                null,
-                new String[]{"name"},
-                new int[]{android.R.layout.simple_list_item_1},
-                0);
-
         LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
         mImageViewProfile = (ImageView) linearLayout.findViewById(R.id.main_imageview_user_photo);
         mTextViewUsername = (TextView) linearLayout.findViewById(R.id.main_textview_username);
@@ -169,8 +91,7 @@ public class MainActivity extends AppCompatActivity
 
         //Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("users");
+        firebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -193,81 +114,20 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-
-                if(user == null){
-
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setIsSmartLockEnabled(false)
-                                    .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
-                                            new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
-                                    .build(),
-                            RC_SIGN_IN);
-                }else{
-
-                    onSignedIn(user);
-
-                }
-            }
-        };
     }
 
-//    private DialogInterface.OnClickListener mOnClickListenerDeleteFolder = new DialogInterface.OnClickListener() {
-//        @Override
-//        public void onClick(DialogInterface dialog, int which) {
-//
-//            Toast.makeText(mContext,"Delete folder ID: " + customAlertDialog.getTag(),Toast.LENGTH_LONG).show();
-//        }
-//    };
+    public void onSignedIn(final FirebaseUser firebaseUser) {
 
-    public void onSignedIn(final FirebaseUser firebaseUser){
-
-        userId = firebaseUser.getUid();
-
-        if(mUser == null) {
-            mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    if (dataSnapshot.hasChild(userId)) {
-
-                        Log.d(TAG,"User is already in database");
-                        mUser = dataSnapshot.child(userId).getValue(User.class);
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("lastActivity", DateUtils.getCurrentTimeString());
-                        mDatabaseReference.child(mUser.getUid()).updateChildren(map);
-
-                    }else{
-
-                        Log.d(TAG,"User's first login");
-                        mUser = User.setupUserFirstTime(firebaseUser,mContext);
-                        registerUserDatabase();
-
-                    }
-
-                    mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mUser.getUid(),mContext);
-                    mViewPager.setAdapter(mViewPagerAdapter);
-                    loadProfileOnDrawer();
-                    Snackbar.make(mCoordinatorLayout,getText(R.string.success_sign_in),Snackbar.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Log.d(TAG,"onCancelled fired");
-                }
-            });
-
+        if (mUser == null) {
+            mUser = User.setupUserFirstTime(firebaseUser, mContext);
+            firebaseDatabaseHelper.fetchUserById(mUser.getUid(), this);
         }
+
+        loadProfileOnDrawer();
+        loadBooksPageView();
     }
 
-    private void loadProfileOnDrawer(){
+    private void loadProfileOnDrawer() {
 
         mTextViewTextEmail.setText(mUser.getEmail());
         mTextViewUsername.setText(mUser.getUsername());
@@ -280,25 +140,23 @@ public class MainActivity extends AppCompatActivity
                 .into(mImageViewProfile);
     }
 
-    public void registerUserDatabase(){
-        mDatabaseReference.child(mUser.getUid()).setValue(mUser);
-    }
-
-    public void onSignedOut(){
+    private void loadBooksPageView() {
+        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mUser.getUid(), mContext);
+        mViewPager.setAdapter(mViewPagerAdapter);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == RC_SIGN_IN){
-            if(resultCode == RESULT_CANCELED) finish();
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_CANCELED) finish();
         }
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        if(savedInstanceState.containsKey(KEY_PARCELABLE_USER)){
+        if (savedInstanceState.containsKey(KEY_PARCELABLE_USER)) {
             mUser = (User) savedInstanceState.get(KEY_PARCELABLE_USER);
         }
         super.onRestoreInstanceState(savedInstanceState);
@@ -311,16 +169,28 @@ public class MainActivity extends AppCompatActivity
         super.onSaveInstanceState(outState);
     }
 
+    private void launchLoginActivityResult() {
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setIsSmartLockEnabled(false)
+                        .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
+                        .build(),
+                RC_SIGN_IN);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+        mFirebaseAuth.addAuthStateListener(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        mFirebaseAuth.removeAuthStateListener(this);
     }
 
     @Override
@@ -334,12 +204,12 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void handleIntent(Intent intent){
+    private void handleIntent(Intent intent) {
 
-        if(intent.getAction().equals(Intent.ACTION_SEARCH)){
+        if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             //TODO do my query
-            Toast.makeText(mContext,query,Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, query, Toast.LENGTH_SHORT).show();
 
             SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
                     SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
@@ -347,7 +217,6 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
-
 
 
     @Override
@@ -365,7 +234,7 @@ public class MainActivity extends AppCompatActivity
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
 
-        ComponentName componentName = new ComponentName(mContext,MainActivity.class);
+        ComponentName componentName = new ComponentName(mContext, MainActivity.class);
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
 
@@ -382,7 +251,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
 
-        switch (id){
+        switch (id) {
 
             case R.id.action_settings:
 
@@ -390,6 +259,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.action_sign_out:
 
+                mUser = null;
                 AuthUI.getInstance().signOut(this);
 
                 return true;
@@ -413,5 +283,36 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+        Toast.makeText(mContext, item.toString(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser == null) {
+            launchLoginActivityResult();
+        } else {
+            onSignedIn(firebaseUser);
+        }
+    }
+
+    @Override
+    public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
+
+        if (dataSnapshot.getValue() != null) {
+            Log.d(TAG, "User is already in database");
+            firebaseDatabaseHelper.updateUserLastActivity(mUser.getUid());
+        } else {
+            firebaseDatabaseHelper.insertUser(mUser);
+        }
+
+        Snackbar.make(mCoordinatorLayout, getText(R.string.success_sign_in), Snackbar.LENGTH_SHORT).show();
+
     }
 }

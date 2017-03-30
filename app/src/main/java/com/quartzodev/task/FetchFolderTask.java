@@ -5,10 +5,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 
 
@@ -16,84 +13,79 @@ import com.quartzodev.data.Folder;
  * Created by victoraldir on 26/03/2017.
  */
 
-public class FetchFolderTask extends AsyncTaskLoader<Folder> {
+public class FetchFolderTask extends AsyncTaskLoader<Folder> implements FirebaseDatabaseHelper.OnDataSnapshotListener {
 
     private static final String TAG = FetchFolderTask.class.getSimpleName();
+
+    private static final int TIMEOUT = 15000;
 
     public static final int FETCH_POPULAR_FOLDER = 0;
     public static final int FETCH_MY_BOOKS_FOLDER = 1;
     public static final int FETCH_CUSTOM_FOLDER = 2;
 
-
-    private String popularMoviesFoderId = "-KgAV0L9l-T9N68ED9-b"; //See a better way to maintain popular folder
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDatabaseReference;
-    private String userId;
+    private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
+    private Folder mFolder;
+    private String mUserId;
     private String folderName;
     private int operation;
 
     public FetchFolderTask(String userId, String folderName, Context context, int operation) {
         super(context);
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference().child("users");
-        this.userId = userId;
+        this.mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
+        this.mUserId = userId;
         this.folderName = folderName;
         this.operation = operation;
+
     }
 
     @Override
     public Folder loadInBackground() {
 
-        final Object locker = new Object();
-        final Folder[] folder = new Folder[1];
-
         switch (operation){
             case FETCH_POPULAR_FOLDER:
-                mDatabaseReference.orderByChild(popularMoviesFoderId).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
 
-                        Log.d(TAG,"Data received: " + dataSnapshot.toString());
+                Log.d(TAG,"Fetching FETCH_POPULAR_FOLDER..");
 
-                        folder[0] = dataSnapshot.child(popularMoviesFoderId).getValue(Folder.class);
+                mFirebaseDatabaseHelper.fetchPopularBooks(this);
+                sleep();
 
-                        synchronized (locker){
-                            locker.notify();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                        Log.d(TAG,"Error: " + databaseError.getDetails());
-
-                        synchronized (locker){
-                            locker.notify();
-                        }
-
-                    }
-                });
-
-                synchronized (locker){
-                    try {
-                        locker.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
+                Log.d(TAG,"FETCH_POPULAR_FOLDER complete!");
 
                 break;
             case FETCH_MY_BOOKS_FOLDER:
-                //mDatabaseReference.child(userId).orderByChild("myBooksFolder");
+
+                Log.d(TAG,"Fetching FETCH_MY_BOOKS_FOLDER..");
+
+                mFirebaseDatabaseHelper.fetchMyBooks(mUserId,this);
+                sleep();
+
+                Log.d(TAG,"FETCH_MY_BOOKS_FOLDER complete!");
+
                 break;
             case FETCH_CUSTOM_FOLDER:
                 break;
         }
 
+        return mFolder;
 
+    }
 
-        return folder[0];
+    @Override
+    public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
+        Log.d(TAG,"Data received: " + dataSnapshot.toString());
+        mFolder = dataSnapshot.getValue(Folder.class);
+    }
 
+    private void sleep(){
+        synchronized (this){
+            try {
+                Log.d(TAG,"Waiting " + TIMEOUT / 1000 + " seconds");
+                this.wait(TIMEOUT);
+            } catch (InterruptedException e) {
+                Log.wtf(TAG,"No idea why");
+                e.printStackTrace();
+            }
+        }
     }
 }

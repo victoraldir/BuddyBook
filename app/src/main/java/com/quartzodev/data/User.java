@@ -62,16 +62,35 @@ public class User implements Parcelable {
 
         Folder myBooksFolder = new Folder(context.getResources().getString(R.string.tab_my_books));
 
-//        Book book = new Book();
-//        book.photoUrl = "";
-//        book.description = "book test";
-//        book.author = "Author test";
-//        myBooksFolder.setBooks(Collections.singletonMap("My book",book));
+        Book book = new Book();
+        book.photoUrl = "http://www.gweissert.com/wp-content/uploads/self-healing-and-self-care-books.jpg";
+        book.description = "book test";
+        book.author = "Author test";
+        myBooksFolder.setBooks(Collections.singletonMap("My book",book));
 
         user.setMyBooksFolder(myBooksFolder);
 
+        Folder customFolder = new Folder("Custom folder");
+
+        Book book2 = new Book();
+        book2.photoUrl = "http://www.gweissert.com/wp-content/uploads/self-healing-and-self-care-books.jpg";
+        book2.description = "book test";
+        book2.author = "Author test";
+        customFolder.setBooks(Collections.singletonMap("My book",book2));
+
+
+        user.setFolders(Collections.singletonMap("customFolder",customFolder));
+
         return  user;
 
+    }
+
+    public Map<String, Folder> getFolders() {
+        return folders;
+    }
+
+    public void setFolders(Map<String, Folder> folders) {
+        this.folders = folders;
     }
 
     public String getUid() {
@@ -138,7 +157,7 @@ public class User implements Parcelable {
         out.writeString(username);
         out.writeString(photoUrl);
         out.writeString(lastActivity);
-        out.writeParcelable(myBooksFolder,flags);
+        //out.writeParcelable(myBooksFolder,flags);
         //out.writeList(folders);
     }
 
