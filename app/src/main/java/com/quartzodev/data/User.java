@@ -10,7 +10,7 @@ import com.quartzodev.buddybook.R;
 import com.quartzodev.utils.DateUtils;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -62,27 +62,54 @@ public class User implements Parcelable {
 
         Folder myBooksFolder = new Folder(context.getResources().getString(R.string.tab_my_books));
 
-        Book book = new Book();
-        book.photoUrl = "http://www.gweissert.com/wp-content/uploads/self-healing-and-self-care-books.jpg";
-        book.description = "book test";
-        book.author = "Author test";
-        myBooksFolder.setBooks(Collections.singletonMap("My book",book));
+        myBooksFolder.setBooks(generateFakeBooksMap(3));
 
         user.setMyBooksFolder(myBooksFolder);
 
-        Folder customFolder = new Folder("Custom folder");
-
-        Book book2 = new Book();
-        book2.photoUrl = "http://www.gweissert.com/wp-content/uploads/self-healing-and-self-care-books.jpg";
-        book2.description = "book test";
-        book2.author = "Author test";
-        customFolder.setBooks(Collections.singletonMap("My book",book2));
-
-
-        user.setFolders(Collections.singletonMap("customFolder",customFolder));
+        user.setFolders(generateFakeFolderMap(10));
 
         return  user;
 
+    }
+
+    private static Map<String, Folder> generateFakeFolderMap(int rows){
+
+        Map<String, Folder> folderList = new HashMap<>();
+
+        for(int x = 0; x < rows; x++){
+
+            Folder folder = new Folder("Custom folder " + x);
+
+            Book book = new Book();
+            book.photoUrl = "http://www.gweissert.com/wp-content/uploads/self-healing-and-self-care-books.jpg";
+            book.description = "book test " + x;
+            book.tittle = "Tittle " + x;
+            book.author = "Author test " + x;
+
+            folder.setBooks(Collections.singletonMap(book.description,book));
+
+            folderList.put(folder.getDescription(),folder);
+        }
+
+        return folderList;
+    }
+
+    private static Map<String, Book> generateFakeBooksMap(int rows){
+
+        Map<String, Book> bookHashMap = new HashMap<>();
+
+
+        for(int x = 0; x < rows; x++){
+            Book book = new Book();
+            book.photoUrl = "http://www.gweissert.com/wp-content/uploads/self-healing-and-self-care-books.jpg";
+            book.description = "book test " + x;
+            book.author = "Author test " + x;
+            book.tittle = "Tittle " + x;
+
+            bookHashMap.put(book.description,book);
+        }
+
+        return bookHashMap;
     }
 
     public Map<String, Folder> getFolders() {

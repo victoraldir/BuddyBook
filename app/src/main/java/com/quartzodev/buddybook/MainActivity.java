@@ -3,6 +3,7 @@ package com.quartzodev.buddybook;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
@@ -11,9 +12,10 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,13 +35,14 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.quartzodev.adapters.ViewPagerAdapter;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.data.User;
 import com.quartzodev.fragments.FolderFragment;
-import com.quartzodev.fragments.dummy.DummyContent;
+import com.quartzodev.fragments.GridBookFragment;
+import com.quartzodev.fragments.ViewPagerBookFragment;
 import com.quartzodev.provider.SuggestionProvider;
+import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.widgets.CircleTransform;
 
 import java.util.Arrays;
@@ -58,14 +61,14 @@ public class MainActivity extends AppCompatActivity
     private static final int RC_SIGN_IN = 1;
     private static final String KEY_PARCELABLE_USER = "userKey";
 
-    @BindView(R.id.pager)
-    ViewPager mViewPager;
+//    @BindView(R.id.pager)
+//    ViewPager mViewPager;
     @BindView(R.id.main_coordinator)
     CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
 
-    private ViewPagerAdapter mViewPagerAdapter;
+
     private ImageView mImageViewProfile;
     private TextView mTextViewUsername;
     private TextView mTextViewTextEmail;
@@ -126,6 +129,7 @@ public class MainActivity extends AppCompatActivity
 
         loadProfileOnDrawer();
         loadBooksPageView();
+        updateFolderList();
     }
 
     private void loadProfileOnDrawer() {
@@ -141,9 +145,47 @@ public class MainActivity extends AppCompatActivity
                 .into(mImageViewProfile);
     }
 
+    private void updateFolderList(){
+        FolderFragment folderFragment = (FolderFragment)
+                getSupportFragmentManager().findFragmentById(R.id.fragment);
+
+        if (folderFragment != null) {
+            folderFragment.updateFolderListByUserId(mUser.getUid());
+        }
+    }
+
     private void loadBooksPageView() {
-        mViewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), mUser.getUid(), mContext);
-        mViewPager.setAdapter(mViewPagerAdapter);
+
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+
+        if(fragment instanceof ViewPagerBookFragment){
+
+        }else{
+            ViewPagerBookFragment newFragment = ViewPagerBookFragment.newInstance(mUser.getUid());
+
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_main_container, newFragment);
+            transaction.addToBackStack(null);
+
+
+            transaction.commit();
+        }
+    }
+
+    private void loadCustomFolder(String folderId) {
+
+        if(folderId == null){ //Load My Books folder
+            loadBooksPageView();
+        }
+
+        Fragment newFragment = GridBookFragment.newInstance(mUser.getUid(),folderId,GridBookFragment.FLAG_CUSTOM_FOLDER);
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_main_container, newFragment);
+        transaction.addToBackStack(null);
+
+        transaction.commit();
+
     }
 
     @Override
@@ -287,8 +329,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onListFragmentInteraction(Folder folder) {
+    public void onLongClickListenerFolderListInteraction(final Folder folder) {
         Toast.makeText(mContext, folder.toString(), Toast.LENGTH_SHORT).show();
+
+        DialogUtils.alertDialogDeleteFolder(mContext, folder, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                firebaseDatabaseHelper.deleteFolder(mUser.getUid(),folder.getDescription());
+            }
+        });
+
+    }
+
+    @Override
+    public void onClickListenerFolderListInteraction(Folder folder) {
+
+        loadCustomFolder(folder != null ? folder.getDescription() : null);
     }
 
     @Override

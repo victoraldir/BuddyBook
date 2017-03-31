@@ -27,9 +27,10 @@
     </android.support.design.widget.AppBarLayout>
 
     <!--
-    <include layout="@layout/fragment_content_main" />
+    <include layout="@layout/fragment_grid_book" />
     -->
 
+        <!--
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
@@ -47,6 +48,12 @@
             />
 
     </android.support.v4.view.ViewPager>
+-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_main_container"
+            />
 
     </LinearLayout>
 

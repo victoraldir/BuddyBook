@@ -27,7 +27,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return GridBookFragment.newInstance(position, mUserId);
+        return GridBookFragment.newInstance(mUserId, position);
     }
     @Override
     public int getCount() {

@@ -2,6 +2,7 @@ package com.quartzodev.data;
 
 import android.util.Log;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +25,7 @@ public class FirebaseDatabaseHelper {
     private static final String ROOT = "users";
     private static final String REF_POPULAR_FOLDER = "-KgAV0L9l-T9N68ED9-b"; //See a better way to maintain popular folder
     private static final String REF_MY_BOOKS_FOLDER = "myBooksFolder";
+    private static final String REF_FOLDERS = "folders";
 
     private DatabaseReference mDatabaseReference;
 
@@ -40,6 +42,8 @@ public class FirebaseDatabaseHelper {
 
         return mInstance;
     }
+
+
 
     public void insertUser(User user){
         mDatabaseReference.child(user.getUid()).setValue(user);
@@ -61,11 +65,30 @@ public class FirebaseDatabaseHelper {
                 .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
     }
 
-    public void fetchMyBooks(String userId, final OnDataSnapshotListener onDataSnapshotListener){
+    public void fetchMyBooksFolder(String userId, final OnDataSnapshotListener onDataSnapshotListener){
 
         mDatabaseReference.child(userId).child(REF_MY_BOOKS_FOLDER)
                 .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
+    }
+
+    public void fetchCustomFolder(String userId, String folderId, final OnDataSnapshotListener onDataSnapshotListener){
+
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId)
+                .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+
+    }
+
+    public void fetchFolders(String userId, final OnDataSnapshotListener onDataSnapshotListener, ChildEventListener listener){
+
+        DatabaseReference ref = mDatabaseReference.child(userId).child(REF_FOLDERS);
+        ref.addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+        ref.addChildEventListener(listener);
+
+    }
+
+    public void deleteFolder(String userId, String folderId){
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).removeValue();
     }
 
     public void fetchUserById(String userId, final OnDataSnapshotListener onDataSnapshotListener) {

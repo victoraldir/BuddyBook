@@ -4,7 +4,9 @@ import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 
@@ -13,7 +15,9 @@ import com.quartzodev.data.Folder;
  * Created by victoraldir on 26/03/2017.
  */
 
-public class FetchFolderTask extends AsyncTaskLoader<Folder> implements FirebaseDatabaseHelper.OnDataSnapshotListener {
+public class FetchFolderTask extends AsyncTaskLoader<Folder> implements
+        FirebaseDatabaseHelper.OnDataSnapshotListener,
+        ChildEventListener{
 
     private static final String TAG = FetchFolderTask.class.getSimpleName();
 
@@ -57,13 +61,23 @@ public class FetchFolderTask extends AsyncTaskLoader<Folder> implements Firebase
 
                 Log.d(TAG,"Fetching FETCH_MY_BOOKS_FOLDER..");
 
-                mFirebaseDatabaseHelper.fetchMyBooks(mUserId,this);
+                mFirebaseDatabaseHelper.fetchMyBooksFolder(mUserId,this);
+
                 sleep();
 
                 Log.d(TAG,"FETCH_MY_BOOKS_FOLDER complete!");
 
                 break;
             case FETCH_CUSTOM_FOLDER:
+
+                Log.d(TAG,"Fetching FETCH_CUSTOM_FOLDER..");
+
+                mFirebaseDatabaseHelper.fetchCustomFolder(mUserId,folderName,this);
+
+                sleep();
+
+                Log.d(TAG,"FETCH_CUSTOM_FOLDER complete!");
+
                 break;
         }
 
@@ -88,4 +102,21 @@ public class FetchFolderTask extends AsyncTaskLoader<Folder> implements Firebase
             }
         }
     }
+
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {}
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {}
 }

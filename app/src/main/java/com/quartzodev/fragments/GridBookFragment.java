@@ -32,22 +32,36 @@ import butterknife.ButterKnife;
 public class GridBookFragment extends Fragment implements LoaderManager.LoaderCallbacks<Folder> {
 
     private static final int LOADER_ID_LIST_BOOKS = 1;
-    private static final String ARG_POSITION_ID = "itemId";
-    private static final String ARG_USER_ID = "userId";
+    private static final String ARG_POSITION_ID = "mFlag";
+    private static final String ARG_USER_ID = "mUserId";
+    private static final String ARG_FOLDER_ID = "mFolderId";
 
-    private static final int TOP_BOOKS_ITEM_ID = 1;
-    private static final int MY_BOOKS_ITEM_ID = 0;
+    public static final int FLAG_MY_BOOKS_FOLDER = 0;
+    public static final int FLAG_TOP_BOOKS_FOLDER = 1;
+    public static final int FLAG_CUSTOM_FOLDER = 3;
+
 
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
     private Adapter mAdapter;
-    private String userId;
-    private long itemId;
+    private String mUserId;
+    private String mFolderId;
+    private int mFlag;
 
-    public static GridBookFragment newInstance(long positionId, String userId) {
+    public static GridBookFragment newInstance(String userId, int flag) {
         Bundle arguments = new Bundle();
-        arguments.putLong(ARG_POSITION_ID, positionId);
+        arguments.putInt(ARG_POSITION_ID, flag);
         arguments.putString(ARG_USER_ID, userId);
+        GridBookFragment fragment = new GridBookFragment();
+        fragment.setArguments(arguments);
+        return fragment;
+    }
+
+    public static GridBookFragment newInstance(String userId, String folderId, long flag) {
+        Bundle arguments = new Bundle();
+        arguments.putLong(ARG_POSITION_ID, flag);
+        arguments.putString(ARG_USER_ID, userId);
+        arguments.putString(ARG_FOLDER_ID, folderId);
         GridBookFragment fragment = new GridBookFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -58,11 +72,15 @@ public class GridBookFragment extends Fragment implements LoaderManager.LoaderCa
         super.onCreate(savedInstanceState);
 
         if(getArguments().containsKey(ARG_USER_ID)){
-            userId = getArguments().getString(ARG_USER_ID);
+            mUserId = getArguments().getString(ARG_USER_ID);
         }
 
         if(getArguments().containsKey(ARG_POSITION_ID)){
-            itemId = getArguments().getLong(ARG_POSITION_ID);
+            mFlag = getArguments().getInt(ARG_POSITION_ID);
+        }
+
+        if(getArguments().containsKey(ARG_FOLDER_ID)){
+            mFolderId = getArguments().getString(ARG_FOLDER_ID);
         }
 
     }
@@ -77,7 +95,7 @@ public class GridBookFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_content_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_grid_book, container, false);
         ButterKnife.bind(this, rootView);
 
         mAdapter = new Adapter(getActivity(),new ArrayList<com.quartzodev.data.Book>());
@@ -97,10 +115,12 @@ public class GridBookFragment extends Fragment implements LoaderManager.LoaderCa
         FetchFolderTask task = null;
 
         //TODO create constants here!
-        if(itemId == MY_BOOKS_ITEM_ID){
-            task = new FetchFolderTask(userId, null, getActivity(), FetchFolderTask.FETCH_POPULAR_FOLDER);
-        }else if(itemId == TOP_BOOKS_ITEM_ID) {
-            task = new FetchFolderTask(userId, null, getActivity(), FetchFolderTask.FETCH_MY_BOOKS_FOLDER);
+        if(mFlag == FLAG_MY_BOOKS_FOLDER){
+            task = new FetchFolderTask(mUserId, null, getActivity(), FetchFolderTask.FETCH_POPULAR_FOLDER);
+        }else if(mFlag == FLAG_TOP_BOOKS_FOLDER) {
+            task = new FetchFolderTask(mUserId, null, getActivity(), FetchFolderTask.FETCH_MY_BOOKS_FOLDER);
+        }else if(mFlag == FLAG_CUSTOM_FOLDER) {
+            task = new FetchFolderTask(mUserId, mFolderId, getActivity(), FetchFolderTask.FETCH_CUSTOM_FOLDER);
         }
 
         return task;

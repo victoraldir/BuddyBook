@@ -66,4 +66,21 @@ public class Folder  {
 //    public void writeToParcel(Parcel out, int flags) {
 //        out.writeString(description);
 //    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Folder folder = (Folder) o;
+
+        return description.equals(folder.description);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return description.hashCode();
+    }
 }
