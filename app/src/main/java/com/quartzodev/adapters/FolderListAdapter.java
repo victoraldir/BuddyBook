@@ -1,4 +1,4 @@
-package com.quartzodev.fragments;
+package com.quartzodev.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Folder;
-import com.quartzodev.fragments.FolderFragment.OnListFragmentInteractionListener;
+import com.quartzodev.fragments.FolderListFragment.OnListFragmentInteractionListener;
 
 import java.util.List;
 
@@ -16,9 +16,9 @@ import java.util.List;
  * {@link RecyclerView.Adapter} that can display a {@link Folder} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  */
-public class MyFolderRecyclerViewAdapter extends RecyclerView.Adapter<MyFolderRecyclerViewAdapter.ViewHolder> {
+public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.ViewHolder> {
 
-    private static final int ADITIONAL_VIEWS = 2;
+    private static final int ADDITIONAL_VIEWS = 2;
 
     private static final int VIEW_TYPE_MY_BOOKS = 0;
     private static final int VIEW_TYPE_FOLDER = 1;
@@ -28,7 +28,7 @@ public class MyFolderRecyclerViewAdapter extends RecyclerView.Adapter<MyFolderRe
     private List<Folder> mFolderList;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyFolderRecyclerViewAdapter(List<Folder> folderList, OnListFragmentInteractionListener listener) {
+    public FolderListAdapter(List<Folder> folderList, OnListFragmentInteractionListener listener) {
         mFolderList = folderList;
         mListener = listener;
     }
@@ -38,7 +38,7 @@ public class MyFolderRecyclerViewAdapter extends RecyclerView.Adapter<MyFolderRe
 
         if(position  == 0){
             return VIEW_TYPE_MY_BOOKS ;
-        }else if (position == ((mFolderList.size() - 1) + ADITIONAL_VIEWS)){
+        }else if (position == ((mFolderList.size() - 1) + ADDITIONAL_VIEWS)){
             return VIEW_TYPE_ADD_FOLDER;
         }
         return VIEW_TYPE_FOLDER;
@@ -66,7 +66,7 @@ public class MyFolderRecyclerViewAdapter extends RecyclerView.Adapter<MyFolderRe
     }
 
     public void swap(List<Folder> folderList){
-        if(folderList != null && !folderList.isEmpty()) {
+        if(folderList != null) {
             mFolderList = folderList;
             notifyDataSetChanged();
         }
@@ -88,7 +88,16 @@ public class MyFolderRecyclerViewAdapter extends RecyclerView.Adapter<MyFolderRe
             });
 
             return;
-        }else if(position == ((mFolderList.size() - 1) + ADITIONAL_VIEWS)){
+        }else if(position == ((mFolderList.size() - 1) + ADDITIONAL_VIEWS)){
+
+
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClickAddFolderListInteraction();
+                }
+            });
+
             return; //No view for the last one
         }
 
@@ -121,7 +130,7 @@ public class MyFolderRecyclerViewAdapter extends RecyclerView.Adapter<MyFolderRe
 
     @Override
     public int getItemCount() {
-        return mFolderList.size() + ADITIONAL_VIEWS; //My Book well be aways as first
+        return mFolderList.size() + ADDITIONAL_VIEWS; //My Book well be aways as first
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

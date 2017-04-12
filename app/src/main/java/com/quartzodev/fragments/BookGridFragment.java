@@ -15,7 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.quartzodev.api.BookApi;
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.Folder;
 import com.quartzodev.task.FetchFolderTask;
 
@@ -29,15 +31,15 @@ import butterknife.ButterKnife;
  * Created by victoraldir on 24/03/2017.
  */
 
-public class GridBookFragment extends Fragment implements LoaderManager.LoaderCallbacks<Folder> {
+public class BookGridFragment extends Fragment implements LoaderManager.LoaderCallbacks<Folder> {
 
     private static final int LOADER_ID_LIST_BOOKS = 1;
     private static final String ARG_POSITION_ID = "mFlag";
     private static final String ARG_USER_ID = "mUserId";
     private static final String ARG_FOLDER_ID = "mFolderId";
 
-    public static final int FLAG_MY_BOOKS_FOLDER = 0;
-    public static final int FLAG_TOP_BOOKS_FOLDER = 1;
+    public static final int FLAG_MY_BOOKS_FOLDER = 1;
+    public static final int FLAG_TOP_BOOKS_FOLDER = 0;
     public static final int FLAG_CUSTOM_FOLDER = 3;
 
 
@@ -47,22 +49,14 @@ public class GridBookFragment extends Fragment implements LoaderManager.LoaderCa
     private String mUserId;
     private String mFolderId;
     private int mFlag;
+    private OnGridFragmentInteractionListener mListener;
 
-    public static GridBookFragment newInstance(String userId, int flag) {
+    public static BookGridFragment newInstanceCustomFolder(String userId, String folderId, int flag) {
         Bundle arguments = new Bundle();
         arguments.putInt(ARG_POSITION_ID, flag);
         arguments.putString(ARG_USER_ID, userId);
-        GridBookFragment fragment = new GridBookFragment();
-        fragment.setArguments(arguments);
-        return fragment;
-    }
-
-    public static GridBookFragment newInstance(String userId, String folderId, long flag) {
-        Bundle arguments = new Bundle();
-        arguments.putLong(ARG_POSITION_ID, flag);
-        arguments.putString(ARG_USER_ID, userId);
         arguments.putString(ARG_FOLDER_ID, folderId);
-        GridBookFragment fragment = new GridBookFragment();
+        BookGridFragment fragment = new BookGridFragment();
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -98,7 +92,7 @@ public class GridBookFragment extends Fragment implements LoaderManager.LoaderCa
         View rootView = inflater.inflate(R.layout.fragment_grid_book, container, false);
         ButterKnife.bind(this, rootView);
 
-        mAdapter = new Adapter(getActivity(),new ArrayList<com.quartzodev.data.Book>());
+        mAdapter = new Adapter(getActivity(),new ArrayList<BookApi>());
         mRecyclerView.setAdapter(mAdapter);
 
         int columnCount = getResources().getInteger(R.integer.list_column_count);
@@ -139,9 +133,9 @@ public class GridBookFragment extends Fragment implements LoaderManager.LoaderCa
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
 
         private Context mContext;
-        private List<com.quartzodev.data.Book> bookList;
+        private List<BookApi> bookList;
 
-        public Adapter(Context mContext, List<com.quartzodev.data.Book> bookList) {
+        public Adapter(Context mContext, List<BookApi> bookList) {
             this.mContext = mContext;
             this.bookList = bookList;
         }
@@ -165,21 +159,27 @@ public class GridBookFragment extends Fragment implements LoaderManager.LoaderCa
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
 
-            com.quartzodev.data.Book book = bookList.get(position);
-            //Book.VolumeInfo bookVolumeInfo = book.volumeInfo;
+            final BookApi book = bookList.get(position);
 
-            holder.textViewBookTitte.setText(book.tittle);
-            //if(bookVolumeInfo.authors != null)
-            holder.textViewBookAuthor.setText(book.author);
+            holder.textViewBookTitle.setText(book.getVolumeInfo().getTitle());
 
-            if(book.photoUrl != null) {
+            holder.textViewBookAuthor.setText(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
+
+            if(book.getVolumeInfo().getImageLink() != null) {
                 Glide.with(mContext)
-                        .load(book.photoUrl)
+                        .load(book.getVolumeInfo().getImageLink().getThumbnail())
                         .centerCrop()
                         .placeholder(android.R.drawable.sym_def_app_icon)
                         .error(android.R.drawable.ic_dialog_alert)
                         .into(holder.ImageViewthumbnail);
             }
+
+            holder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClickListenerBookGridInteraction(mFolderId,book);
+                }
+            });
 
         }
 
@@ -192,12 +192,38 @@ public class GridBookFragment extends Fragment implements LoaderManager.LoaderCa
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.thumbnail) ImageView ImageViewthumbnail;
-        @BindView(R.id.book_title) TextView textViewBookTitte;
+        @BindView(R.id.book_title) TextView textViewBookTitle;
         @BindView(R.id.book_author) TextView textViewBookAuthor;
+        public final View view;
 
         public ViewHolder(View itemView) {
             super(itemView);
+            view = itemView;
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnGridFragmentInteractionListener) {
+            mListener = (OnGridFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnGridFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+
+    public interface OnGridFragmentInteractionListener {
+
+        void onClickListenerBookGridInteraction(String mFolderId, BookApi book);
+
     }
 }

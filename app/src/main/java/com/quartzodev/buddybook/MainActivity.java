@@ -35,38 +35,42 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.quartzodev.api.BookApi;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.data.User;
-import com.quartzodev.fragments.FolderFragment;
-import com.quartzodev.fragments.GridBookFragment;
-import com.quartzodev.fragments.ViewPagerBookFragment;
+import com.quartzodev.fragments.BookGridFragment;
+import com.quartzodev.fragments.FolderListFragment;
+import com.quartzodev.fragments.ViewPagerFragment;
 import com.quartzodev.provider.SuggestionProvider;
 import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.widgets.CircleTransform;
 
 import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        FolderFragment.OnListFragmentInteractionListener,
+        FolderListFragment.OnListFragmentInteractionListener,
         FirebaseAuth.AuthStateListener,
-        FirebaseDatabaseHelper.OnDataSnapshotListener {
+        FirebaseDatabaseHelper.OnDataSnapshotListener,
+        BookGridFragment.OnGridFragmentInteractionListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final int NUM_PAGES = 2;
     private static final int RC_SIGN_IN = 1;
     private static final String KEY_PARCELABLE_USER = "userKey";
 
-//    @BindView(R.id.pager)
-//    ViewPager mViewPager;
     @BindView(R.id.main_coordinator)
     CoordinatorLayout mCoordinatorLayout;
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawer;
 
 
     private ImageView mImageViewProfile;
@@ -109,14 +113,12 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
     }
 
@@ -146,7 +148,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateFolderList(){
-        FolderFragment folderFragment = (FolderFragment)
+        FolderListFragment folderFragment = (FolderListFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment);
 
         if (folderFragment != null) {
@@ -158,10 +160,10 @@ public class MainActivity extends AppCompatActivity
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
-        if(fragment instanceof ViewPagerBookFragment){
+        if(fragment instanceof ViewPagerFragment){
 
         }else{
-            ViewPagerBookFragment newFragment = ViewPagerBookFragment.newInstance(mUser.getUid());
+            ViewPagerFragment newFragment = ViewPagerFragment.newInstance(mUser.getUid());
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_main_container, newFragment);
@@ -176,9 +178,10 @@ public class MainActivity extends AppCompatActivity
 
         if(folderId == null){ //Load My Books folder
             loadBooksPageView();
+            return;
         }
 
-        Fragment newFragment = GridBookFragment.newInstance(mUser.getUid(),folderId,GridBookFragment.FLAG_CUSTOM_FOLDER);
+        Fragment newFragment = BookGridFragment.newInstanceCustomFolder(mUser.getUid(),folderId, BookGridFragment.FLAG_CUSTOM_FOLDER);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_main_container, newFragment);
@@ -335,7 +338,7 @@ public class MainActivity extends AppCompatActivity
         DialogUtils.alertDialogDeleteFolder(mContext, folder, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                firebaseDatabaseHelper.deleteFolder(mUser.getUid(),folder.getDescription());
+                firebaseDatabaseHelper.deleteFolder(mUser.getUid(),folder.getId());
             }
         });
 
@@ -344,7 +347,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClickListenerFolderListInteraction(Folder folder) {
 
+        drawer.closeDrawer(GravityCompat.START);
+
         loadCustomFolder(folder != null ? folder.getDescription() : null);
+    }
+
+    @Override
+    public void onClickAddFolderListInteraction() {
+        DialogUtils.alertDialogAddFolder(this,
+                getSupportFragmentManager(),
+                FirebaseDatabaseHelper.getInstance(),
+                mUser.getUid());
     }
 
     @Override
@@ -370,6 +383,25 @@ public class MainActivity extends AppCompatActivity
         }
 
         Snackbar.make(mCoordinatorLayout, getText(R.string.success_sign_in), Snackbar.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void onClickListenerBookGridInteraction(String folderId, BookApi book) {
+        Toast.makeText(mContext,"Should open details for book id: " + book.getVolumeInfo().getTitle() + " Folder id: " + folderId,Toast.LENGTH_SHORT).show();
+
+        FolderListFragment folderFragment = (FolderListFragment)
+                getSupportFragmentManager().findFragmentById(R.id.fragment);
+
+        Intent it = new Intent(this,DetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString(DetailActivity.ARG_BOOK_ID, book.id);
+        bundle.putString(DetailActivity.ARG_FOLDER_ID, folderId);
+        bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
+        bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, folderFragment.getmFolderListCommaSeparated());
+
+        it.putExtras(bundle);
+        startActivity(it);
 
     }
 }

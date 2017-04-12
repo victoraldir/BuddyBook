@@ -15,7 +15,7 @@ public class BookResponse {
     @SerializedName("totalItems")
     public int totalItems;
     @SerializedName("items")
-    List<Book> items;
+    List<BookApi> items;
 
     public String getKind() {
         return kind;
@@ -33,11 +33,11 @@ public class BookResponse {
         this.totalItems = totalItems;
     }
 
-    public List<Book> getItems() {
+    public List<BookApi> getItems() {
         return items;
     }
 
-    public void setItems(List<Book> items) {
+    public void setItems(List<BookApi> items) {
         this.items = items;
     }
 }

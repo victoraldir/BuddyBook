@@ -13,7 +13,7 @@
     <!-- Facebook Application ID, prefixed by 'fb'.  Enables Chrome Custom tabs. -->
     <string name="facebook_login_protocol_scheme" translatable="false">fb260358024375061</string>
 
-    <string name="tab_top_books">Top books</string>
+    <string name="tab_top_books">Explore</string>
     <string name="tab_my_books">My books</string>
     <string name="item_add_folder">Add folder</string>
     <string name="app_label">BuddyBook</string>
@@ -21,8 +21,12 @@
     <string name="dialog_message">This will also remove all books saved on this folder</string>
     <string name="dialog_title">Delete %1$s?</string>
 
+    <string name="folder_already_exits">Folder already exists</string>
+    <string name="folder_desc_empty">Folder description cannot be empty</string>
+
     <string name="dialog_btn_positive">Yes</string>
     <string name="dialog_btn_ok">OK</string>
     <string name="dialog_btn_cancel">Cancel</string>
+    <string name="title_activity_detail">DetailActivity</string>
 
 </resources>

@@ -1,15 +1,25 @@
 package com.quartzodev.utils;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.MenuItem;
-import android.view.SubMenu;
+import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
+import com.quartzodev.fragments.FolderListFragment;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by victoraldir on 28/03/2017.
@@ -39,40 +49,60 @@ public class DialogUtils {
 
     }
 
-    public static void alertInfo(final Context context,String tittle, String message){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    public static void alertDialogAddFolder(final Activity activity, FragmentManager fragmentManager,
+                                            final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
+                                            final String userId){
 
 
-        builder.setMessage(message)
-                .setTitle(tittle)
-                .setPositiveButton(R.string.dialog_btn_ok, new DialogInterface.OnClickListener() {
+        LayoutInflater inflater = activity.getLayoutInflater();
+
+        View view =  inflater.inflate(R.layout.dialog_add_folder,null);
+
+        final EditText urlEditText = (EditText) view.findViewById(R.id.edittext_add_folder_description);
+        final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.signup_input_layout_name);
+
+        FolderListFragment folderFragment = (FolderListFragment)
+                fragmentManager.findFragmentById(R.id.fragment);
+
+        final List<Folder> folders = folderFragment.getmFolderList();
+
+        final AlertDialog dialog = new AlertDialog.Builder(activity)
+                .setTitle(R.string.item_add_folder)
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Ok",null)
+                .setView(view)
+                .create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface arg0) {
+
+                Button okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                okButton.setOnClickListener(new View.OnClickListener() {
+
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setCancelable(false);
+                    public void onClick(View arg0) {
 
-        AlertDialog dialog = builder.create();
+                        if(urlEditText.getText().toString().isEmpty()){
+                            textInputLayout.setError(activity.getString(R.string.folder_desc_empty));
+                        }else if(folders != null && folders.contains(new Folder(urlEditText.getText().toString()))){
+                            textInputLayout.setError(activity.getString(R.string.folder_already_exits));
+                        }else{
+
+                            Folder newFolder = new Folder(urlEditText.getText().toString());
+
+                            mFirebaseDatabaseHelper.insertFolder(userId,newFolder);
+
+                            dialog.dismiss();
+                        }
+
+                    }
+                });
+            }
+        });
 
         dialog.show();
 
     }
 
-    public static class CustomAlertDialog extends AlertDialog.Builder{
-
-        private long tag; //Tag to reference folder
-
-        public CustomAlertDialog(Context context) {
-            super(context);
-        }
-
-        public long getTag() {
-            return tag;
-        }
-
-        public void setTag(long tag) {
-            this.tag = tag;
-        }
-    }
 }

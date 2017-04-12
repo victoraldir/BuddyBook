@@ -8,10 +8,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.quartzodev.api.BookApi;
 import com.quartzodev.task.FetchFolderTask;
 import com.quartzodev.utils.DateUtils;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,8 +26,8 @@ public class FirebaseDatabaseHelper {
     private static final String TAG = FetchFolderTask.class.getSimpleName();
 
     private static final String ROOT = "users";
-    private static final String REF_POPULAR_FOLDER = "-KgAV0L9l-T9N68ED9-b"; //See a better way to maintain popular folder
-    private static final String REF_MY_BOOKS_FOLDER = "myBooksFolder";
+    public static final String REF_POPULAR_FOLDER = "_popularBooks"; //See a better way to maintain popular folder
+    public static final String REF_MY_BOOKS_FOLDER = "myBooksFolder";
     private static final String REF_FOLDERS = "folders";
 
     private DatabaseReference mDatabaseReference;
@@ -42,11 +45,18 @@ public class FirebaseDatabaseHelper {
 
         return mInstance;
     }
-
-
-
+    
     public void insertUser(User user){
         mDatabaseReference.child(user.getUid()).setValue(user);
+    }
+
+    public void insertFoldersBooks(String userId, Folder folder){
+        DatabaseReference df = mDatabaseReference.child(userId).push();
+
+        String id = df.getKey();
+
+//        df.setValue(book.id,book);
+
     }
 
     public void updateUserLastActivity(String userId){
@@ -65,9 +75,27 @@ public class FirebaseDatabaseHelper {
                 .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
     }
 
+    public void insertPopularBooks(Map<String, BookApi> books){
+
+//        Map<String, BookApi> bookApiMap = new HashMap<>();
+//
+//        for (BookApi book: books) {
+//
+//            bookApiMap.put(book.id,book);
+//
+//        }
+
+        Folder folder = new Folder("Popular Books Folder");
+
+        folder.setBooks(books);
+
+        mDatabaseReference.child(REF_POPULAR_FOLDER).setValue(folder);
+
+    }
+
     public void fetchMyBooksFolder(String userId, final OnDataSnapshotListener onDataSnapshotListener){
 
-        mDatabaseReference.child(userId).child(REF_MY_BOOKS_FOLDER)
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(REF_MY_BOOKS_FOLDER)
                 .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
     }
@@ -79,16 +107,47 @@ public class FirebaseDatabaseHelper {
 
     }
 
+    public void findBook(String userId ,String folderId, String bookId, final OnDataSnapshotListener onDataSnapshotListener){
+
+        if(folderId.equals(REF_POPULAR_FOLDER)){
+
+            mDatabaseReference.child(REF_POPULAR_FOLDER).child("books").child(bookId)
+                    .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+
+        }else{
+
+            //TODO build query upon custom folder
+
+        }
+
+
+
+    }
+
     public void fetchFolders(String userId, final OnDataSnapshotListener onDataSnapshotListener, ChildEventListener listener){
 
         DatabaseReference ref = mDatabaseReference.child(userId).child(REF_FOLDERS);
-        ref.addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+        //ref.addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
         ref.addChildEventListener(listener);
+
+        ref.orderByChild("custom")
+                .equalTo(true)
+                .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
     }
 
     public void deleteFolder(String userId, String folderId){
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).removeValue();
+    }
+
+    public void insertFolder(String userId, Folder folder){
+        DatabaseReference df = mDatabaseReference.child(userId).child(REF_FOLDERS).push();
+
+        folder.setId(df.getKey());
+
+        folder.setCustom(true);
+
+        df.setValue(folder);
     }
 
     public void fetchUserById(String userId, final OnDataSnapshotListener onDataSnapshotListener) {

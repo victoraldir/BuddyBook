@@ -3,8 +3,10 @@ package com.quartzodev.api;
 import android.util.Log;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -13,6 +15,7 @@ import retrofit2.Response;
 /**
  * Created by victoraldir on 24/03/2017.
  */
+
 public class APIServiceTest {
 
     private static final String TAG = APIServiceTest.class.getSimpleName();
@@ -23,6 +26,10 @@ public class APIServiceTest {
         Callback<BookResponse> callback = new Callback<BookResponse>() {
             @Override
             public void onResponse(Call<BookResponse> call, Response<BookResponse> response) {
+
+                List<BookApi> bookList = response.body().items;
+
+
                 Log.d(TAG,call.toString());
                 this.notify();
             }

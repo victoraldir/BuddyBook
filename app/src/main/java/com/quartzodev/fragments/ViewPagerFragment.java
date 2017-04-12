@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
  * Created by victoraldir on 31/03/2017.
  */
 
-public class ViewPagerBookFragment extends Fragment {
+public class ViewPagerFragment extends Fragment {
 
     private static final String ARG_USER_ID = "userId";
 
@@ -27,10 +27,10 @@ public class ViewPagerBookFragment extends Fragment {
     @BindView(R.id.pager)
     ViewPager mViewPager;
 
-    public static ViewPagerBookFragment newInstance(String userId) {
+    public static ViewPagerFragment newInstance(String userId) {
         Bundle arguments = new Bundle();
         arguments.putString(ARG_USER_ID, userId);
-        ViewPagerBookFragment fragment = new ViewPagerBookFragment();
+        ViewPagerFragment fragment = new ViewPagerFragment();
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -53,6 +53,7 @@ public class ViewPagerBookFragment extends Fragment {
     private void loadBooksPageView() {
         mViewPagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), mUserId, getContext());
         mViewPager.setAdapter(mViewPagerAdapter);
+        mViewPagerAdapter.notifyDataSetChanged();
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

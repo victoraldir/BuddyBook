@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 
 import com.google.firebase.database.Exclude;
+import com.quartzodev.api.BookApi;
 
 import java.util.Map;
 
@@ -14,8 +15,10 @@ import java.util.Map;
 
 public class Folder  {
 
+    private String id;
     private String description;
-    private Map<String,Book> books;
+    private boolean isCustom;
+    private Map<String,BookApi> books;
 
     public Folder(){
 
@@ -29,17 +32,13 @@ public class Folder  {
         description = in.readString();
     }
 
-//    public static final Creator<Folder> CREATOR = new Creator<Folder>() {
-//        @Override
-//        public Folder createFromParcel(Parcel in) {
-//            return new Folder(in);
-//        }
-//
-//        @Override
-//        public Folder[] newArray(int size) {
-//            return new Folder[size];
-//        }
-//    };
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getDescription() {
         return description;
@@ -49,24 +48,21 @@ public class Folder  {
         this.description = description;
     }
 
-    public Map<String, Book> getBooks() {
+    public Map<String, BookApi> getBooks() {
         return books;
     }
 
-    public void setBooks(Map<String, Book> books) {
+    public void setBooks(Map<String, BookApi> books) {
         this.books = books;
     }
 
-//    @Override
-//    public int describeContents() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public void writeToParcel(Parcel out, int flags) {
-//        out.writeString(description);
-//    }
+    public boolean isCustom() {
+        return isCustom;
+    }
 
+    public void setCustom(boolean custom) {
+        isCustom = custom;
+    }
 
     @Override
     public boolean equals(Object o) {

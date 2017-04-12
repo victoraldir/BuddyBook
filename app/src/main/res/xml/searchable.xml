@@ -4,5 +4,6 @@
     android:hint="@string/search_hint"
     android:searchSuggestAuthority="com.quartzodev.provider.SuggestionProvider"
     android:searchSuggestSelection=" ?"
-    android:voiceSearchMode="showVoiceSearchButton|launchRecognizer">
+    android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
+    >
 </searchable>

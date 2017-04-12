@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.quartzodev.adapters.FolderListAdapter;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
@@ -27,10 +28,10 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class FolderFragment extends Fragment implements FirebaseDatabaseHelper.OnDataSnapshotListener,
+public class FolderListFragment extends Fragment implements FirebaseDatabaseHelper.OnDataSnapshotListener,
         ChildEventListener{
 
-    private static final String TAG = FolderFragment.class.getSimpleName();
+    private static final String TAG = FolderListFragment.class.getSimpleName();
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -38,14 +39,14 @@ public class FolderFragment extends Fragment implements FirebaseDatabaseHelper.O
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
-    private MyFolderRecyclerViewAdapter myFolderRecyclerViewAdapter;
+    private FolderListAdapter myFolderRecyclerViewAdapter;
     private List<Folder> mFolderList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public FolderFragment() {
+    public FolderListFragment() {
     }
 
     public void updateFolderListByUserId(String userId){
@@ -54,8 +55,8 @@ public class FolderFragment extends Fragment implements FirebaseDatabaseHelper.O
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static FolderFragment newInstance(int columnCount) {
-        FolderFragment fragment = new FolderFragment();
+    public static FolderListFragment newInstance(int columnCount) {
+        FolderListFragment fragment = new FolderListFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -79,7 +80,7 @@ public class FolderFragment extends Fragment implements FirebaseDatabaseHelper.O
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_folder_list, container, false);
 
-        myFolderRecyclerViewAdapter = new MyFolderRecyclerViewAdapter(new ArrayList<Folder>(), mListener);
+        myFolderRecyclerViewAdapter = new FolderListAdapter(new ArrayList<Folder>(), mListener);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -95,6 +96,20 @@ public class FolderFragment extends Fragment implements FirebaseDatabaseHelper.O
         return view;
     }
 
+    public List<Folder> getmFolderList() {
+        return mFolderList;
+    }
+
+    public String getmFolderListCommaSeparated() {
+
+        List<String> stringList = new ArrayList<>();
+
+        for (Folder folder: mFolderList) {
+            stringList.add(folder.getDescription());
+        }
+
+        return android.text.TextUtils.join(",", stringList);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -123,6 +138,13 @@ public class FolderFragment extends Fragment implements FirebaseDatabaseHelper.O
 
             for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                 Folder folder = postSnapshot.getValue(Folder.class);
+                /**
+                 * Just to don't list My Books on the RecycleView
+                 */
+//                if(folder.getId() != null && folder.getDescription() != null &&
+//                        !folder.getDescription().equals(getString(R.string.tab_my_books)))
+//                folderList.add(folder);
+
                 folderList.add(folder);
             }
 
@@ -133,6 +155,16 @@ public class FolderFragment extends Fragment implements FirebaseDatabaseHelper.O
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+        if(mFolderList!= null && dataSnapshot.getValue() != null){
+            Folder folder = dataSnapshot.getValue(Folder.class);
+
+            if(!mFolderList.contains(folder)) {
+                mFolderList.add(folder);
+                myFolderRecyclerViewAdapter.swap(mFolderList);
+            }
+
+        }
 
     }
 
@@ -179,6 +211,8 @@ public class FolderFragment extends Fragment implements FirebaseDatabaseHelper.O
         void onLongClickListenerFolderListInteraction(Folder folder);
 
         void onClickListenerFolderListInteraction(Folder folder);
+
+        void onClickAddFolderListInteraction();
         
     }
 
@@ -187,7 +221,5 @@ public class FolderFragment extends Fragment implements FirebaseDatabaseHelper.O
      *
      */
 
-    public interface OnListFragmentInteractionDefaultButtonsListener {
-        void onClickAddFolderListInteraction();
-    }
+
 }

@@ -12,6 +12,7 @@ import com.quartzodev.utils.DateUtils;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by victoraldir on 25/03/2017.
@@ -24,7 +25,6 @@ public class User implements Parcelable {
     private String username;
     private String photoUrl;
     private String lastActivity;
-    private Folder myBooksFolder;
     private Map<String, Folder> folders;
 
     public User() {
@@ -61,56 +61,61 @@ public class User implements Parcelable {
         }
 
         Folder myBooksFolder = new Folder(context.getResources().getString(R.string.tab_my_books));
+        myBooksFolder.setId(UUID.randomUUID().toString());
+        user.setFolders(Collections.singletonMap(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,myBooksFolder));
+//
+//        myBooksFolder.setBooks(generateFakeBooksMap(3));
+//
+//
+//        //user.setMyBooksFolder(myBooksFolder);
+//
+//        user.setFolders(generateFakeFolderMap(10));
 
-        myBooksFolder.setBooks(generateFakeBooksMap(3));
-
-        user.setMyBooksFolder(myBooksFolder);
-
-        user.setFolders(generateFakeFolderMap(10));
 
         return  user;
 
     }
 
-    private static Map<String, Folder> generateFakeFolderMap(int rows){
-
-        Map<String, Folder> folderList = new HashMap<>();
-
-        for(int x = 0; x < rows; x++){
-
-            Folder folder = new Folder("Custom folder " + x);
-
-            Book book = new Book();
-            book.photoUrl = "http://www.gweissert.com/wp-content/uploads/self-healing-and-self-care-books.jpg";
-            book.description = "book test " + x;
-            book.tittle = "Tittle " + x;
-            book.author = "Author test " + x;
-
-            folder.setBooks(Collections.singletonMap(book.description,book));
-
-            folderList.put(folder.getDescription(),folder);
-        }
-
-        return folderList;
-    }
-
-    private static Map<String, Book> generateFakeBooksMap(int rows){
-
-        Map<String, Book> bookHashMap = new HashMap<>();
-
-
-        for(int x = 0; x < rows; x++){
-            Book book = new Book();
-            book.photoUrl = "http://www.gweissert.com/wp-content/uploads/self-healing-and-self-care-books.jpg";
-            book.description = "book test " + x;
-            book.author = "Author test " + x;
-            book.tittle = "Tittle " + x;
-
-            bookHashMap.put(book.description,book);
-        }
-
-        return bookHashMap;
-    }
+//    private static Map<String, Folder> generateFakeFolderMap(int rows){
+//
+//        Map<String, Folder> folderList = new HashMap<>();
+//
+//        for(int x = 0; x < rows; x++){
+//
+//            Folder folder = new Folder("Custom folder " + x);
+//
+//            Book book = new Book();
+//            book.photoUrl = "http://www.gweissert.com/wp-content/uploads/self-healing-and-self-care-books.jpg";
+//            book.description = "book test " + x;
+//            book.title = "Tittle " + x;
+//            book.authors = "Author test " + x;
+//
+//            folder.setBooks(Collections.singletonMap(book.description,book));
+//            folder.setId(UUID.randomUUID().toString());
+//
+//            folderList.put(folder.getId(),folder);
+//        }
+//
+//        return folderList;
+//    }
+//
+//    private static Map<String, Book> generateFakeBooksMap(int rows){
+//
+//        Map<String, Book> bookHashMap = new HashMap<>();
+//
+//
+//        for(int x = 0; x < rows; x++){
+//            Book book = new Book();
+//            book.photoUrl = "http://www.gweissert.com/wp-content/uploads/self-healing-and-self-care-books.jpg";
+//            book.description = "book test " + x;
+//            book.title = "Tittle " + x;
+//            book.authors = "Author test " + x;
+//
+//            bookHashMap.put(book.description,book);
+//        }
+//
+//        return bookHashMap;
+//    }
 
     public Map<String, Folder> getFolders() {
         return folders;
@@ -148,18 +153,6 @@ public class User implements Parcelable {
         return photoUrl;
     }
 
-    public Folder getMyBooksFolder() {
-        return myBooksFolder;
-    }
-
-    public void setMyBooksFolder(Folder myBooksFolder) {
-        this.myBooksFolder = myBooksFolder;
-    }
-
-
-
-
-
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
@@ -184,8 +177,6 @@ public class User implements Parcelable {
         out.writeString(username);
         out.writeString(photoUrl);
         out.writeString(lastActivity);
-        //out.writeParcelable(myBooksFolder,flags);
-        //out.writeList(folders);
     }
 
     public static final Parcelable.Creator<User> CREATOR
