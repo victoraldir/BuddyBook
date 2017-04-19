@@ -71,7 +71,7 @@
         app:layout_constraintHorizontal_bias="0.24" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/detail_imageView_bookmark"
         android:layout_width="48dp"
         android:layout_height="48dp"
         app:srcCompat="@drawable/ic_bookmark_border_black_24dp"

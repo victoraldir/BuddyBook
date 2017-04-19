@@ -12,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.quartzodev.adapters.BookGridAdapter;
 import com.quartzodev.api.BookApi;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
@@ -45,7 +47,11 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
 
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
-    private Adapter mAdapter;
+
+    @BindView(R.id.grid_book_progress_bar)
+    ProgressBar mProgressBar;
+
+    private BookGridAdapter mAdapter;
     private String mUserId;
     private String mFolderId;
     private int mFlag;
@@ -92,7 +98,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         View rootView = inflater.inflate(R.layout.fragment_grid_book, container, false);
         ButterKnife.bind(this, rootView);
 
-        mAdapter = new Adapter(getActivity(),new ArrayList<BookApi>());
+        mAdapter = new BookGridAdapter(getActivity(),new ArrayList<BookApi>(),mFolderId,mListener);
         mRecyclerView.setAdapter(mAdapter);
 
         int columnCount = getResources().getInteger(R.integer.list_column_count);
@@ -123,84 +129,13 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Folder> loader, Folder data) {
         mAdapter.swap(data);
+        mProgressBar.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onLoaderReset(Loader<Folder> loader) {
 
-    }
-
-    private class Adapter extends RecyclerView.Adapter<ViewHolder> {
-
-        private Context mContext;
-        private List<BookApi> bookList;
-
-        public Adapter(Context mContext, List<BookApi> bookList) {
-            this.mContext = mContext;
-            this.bookList = bookList;
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View view = getActivity().getLayoutInflater().inflate(R.layout.item_book, parent, false);
-            final ViewHolder vh = new ViewHolder(view);
-
-            return vh;
-        }
-
-        public void swap(Folder folder){
-            if(folder != null && folder.getBooks() != null) {
-                this.bookList = new ArrayList<>(folder.getBooks().values());
-                notifyDataSetChanged();
-            }
-        }
-
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-
-            final BookApi book = bookList.get(position);
-
-            holder.textViewBookTitle.setText(book.getVolumeInfo().getTitle());
-
-            holder.textViewBookAuthor.setText(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
-
-            if(book.getVolumeInfo().getImageLink() != null) {
-                Glide.with(mContext)
-                        .load(book.getVolumeInfo().getImageLink().getThumbnail())
-                        .centerCrop()
-                        .placeholder(android.R.drawable.sym_def_app_icon)
-                        .error(android.R.drawable.ic_dialog_alert)
-                        .into(holder.ImageViewthumbnail);
-            }
-
-            holder.view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mListener.onClickListenerBookGridInteraction(mFolderId,book);
-                }
-            });
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return bookList != null ? bookList.size() : 0;
-        }
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.thumbnail) ImageView ImageViewthumbnail;
-        @BindView(R.id.book_title) TextView textViewBookTitle;
-        @BindView(R.id.book_author) TextView textViewBookAuthor;
-        public final View view;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            view = itemView;
-            ButterKnife.bind(this, itemView);
-        }
     }
 
     @Override

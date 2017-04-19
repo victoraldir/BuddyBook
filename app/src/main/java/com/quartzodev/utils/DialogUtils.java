@@ -49,10 +49,37 @@ public class DialogUtils {
 
     }
 
+    public static void alertDialogListFolder(final Context context, String foldersCommaSep, DialogInterface.OnClickListener onClickListener){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+
+        builder.setTitle(R.string.pick_folder)
+                .setNegativeButton("Cancel", null)
+                .setItems(formatFolderList(foldersCommaSep), onClickListener);
+
+        AlertDialog alertDialog = builder.create();
+
+        alertDialog.show();
+
+    }
+
+    private static String[] formatFolderList(String folderList){
+
+        String[] unFormatedList = folderList.split(",");
+
+        String[] newList = new String[unFormatedList.length];
+
+        for(int x=0; x<unFormatedList.length; x++){
+            newList[x] = unFormatedList[x].split("=")[0];
+        }
+
+        return newList;
+    }
+
     public static void alertDialogAddFolder(final Activity activity, FragmentManager fragmentManager,
                                             final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
                                             final String userId){
-
 
         LayoutInflater inflater = activity.getLayoutInflater();
 
@@ -68,8 +95,8 @@ public class DialogUtils {
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setTitle(R.string.item_add_folder)
-                .setNegativeButton("Cancel", null)
                 .setPositiveButton("Ok",null)
+                .setNegativeButton("Cancel", null)
                 .setView(view)
                 .create();
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -84,9 +111,13 @@ public class DialogUtils {
                     public void onClick(View arg0) {
 
                         if(urlEditText.getText().toString().isEmpty()){
+
                             textInputLayout.setError(activity.getString(R.string.folder_desc_empty));
+
                         }else if(folders != null && folders.contains(new Folder(urlEditText.getText().toString()))){
+
                             textInputLayout.setError(activity.getString(R.string.folder_already_exits));
+
                         }else{
 
                             Folder newFolder = new Folder(urlEditText.getText().toString());

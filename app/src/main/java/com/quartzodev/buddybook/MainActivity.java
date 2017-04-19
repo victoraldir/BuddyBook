@@ -19,6 +19,8 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,27 +31,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.quartzodev.adapters.SearchResultAdapter;
 import com.quartzodev.api.BookApi;
-import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.data.User;
 import com.quartzodev.fragments.BookGridFragment;
 import com.quartzodev.fragments.FolderListFragment;
+import com.quartzodev.fragments.SearchResultFragment;
 import com.quartzodev.fragments.ViewPagerFragment;
 import com.quartzodev.provider.SuggestionProvider;
 import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.widgets.CircleTransform;
-
 import java.util.Arrays;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -58,7 +57,8 @@ public class MainActivity extends AppCompatActivity
         FolderListFragment.OnListFragmentInteractionListener,
         FirebaseAuth.AuthStateListener,
         FirebaseDatabaseHelper.OnDataSnapshotListener,
-        BookGridFragment.OnGridFragmentInteractionListener {
+        BookGridFragment.OnGridFragmentInteractionListener,
+        SearchView.OnQueryTextListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
     public static final int NUM_PAGES = 2;
@@ -72,6 +72,9 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
 
+    @BindView(R.id.toolbar_results)
+    RecyclerView mRvToobarResults;
+
 
     private ImageView mImageViewProfile;
     private TextView mTextViewUsername;
@@ -84,6 +87,11 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mFirebaseAuth;
     private FirebaseDatabaseHelper firebaseDatabaseHelper;
 
+    private Fragment mCurrentGridFragment;
+    private String mFolderId;
+
+    private SearchResultFragment mSearchResultFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +99,16 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         mContext = this;
+
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+
+        mRvToobarResults.setLayoutManager(layoutManager);
+
+        SearchResultAdapter adapter = new SearchResultAdapter();
+
+        //mRvToobarResults.setAdapter(adapter);
+
+
 
         LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
         mImageViewProfile = (ImageView) linearLayout.findViewById(R.id.main_imageview_user_photo);
@@ -168,7 +186,6 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_main_container, newFragment);
             transaction.addToBackStack(null);
-
 
             transaction.commit();
         }
@@ -280,6 +297,40 @@ public class MainActivity extends AppCompatActivity
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
 
+        searchView.setOnQueryTextListener(this);
+
+        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                Toast.makeText(mContext,"Search view's been clicked",Toast.LENGTH_SHORT).show();
+
+                mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+
+                mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(),mFolderId);
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_main_container, mSearchResultFragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
+
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                Toast.makeText(mContext,"Search's been closed",Toast.LENGTH_SHORT).show();
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_main_container, mCurrentGridFragment);
+                transaction.addToBackStack(null);
+
+                transaction.commit();
+
+                return true;
+            }
+        });
+
         ComponentName componentName = new ComponentName(mContext, MainActivity.class);
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
@@ -349,7 +400,9 @@ public class MainActivity extends AppCompatActivity
 
         drawer.closeDrawer(GravityCompat.START);
 
-        loadCustomFolder(folder != null ? folder.getDescription() : null);
+        mFolderId = folder != null ? folder.getId() : null;
+
+        loadCustomFolder(folder != null ? folder.getId() : null);
     }
 
     @Override
@@ -403,5 +456,24 @@ public class MainActivity extends AppCompatActivity
         it.putExtras(bundle);
         startActivity(it);
 
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+
+        mSearchResultFragment.executeSearch(query);
+
+        return false;
+
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+
+        Toast.makeText(mContext,newText,Toast.LENGTH_LONG).show();
+
+        mSearchResultFragment.executeSearch(newText);
+
+        return false;
     }
 }

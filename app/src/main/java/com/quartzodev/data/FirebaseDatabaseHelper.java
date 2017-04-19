@@ -77,14 +77,6 @@ public class FirebaseDatabaseHelper {
 
     public void insertPopularBooks(Map<String, BookApi> books){
 
-//        Map<String, BookApi> bookApiMap = new HashMap<>();
-//
-//        for (BookApi book: books) {
-//
-//            bookApiMap.put(book.id,book);
-//
-//        }
-
         Folder folder = new Folder("Popular Books Folder");
 
         folder.setBooks(books);
@@ -100,7 +92,7 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void fetchCustomFolder(String userId, String folderId, final OnDataSnapshotListener onDataSnapshotListener){
+    public void fetchBooksFromFolder(String userId, String folderId, final OnDataSnapshotListener onDataSnapshotListener){
 
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId)
                 .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
@@ -116,7 +108,8 @@ public class FirebaseDatabaseHelper {
 
         }else{
 
-            //TODO build query upon custom folder
+            mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child("books").child(bookId)
+                    .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
         }
 
@@ -148,6 +141,10 @@ public class FirebaseDatabaseHelper {
         folder.setCustom(true);
 
         df.setValue(folder);
+    }
+
+    public void insertBookFolder(String userId, String folderId, BookApi bookApi){
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child("books").updateChildren(Collections.singletonMap(bookApi.getId(),(Object) bookApi));
     }
 
     public void fetchUserById(String userId, final OnDataSnapshotListener onDataSnapshotListener) {

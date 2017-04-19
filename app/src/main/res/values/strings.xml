@@ -21,6 +21,8 @@
     <string name="dialog_message">This will also remove all books saved on this folder</string>
     <string name="dialog_title">Delete %1$s?</string>
 
+    <string name="pick_folder">Move to folder...</string>
+
     <string name="folder_already_exits">Folder already exists</string>
     <string name="folder_desc_empty">Folder description cannot be empty</string>
 

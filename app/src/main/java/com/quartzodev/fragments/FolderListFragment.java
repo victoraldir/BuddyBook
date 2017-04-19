@@ -47,6 +47,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
      * fragment (e.g. upon screen orientation changes).
      */
     public FolderListFragment() {
+        mFolderList = new ArrayList<>();
     }
 
     public void updateFolderListByUserId(String userId){
@@ -105,8 +106,11 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
         List<String> stringList = new ArrayList<>();
 
         for (Folder folder: mFolderList) {
-            stringList.add(folder.getDescription());
+            stringList.add(folder.getDescription() + "=" + folder.getId());
         }
+
+        //Default folder My Books
+        stringList.add(getString(R.string.tab_my_books) + "=" + "myBooksFolder");
 
         return android.text.TextUtils.join(",", stringList);
     }
@@ -159,7 +163,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
         if(mFolderList!= null && dataSnapshot.getValue() != null){
             Folder folder = dataSnapshot.getValue(Folder.class);
 
-            if(!mFolderList.contains(folder)) {
+            if(!mFolderList.contains(folder) && !folder.getDescription().equals(getString(R.string.tab_my_books))) {
                 mFolderList.add(folder);
                 myFolderRecyclerViewAdapter.swap(mFolderList);
             }

@@ -30,15 +30,15 @@ public class FetchFolderTask extends AsyncTaskLoader<Folder> implements
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private Folder mFolder;
     private String mUserId;
-    private String folderName;
+    private String mFolderId;
     private int operation;
 
-    public FetchFolderTask(String userId, String folderName, Context context, int operation) {
+    public FetchFolderTask(String userId, String folderId, Context context, int operation) {
         super(context);
 
         this.mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
         this.mUserId = userId;
-        this.folderName = folderName;
+        this.mFolderId = folderId;
         this.operation = operation;
 
     }
@@ -72,7 +72,7 @@ public class FetchFolderTask extends AsyncTaskLoader<Folder> implements
 
                 Log.d(TAG,"Fetching FETCH_CUSTOM_FOLDER..");
 
-                mFirebaseDatabaseHelper.fetchCustomFolder(mUserId,folderName,this);
+                mFirebaseDatabaseHelper.fetchBooksFromFolder(mUserId, mFolderId,this);
 
                 sleep();
 
