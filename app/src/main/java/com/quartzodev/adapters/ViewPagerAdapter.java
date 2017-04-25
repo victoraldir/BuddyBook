@@ -17,6 +17,8 @@ import com.quartzodev.fragments.BookGridFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
+    public static final int NUM_PAGES = 2;
+
     private Context mContext;
     private String mUserId;
 
@@ -24,7 +26,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
 
         mContext = context;
-        this.mUserId = userId;
+        mUserId = userId;
     }
 
     @Override
@@ -36,8 +38,18 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     }
     @Override
     public int getCount() {
-        return MainActivity.NUM_PAGES;
+        return NUM_PAGES;
     }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return super.getItemPosition(object);
+    }
+
+    //    @Override
+//    public int getItemPosition(Object object) {
+//        return POSITION_NONE;
+//    }
 
     @Override
     public CharSequence getPageTitle(int position) {

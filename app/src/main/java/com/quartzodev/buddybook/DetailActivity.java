@@ -34,11 +34,12 @@ public class DetailActivity extends AppCompatActivity {
 
         DetailActivityFragment newFragment = DetailActivityFragment.newInstance(userId, bookId, folderId, folderListId);
 
+        getSupportFragmentManager().popBackStackImmediate();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.detail_container, newFragment);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.detail_container, newFragment).commit();
+        //transaction.addToBackStack(null);
 
-        transaction.commit();
+        //transaction.commit();
 
     }
 

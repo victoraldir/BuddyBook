@@ -1,13 +1,16 @@
 package com.quartzodev.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.quartzodev.adapters.BookGridAdapter;
 import com.quartzodev.api.BookApi;
+import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.Folder;
@@ -35,6 +39,8 @@ import butterknife.ButterKnife;
 
 public class BookGridFragment extends Fragment implements LoaderManager.LoaderCallbacks<Folder> {
 
+    private static final String TAG = BookGridFragment.class.getSimpleName();
+
     private static final int LOADER_ID_LIST_BOOKS = 1;
     private static final String ARG_POSITION_ID = "mFlag";
     private static final String ARG_USER_ID = "mUserId";
@@ -45,11 +51,12 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     public static final int FLAG_CUSTOM_FOLDER = 3;
 
 
+
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.grid_book_progress_bar)
-    ProgressBar mProgressBar;
+//    @BindView(R.id.grid_book_progress_bar)
+//    ProgressBar mProgressBar;
 
     private BookGridAdapter mAdapter;
     private String mUserId;
@@ -129,8 +136,16 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onLoadFinished(Loader<Folder> loader, Folder data) {
         mAdapter.swap(data);
-        mProgressBar.setVisibility(View.INVISIBLE);
-        mRecyclerView.setVisibility(View.VISIBLE);
+        closeProgressBar();
+    }
+
+    private void closeProgressBar(){
+        Intent localIntent = new Intent(MainActivity.ACTION_COMPLETE);
+
+        Log.d(TAG, "Inserted new card");
+        localIntent.putExtra(MainActivity.EXTRA_GRID_RESULT, true);
+
+        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(localIntent);
     }
 
     @Override

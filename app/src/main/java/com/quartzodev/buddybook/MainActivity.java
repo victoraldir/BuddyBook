@@ -1,10 +1,12 @@
 package com.quartzodev.buddybook;
 
 import android.app.SearchManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
@@ -14,6 +16,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -29,6 +32,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
@@ -61,7 +66,11 @@ public class MainActivity extends AppCompatActivity
         SearchView.OnQueryTextListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    public static final int NUM_PAGES = 2;
+
+    public static final String EXTRA_GRID_RESULT = ".RESULT";
+    public static final String ACTION_COMPLETE = TAG + ".ACTION_COMPLETE";
+
+
     private static final int RC_SIGN_IN = 1;
     private static final String KEY_PARCELABLE_USER = "userKey";
 
@@ -71,9 +80,13 @@ public class MainActivity extends AppCompatActivity
     NavigationView mNavigationView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
-
     @BindView(R.id.toolbar_results)
     RecyclerView mRvToobarResults;
+    @BindView(R.id.fragment_main_container)
+    RelativeLayout mContainer;
+    @BindView(R.id.grid_book_progress_bar)
+    ProgressBar mProgressBar;
+
 
 
     private ImageView mImageViewProfile;
@@ -89,8 +102,9 @@ public class MainActivity extends AppCompatActivity
 
     private Fragment mCurrentGridFragment;
     private String mFolderId;
-
     private SearchResultFragment mSearchResultFragment;
+    private ResponseReceiver mResponseReceiver;
+    private SearchView mSearchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,11 +118,7 @@ public class MainActivity extends AppCompatActivity
 
         mRvToobarResults.setLayoutManager(layoutManager);
 
-        SearchResultAdapter adapter = new SearchResultAdapter();
-
-        //mRvToobarResults.setAdapter(adapter);
-
-
+        mResponseReceiver = new ResponseReceiver();
 
         LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
         mImageViewProfile = (ImageView) linearLayout.findViewById(R.id.main_imageview_user_photo);
@@ -148,8 +158,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         loadProfileOnDrawer();
-        loadBooksPageView();
         updateFolderList();
+        loadBooksPageView();
     }
 
     private void loadProfileOnDrawer() {
@@ -180,15 +190,33 @@ public class MainActivity extends AppCompatActivity
 
         if(fragment instanceof ViewPagerFragment){
 
+            setProgressBar(false);
+
         }else{
             ViewPagerFragment newFragment = ViewPagerFragment.newInstance(mUser.getUid());
 
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_main_container, newFragment);
-            transaction.addToBackStack(null);
 
-            transaction.commit();
+            getSupportFragmentManager().popBackStackImmediate();
+            FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_main_container, newFragment).commit();
+            //transaction.addToBackStack(null);
+
+            //transaction.commit();
+//            getSupportFragmentManager().executePendingTransactions();
+//            getSupportFragmentManager().popBackStack();
         }
+    }
+
+    private void setProgressBar(boolean flag){
+
+        if(flag){
+            mProgressBar.setVisibility(View.VISIBLE);
+            mContainer.setVisibility(View.INVISIBLE);
+        }else{
+            mProgressBar.setVisibility(View.INVISIBLE);
+            mContainer.setVisibility(View.VISIBLE);
+        }
+
     }
 
     private void loadCustomFolder(String folderId) {
@@ -200,11 +228,12 @@ public class MainActivity extends AppCompatActivity
 
         Fragment newFragment = BookGridFragment.newInstanceCustomFolder(mUser.getUid(),folderId, BookGridFragment.FLAG_CUSTOM_FOLDER);
 
+        //getSupportFragmentManager().popBackStackImmediate();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_main_container, newFragment);
-        transaction.addToBackStack(null);
+        transaction.replace(R.id.fragment_main_container, newFragment).commit();
+        //transaction.addToBackStack(null);
 
-        transaction.commit();
+        //transaction.commit();
 
     }
 
@@ -245,18 +274,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        mFirebaseAuth.addAuthStateListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mFirebaseAuth.removeAuthStateListener(this);
-    }
-
-    @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
@@ -294,10 +311,11 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
 
         // Retrieve the SearchView and plug it into SearchManager
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        mSearchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
 
-        searchView.setOnQueryTextListener(this);
+        mSearchView.setOnQueryTextListener(this);
 
         MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
             @Override
@@ -308,11 +326,12 @@ public class MainActivity extends AppCompatActivity
 
                 mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(),mFolderId);
 
+                getSupportFragmentManager().popBackStackImmediate();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_main_container, mSearchResultFragment);
-                transaction.addToBackStack(null);
+                transaction.replace(R.id.fragment_main_container, mSearchResultFragment).commit();
+                //transaction.addToBackStack(null);
 
-                transaction.commit();
+                //transaction.commit();
 
                 return true;
             }
@@ -321,11 +340,12 @@ public class MainActivity extends AppCompatActivity
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 Toast.makeText(mContext,"Search's been closed",Toast.LENGTH_SHORT).show();
 
+                getSupportFragmentManager().popBackStackImmediate();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_main_container, mCurrentGridFragment);
-                transaction.addToBackStack(null);
+                transaction.replace(R.id.fragment_main_container, mCurrentGridFragment).commit();
+                //transaction.addToBackStack(null);
 
-                transaction.commit();
+                //transaction.commit();
 
                 return true;
             }
@@ -333,7 +353,7 @@ public class MainActivity extends AppCompatActivity
 
         ComponentName componentName = new ComponentName(mContext, MainActivity.class);
 
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
 
         return true;
 
@@ -463,7 +483,9 @@ public class MainActivity extends AppCompatActivity
 
         mSearchResultFragment.executeSearch(query);
 
-        return false;
+        mSearchView.clearFocus();
+
+        return true;
 
     }
 
@@ -475,5 +497,44 @@ public class MainActivity extends AppCompatActivity
         mSearchResultFragment.executeSearch(newText);
 
         return false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mFirebaseAuth.addAuthStateListener(this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(mResponseReceiver,
+                new IntentFilter(ACTION_COMPLETE));
+    }
+
+    /**
+     * Makes sure to unregister the BroadcastReceiver when this activity is destroyed
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mFirebaseAuth.removeAuthStateListener(this);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mResponseReceiver);
+    }
+
+
+    /**
+     * Here we can get any response back from our Service and handle the situation properly
+     */
+    private class ResponseReceiver extends BroadcastReceiver {
+
+        private ResponseReceiver() {
+        }
+
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (!intent.getBooleanExtra(EXTRA_GRID_RESULT,false)) {
+                Toast.makeText(context, R.string.error_adding_card, Toast.LENGTH_LONG).show();
+            }
+
+            setProgressBar(false);
+        }
     }
 }

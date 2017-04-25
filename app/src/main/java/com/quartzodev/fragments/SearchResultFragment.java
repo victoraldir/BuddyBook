@@ -48,8 +48,8 @@ public class SearchResultFragment extends Fragment {
     private String mFolderId;
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
 
-    @BindView(R.id.grid_book_progress_bar)
-    ProgressBar mProgressBar;
+//    @BindView(R.id.grid_book_progress_bar)
+//    ProgressBar mProgressBar;
 
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
@@ -62,7 +62,7 @@ public class SearchResultFragment extends Fragment {
 
         ButterKnife.bind(this, rootView);
 
-        mProgressBar = (ProgressBar) rootView.findViewById(R.id.grid_book_progress_bar);
+        //mProgressBar = (ProgressBar) rootView.findViewById(R.id.grid_book_progress_bar);
 
         mAdapter = new BookGridAdapter(getActivity(),new ArrayList<BookApi>(),mFolderId,mListener);
 
@@ -83,7 +83,7 @@ public class SearchResultFragment extends Fragment {
             mSearchTask.cancel();
         }
 
-        mSearchTask = new SearchTask(this);
+        mSearchTask = new SearchTask();
 
         mSearchTask.execute(query);
 
@@ -133,18 +133,18 @@ public class SearchResultFragment extends Fragment {
 
         private final String LOG = SearchTask.class.getSimpleName();
         private boolean mCanceled = false;
-        private RecyclerView recyclerView;
-        private ProgressBar progressBar;
+//        private RecyclerView recyclerView;
+//        private ProgressBar progressBar;
 
-        public SearchTask(SearchResultFragment fragment){
-            this.recyclerView = fragment.mRecyclerView;
-            this.progressBar = fragment.mProgressBar;
+        public SearchTask(){
+//            this.recyclerView = fragment.mRecyclerView;
+//            this.progressBar = fragment.mProgressBar;
         }
 
         @Override
         protected void onPreExecute() {
-            mRecyclerView.setVisibility(View.INVISIBLE);
-            progressBar.setVisibility(View.VISIBLE);
+//            mRecyclerView.setVisibility(View.INVISIBLE);
+//            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -181,8 +181,6 @@ public class SearchResultFragment extends Fragment {
 
             mAdapter.swap(bookApis);
 
-            mProgressBar.setVisibility(View.INVISIBLE);
-            mRecyclerView.setVisibility(View.VISIBLE);
         }
 
         public void cancel() {

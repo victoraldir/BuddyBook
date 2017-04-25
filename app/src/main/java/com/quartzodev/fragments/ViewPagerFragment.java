@@ -42,24 +42,27 @@ public class ViewPagerFragment extends Fragment {
         if(getArguments().containsKey(ARG_USER_ID)){
             mUserId = getArguments().getString(ARG_USER_ID);
         }
+
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadBooksPageView();
+
+        mViewPagerAdapter.notifyDataSetChanged();
     }
 
     private void loadBooksPageView() {
-        mViewPagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), mUserId, getContext());
+        mViewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), mUserId, getContext());
         mViewPager.setAdapter(mViewPagerAdapter);
-        mViewPagerAdapter.notifyDataSetChanged();
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_view_pager, container, false);
 
         ButterKnife.bind(this, rootView);
+
+        loadBooksPageView();
 
         return rootView;
     }
