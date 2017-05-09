@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.quartzodev.api.BookApi;
+import com.quartzodev.api.VolumeInfo;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.task.FetchBookTask;
@@ -103,9 +104,11 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
 
     private void loadBookDetails(BookApi bookApi){
 
-        if(bookApi.getVolumeInfo().getImageLink() != null) {
+        VolumeInfo volumeInfo = bookApi.getVolumeInfo();
+
+        if(volumeInfo != null && bookApi.getVolumeInfo().getImageLink() != null) {
             Glide.with(mContext)
-                    .load(bookApi.getVolumeInfo().getImageLink().getThumbnail())
+                    .load(volumeInfo.getImageLink().getThumbnail())
                     .centerCrop()
                     .placeholder(android.R.drawable.sym_def_app_icon)
                     .error(android.R.drawable.ic_dialog_alert)

@@ -89,7 +89,7 @@ public class DialogUtils {
         final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.signup_input_layout_name);
 
         FolderListFragment folderFragment = (FolderListFragment)
-                fragmentManager.findFragmentById(R.id.fragment);
+                fragmentManager.findFragmentById(R.id.container_nav_header);
 
         final List<Folder> folders = folderFragment.getmFolderList();
 

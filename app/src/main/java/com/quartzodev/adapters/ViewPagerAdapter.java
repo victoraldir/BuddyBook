@@ -26,7 +26,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
 
         mContext = context;
-        mUserId = userId;
+        this.mUserId = userId;
     }
 
     @Override
@@ -41,12 +41,8 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         return NUM_PAGES;
     }
 
-    @Override
-    public int getItemPosition(Object object) {
-        return super.getItemPosition(object);
-    }
 
-    //    @Override
+//    @Override
 //    public int getItemPosition(Object object) {
 //        return POSITION_NONE;
 //    }

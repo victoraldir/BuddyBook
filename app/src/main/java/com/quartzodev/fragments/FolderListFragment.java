@@ -48,6 +48,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
      */
     public FolderListFragment() {
         mFolderList = new ArrayList<>();
+        mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
     }
 
     public void updateFolderListByUserId(String userId){

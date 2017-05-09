@@ -48,13 +48,12 @@ public class ViewPagerFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mViewPagerAdapter.notifyDataSetChanged();
     }
 
     private void loadBooksPageView() {
         mViewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), mUserId, getContext());
         mViewPager.setAdapter(mViewPagerAdapter);
+        mViewPagerAdapter.notifyDataSetChanged();
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

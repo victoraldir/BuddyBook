@@ -41,7 +41,6 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.quartzodev.adapters.SearchResultAdapter;
 import com.quartzodev.api.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
@@ -105,6 +104,8 @@ public class MainActivity extends AppCompatActivity
     private SearchResultFragment mSearchResultFragment;
     private ResponseReceiver mResponseReceiver;
     private SearchView mSearchView;
+
+    private FolderListFragment mRetainedFolderFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,13 +177,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateFolderList(){
-        FolderListFragment folderFragment = (FolderListFragment)
-                getSupportFragmentManager().findFragmentById(R.id.fragment);
+//        FolderListFragment folderFragment = (FolderListFragment)
+//                getSupportFragmentManager().findFragmentById(R.id.container_nav_header);
 
-        if (folderFragment != null) {
-            folderFragment.updateFolderListByUserId(mUser.getUid());
+        if (mRetainedFolderFragment == null) {
+
+            mRetainedFolderFragment = FolderListFragment.newInstance(1);
+
+            FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container_nav_header, mRetainedFolderFragment).commit();
         }
+
+        mRetainedFolderFragment.updateFolderListByUserId(mUser.getUid());
     }
+
+
 
     private void loadBooksPageView() {
 
@@ -193,12 +202,14 @@ public class MainActivity extends AppCompatActivity
             setProgressBar(false);
 
         }else{
+
             ViewPagerFragment newFragment = ViewPagerFragment.newInstance(mUser.getUid());
 
 
-            getSupportFragmentManager().popBackStackImmediate();
+            //getSupportFragmentManager().popBackStackImmediate();
             FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_main_container, newFragment).commit();
+            setProgressBar(false);
             //transaction.addToBackStack(null);
 
             //transaction.commit();
@@ -326,10 +337,10 @@ public class MainActivity extends AppCompatActivity
 
                 mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(),mFolderId);
 
-                getSupportFragmentManager().popBackStackImmediate();
+                //getSupportFragmentManager().popBackStackImmediate();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_main_container, mSearchResultFragment).commit();
-                //transaction.addToBackStack(null);
+                transaction.addToBackStack(null);
 
                 //transaction.commit();
 
@@ -340,7 +351,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 Toast.makeText(mContext,"Search's been closed",Toast.LENGTH_SHORT).show();
 
-                getSupportFragmentManager().popBackStackImmediate();
+                //getSupportFragmentManager().popBackStackImmediate();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_main_container, mCurrentGridFragment).commit();
                 //transaction.addToBackStack(null);
@@ -464,7 +475,9 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(mContext,"Should open details for book id: " + book.getVolumeInfo().getTitle() + " Folder id: " + folderId,Toast.LENGTH_SHORT).show();
 
         FolderListFragment folderFragment = (FolderListFragment)
-                getSupportFragmentManager().findFragmentById(R.id.fragment);
+                getSupportFragmentManager().findFragmentById(R.id.container_nav_header);
+
+        firebaseDatabaseHelper.insertBookSearchHistory(mUser.getUid(),book); //Insert book
 
         Intent it = new Intent(this,DetailActivity.class);
         Bundle bundle = new Bundle();
@@ -481,9 +494,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextSubmit(String query) {
 
-        mSearchResultFragment.executeSearch(query);
-
-        mSearchView.clearFocus();
+        if(query != null && !query.isEmpty()) {
+            mSearchResultFragment.executeSearch(query);
+            mSearchView.clearFocus();
+        }
 
         return true;
 
@@ -492,9 +506,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextChange(String newText) {
 
-        Toast.makeText(mContext,newText,Toast.LENGTH_LONG).show();
-
-        mSearchResultFragment.executeSearch(newText);
+        if(newText != null && !newText.isEmpty()) {
+            mSearchResultFragment.executeSearch(newText);
+        }
 
         return false;
     }

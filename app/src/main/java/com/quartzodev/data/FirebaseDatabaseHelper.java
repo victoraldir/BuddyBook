@@ -28,6 +28,7 @@ public class FirebaseDatabaseHelper {
     private static final String ROOT = "users";
     public static final String REF_POPULAR_FOLDER = "_popularBooks"; //See a better way to maintain popular folder
     public static final String REF_MY_BOOKS_FOLDER = "myBooksFolder";
+    public static final String REF_SEARCH_HISTORY = "search_history"; //See a better way to maintain popular folder
     private static final String REF_FOLDERS = "folders";
 
     private DatabaseReference mDatabaseReference;
@@ -48,15 +49,6 @@ public class FirebaseDatabaseHelper {
     
     public void insertUser(User user){
         mDatabaseReference.child(user.getUid()).setValue(user);
-    }
-
-    public void insertFoldersBooks(String userId, Folder folder){
-        DatabaseReference df = mDatabaseReference.child(userId).push();
-
-        String id = df.getKey();
-
-//        df.setValue(book.id,book);
-
     }
 
     public void updateUserLastActivity(String userId){
@@ -85,6 +77,12 @@ public class FirebaseDatabaseHelper {
 
     }
 
+    public void insertBookSearchHistory(String userId, BookApi book){
+
+        mDatabaseReference.child(userId).child(REF_SEARCH_HISTORY).updateChildren(Collections.singletonMap(book.getId(),(Object) book));
+
+    }
+
     public void fetchMyBooksFolder(String userId, final OnDataSnapshotListener onDataSnapshotListener){
 
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(REF_MY_BOOKS_FOLDER)
@@ -99,9 +97,13 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void findBook(String userId ,String folderId, String bookId, final OnDataSnapshotListener onDataSnapshotListener){
+    public void findBook(String userId ,String folderId, String bookId, final OnDataSnapshotListener onDataSnapshotListener) {
 
-        if(folderId.equals(REF_POPULAR_FOLDER)){
+        if(folderId == null) {
+
+            mDatabaseReference.child(userId).child(REF_SEARCH_HISTORY).child(bookId).addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+
+        }else if(folderId.equals(REF_POPULAR_FOLDER)){
 
             mDatabaseReference.child(REF_POPULAR_FOLDER).child("books").child(bookId)
                     .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));

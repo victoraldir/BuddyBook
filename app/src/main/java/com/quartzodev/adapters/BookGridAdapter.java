@@ -28,7 +28,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
 
     private Context mContext;
-    private List<BookApi> mBookList;
+    private List<BookApi> mBookList = new ArrayList<>();
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
     private String mFolderId;
 

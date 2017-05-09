@@ -135,6 +135,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
 
     @Override
     public void onLoadFinished(Loader<Folder> loader, Folder data) {
+
         mAdapter.swap(data);
         closeProgressBar();
     }
