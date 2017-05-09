@@ -104,23 +104,27 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
 
     private void loadBookDetails(BookApi bookApi){
 
-        VolumeInfo volumeInfo = bookApi.getVolumeInfo();
+        if(bookApi != null) {
 
-        if(volumeInfo != null && bookApi.getVolumeInfo().getImageLink() != null) {
-            Glide.with(mContext)
-                    .load(volumeInfo.getImageLink().getThumbnail())
-                    .centerCrop()
-                    .placeholder(android.R.drawable.sym_def_app_icon)
-                    .error(android.R.drawable.ic_dialog_alert)
-                    .into(mPhoto);
+            VolumeInfo volumeInfo = bookApi.getVolumeInfo();
+
+            if (volumeInfo != null && bookApi.getVolumeInfo().getImageLink() != null) {
+                Glide.with(mContext)
+                        .load(volumeInfo.getImageLink().getThumbnail())
+                        .centerCrop()
+                        .placeholder(android.R.drawable.sym_def_app_icon)
+                        .error(android.R.drawable.ic_dialog_alert)
+                        .into(mPhoto);
+            }
+
+            mTitle.setText(bookApi.getVolumeInfo().getTitle());
+            mAuthor.setText(bookApi.getVolumeInfo().getAuthors().get(0));
+            mDescription.setText(bookApi.getVolumeInfo().getDescription());
+            mPublishedDate.setText(bookApi.getVolumeInfo().getPublishedDate());
+
+            btnBookMark.setOnClickListener(this);
+
         }
-
-        mTitle.setText(bookApi.getVolumeInfo().getTitle());
-        mAuthor.setText(bookApi.getVolumeInfo().getAuthors().get(0));
-        mDescription.setText(bookApi.getVolumeInfo().getDescription());
-        mPublishedDate.setText(bookApi.getVolumeInfo().getPublishedDate());
-
-        btnBookMark.setOnClickListener(this);
     }
 
     @Override

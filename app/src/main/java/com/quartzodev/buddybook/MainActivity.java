@@ -15,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity
     private SearchView mSearchView;
 
     private FolderListFragment mRetainedFolderFragment;
+    ViewPagerFragment mRetainedViewPagerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,12 +205,12 @@ public class MainActivity extends AppCompatActivity
 
         }else{
 
-            ViewPagerFragment newFragment = ViewPagerFragment.newInstance(mUser.getUid());
+            mRetainedViewPagerFragment = ViewPagerFragment.newInstance(mUser.getUid());
 
 
             //getSupportFragmentManager().popBackStackImmediate();
             FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_main_container, newFragment).commit();
+            transaction.replace(R.id.fragment_main_container, mRetainedViewPagerFragment).commit();
             setProgressBar(false);
             //transaction.addToBackStack(null);
 
@@ -297,7 +299,7 @@ public class MainActivity extends AppCompatActivity
 
     private void handleIntent(Intent intent) {
 
-        if (intent.getAction().equals(Intent.ACTION_SEARCH)) {
+        if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_SEARCH)) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             //TODO do my query
             Toast.makeText(mContext, query, Toast.LENGTH_SHORT).show();
@@ -337,12 +339,8 @@ public class MainActivity extends AppCompatActivity
 
                 mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(),mFolderId);
 
-                //getSupportFragmentManager().popBackStackImmediate();
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_main_container, mSearchResultFragment).commit();
-                transaction.addToBackStack(null);
-
-                //transaction.commit();
 
                 return true;
             }
@@ -351,12 +349,12 @@ public class MainActivity extends AppCompatActivity
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 Toast.makeText(mContext,"Search's been closed",Toast.LENGTH_SHORT).show();
 
-                //getSupportFragmentManager().popBackStackImmediate();
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_main_container, mCurrentGridFragment).commit();
-                //transaction.addToBackStack(null);
+                FragmentManager fm = getSupportFragmentManager();
 
-                //transaction.commit();
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.remove(mSearchResultFragment);
+                transaction.replace(R.id.fragment_main_container, ViewPagerFragment.newInstance(mUser.getUid())); //TODO check the best way to get it done.
+                transaction.commit();
 
                 return true;
             }
