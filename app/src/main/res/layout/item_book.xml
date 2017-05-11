@@ -16,7 +16,7 @@
         android:orientation="vertical">
 
         <!--suppress AndroidLintContentDescription -->
-        <ImageView
+        <com.quartzodev.views.DynamicImageView
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

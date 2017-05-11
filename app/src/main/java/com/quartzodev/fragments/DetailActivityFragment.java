@@ -62,7 +62,6 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mBookId = getArguments().getString(ARG_BOOK_ID);
         mFolderId = getArguments().getString(ARG_FOLDER_ID);
         mUserId = getArguments().getString(ARG_USER_ID);
@@ -75,20 +74,15 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
-
         ButterKnife.bind(this,view);
-
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         Toast.makeText(mContext,"Folder list is: " + mFolderListComma,Toast.LENGTH_SHORT).show();
-
         getLoaderManager().initLoader(LOADER_ID_BOOK,null,this).forceLoad();
-
     }
 
     public static DetailActivityFragment newInstance(String userId ,String bookId, String folderId, String folderListId) {
@@ -134,15 +128,12 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
 
     @Override
     public void onLoadFinished(Loader<BookApi> loader, BookApi data) {
-
         mBookSelected = data;
-
         loadBookDetails(mBookSelected);
     }
 
     @Override
     public void onLoaderReset(Loader<BookApi> loader) {
-
     }
 
 

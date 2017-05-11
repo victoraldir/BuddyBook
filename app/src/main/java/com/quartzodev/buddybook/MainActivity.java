@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -80,12 +81,12 @@ public class MainActivity extends AppCompatActivity
     NavigationView mNavigationView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
-    @BindView(R.id.toolbar_results)
-    RecyclerView mRvToobarResults;
-    @BindView(R.id.fragment_main_container)
-    RelativeLayout mContainer;
-    @BindView(R.id.grid_book_progress_bar)
-    ProgressBar mProgressBar;
+//    @BindView(R.id.toolbar_results)
+//    RecyclerView mRvToobarResults;
+//    @BindView(R.id.fragment_main_container)
+//    FrameLayout mContainer;
+//    @BindView(R.id.grid_book_progress_bar)
+//    ProgressBar mProgressBar;
 
 
 
@@ -100,10 +101,10 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mFirebaseAuth;
     private FirebaseDatabaseHelper firebaseDatabaseHelper;
 
-    private Fragment mCurrentGridFragment;
+    //private Fragment mCurrentGridFragment;
     private String mFolderId;
     private SearchResultFragment mSearchResultFragment;
-    private ResponseReceiver mResponseReceiver;
+    //private ResponseReceiver mResponseReceiver;
     private SearchView mSearchView;
 
     private FolderListFragment mRetainedFolderFragment;
@@ -117,11 +118,11 @@ public class MainActivity extends AppCompatActivity
 
         mContext = this;
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mContext);
 
-        mRvToobarResults.setLayoutManager(layoutManager);
+//        mRvToobarResults.setLayoutManager(layoutManager);
 
-        mResponseReceiver = new ResponseReceiver();
+        //mResponseReceiver = new ResponseReceiver();
 
         LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
         mImageViewProfile = (ImageView) linearLayout.findViewById(R.id.main_imageview_user_photo);
@@ -179,8 +180,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateFolderList(){
-//        FolderListFragment folderFragment = (FolderListFragment)
-//                getSupportFragmentManager().findFragmentById(R.id.container_nav_header);
 
         if (mRetainedFolderFragment == null) {
 
@@ -201,7 +200,7 @@ public class MainActivity extends AppCompatActivity
 
         if(fragment instanceof ViewPagerFragment){
 
-            setProgressBar(false);
+//            setProgressBar(false);
 
         }else{
 
@@ -211,7 +210,7 @@ public class MainActivity extends AppCompatActivity
             //getSupportFragmentManager().popBackStackImmediate();
             FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_main_container, mRetainedViewPagerFragment).commit();
-            setProgressBar(false);
+            //setProgressBar(false);
             //transaction.addToBackStack(null);
 
             //transaction.commit();
@@ -220,17 +219,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void setProgressBar(boolean flag){
-
-        if(flag){
-            mProgressBar.setVisibility(View.VISIBLE);
-            mContainer.setVisibility(View.INVISIBLE);
-        }else{
-            mProgressBar.setVisibility(View.INVISIBLE);
-            mContainer.setVisibility(View.VISIBLE);
-        }
-
-    }
+//    private void setProgressBar(boolean flag){
+//
+//        if(flag){
+//            mProgressBar.setVisibility(View.VISIBLE);
+//            mContainer.setVisibility(View.INVISIBLE);
+//        }else{
+//            mProgressBar.setVisibility(View.INVISIBLE);
+//            mContainer.setVisibility(View.VISIBLE);
+//        }
+//
+//    }
 
     private void loadCustomFolder(String folderId) {
 
@@ -239,15 +238,24 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        Fragment newFragment = BookGridFragment.newInstanceCustomFolder(mUser.getUid(),folderId, BookGridFragment.FLAG_CUSTOM_FOLDER);
+        Fragment mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
-        //getSupportFragmentManager().popBackStackImmediate();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_main_container, newFragment).commit();
-        //transaction.addToBackStack(null);
+        if(mCurrentGridFragment  instanceof  BookGridFragment){
 
-        //transaction.commit();
+            ((BookGridFragment) mCurrentGridFragment).updateContent(mUser.getUid(),folderId, BookGridFragment.FLAG_CUSTOM_FOLDER);
 
+        }else {
+
+            Fragment newFragment = BookGridFragment.newInstanceCustomFolder(mUser.getUid(),folderId, BookGridFragment.FLAG_CUSTOM_FOLDER);
+
+            //getSupportFragmentManager().popBackStackImmediate();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_main_container, newFragment).commit();
+            //transaction.addToBackStack(null);
+
+            //transaction.commit();
+
+        }
     }
 
     @Override
@@ -335,7 +343,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onMenuItemActionExpand(MenuItem item) {
                 Toast.makeText(mContext,"Search view's been clicked",Toast.LENGTH_SHORT).show();
 
-                mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+                //mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
                 mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(),mFolderId);
 
@@ -493,6 +501,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onQueryTextSubmit(String query) {
 
         if(query != null && !query.isEmpty()) {
+//            setProgressBar(true);
             mSearchResultFragment.executeSearch(query);
             mSearchView.clearFocus();
         }
@@ -505,6 +514,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onQueryTextChange(String newText) {
 
         if(newText != null && !newText.isEmpty()) {
+//            setProgressBar(true);
             mSearchResultFragment.executeSearch(newText);
         }
 
@@ -515,8 +525,8 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         mFirebaseAuth.addAuthStateListener(this);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mResponseReceiver,
-                new IntentFilter(ACTION_COMPLETE));
+//        LocalBroadcastManager.getInstance(this).registerReceiver(mResponseReceiver,
+//                new IntentFilter(ACTION_COMPLETE));
     }
 
     /**
@@ -526,27 +536,27 @@ public class MainActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         mFirebaseAuth.removeAuthStateListener(this);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mResponseReceiver);
+        //LocalBroadcastManager.getInstance(this).unregisterReceiver(mResponseReceiver);
     }
 
 
     /**
      * Here we can get any response back from our Service and handle the situation properly
      */
-    private class ResponseReceiver extends BroadcastReceiver {
-
-        private ResponseReceiver() {
-        }
-
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            if (!intent.getBooleanExtra(EXTRA_GRID_RESULT,false)) {
-                Toast.makeText(context, R.string.error_adding_card, Toast.LENGTH_LONG).show();
-            }
-
-            setProgressBar(false);
-        }
-    }
+//    private class ResponseReceiver extends BroadcastReceiver {
+//
+//        private ResponseReceiver() {
+//        }
+//
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//
+//            if (!intent.getBooleanExtra(EXTRA_GRID_RESULT,false)) {
+//                Toast.makeText(context, R.string.error_adding_card, Toast.LENGTH_LONG).show();
+//            }
+//
+//            //setProgressBar(false);
+//        }
+//    }
 }

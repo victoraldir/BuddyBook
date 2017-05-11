@@ -49,11 +49,17 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     }
 
     public void swap(Folder folder){
+        clearList();
         if(folder != null && folder.getBooks() != null) {
             this.mBookList = new ArrayList<>(folder.getBooks().values());
-            notifyDataSetChanged();
         }
+        notifyDataSetChanged();
     }
+
+    private void clearList(){
+        this.mBookList.clear();
+    }
+
 
     public void swap(List<BookApi> bookApiList){
         mBookList.clear();

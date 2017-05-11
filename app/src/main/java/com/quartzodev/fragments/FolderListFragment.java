@@ -119,6 +119,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
@@ -161,14 +162,16 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-        if(mFolderList!= null && dataSnapshot.getValue() != null){
-            Folder folder = dataSnapshot.getValue(Folder.class);
+        if(isAdded()) {
+            if (mFolderList != null && dataSnapshot.getValue() != null) {
+                Folder folder = dataSnapshot.getValue(Folder.class);
 
-            if(!mFolderList.contains(folder) && !folder.getDescription().equals(getString(R.string.tab_my_books))) {
-                mFolderList.add(folder);
-                myFolderRecyclerViewAdapter.swap(mFolderList);
+                if (!mFolderList.contains(folder) && !folder.getDescription().equals(getString(R.string.tab_my_books))) {
+                    mFolderList.add(folder);
+                    myFolderRecyclerViewAdapter.swap(mFolderList);
+                }
+
             }
-
         }
 
     }

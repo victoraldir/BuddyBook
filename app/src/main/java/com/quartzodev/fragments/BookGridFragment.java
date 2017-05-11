@@ -41,7 +41,6 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
 
     private static final String TAG = BookGridFragment.class.getSimpleName();
 
-    private static final int LOADER_ID_LIST_BOOKS = 1;
     private static final String ARG_POSITION_ID = "mFlag";
     private static final String ARG_USER_ID = "mUserId";
     private static final String ARG_FOLDER_ID = "mFolderId";
@@ -50,13 +49,10 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     public static final int FLAG_TOP_BOOKS_FOLDER = 0;
     public static final int FLAG_CUSTOM_FOLDER = 3;
 
-
-
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
-
-//    @BindView(R.id.grid_book_progress_bar)
-//    ProgressBar mProgressBar;
+    @BindView(R.id.grid_book_progress_bar)
+    ProgressBar mProgressBar;
 
     private BookGridAdapter mAdapter;
     private String mUserId;
@@ -72,6 +68,14 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         BookGridFragment fragment = new BookGridFragment();
         fragment.setArguments(arguments);
         return fragment;
+    }
+
+    public void updateContent(String userId, String folderId, int flag){
+        mUserId = userId;
+        mFolderId = folderId;
+        mFlag = flag;
+        getActivity().getSupportLoaderManager().destroyLoader(mFlag);
+        getActivity().getSupportLoaderManager().initLoader(mFlag,null,this);
     }
 
     @Override
@@ -95,7 +99,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(LOADER_ID_LIST_BOOKS,null,this).forceLoad();
+        getActivity().getSupportLoaderManager().initLoader(mFlag,null,this);
     }
 
     @Nullable
@@ -119,6 +123,8 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public Loader<Folder> onCreateLoader(int id, Bundle args) {
 
+        setLoading(true);
+
         FetchFolderTask task = null;
 
         //TODO create constants here!
@@ -130,23 +136,31 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
             task = new FetchFolderTask(mUserId, mFolderId, getActivity(), FetchFolderTask.FETCH_CUSTOM_FOLDER);
         }
 
+        task.forceLoad();
+
         return task;
+    }
+
+    public void setLoading(boolean flag){
+        ViewGroup container = (ViewGroup)this.getView();
+
+        if (container != null) {
+            if(flag) {
+                container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.VISIBLE);
+                container.findViewById(R.id.recycler_view_books).setVisibility(View.INVISIBLE);
+            }else{
+                container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.INVISIBLE);
+                container.findViewById(R.id.recycler_view_books).setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Folder> loader, Folder data) {
 
         mAdapter.swap(data);
-        closeProgressBar();
-    }
+        setLoading(false);
 
-    private void closeProgressBar(){
-        Intent localIntent = new Intent(MainActivity.ACTION_COMPLETE);
-
-        Log.d(TAG, "Inserted new card");
-        localIntent.putExtra(MainActivity.EXTRA_GRID_RESULT, true);
-
-        LocalBroadcastManager.getInstance(getContext()).sendBroadcast(localIntent);
     }
 
     @Override
@@ -163,6 +177,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
             throw new RuntimeException(context.toString()
                     + " must implement OnGridFragmentInteractionListener");
         }
+
     }
 
     @Override
@@ -170,7 +185,6 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         super.onDetach();
         mListener = null;
     }
-
 
     public interface OnGridFragmentInteractionListener {
 
