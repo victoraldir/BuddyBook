@@ -51,8 +51,8 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
 
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
-    @BindView(R.id.grid_book_progress_bar)
-    ProgressBar mProgressBar;
+//    @BindView(R.id.grid_book_progress_bar)
+//    ProgressBar mProgressBar;
 
     private BookGridAdapter mAdapter;
     private String mUserId;

@@ -6,11 +6,10 @@ package com.quartzodev.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 public class DynamicImageView extends android.support.v7.widget.AppCompatImageView {
 
-    private static final float ASPECT_RATIO = 1.3f;
+    private static final float ASPECT_RATIO = 1.5f;
 
     public DynamicImageView(Context context) {
         super(context);

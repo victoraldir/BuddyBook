@@ -76,6 +76,11 @@ public class SearchResultFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setLoading(false);
+    }
 
     public void executeSearch(String query){
 
@@ -86,6 +91,8 @@ public class SearchResultFragment extends Fragment {
         mSearchTask = new SearchTask();
 
         mSearchTask.execute(query);
+
+        setLoading(true);
 
     }
 
@@ -111,6 +118,19 @@ public class SearchResultFragment extends Fragment {
     }
 
 
+    public void setLoading(boolean flag){
+        ViewGroup container = (ViewGroup)this.getView();
+
+        if (container != null) {
+            if(flag) {
+                container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.VISIBLE);
+                container.findViewById(R.id.recycler_view_books).setVisibility(View.INVISIBLE);
+            }else{
+                container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.INVISIBLE);
+                container.findViewById(R.id.recycler_view_books).setVisibility(View.VISIBLE);
+            }
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -145,30 +165,35 @@ public class SearchResultFragment extends Fragment {
         protected void onPreExecute() {
 //            mRecyclerView.setVisibility(View.INVISIBLE);
 //            progressBar.setVisibility(View.VISIBLE);
+
         }
 
         @Override
         protected void onCancelled() {
 
-            Log.d(LOG,"Thread ID: " + getId() + " cancelled");
-
-            super.onCancelled();
+            if(!isCancelled()) {
+                Log.d(LOG, "Thread ID: " + getId() + " cancelled");
+                setLoading(false);
+                super.onCancelled();
+            }
         }
 
         @Override
         protected List<BookApi> doInBackground(String... params) {
 
-            Log.d(LOG, "Thread ID: " + getId() + ". Running search query for text: " + params[0]);
+            if(!isCancelled()) {
+                Log.d(LOG, "Thread ID: " + getId() + ". Running search query for text: " + params[0]);
 
-            try {
-                Response<BookResponse> bookResponseResponse = APIService.getInstance().getBooks(params[0]).execute();
+                try {
+                    Response<BookResponse> bookResponseResponse = APIService.getInstance().getBooks(params[0]).execute();
 
-                if(bookResponseResponse.body() != null && !mCanceled){
-                    return bookResponseResponse.body().getItems();
+                    if (bookResponseResponse.body() != null && !mCanceled) {
+                        return bookResponseResponse.body().getItems();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
 
             return null;
@@ -179,7 +204,10 @@ public class SearchResultFragment extends Fragment {
 
             Log.d(LOG,"Thread ID: " + getId() + ". Completed");
 
-            mAdapter.swap(bookApis);
+            if(!isCancelled()){
+                setLoading(false);
+                mAdapter.swap(bookApis);
+            }
 
         }
 
