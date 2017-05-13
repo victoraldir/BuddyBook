@@ -14,6 +14,7 @@ public class DetailActivity extends AppCompatActivity {
     public static final String ARG_FOLDER_ID = "folderId";
     public static final String ARG_USER_ID = "userId";
     public static final String ARG_FOLDER_LIST_ID = "folderListId";
+    public static final String ARG_BOOK_JSON = "bookJson";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +32,9 @@ public class DetailActivity extends AppCompatActivity {
         String folderId = getIntent().getExtras().getString(ARG_FOLDER_ID);
         String userId = getIntent().getExtras().getString(ARG_USER_ID);
         String folderListId = getIntent().getExtras().getString(ARG_FOLDER_LIST_ID);
+        String bookJson = getIntent().getExtras().getString(ARG_BOOK_JSON);
 
-        DetailActivityFragment newFragment = DetailActivityFragment.newInstance(userId, bookId, folderId, folderListId);
+        DetailActivityFragment newFragment = DetailActivityFragment.newInstance(userId, bookId, folderId, folderListId,bookJson);
 
         getSupportFragmentManager().popBackStackImmediate();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

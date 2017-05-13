@@ -31,5 +31,23 @@
     <string name="dialog_btn_cancel">Cancel</string>
     <string name="title_activity_detail">DetailActivity</string>
     <string name="error_adding_card">Error loading fragments</string>
+    <string name="simple_scanner_activity">Bar code reader</string>
+
+    <!-- TODO barcode stuff. Review them! -->
+    <string name="ok">OK</string>
+    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+    <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
+    <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
+    <string name="title_activity_main">Barcode Reader Sample</string>
+    <string name="barcode_header">Click &quot;Read Barcode&quot; to read a barcode</string>
+    <string name="read_barcode">Read Barcode</string>
+    <string name="auto_focus">Auto Focus</string>
+    <string name="use_flash">Use Flash</string>
+    <string name="barcode_success">Barcode read successfully</string>
+    <string name="barcode_failure">No barcode captured</string>
+    <string name="barcode_error">"Error reading barcode: %1$s"</string>
+    <string name="activity_title">Read Barcode</string>
+    <string name="point_bar_code">Point to a bar code. Pinch/Stretch to zoom</string>
+
 
 </resources>

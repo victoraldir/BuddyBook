@@ -40,9 +40,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.gson.Gson;
 import com.quartzodev.api.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
@@ -52,6 +55,7 @@ import com.quartzodev.fragments.FolderListFragment;
 import com.quartzodev.fragments.SearchResultFragment;
 import com.quartzodev.fragments.ViewPagerFragment;
 import com.quartzodev.provider.SuggestionProvider;
+import com.quartzodev.ui.BarcodeCaptureActivity;
 import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.widgets.CircleTransform;
 import java.util.Arrays;
@@ -64,7 +68,7 @@ public class MainActivity extends AppCompatActivity
         FirebaseAuth.AuthStateListener,
         FirebaseDatabaseHelper.OnDataSnapshotListener,
         BookGridFragment.OnGridFragmentInteractionListener,
-        SearchView.OnQueryTextListener{
+        SearchView.OnQueryTextListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -73,6 +77,7 @@ public class MainActivity extends AppCompatActivity
 
 
     private static final int RC_SIGN_IN = 1;
+    private static final int RC_BARCODE_CAPTURE = 2;
     private static final String KEY_PARCELABLE_USER = "userKey";
 
     @BindView(R.id.main_coordinator)
@@ -87,7 +92,6 @@ public class MainActivity extends AppCompatActivity
 //    FrameLayout mContainer;
 //    @BindView(R.id.grid_book_progress_bar)
 //    ProgressBar mProgressBar;
-
 
 
     private ImageView mImageViewProfile;
@@ -140,6 +144,14 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // launch barcode activity.
+                Intent intent = new Intent(mContext, BarcodeCaptureActivity.class);
+                intent.putExtra(BarcodeCaptureActivity.AutoFocus, true); //Automatic focus
+                intent.putExtra(BarcodeCaptureActivity.UseFlash, false); //Flash false
+
+                startActivityForResult(intent, RC_BARCODE_CAPTURE);
+
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -152,6 +164,12 @@ public class MainActivity extends AppCompatActivity
 
         mNavigationView.setNavigationItemSelectedListener(this);
 
+        getSupportFragmentManager().addOnBackStackChangedListener(
+                new FragmentManager.OnBackStackChangedListener() {
+                    public void onBackStackChanged() {
+
+                    }
+                });
     }
 
     public void onSignedIn(final FirebaseUser firebaseUser) {
@@ -159,11 +177,12 @@ public class MainActivity extends AppCompatActivity
         if (mUser == null) {
             mUser = User.setupUserFirstTime(firebaseUser, mContext);
             firebaseDatabaseHelper.fetchUserById(mUser.getUid(), this);
+            updateFolderList();
+            loadBooksPageView();
+        } else {
+            loadProfileOnDrawer();
+            updateFolderList();
         }
-
-        loadProfileOnDrawer();
-        updateFolderList();
-        loadBooksPageView();
     }
 
     private void loadProfileOnDrawer() {
@@ -179,36 +198,35 @@ public class MainActivity extends AppCompatActivity
                 .into(mImageViewProfile);
     }
 
-    private void updateFolderList(){
+    private void updateFolderList() {
 
         if (mRetainedFolderFragment == null) {
 
-            mRetainedFolderFragment = FolderListFragment.newInstance(1);
+            mRetainedFolderFragment = FolderListFragment.newInstance(mUser.getUid());
 
-            FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.container_nav_header, mRetainedFolderFragment).commit();
         }
 
-        mRetainedFolderFragment.updateFolderListByUserId(mUser.getUid());
+        //mRetainedFolderFragment.updateFolderListByUserId(mUser.getUid());
     }
-
 
 
     private void loadBooksPageView() {
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
-        if(fragment instanceof ViewPagerFragment){
+        if (fragment instanceof ViewPagerFragment) {
 
 //            setProgressBar(false);
 
-        }else{
+        } else {
 
             mRetainedViewPagerFragment = ViewPagerFragment.newInstance(mUser.getUid());
 
 
             //getSupportFragmentManager().popBackStackImmediate();
-            FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_main_container, mRetainedViewPagerFragment).commit();
             //setProgressBar(false);
             //transaction.addToBackStack(null);
@@ -233,27 +251,26 @@ public class MainActivity extends AppCompatActivity
 
     private void loadCustomFolder(String folderId) {
 
-        if(folderId == null){ //Load My Books folder
+        if (folderId == null) { //Load My Books folder
             loadBooksPageView();
             return;
         }
 
         Fragment mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
-        if(mCurrentGridFragment  instanceof  BookGridFragment){
+        if (mCurrentGridFragment instanceof BookGridFragment) {
 
-            ((BookGridFragment) mCurrentGridFragment).updateContent(mUser.getUid(),folderId, BookGridFragment.FLAG_CUSTOM_FOLDER);
+            ((BookGridFragment) mCurrentGridFragment).updateContent(mUser.getUid(), folderId, BookGridFragment.FLAG_CUSTOM_FOLDER);
 
-        }else {
+        } else {
 
-            Fragment newFragment = BookGridFragment.newInstanceCustomFolder(mUser.getUid(),folderId, BookGridFragment.FLAG_CUSTOM_FOLDER);
+            Fragment newFragment = BookGridFragment.newInstanceCustomFolder(mUser.getUid(), folderId, BookGridFragment.FLAG_CUSTOM_FOLDER);
 
             //getSupportFragmentManager().popBackStackImmediate();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_main_container, newFragment).commit();
-            //transaction.addToBackStack(null);
-
-            //transaction.commit();
+            transaction.replace(R.id.fragment_main_container, newFragment);
+            transaction.addToBackStack(folderId);
+            transaction.commit();
 
         }
     }
@@ -264,8 +281,26 @@ public class MainActivity extends AppCompatActivity
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_CANCELED) finish();
+        } else if (requestCode == RC_BARCODE_CAPTURE) {
+            if (requestCode == RC_BARCODE_CAPTURE) {
+                if (resultCode == CommonStatusCodes.SUCCESS) {
+                    if (data != null) {
+                        Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                        Log.d(TAG, "Barcode read: " + barcode.displayValue);
+
+
+
+                    } else {
+                        Log.d(TAG, "No barcode captured, intent data is null");
+                    }
+                }
+
+
+            }
         }
     }
+
+
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
@@ -315,6 +350,11 @@ public class MainActivity extends AppCompatActivity
             SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
                     SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
             suggestions.saveRecentQuery(query, null);
+
+            mSearchResultFragment.executeSearch(query);
+            mSearchView.clearFocus();
+
+            mSearchView.setQuery(query,true);
         }
 
     }
@@ -334,6 +374,21 @@ public class MainActivity extends AppCompatActivity
         // Retrieve the SearchView and plug it into SearchManager
         //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         mSearchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+
+        mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+
+                return false;
+            }
+        });
+
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
 
         mSearchView.setOnQueryTextListener(this);
@@ -349,6 +404,8 @@ public class MainActivity extends AppCompatActivity
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_main_container, mSearchResultFragment).commit();
+
+                mSearchView.requestFocus();
 
                 return true;
             }
@@ -483,6 +540,8 @@ public class MainActivity extends AppCompatActivity
         FolderListFragment folderFragment = (FolderListFragment)
                 getSupportFragmentManager().findFragmentById(R.id.container_nav_header);
 
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+
         firebaseDatabaseHelper.insertBookSearchHistory(mUser.getUid(),book); //Insert book
 
         Intent it = new Intent(this,DetailActivity.class);
@@ -491,6 +550,11 @@ public class MainActivity extends AppCompatActivity
         bundle.putString(DetailActivity.ARG_FOLDER_ID, folderId);
         bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
         bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, folderFragment.getmFolderListCommaSeparated());
+
+        //if(currentFragment instanceof  SearchResultFragment){
+        Gson gson = new Gson();
+        bundle.putString(DetailActivity.ARG_BOOK_JSON, gson.toJson(book));
+        //}
 
         it.putExtras(bundle);
         startActivity(it);
@@ -502,6 +566,11 @@ public class MainActivity extends AppCompatActivity
 
         if(query != null && !query.isEmpty()) {
 //            setProgressBar(true);
+
+            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                    SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
+            suggestions.saveRecentQuery(query, null);
+
             mSearchResultFragment.executeSearch(query);
             mSearchView.clearFocus();
         }

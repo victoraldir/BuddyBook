@@ -38,6 +38,7 @@ public class FirebaseDatabaseHelper {
 
     private FirebaseDatabaseHelper(){
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseDatabase.setPersistenceEnabled(true);
         mDatabaseReference = mFirebaseDatabase.getReference().child(ROOT);
     }
 

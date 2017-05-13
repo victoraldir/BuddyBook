@@ -2,6 +2,7 @@ package com.quartzodev.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,14 +34,17 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
 
     private static final String TAG = FolderListFragment.class.getSimpleName();
 
+    private final String KEY_USER_ID = "userId";
+
     // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
+    private static final String ARG_USER_ID = "user-id";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private FolderListAdapter myFolderRecyclerViewAdapter;
     private List<Folder> mFolderList;
+    private String mUserId;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -51,16 +55,30 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
     }
 
-    public void updateFolderListByUserId(String userId){
-        mFirebaseDatabaseHelper.fetchFolders(userId,this,this);
+//    public void updateFolderListByUserId(String userId){
+//        mUserId = userId;
+//        mFirebaseDatabaseHelper.fetchFolders(userId,this,this);
+//    }
+
+    public void updateFolderListByUserId(){
+        mFirebaseDatabaseHelper.fetchFolders(mUserId,this,this);
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        outState.putString(KEY_USER_ID,mUserId);
+        super.onSaveInstanceState(outState);
+    }
+
+
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static FolderListFragment newInstance(int columnCount) {
+    public static FolderListFragment newInstance(String userId) {
         FolderListFragment fragment = new FolderListFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
+        args.putString(ARG_USER_ID, userId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,12 +87,23 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if(savedInstanceState != null && savedInstanceState.containsKey(KEY_USER_ID)){
+            mUserId = savedInstanceState.getString(KEY_USER_ID);
+//            updateFolderListByUserId(mUserId);
+        }
+
         if(mFirebaseDatabaseHelper == null)
             mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
 
         if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            mUserId = getArguments().getString(ARG_USER_ID);
         }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mFirebaseDatabaseHelper.fetchFolders(mUserId,this,this);
     }
 
     @Override
