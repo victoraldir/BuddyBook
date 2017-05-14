@@ -25,6 +25,7 @@ import com.quartzodev.api.BookResponse;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Folder;
 import com.quartzodev.task.FetchFolderTask;
+import com.quartzodev.task.SearchTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,14 +39,22 @@ import retrofit2.Response;
  * Created by victoraldir on 24/03/2017.
  */
 
-public class SearchResultFragment extends Fragment {
+public class SearchResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<BookApi>>{
+
+    private static final int LOADER_ID_SEARCH = 2;
 
     private static final String ARG_FOLDER_ID = "mFolderId";
     private static final String ARG_USER_ID = "mUserId";
+    private static final String ARG_ISBN = "mIsbn";
 
-    private SearchTask mSearchTask;
+    private static final String ARG_QUERY = "query";
+    private static final String ARG_MAX_RESULT = "maxResult";
+
+    //private SearchTask mSearchTask;
     private BookGridAdapter mAdapter;
     private String mFolderId;
+    private String mISBN;
+
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
 
 //    @BindView(R.id.grid_book_progress_bar)
@@ -53,6 +62,8 @@ public class SearchResultFragment extends Fragment {
 
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
+
+    private LoaderManager mLoadManager;
 
     @Nullable
     @Override
@@ -73,34 +84,83 @@ public class SearchResultFragment extends Fragment {
                 new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(sglm);
 
+        if(getArguments().containsKey(ARG_ISBN)){
+            mISBN = getArguments().getString(ARG_ISBN);
+        }
+
         return rootView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setLoading(false);
+
+        mLoadManager = getLoaderManager();
+        mLoadManager.initLoader(LOADER_ID_SEARCH,null,this);
+
+//        if(mISBN != null){
+//
+//            executeSearch(mISBN,1);
+//
+//        }else{
+//            //setLoading(false);
+//        }
     }
 
-    public void executeSearch(String query){
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mLoadManager = getLoaderManager();
+    }
 
-        if( mSearchTask != null ) {
-            mSearchTask.cancel();
+    public void executeSearch(String query, Integer maxResult){
+
+//        if( mSearchTask != null ) {
+//            mSearchTask.cancel();
+//        }
+//
+//        mSearchTask = new SearchTask();
+//
+//        if(maxResult == null){
+//            mSearchTask.execute(query,null);
+//        }else{
+//            mSearchTask.execute(query,maxResult.toString());
+//        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString(ARG_QUERY,query);
+        if(maxResult != null) {
+            bundle.putInt(ARG_MAX_RESULT, maxResult);
         }
 
-        mSearchTask = new SearchTask();
+        if(mLoadManager.hasRunningLoaders()) {
 
-        mSearchTask.execute(query);
+            if(mLoadManager.getLoader(LOADER_ID_SEARCH) != null)
+                mLoadManager.getLoader(LOADER_ID_SEARCH).cancelLoad();
 
-        setLoading(true);
+            mLoadManager.restartLoader(LOADER_ID_SEARCH, bundle, this);
+
+        }else{
+            Loader l = mLoadManager.getLoader(LOADER_ID_SEARCH);
+            if(l == null){
+                mLoadManager.initLoader(LOADER_ID_SEARCH, bundle, this);
+            }else{
+                mLoadManager.restartLoader(LOADER_ID_SEARCH, bundle, this);
+            }
+
+        }
+
+        //setLoading(true);
 
     }
 
-    public static SearchResultFragment newInstance(String userId, String folderId) {
+    //TODO Stop request when rotating
+    public static SearchResultFragment newInstance(String userId, String folderId, String isbn) {
 
         Bundle arguments = new Bundle();
         arguments.putString(ARG_USER_ID, userId);
         arguments.putString(ARG_FOLDER_ID, folderId);
+        arguments.putString(ARG_ISBN, isbn);
         SearchResultFragment fragment = new SearchResultFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -149,71 +209,117 @@ public class SearchResultFragment extends Fragment {
         mListener = null;
     }
 
-    public class SearchTask extends AsyncTask<String,Integer,List<BookApi>> {
+    @Override
+    public Loader<List<BookApi>> onCreateLoader(int id, Bundle args) {
+        setLoading(true);
 
-        private final String LOG = SearchTask.class.getSimpleName();
-        private boolean mCanceled = false;
-//        private RecyclerView recyclerView;
-//        private ProgressBar progressBar;
+        if(args != null && args.containsKey(ARG_QUERY)){
 
-        public SearchTask(){
-//            this.recyclerView = fragment.mRecyclerView;
-//            this.progressBar = fragment.mProgressBar;
-        }
+            if(args.containsKey(ARG_MAX_RESULT)){
 
-        @Override
-        protected void onPreExecute() {
-//            mRecyclerView.setVisibility(View.INVISIBLE);
-//            progressBar.setVisibility(View.VISIBLE);
+                return new SearchTask(getContext(),
+                        "",
+                        null);
 
-        }
-
-        @Override
-        protected void onCancelled() {
-
-            if(!isCancelled()) {
-                Log.d(LOG, "Thread ID: " + getId() + " cancelled");
-                setLoading(false);
-                super.onCancelled();
+            }else{
+                return new SearchTask(getContext(),
+                        args.getString(ARG_QUERY),
+                        args.getInt(ARG_MAX_RESULT));
             }
         }
 
-        @Override
-        protected List<BookApi> doInBackground(String... params) {
-
-            if(!isCancelled()) {
-                Log.d(LOG, "Thread ID: " + getId() + ". Running search query for text: " + params[0]);
-
-                try {
-                    Response<BookResponse> bookResponseResponse = APIService.getInstance().getBooks(params[0]).execute();
-
-                    if (bookResponseResponse.body() != null && !mCanceled) {
-                        return bookResponseResponse.body().getItems();
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(List<BookApi> bookApis) {
-
-            Log.d(LOG,"Thread ID: " + getId() + ". Completed");
-
-            if(!isCancelled()){
-                setLoading(false);
-                mAdapter.swap(bookApis);
-            }
-
-        }
-
-        public void cancel() {
-            mCanceled = true;
-        }
+        return new SearchTask(getContext(),
+                "",
+                null);
     }
+
+    @Override
+    public void onLoadFinished(Loader<List<BookApi>> loader, List<BookApi> data) {
+        setLoading(false);
+        mAdapter.swap(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<BookApi>> loader) {
+
+    }
+
+//    public class SearchTask extends AsyncTask<String,Integer,List<BookApi>> {
+//
+//        private final String LOG = SearchTask.class.getSimpleName();
+//        private boolean mCanceled = false;
+////        private RecyclerView recyclerView;
+////        private ProgressBar progressBar;
+//
+//        public SearchTask(){
+////            this.recyclerView = fragment.mRecyclerView;
+////            this.progressBar = fragment.mProgressBar;
+//        }
+//
+//        @Override
+//        protected void onPreExecute() {
+////            mRecyclerView.setVisibility(View.INVISIBLE);
+////            progressBar.setVisibility(View.VISIBLE);
+//
+//        }
+//
+//        @Override
+//        protected void onCancelled() {
+//
+//            if(!isCancelled()) {
+//                Log.d(LOG, "Thread ID: " + getId() + " cancelled");
+//                //setLoading(false);
+//                super.onCancelled();
+//            }
+//        }
+//
+//        @Override
+//        protected List<BookApi> doInBackground(String... params) {
+//
+//            if(!isCancelled()) {
+//                Log.d(LOG, "Thread ID: " + getId() + ". Running search query for text: " + params[0]);
+//
+//                try {
+//
+//                    Response<BookResponse> bookResponseResponse;
+//
+//                    //Has max results limit
+//                    if(params[1] != null && !params[1].isEmpty()){
+//                        bookResponseResponse = APIService.getInstance()
+//                                .getBooksMaxResult(params[0],Integer.parseInt(params[1]))
+//                                .execute();
+//                    }else{
+//                        bookResponseResponse = APIService.getInstance().getBooks(params[0]).execute();
+//                    }
+//
+//
+//                    if (bookResponseResponse.body() != null && !mCanceled) {
+//                        return bookResponseResponse.body().getItems();
+//                    }
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(List<BookApi> bookApis) {
+//
+//            Log.d(LOG,"Thread ID: " + getId() + ". Completed");
+//
+//            if(!isCancelled()){
+//                //setLoading(false);
+//                mAdapter.swap(bookApis);
+//            }
+//
+//        }
+//
+//        public void cancel() {
+//            mCanceled = true;
+//        }
+//    }
 
 }

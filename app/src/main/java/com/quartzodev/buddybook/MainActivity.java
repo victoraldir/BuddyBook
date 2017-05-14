@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity
     private static final int RC_SIGN_IN = 1;
     private static final int RC_BARCODE_CAPTURE = 2;
     private static final String KEY_PARCELABLE_USER = "userKey";
+    private static final String KEY_CURRENT_QUERY = "queryKey";
 
     @BindView(R.id.main_coordinator)
     CoordinatorLayout mCoordinatorLayout;
@@ -113,6 +114,7 @@ public class MainActivity extends AppCompatActivity
 
     private FolderListFragment mRetainedFolderFragment;
     ViewPagerFragment mRetainedViewPagerFragment;
+    private String mCurrQuery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +172,8 @@ public class MainActivity extends AppCompatActivity
 
                     }
                 });
+
+
     }
 
     public void onSignedIn(final FirebaseUser firebaseUser) {
@@ -288,7 +292,12 @@ public class MainActivity extends AppCompatActivity
                         Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                         Log.d(TAG, "Barcode read: " + barcode.displayValue);
 
+                        Fragment searchFragment = SearchResultFragment.newInstance(mUser.getUid(),mFolderId,barcode.displayValue);
 
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_main_container, searchFragment).commit();
+
+                        //mSearchView.requestFocus();
 
                     } else {
                         Log.d(TAG, "No barcode captured, intent data is null");
@@ -300,19 +309,27 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState.containsKey(KEY_PARCELABLE_USER)) {
             mUser = (User) savedInstanceState.get(KEY_PARCELABLE_USER);
         }
+
+        if(savedInstanceState.containsKey(KEY_CURRENT_QUERY)){
+            mCurrQuery = savedInstanceState.getString(KEY_CURRENT_QUERY);
+        }
+
         super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(KEY_PARCELABLE_USER, mUser);
+
+        if(mSearchView.getQuery() != null && mSearchView.isEnabled()){
+            outState.putCharSequence(KEY_CURRENT_QUERY,mSearchView.getQuery().toString());
+        }
+
 
         super.onSaveInstanceState(outState);
     }
@@ -351,7 +368,7 @@ public class MainActivity extends AppCompatActivity
                     SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
             suggestions.saveRecentQuery(query, null);
 
-            mSearchResultFragment.executeSearch(query);
+            mSearchResultFragment.executeSearch(query,null);
             mSearchView.clearFocus();
 
             mSearchView.setQuery(query,true);
@@ -389,6 +406,12 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        if(mCurrQuery != null){
+            //TODO open searchView programaticaly
+            mSearchView.requestFocus();
+            mSearchView.setQuery(mCurrQuery,true);
+        }
+
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
 
         mSearchView.setOnQueryTextListener(this);
@@ -400,8 +423,10 @@ public class MainActivity extends AppCompatActivity
 
                 //mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
-                mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(),mFolderId);
+                mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(),mFolderId,null);
 
+
+                mSearchResultFragment.setRetainInstance(true);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_main_container, mSearchResultFragment).commit();
 
@@ -571,7 +596,7 @@ public class MainActivity extends AppCompatActivity
                     SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
             suggestions.saveRecentQuery(query, null);
 
-            mSearchResultFragment.executeSearch(query);
+            mSearchResultFragment.executeSearch(query,null);
             mSearchView.clearFocus();
         }
 
@@ -584,7 +609,7 @@ public class MainActivity extends AppCompatActivity
 
         if(newText != null && !newText.isEmpty()) {
 //            setProgressBar(true);
-            mSearchResultFragment.executeSearch(newText);
+            mSearchResultFragment.executeSearch(newText,null);
         }
 
         return false;
