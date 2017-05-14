@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -57,6 +59,7 @@ import com.quartzodev.fragments.ViewPagerFragment;
 import com.quartzodev.provider.SuggestionProvider;
 import com.quartzodev.ui.BarcodeCaptureActivity;
 import com.quartzodev.utils.DialogUtils;
+import com.quartzodev.views.DynamicImageView;
 import com.quartzodev.widgets.CircleTransform;
 import java.util.Arrays;
 import butterknife.BindView;
@@ -183,6 +186,7 @@ public class MainActivity extends AppCompatActivity
             firebaseDatabaseHelper.fetchUserById(mUser.getUid(), this);
             updateFolderList();
             loadBooksPageView();
+            loadProfileOnDrawer();
         } else {
             loadProfileOnDrawer();
             updateFolderList();
@@ -326,7 +330,7 @@ public class MainActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(KEY_PARCELABLE_USER, mUser);
 
-        if(mSearchView.getQuery() != null && mSearchView.isEnabled()){
+        if(mSearchView != null && mSearchView.getQuery() != null && mSearchView.isEnabled()){
             outState.putCharSequence(KEY_CURRENT_QUERY,mSearchView.getQuery().toString());
         }
 
@@ -339,6 +343,7 @@ public class MainActivity extends AppCompatActivity
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setIsSmartLockEnabled(false)
+                        .setTheme(R.style.LoginTheme)
                         .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                 new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
                                 new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
@@ -559,7 +564,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onClickListenerBookGridInteraction(String folderId, BookApi book) {
+    public void onClickListenerBookGridInteraction(String folderId, BookApi book, DynamicImageView imageView) {
         Toast.makeText(mContext,"Should open details for book id: " + book.getVolumeInfo().getTitle() + " Folder id: " + folderId,Toast.LENGTH_SHORT).show();
 
         FolderListFragment folderFragment = (FolderListFragment)
@@ -582,7 +587,14 @@ public class MainActivity extends AppCompatActivity
         //}
 
         it.putExtras(bundle);
-        startActivity(it);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            startActivity(it,ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this,imageView,imageView.getTransitionName()).toBundle());
+        }else{
+            startActivity(it);
+        }
+
 
     }
 

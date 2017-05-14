@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -80,8 +81,8 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         mRecyclerView.setAdapter(mAdapter);
 
         int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm =
-                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        GridLayoutManager sglm =
+                new GridLayoutManager(getContext(), columnCount);
         mRecyclerView.setLayoutManager(sglm);
 
         if(getArguments().containsKey(ARG_ISBN)){
@@ -96,15 +97,14 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         super.onViewCreated(view, savedInstanceState);
 
         mLoadManager = getLoaderManager();
-        mLoadManager.initLoader(LOADER_ID_SEARCH,null,this);
 
-//        if(mISBN != null){
-//
-//            executeSearch(mISBN,1);
-//
-//        }else{
-//            //setLoading(false);
-//        }
+        //mLoadManager.initLoader(LOADER_ID_SEARCH,null,this);
+
+        if(mISBN != null){
+            executeSearch(mISBN,1);
+        }else {
+            mLoadManager.initLoader(LOADER_ID_SEARCH,null,this);
+        }
     }
 
     @Override
@@ -218,13 +218,15 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
             if(args.containsKey(ARG_MAX_RESULT)){
 
                 return new SearchTask(getContext(),
-                        "",
-                        null);
-
-            }else{
-                return new SearchTask(getContext(),
                         args.getString(ARG_QUERY),
                         args.getInt(ARG_MAX_RESULT));
+
+            }else{
+
+
+                return new SearchTask(getContext(),
+                        args.getString(ARG_QUERY),
+                        null);
             }
         }
 

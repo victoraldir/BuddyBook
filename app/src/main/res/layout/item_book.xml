@@ -22,7 +22,8 @@
             android:layout_height="match_parent"
             tools:src="@drawable/com_facebook_profile_picture_blank_portrait"
             android:layout_weight="1"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:transitionName="@string/transition_image"/>
 
         <!--
         <View

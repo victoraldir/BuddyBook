@@ -28,6 +28,7 @@ import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -57,7 +58,7 @@ import java.io.IOException;
  * rear facing camera. During detection overlay graphics are drawn to indicate the position,
  * size, and ID of each barcode.
  */
-public final class BarcodeCaptureActivity extends AppCompatActivity {
+public final class BarcodeCaptureActivity extends AppCompatActivity implements BarcodeTrackerFactory.BarcodeDetectionListener {
     private static final String TAG = "Barcode-reader";
 
     // intent request code to handle updating play services if needed.
@@ -155,6 +156,12 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
         return b || c || super.onTouchEvent(e);
     }
 
+    public void vibrateDetection(){
+        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        // Vibrate for 500 milliseconds
+        v.vibrate(250);
+    }
+
     /**
      * Creates and starts the camera.  Note that this uses a higher resolution in comparison
      * to other detection examples to enable the barcode detector to detect small barcodes
@@ -171,8 +178,10 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
         // is set to receive the barcode detection results, track the barcodes, and maintain
         // graphics for each barcode on screen.  The factory is used by the multi-processor to
         // create a separate tracker instance for each barcode.
-        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).build();
-        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay);
+        BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context)
+                .build();
+
+        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay,this);
         barcodeDetector.setProcessor(
                 new MultiProcessor.Builder<>(barcodeFactory).build());
 
@@ -368,6 +377,17 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onBarcodeCreated(Barcode barcode) {
+
+        vibrateDetection();
+
+        Intent data = new Intent();
+        data.putExtra(BarcodeObject, barcode);
+        setResult(CommonStatusCodes.SUCCESS, data);
+        finish();
     }
 
     private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {

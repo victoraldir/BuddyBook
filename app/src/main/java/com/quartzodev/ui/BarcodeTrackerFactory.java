@@ -26,18 +26,26 @@ import com.quartzodev.ui.camera.GraphicOverlay;
  */
 public class BarcodeTrackerFactory implements MultiProcessor.Factory<Barcode> {
     private GraphicOverlay<BarcodeGraphic> mGraphicOverlay;
+    private BarcodeDetectionListener mListener;
 
-    public BarcodeTrackerFactory(GraphicOverlay<BarcodeGraphic> barcodeGraphicOverlay) {
+    public BarcodeTrackerFactory(GraphicOverlay<BarcodeGraphic> barcodeGraphicOverlay, BarcodeDetectionListener listener) {
         mGraphicOverlay = barcodeGraphicOverlay;
+        mListener = listener;
     }
 
 
 
     @Override
     public Tracker<Barcode> create(Barcode barcode) {
+
+        mListener.onBarcodeCreated(barcode);
+
         BarcodeGraphic graphic = new BarcodeGraphic(mGraphicOverlay);
         return new BarcodeGraphicTracker(mGraphicOverlay, graphic);
     }
 
+    interface BarcodeDetectionListener{
+        void onBarcodeCreated(Barcode barcode);
+    }
 }
 

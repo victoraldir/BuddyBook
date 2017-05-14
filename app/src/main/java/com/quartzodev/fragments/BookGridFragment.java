@@ -27,6 +27,7 @@ import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.Folder;
 import com.quartzodev.task.FetchFolderTask;
+import com.quartzodev.views.DynamicImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,7 +190,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
 
     public interface OnGridFragmentInteractionListener {
 
-        void onClickListenerBookGridInteraction(String mFolderId, BookApi book);
+        void onClickListenerBookGridInteraction(String mFolderId, BookApi book, DynamicImageView imageView);
 
     }
 }

@@ -33,6 +33,8 @@
     <string name="error_adding_card">Error loading fragments</string>
     <string name="simple_scanner_activity">Bar code reader</string>
 
+    <string name="transition_image">transition_image</string>
+
     <!-- TODO barcode stuff. Review them! -->
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>

@@ -13,6 +13,7 @@ import com.quartzodev.api.BookApi;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Folder;
 import com.quartzodev.fragments.BookGridFragment;
+import com.quartzodev.views.DynamicImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +70,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(BookGridAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final BookGridAdapter.ViewHolder holder, int position) {
 
         final BookApi book = mBookList.get(position);
 
@@ -89,7 +90,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onClickListenerBookGridInteraction(mFolderId,book);
+                mListener.onClickListenerBookGridInteraction(mFolderId,book, (DynamicImageView) holder.ImageViewthumbnail);
             }
         });
 
