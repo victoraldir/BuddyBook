@@ -196,6 +196,8 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
                 if (!mFolderList.contains(folder) && !folder.getDescription().equals(getString(R.string.tab_my_books))) {
                     mFolderList.add(folder);
                     myFolderRecyclerViewAdapter.swap(mFolderList);
+
+                    mListener.onFolderListIsAvailable(mFolderList, getmFolderListCommaSeparated());
                 }
 
             }
@@ -216,6 +218,8 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
 
             mFolderList.remove(folder);
             myFolderRecyclerViewAdapter.swap(mFolderList);
+
+            mListener.onFolderListIsAvailable(mFolderList, getmFolderListCommaSeparated());
 
         }
 

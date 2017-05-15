@@ -94,6 +94,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getActivity().getSupportLoaderManager().destroyLoader(mFlag);
         getActivity().getSupportLoaderManager().initLoader(mFlag, null, this);
     }
 
