@@ -29,16 +29,13 @@ import com.quartzodev.ui.camera.GraphicOverlay;
  */
 public class BarcodeGraphic extends GraphicOverlay.Graphic {
 
-    private int mId;
-
     private static final int COLOR_CHOICES[] = {
             Color.BLUE,
             Color.CYAN,
             Color.GREEN
     };
-
     private static int mCurrentColorIndex = 0;
-
+    private int mId;
     private Paint mRectPaint;
     private Paint mTextPaint;
     private volatile Barcode mBarcode;

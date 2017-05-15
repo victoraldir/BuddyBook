@@ -23,10 +23,9 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
     private static final int VIEW_TYPE_MY_BOOKS = 0;
     private static final int VIEW_TYPE_FOLDER = 1;
     private static final int VIEW_TYPE_ADD_FOLDER = 3;
-
+    private final OnListFragmentInteractionListener mListener;
     //private final List<DummyItem> mValues;
     private List<Folder> mFolderList;
-    private final OnListFragmentInteractionListener mListener;
 
     public FolderListAdapter(List<Folder> folderList, OnListFragmentInteractionListener listener) {
         mFolderList = folderList;
@@ -36,9 +35,9 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
     @Override
     public int getItemViewType(int position) {
 
-        if(position  == 0){
-            return VIEW_TYPE_MY_BOOKS ;
-        }else if (position == ((mFolderList.size() - 1) + ADDITIONAL_VIEWS)){
+        if (position == 0) {
+            return VIEW_TYPE_MY_BOOKS;
+        } else if (position == ((mFolderList.size() - 1) + ADDITIONAL_VIEWS)) {
             return VIEW_TYPE_ADD_FOLDER;
         }
         return VIEW_TYPE_FOLDER;
@@ -49,15 +48,15 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
 
         View view;
 
-        if(viewType == VIEW_TYPE_MY_BOOKS){
+        if (viewType == VIEW_TYPE_MY_BOOKS) {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_my_books, parent, false);
-        }else if( viewType == VIEW_TYPE_ADD_FOLDER) {
+        } else if (viewType == VIEW_TYPE_ADD_FOLDER) {
 
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.item_add_folder, parent, false);
 
-        }else{
+        } else {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.fragment_folder, parent, false);
         }
@@ -65,8 +64,8 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
         return new ViewHolder(view);
     }
 
-    public void swap(List<Folder> folderList){
-        if(folderList != null) {
+    public void swap(List<Folder> folderList) {
+        if (folderList != null) {
             mFolderList = folderList;
             notifyDataSetChanged();
         }
@@ -88,7 +87,7 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
             });
 
             return;
-        }else if(position == ((mFolderList.size() - 1) + ADDITIONAL_VIEWS)){
+        } else if (position == ((mFolderList.size() - 1) + ADDITIONAL_VIEWS)) {
 
 
             holder.mView.setOnClickListener(new View.OnClickListener() {

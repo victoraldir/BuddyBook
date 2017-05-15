@@ -30,14 +30,12 @@ import java.util.List;
  * interface.
  */
 public class FolderListFragment extends Fragment implements FirebaseDatabaseHelper.OnDataSnapshotListener,
-        ChildEventListener{
+        ChildEventListener {
 
     private static final String TAG = FolderListFragment.class.getSimpleName();
-
-    private final String KEY_USER_ID = "userId";
-
     // TODO: Customize parameter argument names
     private static final String ARG_USER_ID = "user-id";
+    private final String KEY_USER_ID = "userId";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
@@ -60,19 +58,6 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
 //        mFirebaseDatabaseHelper.fetchFolders(userId,this,this);
 //    }
 
-    public void updateFolderListByUserId(){
-        mFirebaseDatabaseHelper.fetchFolders(mUserId,this,this);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-
-        outState.putString(KEY_USER_ID,mUserId);
-        super.onSaveInstanceState(outState);
-    }
-
-
-
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static FolderListFragment newInstance(String userId) {
@@ -83,16 +68,27 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
         return fragment;
     }
 
+    public void updateFolderListByUserId() {
+        mFirebaseDatabaseHelper.fetchFolders(mUserId, this, this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        outState.putString(KEY_USER_ID, mUserId);
+        super.onSaveInstanceState(outState);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(savedInstanceState != null && savedInstanceState.containsKey(KEY_USER_ID)){
+        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_USER_ID)) {
             mUserId = savedInstanceState.getString(KEY_USER_ID);
 //            updateFolderListByUserId(mUserId);
         }
 
-        if(mFirebaseDatabaseHelper == null)
+        if (mFirebaseDatabaseHelper == null)
             mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
 
         if (getArguments() != null) {
@@ -103,7 +99,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mFirebaseDatabaseHelper.fetchFolders(mUserId,this,this);
+        mFirebaseDatabaseHelper.fetchFolders(mUserId, this, this);
     }
 
     @Override
@@ -135,7 +131,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
 
         List<String> stringList = new ArrayList<>();
 
-        for (Folder folder: mFolderList) {
+        for (Folder folder : mFolderList) {
             stringList.add(folder.getDescription() + "=" + folder.getId());
         }
 
@@ -167,11 +163,11 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
         Log.d(TAG, "DataSnapshot of folders Query: " + dataSnapshot != null ? dataSnapshot.toString() : "EMPTY");
 
-        if(dataSnapshot.getValue() != null){
+        if (dataSnapshot.getValue() != null) {
 
             List<Folder> folderList = new ArrayList<>();
 
-            for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+            for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                 Folder folder = postSnapshot.getValue(Folder.class);
                 /**
                  * Just to don't list My Books on the RecycleView
@@ -185,13 +181,15 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
 
             mFolderList = folderList;
             myFolderRecyclerViewAdapter.swap(mFolderList);
+
+            mListener.onFolderListIsAvailable(folderList, getmFolderListCommaSeparated());
         }
     }
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
 
-        if(isAdded()) {
+        if (isAdded()) {
             if (mFolderList != null && dataSnapshot.getValue() != null) {
                 Folder folder = dataSnapshot.getValue(Folder.class);
 
@@ -213,7 +211,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-        if(dataSnapshot.getValue() != null){
+        if (dataSnapshot.getValue() != null) {
             Folder folder = dataSnapshot.getValue(Folder.class);
 
             mFolderList.remove(folder);
@@ -250,7 +248,8 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
         void onClickListenerFolderListInteraction(Folder folder);
 
         void onClickAddFolderListInteraction();
-        
+
+        void onFolderListIsAvailable(List<Folder> folderList, String folderListComma);
     }
 
     /**

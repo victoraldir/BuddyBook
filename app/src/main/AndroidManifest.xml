@@ -3,7 +3,7 @@
     package="com.quartzodev.buddybook">
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -48,9 +48,9 @@
 
         <activity
             android:name="com.quartzodev.ui.BarcodeCaptureActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="@string/activity_title"/>
-        
+            android:label="@string/activity_title"
+            android:parentActivityName=".MainActivity" />
+
     </application>
 
 </manifest>

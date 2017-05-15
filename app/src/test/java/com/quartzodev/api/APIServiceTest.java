@@ -3,7 +3,6 @@ package com.quartzodev.api;
 import android.util.Log;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,20 +29,20 @@ public class APIServiceTest {
                 List<BookApi> bookList = response.body().items;
 
 
-                Log.d(TAG,call.toString());
+                Log.d(TAG, call.toString());
                 this.notify();
             }
 
             @Override
             public void onFailure(Call<BookResponse> call, Throwable t) {
-                Log.e(TAG,call.toString());
+                Log.e(TAG, call.toString());
                 this.notify();
             }
         };
 
-        APIService.getInstance().getBooks("flowers+inauthor:keyes",callback);
+        APIService.getInstance().getBooks("flowers+inauthor:keyes", callback);
 
-        synchronized (callback){
+        synchronized (callback) {
             callback.wait();
         }
 

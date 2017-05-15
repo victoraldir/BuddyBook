@@ -1,7 +1,6 @@
 package com.quartzodev.fragments;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,40 +8,28 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.quartzodev.adapters.BookGridAdapter;
-import com.quartzodev.api.APIService;
 import com.quartzodev.api.BookApi;
-import com.quartzodev.api.BookResponse;
 import com.quartzodev.buddybook.R;
-import com.quartzodev.data.Folder;
-import com.quartzodev.task.FetchFolderTask;
 import com.quartzodev.task.SearchTask;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Response;
 
 /**
  * Created by victoraldir on 24/03/2017.
  */
 
-public class SearchResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<BookApi>>{
+public class SearchResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<BookApi>> {
 
-    private static final int LOADER_ID_SEARCH = 2;
+    private static final int LOADER_ID_SEARCH = 3;
 
     private static final String ARG_FOLDER_ID = "mFolderId";
     private static final String ARG_USER_ID = "mUserId";
@@ -50,109 +37,17 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     private static final String ARG_QUERY = "query";
     private static final String ARG_MAX_RESULT = "maxResult";
-
+    @BindView(R.id.recycler_view_books)
+    RecyclerView mRecyclerView;
     //private SearchTask mSearchTask;
     private BookGridAdapter mAdapter;
     private String mFolderId;
     private String mISBN;
 
-    private BookGridFragment.OnGridFragmentInteractionListener mListener;
-
 //    @BindView(R.id.grid_book_progress_bar)
 //    ProgressBar mProgressBar;
-
-    @BindView(R.id.recycler_view_books)
-    RecyclerView mRecyclerView;
-
+    private BookGridFragment.OnGridFragmentInteractionListener mListener;
     private LoaderManager mLoadManager;
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View rootView = inflater.inflate(R.layout.fragment_grid_book, container, false);
-
-        ButterKnife.bind(this, rootView);
-
-        //mProgressBar = (ProgressBar) rootView.findViewById(R.id.grid_book_progress_bar);
-
-        mAdapter = new BookGridAdapter(getActivity(),new ArrayList<BookApi>(),mFolderId,mListener);
-
-        mRecyclerView.setAdapter(mAdapter);
-
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
-        GridLayoutManager sglm =
-                new GridLayoutManager(getContext(), columnCount);
-        mRecyclerView.setLayoutManager(sglm);
-
-        if(getArguments().containsKey(ARG_ISBN)){
-            mISBN = getArguments().getString(ARG_ISBN);
-        }
-
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        mLoadManager = getLoaderManager();
-
-        //mLoadManager.initLoader(LOADER_ID_SEARCH,null,this);
-
-        if(mISBN != null){
-            executeSearch(mISBN,1);
-        }else {
-            mLoadManager.initLoader(LOADER_ID_SEARCH,null,this);
-        }
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mLoadManager = getLoaderManager();
-    }
-
-    public void executeSearch(String query, Integer maxResult){
-
-//        if( mSearchTask != null ) {
-//            mSearchTask.cancel();
-//        }
-//
-//        mSearchTask = new SearchTask();
-//
-//        if(maxResult == null){
-//            mSearchTask.execute(query,null);
-//        }else{
-//            mSearchTask.execute(query,maxResult.toString());
-//        }
-
-        Bundle bundle = new Bundle();
-        bundle.putString(ARG_QUERY,query);
-        if(maxResult != null) {
-            bundle.putInt(ARG_MAX_RESULT, maxResult);
-        }
-
-        if(mLoadManager.hasRunningLoaders()) {
-
-            if(mLoadManager.getLoader(LOADER_ID_SEARCH) != null)
-                mLoadManager.getLoader(LOADER_ID_SEARCH).cancelLoad();
-
-            mLoadManager.restartLoader(LOADER_ID_SEARCH, bundle, this);
-
-        }else{
-            Loader l = mLoadManager.getLoader(LOADER_ID_SEARCH);
-            if(l == null){
-                mLoadManager.initLoader(LOADER_ID_SEARCH, bundle, this);
-            }else{
-                mLoadManager.restartLoader(LOADER_ID_SEARCH, bundle, this);
-            }
-
-        }
-
-        //setLoading(true);
-
-    }
 
     //TODO Stop request when rotating
     public static SearchResultFragment newInstance(String userId, String folderId, String isbn) {
@@ -167,25 +62,113 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View rootView = inflater.inflate(R.layout.fragment_grid_book, container, false);
+
+        ButterKnife.bind(this, rootView);
+
+        //mProgressBar = (ProgressBar) rootView.findViewById(R.id.grid_book_progress_bar);
+
+        mAdapter = new BookGridAdapter(getActivity(), new ArrayList<BookApi>(), mFolderId, mListener);
+
+        mRecyclerView.setAdapter(mAdapter);
+
+        int columnCount = getResources().getInteger(R.integer.list_column_count);
+        GridLayoutManager sglm =
+                new GridLayoutManager(getContext(), columnCount);
+        mRecyclerView.setLayoutManager(sglm);
+
+        if (getArguments().containsKey(ARG_ISBN)) {
+            mISBN = getArguments().getString(ARG_ISBN);
+        }
+
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mLoadManager = getLoaderManager();
+
+        //mLoadManager.initLoader(LOADER_ID_SEARCH,null,this);
+
+        if (mISBN != null) {
+            executeSearch(mISBN, 1);
+        } else {
+            mLoadManager.initLoader(LOADER_ID_SEARCH, null, this);
+        }
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mLoadManager = getLoaderManager();
+    }
+
+    public void executeSearch(String query, Integer maxResult) {
+
+//        if( mSearchTask != null ) {
+//            mSearchTask.cancel();
+//        }
+//
+//        mSearchTask = new SearchTask();
+//
+//        if(maxResult == null){
+//            mSearchTask.execute(query,null);
+//        }else{
+//            mSearchTask.execute(query,maxResult.toString());
+//        }
+
+        Bundle bundle = new Bundle();
+        bundle.putString(ARG_QUERY, query);
+        if (maxResult != null) {
+            bundle.putInt(ARG_MAX_RESULT, maxResult);
+        }
+
+        if (mLoadManager.hasRunningLoaders()) {
+
+            if (mLoadManager.getLoader(LOADER_ID_SEARCH) != null)
+                mLoadManager.getLoader(LOADER_ID_SEARCH).cancelLoad();
+
+            mLoadManager.restartLoader(LOADER_ID_SEARCH, bundle, this);
+
+        } else {
+            Loader l = mLoadManager.getLoader(LOADER_ID_SEARCH);
+            if (l == null) {
+                mLoadManager.initLoader(LOADER_ID_SEARCH, bundle, this);
+            } else {
+                mLoadManager.restartLoader(LOADER_ID_SEARCH, bundle, this);
+            }
+
+        }
+
+        //setLoading(true);
+
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
 
-        if(getArguments().containsKey(ARG_FOLDER_ID)){
+        if (getArguments().containsKey(ARG_FOLDER_ID)) {
             mFolderId = getArguments().getString(ARG_FOLDER_ID);
         }
     }
 
 
-    public void setLoading(boolean flag){
-        ViewGroup container = (ViewGroup)this.getView();
+    public void setLoading(boolean flag) {
+        ViewGroup container = (ViewGroup) this.getView();
 
         if (container != null) {
-            if(flag) {
+            if (flag) {
                 container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.VISIBLE);
                 container.findViewById(R.id.recycler_view_books).setVisibility(View.INVISIBLE);
-            }else{
+            } else {
                 container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.INVISIBLE);
                 container.findViewById(R.id.recycler_view_books).setVisibility(View.VISIBLE);
             }
@@ -213,15 +196,15 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     public Loader<List<BookApi>> onCreateLoader(int id, Bundle args) {
         setLoading(true);
 
-        if(args != null && args.containsKey(ARG_QUERY)){
+        if (args != null && args.containsKey(ARG_QUERY)) {
 
-            if(args.containsKey(ARG_MAX_RESULT)){
+            if (args.containsKey(ARG_MAX_RESULT)) {
 
                 return new SearchTask(getContext(),
                         args.getString(ARG_QUERY),
                         args.getInt(ARG_MAX_RESULT));
 
-            }else{
+            } else {
 
 
                 return new SearchTask(getContext(),

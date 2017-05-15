@@ -21,11 +21,10 @@ import butterknife.ButterKnife;
 public class ViewPagerFragment extends Fragment {
 
     private static final String ARG_USER_ID = "userId";
-
+    @BindView(R.id.main_pager)
+    ViewPager mViewPager;
     private String mUserId;
     private ViewPagerAdapter mViewPagerAdapter;
-    @BindView(R.id.pager)
-    ViewPager mViewPager;
 
     public static ViewPagerFragment newInstance(String userId) {
         Bundle arguments = new Bundle();
@@ -39,7 +38,7 @@ public class ViewPagerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(getArguments().containsKey(ARG_USER_ID)){
+        if (getArguments().containsKey(ARG_USER_ID)) {
             mUserId = getArguments().getString(ARG_USER_ID);
         }
 

@@ -17,6 +17,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
         buildTypes.each {
             it.buildConfigField 'String', 'GOOGLE_BOOK_API_KEY', GOOGLE_BOOK_API_KEY
         }

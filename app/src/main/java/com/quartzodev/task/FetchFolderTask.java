@@ -17,16 +17,13 @@ import com.quartzodev.data.Folder;
 
 public class FetchFolderTask extends AsyncTaskLoader<Folder> implements
         FirebaseDatabaseHelper.OnDataSnapshotListener,
-        ChildEventListener{
-
-    private static final String TAG = FetchFolderTask.class.getSimpleName();
-
-    private static final int TIMEOUT = 15000;
+        ChildEventListener {
 
     public static final int FETCH_POPULAR_FOLDER = 0;
     public static final int FETCH_MY_BOOKS_FOLDER = 1;
     public static final int FETCH_CUSTOM_FOLDER = 2;
-
+    private static final String TAG = FetchFolderTask.class.getSimpleName();
+    private static final int TIMEOUT = 15000;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private Folder mFolder;
     private String mUserId;
@@ -46,37 +43,37 @@ public class FetchFolderTask extends AsyncTaskLoader<Folder> implements
     @Override
     public Folder loadInBackground() {
 
-        switch (operation){
+        switch (operation) {
             case FETCH_POPULAR_FOLDER:
 
-                Log.d(TAG,"Fetching FETCH_POPULAR_FOLDER..");
+                Log.d(TAG, "Fetching FETCH_POPULAR_FOLDER..");
 
                 mFirebaseDatabaseHelper.fetchPopularBooks(this);
                 sleep();
 
-                Log.d(TAG,"FETCH_POPULAR_FOLDER complete!");
+                Log.d(TAG, "FETCH_POPULAR_FOLDER complete!");
 
                 break;
             case FETCH_MY_BOOKS_FOLDER:
 
-                Log.d(TAG,"Fetching FETCH_MY_BOOKS_FOLDER..");
+                Log.d(TAG, "Fetching FETCH_MY_BOOKS_FOLDER..");
 
-                mFirebaseDatabaseHelper.fetchMyBooksFolder(mUserId,this);
+                mFirebaseDatabaseHelper.fetchMyBooksFolder(mUserId, this);
 
                 sleep();
 
-                Log.d(TAG,"FETCH_MY_BOOKS_FOLDER complete!");
+                Log.d(TAG, "FETCH_MY_BOOKS_FOLDER complete!");
 
                 break;
             case FETCH_CUSTOM_FOLDER:
 
-                Log.d(TAG,"Fetching FETCH_CUSTOM_FOLDER..");
+                Log.d(TAG, "Fetching FETCH_CUSTOM_FOLDER..");
 
-                mFirebaseDatabaseHelper.fetchBooksFromFolder(mUserId, mFolderId,this);
+                mFirebaseDatabaseHelper.fetchBooksFromFolder(mUserId, mFolderId, this);
 
                 sleep();
 
-                Log.d(TAG,"FETCH_CUSTOM_FOLDER complete!");
+                Log.d(TAG, "FETCH_CUSTOM_FOLDER complete!");
 
                 break;
         }
@@ -87,27 +84,29 @@ public class FetchFolderTask extends AsyncTaskLoader<Folder> implements
 
     @Override
     public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
-        Log.d(TAG,"Data received: " + dataSnapshot.toString());
+        Log.d(TAG, "Data received: " + dataSnapshot.toString());
         mFolder = dataSnapshot.getValue(Folder.class);
     }
 
-    private void sleep(){
-        synchronized (this){
+    private void sleep() {
+        synchronized (this) {
             try {
-                Log.d(TAG,"Waiting " + TIMEOUT / 1000 + " seconds");
+                Log.d(TAG, "Waiting " + TIMEOUT / 1000 + " seconds");
                 this.wait(TIMEOUT);
             } catch (InterruptedException e) {
-                Log.wtf(TAG,"No idea why");
+                Log.wtf(TAG, "No idea why");
                 e.printStackTrace();
             }
         }
     }
 
     @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String s) {}
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+    }
 
     @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+    }
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
@@ -115,8 +114,10 @@ public class FetchFolderTask extends AsyncTaskLoader<Folder> implements
     }
 
     @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+    }
 
     @Override
-    public void onCancelled(DatabaseError databaseError) {}
+    public void onCancelled(DatabaseError databaseError) {
+    }
 }

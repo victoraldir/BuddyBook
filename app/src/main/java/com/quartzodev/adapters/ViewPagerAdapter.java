@@ -3,10 +3,8 @@ package com.quartzodev.adapters;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.fragments.BookGridFragment;
@@ -36,6 +34,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
         return BookGridFragment.newInstanceCustomFolder(mUserId, folderId, position);
     }
+
     @Override
     public int getCount() {
         return NUM_PAGES;
@@ -44,9 +43,9 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
 
-        if(position == 1){
+        if (position == 1) {
             return mContext.getResources().getString(R.string.tab_top_books);
-        }else{
+        } else {
             return mContext.getResources().getString(R.string.tab_my_books);
         }
 

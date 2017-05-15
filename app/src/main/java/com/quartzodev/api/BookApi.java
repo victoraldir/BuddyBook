@@ -1,11 +1,6 @@
 package com.quartzodev.api;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 
 /**
  * Created by victoraldir on 23/03/2017.
@@ -22,7 +17,7 @@ public class BookApi {
     @SerializedName("volumeInfo")
     public VolumeInfo volumeInfo;
 
-    public BookApi(){
+    public BookApi() {
     }
 
     public String getId() {

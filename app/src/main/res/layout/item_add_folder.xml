@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_gravity="">
+    android:layout_gravity=""
+    android:orientation="horizontal">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -14,10 +14,10 @@
 
     <TextView
         android:id="@+id/content"
-        tools:text="Add folder"
-        android:text="@string/item_add_folder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:text="@string/item_add_folder"
+        android:textAppearance="?attr/textAppearanceListItem"
+        tools:text="Add folder" />
 </LinearLayout>

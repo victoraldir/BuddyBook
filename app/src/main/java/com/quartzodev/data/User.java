@@ -10,7 +10,6 @@ import com.quartzodev.buddybook.R;
 import com.quartzodev.utils.DateUtils;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,6 +19,16 @@ import java.util.UUID;
 
 public class User implements Parcelable {
 
+    public static final Parcelable.Creator<User> CREATOR
+            = new Parcelable.Creator<User>() {
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
     private String uid;
     private String email;
     private String username;
@@ -37,43 +46,6 @@ public class User implements Parcelable {
         this.username = username;
         this.photoUrl = photoUrl;
         this.lastActivity = lastActivity;
-    }
-
-    public static User setupUserFirstTime(FirebaseUser firebaseUser, Context context){
-
-        User user = new User(firebaseUser.getUid(),
-                firebaseUser.getEmail(),
-                firebaseUser.getDisplayName(),
-                firebaseUser.getPhotoUrl() == null ? null : firebaseUser.getPhotoUrl().toString(),
-                DateUtils.getCurrentTimeString());
-
-        try {
-            if (user.getPhotoUrl() == null) {
-                for (UserInfo userInfo : firebaseUser.getProviderData()) {
-                    if (userInfo.getPhotoUrl() != null) {
-                        user.setPhotoUrl(userInfo.getPhotoUrl().toString());
-                        break;
-                    }
-                }
-            }
-        }catch (Exception ex){
-
-        }
-
-        Folder myBooksFolder = new Folder(context.getResources().getString(R.string.tab_my_books));
-        myBooksFolder.setId(UUID.randomUUID().toString());
-        user.setFolders(Collections.singletonMap(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,myBooksFolder));
-//
-//        myBooksFolder.setBooks(generateFakeBooksMap(3));
-//
-//
-//        //user.setMyBooksFolder(myBooksFolder);
-//
-//        user.setFolders(generateFakeFolderMap(10));
-
-
-        return  user;
-
     }
 
 //    private static Map<String, Folder> generateFakeFolderMap(int rows){
@@ -116,6 +88,53 @@ public class User implements Parcelable {
 //
 //        return bookHashMap;
 //    }
+
+    private User(Parcel in) {
+        uid = in.readString();
+        email = in.readString();
+        username = in.readString();
+        photoUrl = in.readString();
+        lastActivity = in.readString();
+
+
+    }
+
+    public static User setupUserFirstTime(FirebaseUser firebaseUser, Context context) {
+
+        User user = new User(firebaseUser.getUid(),
+                firebaseUser.getEmail(),
+                firebaseUser.getDisplayName(),
+                firebaseUser.getPhotoUrl() == null ? null : firebaseUser.getPhotoUrl().toString(),
+                DateUtils.getCurrentTimeString());
+
+        try {
+            if (user.getPhotoUrl() == null) {
+                for (UserInfo userInfo : firebaseUser.getProviderData()) {
+                    if (userInfo.getPhotoUrl() != null) {
+                        user.setPhotoUrl(userInfo.getPhotoUrl().toString());
+                        break;
+                    }
+                }
+            }
+        } catch (Exception ex) {
+
+        }
+
+        Folder myBooksFolder = new Folder(context.getResources().getString(R.string.tab_my_books));
+        myBooksFolder.setId(UUID.randomUUID().toString());
+        user.setFolders(Collections.singletonMap(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, myBooksFolder));
+//
+//        myBooksFolder.setBooks(generateFakeBooksMap(3));
+//
+//
+//        //user.setMyBooksFolder(myBooksFolder);
+//
+//        user.setFolders(generateFakeFolderMap(10));
+
+
+        return user;
+
+    }
 
     public Map<String, Folder> getFolders() {
         return folders;
@@ -170,33 +189,11 @@ public class User implements Parcelable {
         return 0;
     }
 
-
     public void writeToParcel(Parcel out, int flags) {
         out.writeString(uid);
         out.writeString(email);
         out.writeString(username);
         out.writeString(photoUrl);
         out.writeString(lastActivity);
-    }
-
-    public static final Parcelable.Creator<User> CREATOR
-            = new Parcelable.Creator<User>() {
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
-
-    private User(Parcel in) {
-        uid = in.readString();
-        email = in.readString();
-        username = in.readString();
-        photoUrl = in.readString();
-        lastActivity = in.readString();
-
-
     }
 }

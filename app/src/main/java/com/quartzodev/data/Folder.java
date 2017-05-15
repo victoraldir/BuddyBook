@@ -1,10 +1,7 @@
 package com.quartzodev.data;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
-
-import com.google.firebase.database.Exclude;
 import com.quartzodev.api.BookApi;
 
 import java.util.Map;
@@ -13,18 +10,18 @@ import java.util.Map;
  * Created by victoraldir on 26/03/2017.
  */
 
-public class Folder  {
+public class Folder {
 
     private String id;
     private String description;
     private boolean isCustom;
-    private Map<String,BookApi> books;
+    private Map<String, BookApi> books;
 
-    public Folder(){
+    public Folder() {
 
     }
 
-    public Folder(String description){
+    public Folder(String description) {
         this.description = description;
     }
 

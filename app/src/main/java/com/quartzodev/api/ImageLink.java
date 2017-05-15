@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by victoraldir on 12/04/2017.
  */
 
-public class ImageLink{
+public class ImageLink {
 
     @SerializedName("smallThumbnail")
     public String smallThumbnail;
@@ -14,7 +14,7 @@ public class ImageLink{
     @SerializedName("thumbnail")
     public String thumbnail;
 
-    public ImageLink(){
+    public ImageLink() {
     }
 
     public String getSmallThumbnail() {

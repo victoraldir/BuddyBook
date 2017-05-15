@@ -14,7 +14,6 @@ import com.quartzodev.utils.DateUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,52 +22,49 @@ import java.util.Map;
 
 public class FirebaseDatabaseHelper {
 
-    private static final String TAG = FetchFolderTask.class.getSimpleName();
-
-    private static final String ROOT = "users";
     public static final String REF_POPULAR_FOLDER = "_popularBooks"; //See a better way to maintain popular folder
     public static final String REF_MY_BOOKS_FOLDER = "myBooksFolder";
     public static final String REF_SEARCH_HISTORY = "search_history"; //See a better way to maintain popular folder
+    private static final String TAG = FetchFolderTask.class.getSimpleName();
+    private static final String ROOT = "users";
     private static final String REF_FOLDERS = "folders";
-
+    private static FirebaseDatabaseHelper mInstance;
     private DatabaseReference mDatabaseReference;
 
-    private static FirebaseDatabaseHelper mInstance;
 
-
-    private FirebaseDatabaseHelper(){
+    private FirebaseDatabaseHelper() {
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseDatabase.setPersistenceEnabled(true);
         mDatabaseReference = mFirebaseDatabase.getReference().child(ROOT);
     }
 
-    public static FirebaseDatabaseHelper getInstance(){
-        if(mInstance == null) mInstance = new FirebaseDatabaseHelper();
+    public static FirebaseDatabaseHelper getInstance() {
+        if (mInstance == null) mInstance = new FirebaseDatabaseHelper();
 
         return mInstance;
     }
-    
-    public void insertUser(User user){
+
+    public void insertUser(User user) {
         mDatabaseReference.child(user.getUid()).setValue(user);
     }
 
-    public void updateUserLastActivity(String userId){
+    public void updateUserLastActivity(String userId) {
         Map<String, Object> mapLastActivity = new HashMap<>();
         mapLastActivity.put("lastActivity", DateUtils.getCurrentTimeString());
-        updateUser(userId,mapLastActivity);
+        updateUser(userId, mapLastActivity);
     }
 
-    public void updateUser(String userId,  Map<String, Object> fields){
+    public void updateUser(String userId, Map<String, Object> fields) {
         mDatabaseReference.child(userId).updateChildren(fields);
     }
 
-    public void fetchPopularBooks(final OnDataSnapshotListener onDataSnapshotListener){
+    public void fetchPopularBooks(final OnDataSnapshotListener onDataSnapshotListener) {
 
         mDatabaseReference.child(REF_POPULAR_FOLDER)
                 .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
     }
 
-    public void insertPopularBooks(Map<String, BookApi> books){
+    public void insertPopularBooks(Map<String, BookApi> books) {
 
         Folder folder = new Folder("Popular Books Folder");
 
@@ -78,38 +74,42 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void insertBookSearchHistory(String userId, BookApi book){
+    public void insertBookSearchHistory(String userId, BookApi book) {
 
-        mDatabaseReference.child(userId).child(REF_SEARCH_HISTORY).updateChildren(Collections.singletonMap(book.getId(),(Object) book));
+        mDatabaseReference.child(userId).child(REF_SEARCH_HISTORY).updateChildren(Collections.singletonMap(book.getId(), (Object) book));
 
     }
 
-    public void fetchMyBooksFolder(String userId, final OnDataSnapshotListener onDataSnapshotListener){
+    public void fetchMyBooksFolder(String userId, final OnDataSnapshotListener onDataSnapshotListener) {
 
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(REF_MY_BOOKS_FOLDER)
                 .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
     }
 
-    public void fetchBooksFromFolder(String userId, String folderId, final OnDataSnapshotListener onDataSnapshotListener){
+    public void attachMyBooksFolderChieldEventListener(String userId, ChildEventListener listener){
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(REF_MY_BOOKS_FOLDER).addChildEventListener(listener);
+    }
+
+    public void fetchBooksFromFolder(String userId, String folderId, final OnDataSnapshotListener onDataSnapshotListener) {
 
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId)
                 .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
     }
 
-    public void findBook(String userId ,String folderId, String bookId, final OnDataSnapshotListener onDataSnapshotListener) {
+    public void findBook(String userId, String folderId, String bookId, final OnDataSnapshotListener onDataSnapshotListener) {
 
-        if(folderId == null) {
+        if (folderId == null) {
 
             mDatabaseReference.child(userId).child(REF_SEARCH_HISTORY).child(bookId).addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
-        }else if(folderId.equals(REF_POPULAR_FOLDER)){
+        } else if (folderId.equals(REF_POPULAR_FOLDER)) {
 
             mDatabaseReference.child(REF_POPULAR_FOLDER).child("books").child(bookId)
                     .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
-        }else{
+        } else {
 
             mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child("books").child(bookId)
                     .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
@@ -117,10 +117,9 @@ public class FirebaseDatabaseHelper {
         }
 
 
-
     }
 
-    public void fetchFolders(String userId, final OnDataSnapshotListener onDataSnapshotListener, ChildEventListener listener){
+    public void fetchFolders(String userId, final OnDataSnapshotListener onDataSnapshotListener, ChildEventListener listener) {
 
         DatabaseReference ref = mDatabaseReference.child(userId).child(REF_FOLDERS);
         //ref.addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
@@ -132,11 +131,11 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void deleteFolder(String userId, String folderId){
+    public void deleteFolder(String userId, String folderId) {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).removeValue();
     }
 
-    public void insertFolder(String userId, Folder folder){
+    public void insertFolder(String userId, Folder folder) {
         DatabaseReference df = mDatabaseReference.child(userId).child(REF_FOLDERS).push();
 
         folder.setId(df.getKey());
@@ -146,8 +145,8 @@ public class FirebaseDatabaseHelper {
         df.setValue(folder);
     }
 
-    public void insertBookFolder(String userId, String folderId, BookApi bookApi){
-        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child("books").updateChildren(Collections.singletonMap(bookApi.getId(),(Object) bookApi));
+    public void insertBookFolder(String userId, String folderId, BookApi bookApi) {
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child("books").updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
     }
 
     public void fetchUserById(String userId, final OnDataSnapshotListener onDataSnapshotListener) {
@@ -157,7 +156,7 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    private ValueEventListener buildValueEventListener(final OnDataSnapshotListener onDataSnapshotListener){
+    private ValueEventListener buildValueEventListener(final OnDataSnapshotListener onDataSnapshotListener) {
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -168,12 +167,12 @@ public class FirebaseDatabaseHelper {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 //TODO create method on OnDataSnapshotListener to deal with this
-                Log.e(TAG,databaseError.getDetails());
+                Log.e(TAG, databaseError.getDetails());
             }
         };
     }
 
-    private void notifyCaller(final OnDataSnapshotListener onDataSnapshotListener){
+    private void notifyCaller(final OnDataSnapshotListener onDataSnapshotListener) {
         synchronized (onDataSnapshotListener) {
             onDataSnapshotListener.notify(); //Release Task
         }

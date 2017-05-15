@@ -20,7 +20,7 @@ public class APIService {
     private static APIService sMinstance;
     private IGoogleBookAPI mService;
 
-    private APIService(){
+    private APIService() {
 
         // Add the interceptor to OkHttpClient
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
@@ -37,28 +37,28 @@ public class APIService {
 
     }
 
-    public static APIService getInstance(){
+    public static APIService getInstance() {
 
-        if(sMinstance == null) sMinstance = new APIService();
+        if (sMinstance == null) sMinstance = new APIService();
 
         return sMinstance;
     }
 
-    public void getBooks(String query, Callback<BookResponse> callback){
+    public void getBooks(String query, Callback<BookResponse> callback) {
 
         mService.getBooks(query, BuildConfig.GOOGLE_BOOK_API_KEY).enqueue(callback);
 
     }
 
-    public Call<BookResponse> getBooks(String query){
+    public Call<BookResponse> getBooks(String query) {
         return mService.getBooks(query, BuildConfig.GOOGLE_BOOK_API_KEY);
     }
 
-    public Call<BookResponse> getBooksMaxResult(String query, int maxResults){
-        return mService.getBooksMaxResult(query,maxResults, BuildConfig.GOOGLE_BOOK_API_KEY);
+    public Call<BookResponse> getBooksMaxResult(String query, int maxResults) {
+        return mService.getBooksMaxResult(query, maxResults, BuildConfig.GOOGLE_BOOK_API_KEY);
     }
 
-    interface IGoogleBookAPI{
+    interface IGoogleBookAPI {
         @GET("/books/v1/volumes")
         Call<BookResponse> getBooks(@Query("q") String query, @Query("key") String apiKey);
 

@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.quartzodev.fragments.DetailActivityFragment;
+
 import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity {
@@ -35,7 +36,7 @@ public class DetailActivity extends AppCompatActivity {
         String folderListId = getIntent().getExtras().getString(ARG_FOLDER_LIST_ID);
         String bookJson = getIntent().getExtras().getString(ARG_BOOK_JSON);
 
-        DetailActivityFragment newFragment = DetailActivityFragment.newInstance(userId, bookId, folderId, folderListId,bookJson);
+        DetailActivityFragment newFragment = DetailActivityFragment.newInstance(userId, bookId, folderId, folderListId, bookJson);
 
         getSupportFragmentManager().popBackStackImmediate();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

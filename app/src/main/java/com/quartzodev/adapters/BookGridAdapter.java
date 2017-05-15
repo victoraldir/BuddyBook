@@ -49,22 +49,22 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         return vh;
     }
 
-    public void swap(Folder folder){
+    public void swap(Folder folder) {
         clearList();
-        if(folder != null && folder.getBooks() != null) {
+        if (folder != null && folder.getBooks() != null) {
             this.mBookList = new ArrayList<>(folder.getBooks().values());
         }
         notifyDataSetChanged();
     }
 
-    private void clearList(){
+    private void clearList() {
         this.mBookList.clear();
     }
 
 
-    public void swap(List<BookApi> bookApiList){
+    public void swap(List<BookApi> bookApiList) {
         mBookList.clear();
-        if(bookApiList != null)
+        if (bookApiList != null)
             mBookList.addAll(bookApiList);
         this.notifyDataSetChanged();
     }
@@ -78,7 +78,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
         holder.textViewBookAuthor.setText(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
 
-        if(book.getVolumeInfo().getImageLink() != null) {
+        if (book.getVolumeInfo().getImageLink() != null) {
             Glide.with(mContext)
                     .load(book.getVolumeInfo().getImageLink().getThumbnail())
                     .centerCrop()
@@ -90,7 +90,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onClickListenerBookGridInteraction(mFolderId,book, (DynamicImageView) holder.ImageViewthumbnail);
+                mListener.onClickListenerBookGridInteraction(mFolderId, book, (DynamicImageView) holder.ImageViewthumbnail);
             }
         });
 
@@ -103,12 +103,13 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
+        public final View view;
         @BindView(R.id.thumbnail)
         ImageView ImageViewthumbnail;
         @BindView(R.id.book_title)
         TextView textViewBookTitle;
-        @BindView(R.id.book_author) TextView textViewBookAuthor;
-        public final View view;
+        @BindView(R.id.book_author)
+        TextView textViewBookAuthor;
 
         public ViewHolder(View itemView) {
             super(itemView);

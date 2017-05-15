@@ -2,9 +2,9 @@ package com.quartzodev.fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
@@ -35,25 +35,11 @@ import butterknife.ButterKnife;
 public class DetailActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<BookApi>,
         View.OnClickListener,
         DialogInterface.OnClickListener,
-        FirebaseDatabaseHelper.OnDataSnapshotListener{
+        FirebaseDatabaseHelper.OnDataSnapshotListener {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
 
     private static final int LOADER_ID_BOOK = 1;
-
-//    public static final String ARG_BOOK_ID = "bookId";
-//    public static final String ARG_FOLDER_ID = "folderId";
-//    public static final String ARG_USER_ID = "userId";
-//    public static final String ARG_FOLDER_LIST_ID = "folderListId";
-//    public static final String ARG_BOOK_JSON = "bookJson";
-    private String mBookId;
-    private String mBookJson;
-    private String mFolderId;
-    private String mUserId;
-    private String mFolderListComma;
-    private Context mContext;
-    private BookApi mBookSelected;
-
     @BindView(R.id.detail_imageview_thumb)
     ImageView mPhoto;
     @BindView(R.id.detail_textview_title)
@@ -66,11 +52,34 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
     TextView mDescription;
     @BindView(R.id.detail_imageView_bookmark)
     ImageView btnBookMark;
-
+    //    public static final String ARG_BOOK_ID = "bookId";
+//    public static final String ARG_FOLDER_ID = "folderId";
+//    public static final String ARG_USER_ID = "userId";
+//    public static final String ARG_FOLDER_LIST_ID = "folderListId";
+//    public static final String ARG_BOOK_JSON = "bookJson";
+    private String mBookId;
+    private String mBookJson;
+    private String mFolderId;
+    private String mUserId;
+    private String mFolderListComma;
+    private Context mContext;
+    private BookApi mBookSelected;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
     public DetailActivityFragment() {
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
+    }
+
+    public static DetailActivityFragment newInstance(String userId, String bookId, String folderId, String folderListId, String bookJson) {
+        DetailActivityFragment fragment = new DetailActivityFragment();
+        Bundle args = new Bundle();
+        args.putString(DetailActivity.ARG_BOOK_ID, bookId);
+        args.putString(DetailActivity.ARG_FOLDER_ID, folderId);
+        args.putString(DetailActivity.ARG_USER_ID, userId);
+        args.putString(DetailActivity.ARG_FOLDER_LIST_ID, folderListId);
+        args.putString(DetailActivity.ARG_BOOK_JSON, bookJson);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -89,35 +98,23 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toast.makeText(mContext,"Folder list is: " + mFolderListComma,Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "Folder list is: " + mFolderListComma, Toast.LENGTH_SHORT).show();
         //getLoaderManager().initLoader(LOADER_ID_BOOK,null,this).forceLoad();
-        mFirebaseDatabaseHelper.findBook(mUserId,mFolderId,mBookId,this);
+        mFirebaseDatabaseHelper.findBook(mUserId, mFolderId, mBookId, this);
     }
 
-    public static DetailActivityFragment newInstance(String userId ,String bookId, String folderId, String folderListId, String bookJson) {
-        DetailActivityFragment fragment = new DetailActivityFragment();
-        Bundle args = new Bundle();
-        args.putString(DetailActivity.ARG_BOOK_ID, bookId);
-        args.putString(DetailActivity.ARG_FOLDER_ID, folderId);
-        args.putString(DetailActivity.ARG_USER_ID, userId);
-        args.putString(DetailActivity.ARG_FOLDER_LIST_ID, folderListId);
-        args.putString(DetailActivity.ARG_BOOK_JSON, bookJson);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private void loadBookDetails(BookApi bookApi) {
 
-    private void loadBookDetails(BookApi bookApi){
+        Log.d(TAG, "Should detail book: " + bookApi.getVolumeInfo().getDescription());
 
-        Log.d(TAG,"Should detail book: " + bookApi.getVolumeInfo().getDescription());
-
-        if(bookApi != null) {
+        if (bookApi != null) {
 
             VolumeInfo volumeInfo = bookApi.getVolumeInfo();
 
@@ -142,7 +139,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
 
     @Override
     public Loader<BookApi> onCreateLoader(int id, Bundle args) {
-        return new FetchBookTask(mContext,mUserId,mFolderId,mBookId);
+        return new FetchBookTask(mContext, mUserId, mFolderId, mBookId);
     }
 
     @Override
@@ -158,7 +155,7 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
 
     @Override
     public void onClick(View v) {
-        DialogUtils.alertDialogListFolder(mContext, mFolderListComma,this);
+        DialogUtils.alertDialogListFolder(mContext, mFolderListComma, this);
     }
 
     @Override
@@ -167,20 +164,20 @@ public class DetailActivityFragment extends Fragment implements LoaderManager.Lo
         String unFormatted = mFolderListComma.split(",")[which];
         String id = unFormatted.split("=")[1];
 
-        Toast.makeText(mContext,"Position: " + which, Toast.LENGTH_SHORT).show();
-        FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId,id,mBookSelected);
+        Toast.makeText(mContext, "Position: " + which, Toast.LENGTH_SHORT).show();
+        FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId, id, mBookSelected);
         dialog.dismiss();
     }
 
     @Override
     public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
-        Log.d(TAG,"Data received: " + dataSnapshot.toString());
+        Log.d(TAG, "Data received: " + dataSnapshot.toString());
         mBookSelected = dataSnapshot.getValue(BookApi.class);
 
         //TODO maybe it's not needed. Leaving as it's for now.
-        if(mBookSelected == null){
+        if (mBookSelected == null) {
             Gson gson = new Gson();
-            mBookSelected = gson.fromJson(mBookJson,BookApi.class);
+            mBookSelected = gson.fromJson(mBookJson, BookApi.class);
         }
 
         loadBookDetails(mBookSelected);
