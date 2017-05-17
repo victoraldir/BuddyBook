@@ -6,7 +6,7 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
-    <integer name="list_column_count">3</integer>
+    <integer name="list_column_count">2</integer>
     <dimen name="text_margin">16dp</dimen>
 
     <dimen name="search_view_inset">5dp</dimen>

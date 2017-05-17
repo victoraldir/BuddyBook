@@ -69,7 +69,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     }
 
     public void updateFolderListByUserId() {
-        mFirebaseDatabaseHelper.fetchFolders(mUserId, this, this);
+        mFirebaseDatabaseHelper.fetchFolders(mUserId, this);
     }
 
     @Override
@@ -99,7 +99,8 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mFirebaseDatabaseHelper.fetchFolders(mUserId, this, this);
+        mFirebaseDatabaseHelper.fetchFolders(mUserId, this);
+        mFirebaseDatabaseHelper.attachFetchFolders(mUserId,this);
     }
 
     @Override
@@ -147,6 +148,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
 
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
+
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -157,6 +159,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mFirebaseDatabaseHelper.detacheFetchFolders(mUserId,this);
     }
 
     @Override
@@ -182,6 +185,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
             mFolderList = folderList;
             myFolderRecyclerViewAdapter.swap(mFolderList);
 
+            if(mListener != null)
             mListener.onFolderListIsAvailable(folderList, getmFolderListCommaSeparated());
         }
     }

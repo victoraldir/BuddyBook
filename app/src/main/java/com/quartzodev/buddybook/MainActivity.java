@@ -607,6 +607,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onDeleteBookClickListener(String mFolderId, BookApi book) {
+        firebaseDatabaseHelper.deleteBookFolder(mUser.getUid(),mFolderId,book);
+    }
+
+    @Override
     public boolean onQueryTextSubmit(String query) {
 
         if (query != null && !query.isEmpty()) {

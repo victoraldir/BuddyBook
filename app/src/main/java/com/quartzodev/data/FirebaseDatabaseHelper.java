@@ -28,6 +28,7 @@ public class FirebaseDatabaseHelper {
     private static final String TAG = FetchFolderTask.class.getSimpleName();
     private static final String ROOT = "users";
     private static final String REF_FOLDERS = "folders";
+    private static final String REF_BOOKS = "books";
     private static FirebaseDatabaseHelper mInstance;
     private DatabaseReference mDatabaseReference;
 
@@ -87,8 +88,8 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void attachMyBooksFolderChieldEventListener(String userId, ChildEventListener listener){
-        mDatabaseReference.child(userId).child(REF_FOLDERS).child(REF_MY_BOOKS_FOLDER).addChildEventListener(listener);
+    public void attachBookFolderChildEventListener(String userId, String folderId, ChildEventListener listener){
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).addChildEventListener(listener);
     }
 
     public void fetchBooksFromFolder(String userId, String folderId, final OnDataSnapshotListener onDataSnapshotListener) {
@@ -119,17 +120,27 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void fetchFolders(String userId, final OnDataSnapshotListener onDataSnapshotListener, ChildEventListener listener) {
+    public void fetchFolders(String userId, final OnDataSnapshotListener onDataSnapshotListener) {
 
         DatabaseReference ref = mDatabaseReference.child(userId).child(REF_FOLDERS);
         //ref.addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
-        ref.addChildEventListener(listener);
 
         ref.orderByChild("custom")
                 .equalTo(true)
                 .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
     }
+
+    public void attachFetchFolders(String userId, ChildEventListener listener) {
+        DatabaseReference ref = mDatabaseReference.child(userId).child(REF_FOLDERS);
+        ref.addChildEventListener(listener);
+    }
+
+    public void detacheFetchFolders(String userId, ChildEventListener listener) {
+        DatabaseReference ref = mDatabaseReference.child(userId).child(REF_FOLDERS);
+        ref.removeEventListener(listener);
+    }
+
 
     public void deleteFolder(String userId, String folderId) {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).removeValue();
@@ -147,6 +158,10 @@ public class FirebaseDatabaseHelper {
 
     public void insertBookFolder(String userId, String folderId, BookApi bookApi) {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child("books").updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
+    }
+
+    public void deleteBookFolder(String userId, String folderId, BookApi bookApi) {
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).removeValue();
     }
 
     public void fetchUserById(String userId, final OnDataSnapshotListener onDataSnapshotListener) {

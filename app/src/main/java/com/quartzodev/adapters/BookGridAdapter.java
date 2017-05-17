@@ -2,7 +2,9 @@ package com.quartzodev.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -57,6 +59,13 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         notifyDataSetChanged();
     }
 
+    public void removeItem(BookApi bookApi){
+        if(mBookList != null){
+            mBookList.remove(bookApi);
+            notifyDataSetChanged();
+        }
+    }
+
     private void clearList() {
         this.mBookList.clear();
     }
@@ -74,9 +83,39 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
         final BookApi book = mBookList.get(position);
 
-        holder.textViewBookTitle.setText(book.getVolumeInfo().getTitle());
+        //holder.textViewBookTitle.setText(book.getVolumeInfo().getTitle());
 
-        holder.textViewBookAuthor.setText(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
+        //holder.textViewBookAuthor.setText(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
+
+        holder.toolbar.setTitle(book.getVolumeInfo().getTitle());
+        holder.toolbar.setSubtitle(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
+
+        holder.toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onClickListenerBookGridInteraction(mFolderId, book, (DynamicImageView) holder.imageViewthumbnail);
+            }
+        });
+
+        if(!holder.toolbar.getMenu().hasVisibleItems()) {
+            holder.toolbar.inflateMenu(R.menu.menu_my_books);
+        }
+
+        holder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                int menuId = item.getItemId();
+
+                switch (menuId){
+                    case R.id.action_delete:
+                        mListener.onDeleteBookClickListener(mFolderId,book);
+                        break;
+                }
+
+                return false;
+            }
+        });
 
         if (book.getVolumeInfo().getImageLink() != null) {
             Glide.with(mContext)
@@ -84,13 +123,13 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
                     .centerCrop()
                     .placeholder(android.R.drawable.sym_def_app_icon)
                     .error(android.R.drawable.ic_dialog_alert)
-                    .into(holder.ImageViewthumbnail);
+                    .into(holder.imageViewthumbnail);
         }
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onClickListenerBookGridInteraction(mFolderId, book, (DynamicImageView) holder.ImageViewthumbnail);
+                mListener.onClickListenerBookGridInteraction(mFolderId, book, (DynamicImageView) holder.imageViewthumbnail);
             }
         });
 
@@ -105,11 +144,14 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
         public final View view;
         @BindView(R.id.thumbnail)
-        ImageView ImageViewthumbnail;
-        @BindView(R.id.book_title)
-        TextView textViewBookTitle;
-        @BindView(R.id.book_author)
-        TextView textViewBookAuthor;
+        ImageView imageViewthumbnail;
+        @BindView(R.id.book_toolbar)
+        Toolbar toolbar;
+//        @BindView(R.id.book_title)
+//        TextView textViewBookTitle;
+//        @BindView(R.id.book_author)
+//        TextView textViewBookAuthor;
+
 
         public ViewHolder(View itemView) {
             super(itemView);

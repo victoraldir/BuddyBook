@@ -126,11 +126,12 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         //TODO create constants here!
         if (mFlag == FLAG_MY_BOOKS_FOLDER) {
             //Registering listener do detect operations
-            mFirebaseDatabaseHelper.attachMyBooksFolderChieldEventListener(mUserId,this);
+            mFirebaseDatabaseHelper.attachBookFolderChildEventListener(mUserId,mFirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,this);
             task = new FetchFolderTask(mUserId, null, getActivity(), FetchFolderTask.FETCH_POPULAR_FOLDER);
         } else if (mFlag == FLAG_TOP_BOOKS_FOLDER) {
             task = new FetchFolderTask(mUserId, null, getActivity(), FetchFolderTask.FETCH_MY_BOOKS_FOLDER);
         } else if (mFlag == FLAG_CUSTOM_FOLDER) {
+            mFirebaseDatabaseHelper.attachBookFolderChildEventListener(mUserId,mFolderId,this);
             task = new FetchFolderTask(mUserId, mFolderId, getActivity(), FetchFolderTask.FETCH_CUSTOM_FOLDER);
         }
 
@@ -199,6 +200,13 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
 
+        Log.d(TAG,"onChildRemoved FIRED " + dataSnapshot.toString());
+
+        if (dataSnapshot.getValue() != null) {
+            BookApi bookApi = dataSnapshot.getValue(BookApi.class);
+            mAdapter.removeItem(bookApi);
+        }
+
     }
 
     @Override
@@ -214,6 +222,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     public interface OnGridFragmentInteractionListener {
 
         void onClickListenerBookGridInteraction(String mFolderId, BookApi book, DynamicImageView imageView);
+        void onDeleteBookClickListener(String mFolderId, BookApi book);
 
     }
 }

@@ -6,6 +6,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="action_sign_out">Sign Out</string>
+    <string name="action_remove">Remove</string>
 
     <string name="success_sign_in">You\'re now signed in!</string>
 
