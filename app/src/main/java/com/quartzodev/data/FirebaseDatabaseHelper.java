@@ -88,8 +88,12 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void attachBookFolderChildEventListener(String userId, String folderId, ChildEventListener listener){
-        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).addChildEventListener(listener);
+    public ChildEventListener attachBookFolderChildEventListener(String userId, String folderId, ChildEventListener listener){
+        return mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).addChildEventListener(listener);
+    }
+
+    public void detachBookFolderChildEventListener(String userId, String folderId, ChildEventListener listener){
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).removeEventListener(listener);
     }
 
     public void fetchBooksFromFolder(String userId, String folderId, final OnDataSnapshotListener onDataSnapshotListener) {

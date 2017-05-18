@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.quartzodev.api.BookApi;
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.fragments.BookGridFragment;
 import com.quartzodev.views.DynamicImageView;
@@ -34,12 +35,17 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     private List<BookApi> mBookList = new ArrayList<>();
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
     private String mFolderId;
+    private int mType;
 
-    public BookGridAdapter(Context mContext, List<BookApi> bookList, String folderId, BookGridFragment.OnGridFragmentInteractionListener listener) {
+    public BookGridAdapter(Context mContext, List<BookApi> bookList,
+                           String folderId,
+                           BookGridFragment.OnGridFragmentInteractionListener listener,
+                           int type) {
         this.mContext = mContext;
         this.mBookList = bookList;
         this.mFolderId = folderId;
         this.mListener = listener;
+        mType = type;
     }
 
     @Override
@@ -49,6 +55,11 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         final BookGridAdapter.ViewHolder vh = new BookGridAdapter.ViewHolder(view);
 
         return vh;
+    }
+
+    public void setFolderId(String folderId){
+        clearList();
+        mFolderId = folderId;
     }
 
     public void swap(Folder folder) {
@@ -62,6 +73,13 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     public void removeItem(BookApi bookApi){
         if(mBookList != null){
             mBookList.remove(bookApi);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void addItem(BookApi bookApi){
+        if(mBookList != null){
+            mBookList.add(bookApi);
             notifyDataSetChanged();
         }
     }
@@ -98,7 +116,16 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         });
 
         if(!holder.toolbar.getMenu().hasVisibleItems()) {
-            holder.toolbar.inflateMenu(R.menu.menu_my_books);
+            switch (mType){
+                case BookGridFragment.FLAG_CUSTOM_FOLDER:
+                    holder.toolbar.inflateMenu(R.menu.menu_folders);
+                    break;
+                case BookGridFragment.FLAG_MY_BOOKS_FOLDER:
+                    holder.toolbar.inflateMenu(R.menu.menu_my_books);
+                    break;
+                case BookGridFragment.FLAG_TOP_BOOKS_FOLDER:
+                    break;
+            }
         }
 
         holder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -111,6 +138,11 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
                     case R.id.action_delete:
                         mListener.onDeleteBookClickListener(mFolderId,book);
                         break;
+                    case R.id.action_have_this:
+                        mListener.onAddBookToFolderClickListener(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,book);
+                        break;
+                    case R.id.action_move_folder:
+                        mListener.onAddBookToFolderClickListener(mFolderId,book);
                 }
 
                 return false;

@@ -72,7 +72,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
         //mProgressBar = (ProgressBar) rootView.findViewById(R.id.grid_book_progress_bar);
 
-        mAdapter = new BookGridAdapter(getActivity(), new ArrayList<BookApi>(), mFolderId, mListener);
+        mAdapter = new BookGridAdapter(getActivity(), new ArrayList<BookApi>(), mFolderId, mListener, BookGridFragment.FLAG_SEARCH);
 
         mRecyclerView.setAdapter(mAdapter);
 

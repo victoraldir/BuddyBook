@@ -214,15 +214,16 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
             transaction.replace(mFolderListContainer.getId(), mRetainedFolderFragment);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                if (!isDestroyed()) {
-                    transaction.commit();
-                }
-            } else {
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
-            }
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//                if (!isDestroyed()) {
+//                    transaction.commit();
+//                }
+//            } else {
+//                Intent intent = getIntent();
+//                finish();
+//                startActivity(intent);
+//            }
+            transaction.commit();
 
         }
 
@@ -252,9 +253,9 @@ public class MainActivity extends AppCompatActivity
 //
 //    }
 
-    private void loadCustomFolder(String folderId) {
+    private void loadCustomFolder(Folder folder) {
 
-        if (folderId == null) { //Load My Books folder
+        if (folder == null) { //Load My Books folder
             loadBooksPageView();
             return;
         }
@@ -263,16 +264,16 @@ public class MainActivity extends AppCompatActivity
 
         if (mCurrentGridFragment instanceof BookGridFragment) {
 
-            ((BookGridFragment) mCurrentGridFragment).updateContent(mUser.getUid(), folderId, BookGridFragment.FLAG_CUSTOM_FOLDER);
+            ((BookGridFragment) mCurrentGridFragment).updateContent(mUser.getUid(), folder.getId(),folder.getDescription(), BookGridFragment.FLAG_CUSTOM_FOLDER);
 
         } else {
 
-            Fragment newFragment = BookGridFragment.newInstanceCustomFolder(mUser.getUid(), folderId, BookGridFragment.FLAG_CUSTOM_FOLDER);
+            Fragment newFragment = BookGridFragment.newInstanceCustomFolder(mUser.getUid(), folder.getId(),folder.getDescription(), BookGridFragment.FLAG_CUSTOM_FOLDER);
 
             //getSupportFragmentManager().popBackStackImmediate();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_main_container, newFragment);
-            transaction.addToBackStack(folderId);
+            transaction.addToBackStack(folder.getId());
             transaction.commit();
 
         }
@@ -520,7 +521,7 @@ public class MainActivity extends AppCompatActivity
 
         mFolderId = folder != null ? folder.getId() : null;
 
-        loadCustomFolder(folder != null ? folder.getId() : null);
+        loadCustomFolder(folder);
     }
 
     @Override
@@ -547,11 +548,12 @@ public class MainActivity extends AppCompatActivity
         if (firebaseUser == null) {
             launchLoginActivityResult();
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                if (!isDestroyed()) {
-                    onSignedIn(firebaseUser);
-                }
-            }
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//                if (!isDestroyed()) {
+//                    onSignedIn(firebaseUser);
+//                }
+//            }
+            onSignedIn(firebaseUser);
 
         }
     }
@@ -609,6 +611,42 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDeleteBookClickListener(String mFolderId, BookApi book) {
         firebaseDatabaseHelper.deleteBookFolder(mUser.getUid(),mFolderId,book);
+    }
+
+    @Override
+    public void onAddBookToFolderClickListener(final String folderId, final BookApi book) {
+
+        if(folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)){ //I have this operation
+            firebaseDatabaseHelper.insertBookFolder(mUser.getUid(),folderId,book);
+            return;
+        }
+
+        DialogUtils.alertDialogListFolder(mContext, mFolderListComma, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                String unFormatted = mFolderListComma.split(",")[which];
+                final String id = unFormatted.split("=")[1];
+                String name = unFormatted.split("=")[0];
+
+                Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.added_to_folder),name), Snackbar.LENGTH_LONG)
+                        .setAction(getString(R.string.redo), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if(!id.equals(folderId)) {
+                                    firebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book);
+                                    firebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), id, book);
+                                }
+                            }
+                        }).show();
+
+                if(!id.equals(folderId)) {
+                    firebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
+                    firebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), folderId, book);
+                }
+
+            }
+        });
     }
 
     @Override

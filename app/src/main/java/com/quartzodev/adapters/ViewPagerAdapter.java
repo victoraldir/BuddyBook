@@ -32,7 +32,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
         String folderId = position == 1 ? FirebaseDatabaseHelper.REF_POPULAR_FOLDER : FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER;
 
-        return BookGridFragment.newInstanceCustomFolder(mUserId, folderId, position);
+        return BookGridFragment.newInstanceCustomFolder(mUserId, folderId, null, position);
     }
 
     @Override
