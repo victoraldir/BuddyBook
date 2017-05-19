@@ -609,8 +609,18 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDeleteBookClickListener(String mFolderId, BookApi book) {
+    public void onDeleteBookClickListener(final String mFolderId, final BookApi book) {
         firebaseDatabaseHelper.deleteBookFolder(mUser.getUid(),mFolderId,book);
+
+        Snackbar.make(mCoordinatorLayout, getString(R.string.deleted_folder), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.redo), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                            firebaseDatabaseHelper.insertBookFolder(mUser.getUid(), mFolderId, book);
+
+                    }
+                }).show();
     }
 
     @Override

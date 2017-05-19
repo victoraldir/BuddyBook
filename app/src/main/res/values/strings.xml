@@ -11,6 +11,7 @@
     <string name="action_move_to">Move to...</string>
 
     <string name="added_to_folder">Book added to folder %1$s</string>
+    <string name="deleted_folder">Book deleted</string>
     <string name="redo">Redo</string>
 
     <string name="success_sign_in">You\'re now signed in!</string>
