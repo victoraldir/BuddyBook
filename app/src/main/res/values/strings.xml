@@ -7,10 +7,13 @@
     <string name="action_settings">Settings</string>
     <string name="action_sign_out">Sign Out</string>
     <string name="action_remove">Remove</string>
+    <string name="action_copy">Copy to folder...</string>
+    <string name="action_lend">Lend this book...</string>
     <string name="action_have_this">I have this</string>
-    <string name="action_move_to">Move to...</string>
+    <string name="action_move_to">Move to folder...</string>
 
     <string name="added_to_folder">Book added to folder %1$s</string>
+    <string name="copied_to_folder">Book copied to folder %1$s</string>
     <string name="deleted_folder">Book deleted</string>
     <string name="redo">Redo</string>
 
@@ -28,10 +31,15 @@
     <string name="dialog_message">This will also remove all books saved on this folder</string>
     <string name="dialog_title">Delete %1$s?</string>
 
+    <string name="dialog_title_lend">Lend book</string>
+
     <string name="pick_folder">Move to folder...</string>
 
     <string name="folder_already_exits">Folder already exists</string>
     <string name="folder_desc_empty">Folder description cannot be empty</string>
+
+    <string name="lend_name_empty">Name cannot be empty</string>
+    <string name="lend_email_empty">Email cannot be empty</string>
 
     <string name="dialog_btn_positive">Yes</string>
     <string name="dialog_btn_ok">OK</string>
@@ -41,6 +49,9 @@
     <string name="simple_scanner_activity">Bar code reader</string>
 
     <string name="transition_image">transition_image</string>
+
+    <string name="dialog_name_hint">Name</string>
+    <string name="dialog_email_hint">Email</string>
 
     <!-- TODO barcode stuff. Review them! -->
     <string name="ok">OK</string>

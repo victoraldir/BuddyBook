@@ -160,6 +160,14 @@ public class FirebaseDatabaseHelper {
         df.setValue(folder);
     }
 
+    public void updateBook(String userId, String folderId, BookApi bookApi){
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).updateChildren(Collections.singletonMap(bookApi.getId(),(Object) bookApi));
+    }
+
+//    public void deleteBookFolder(String userId, String folderId, BookApi bookApi) {
+//        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).removeValue();
+//    }
+
     public void insertBookFolder(String userId, String folderId, BookApi bookApi) {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child("books").updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
     }

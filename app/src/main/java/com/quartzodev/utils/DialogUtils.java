@@ -10,10 +10,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.quartzodev.api.BookApi;
+import com.quartzodev.api.Lend;
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -73,7 +77,6 @@ public class DialogUtils {
     }
 
     public static void alertDialogAddFolder(final Activity activity,
-                                            //FragmentManager fragmentManager,
                                             final List<Folder> folders,
                                             final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
                                             final String userId) {
@@ -85,13 +88,6 @@ public class DialogUtils {
         final EditText urlEditText = (EditText) view.findViewById(R.id.edittext_add_folder_description);
         urlEditText.setSingleLine(true);
         final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.signup_input_layout_name);
-
-//        FolderListFragment folderFragment = (FolderListFragment)
-//                fragmentManager.findFragmentById(R.id.container_nav_header);
-
-        // final List<Folder> folders = folderFragment.getmFolderList();
-
-        //final List<Folder> folders = new ArrayList<>();
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setTitle(R.string.item_add_folder)
@@ -136,4 +132,72 @@ public class DialogUtils {
 
     }
 
+    public static void alertDialogLendBook(final Activity activity,
+                                           final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
+                                           final String userId,
+                                            final BookApi book){
+
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_lend_book, null);
+
+        final AlertDialog dialog = new AlertDialog.Builder(activity)
+                .setTitle(R.string.dialog_title_lend)
+                .setPositiveButton("Ok", null)
+                .setNegativeButton("Cancel", null)
+                .setView(view)
+                .create();
+
+        final EditText nameEdtText = (EditText) view.findViewById(R.id.edittext_receiver_name);
+        nameEdtText.setSingleLine(true);
+
+        final TextInputLayout nameInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_input_layout_name);
+
+        final EditText emailEdtText = (EditText) view.findViewById(R.id.edittext_receiver_email);
+
+        final TextInputLayout emailInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_input_layout_email);
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface arg0) {
+
+                Button okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                okButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View arg0) {
+
+                        if (nameEdtText.getText().toString().isEmpty()) {
+
+                            nameInputLayout.setError(activity.getString(R.string.lend_name_empty));
+
+                        } else if (emailEdtText.getText().toString().isEmpty()) {
+
+                            emailInputLayout.setError(activity.getString(R.string.lend_email_empty));
+
+                        } else {
+
+                            Lend lend = new Lend(nameEdtText.getText().toString(),
+                                    emailEdtText.getText().toString(),
+                                    new Date());
+
+                            book.setLend(lend);
+
+                            mFirebaseDatabaseHelper.updateBook(userId,FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,book);
+
+                            dialog.dismiss();
+
+                        }
+
+
+
+                    }
+                });
+            }
+        });
+
+        dialog.show();
+
+
+    }
 }

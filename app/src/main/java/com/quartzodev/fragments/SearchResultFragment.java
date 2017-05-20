@@ -39,7 +39,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     private static final String ARG_MAX_RESULT = "maxResult";
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
-    //private SearchTask mSearchTask;
+
     private BookGridAdapter mAdapter;
     private String mFolderId;
     private String mISBN;
@@ -70,9 +70,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
         ButterKnife.bind(this, rootView);
 
-        //mProgressBar = (ProgressBar) rootView.findViewById(R.id.grid_book_progress_bar);
-
-        mAdapter = new BookGridAdapter(getActivity(), new ArrayList<BookApi>(), mFolderId, mListener, BookGridFragment.FLAG_SEARCH);
+        mAdapter = new BookGridAdapter(getActivity(), new ArrayList<BookApi>(), mFolderId, mListener, BookGridFragment.FLAG_SEARCH, null);
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -228,83 +226,5 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     public void onLoaderReset(Loader<List<BookApi>> loader) {
 
     }
-
-//    public class SearchTask extends AsyncTask<String,Integer,List<BookApi>> {
-//
-//        private final String LOG = SearchTask.class.getSimpleName();
-//        private boolean mCanceled = false;
-////        private RecyclerView recyclerView;
-////        private ProgressBar progressBar;
-//
-//        public SearchTask(){
-////            this.recyclerView = fragment.mRecyclerView;
-////            this.progressBar = fragment.mProgressBar;
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-////            mRecyclerView.setVisibility(View.INVISIBLE);
-////            progressBar.setVisibility(View.VISIBLE);
-//
-//        }
-//
-//        @Override
-//        protected void onCancelled() {
-//
-//            if(!isCancelled()) {
-//                Log.d(LOG, "Thread ID: " + getId() + " cancelled");
-//                //setLoading(false);
-//                super.onCancelled();
-//            }
-//        }
-//
-//        @Override
-//        protected List<BookApi> doInBackground(String... params) {
-//
-//            if(!isCancelled()) {
-//                Log.d(LOG, "Thread ID: " + getId() + ". Running search query for text: " + params[0]);
-//
-//                try {
-//
-//                    Response<BookResponse> bookResponseResponse;
-//
-//                    //Has max results limit
-//                    if(params[1] != null && !params[1].isEmpty()){
-//                        bookResponseResponse = APIService.getInstance()
-//                                .getBooksMaxResult(params[0],Integer.parseInt(params[1]))
-//                                .execute();
-//                    }else{
-//                        bookResponseResponse = APIService.getInstance().getBooks(params[0]).execute();
-//                    }
-//
-//
-//                    if (bookResponseResponse.body() != null && !mCanceled) {
-//                        return bookResponseResponse.body().getItems();
-//                    }
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(List<BookApi> bookApis) {
-//
-//            Log.d(LOG,"Thread ID: " + getId() + ". Completed");
-//
-//            if(!isCancelled()){
-//                //setLoading(false);
-//                mAdapter.swap(bookApis);
-//            }
-//
-//        }
-//
-//        public void cancel() {
-//            mCanceled = true;
-//        }
-//    }
 
 }

@@ -16,6 +16,7 @@ import com.quartzodev.buddybook.R;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.fragments.BookGridFragment;
+import com.quartzodev.fragments.ViewPagerFragment;
 import com.quartzodev.views.DynamicImageView;
 
 import java.util.ArrayList;
@@ -36,15 +37,18 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
     private String mFolderId;
     private int mType;
+    private BookGridFragment mParent;
 
     public BookGridAdapter(Context mContext, List<BookApi> bookList,
                            String folderId,
                            BookGridFragment.OnGridFragmentInteractionListener listener,
-                           int type) {
+                           int type,
+                           BookGridFragment parent) {
         this.mContext = mContext;
         this.mBookList = bookList;
         this.mFolderId = folderId;
         this.mListener = listener;
+        mParent = parent;
         mType = type;
     }
 
@@ -74,13 +78,21 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         if(mBookList != null){
             mBookList.remove(bookApi);
             notifyDataSetChanged();
+            updateAdapterParent();
         }
     }
 
     public void addItem(BookApi bookApi){
-        if(mBookList != null){
+        if(mBookList != null && !mBookList.contains(bookApi)){
             mBookList.add(bookApi);
             notifyDataSetChanged();
+            updateAdapterParent();
+        }
+    }
+
+    private void updateAdapterParent(){
+        if(mParent != null && mParent.getParentFragment() != null) {
+            ((ViewPagerFragment) mParent.getParentFragment()).forceNotify();
         }
     }
 
@@ -101,12 +113,14 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
         final BookApi book = mBookList.get(position);
 
-        //holder.textViewBookTitle.setText(book.getVolumeInfo().getTitle());
+        if(book.getLend() != null){
+            holder.imageViewIconLend.setVisibility(View.VISIBLE);
+        }
 
-        //holder.textViewBookAuthor.setText(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
-
-        holder.toolbar.setTitle(book.getVolumeInfo().getTitle());
-        holder.toolbar.setSubtitle(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
+        holder.textViewBookTitle.setText(book.getVolumeInfo().getTitle());
+        holder.textViewBookAuthor.setText(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
+        //holder.toolbar.setTitle(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
+        //holder.toolbar.setSubtitle(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
 
         holder.toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,6 +157,13 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
                         break;
                     case R.id.action_move_folder:
                         mListener.onAddBookToFolderClickListener(mFolderId,book);
+                        break;
+                    case R.id.action_copy:
+                        mListener.onCopyBookToFolderClickListener(mFolderId,book);
+                        break;
+                    case R.id.action_lend:
+                        mListener.onLendBookClickListener(book);
+                        break;
                 }
 
                 return false;
@@ -179,10 +200,12 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         ImageView imageViewthumbnail;
         @BindView(R.id.book_toolbar)
         Toolbar toolbar;
-//        @BindView(R.id.book_title)
-//        TextView textViewBookTitle;
-//        @BindView(R.id.book_author)
-//        TextView textViewBookAuthor;
+        @BindView(R.id.book_title)
+        TextView textViewBookTitle;
+        @BindView(R.id.book_author)
+        TextView textViewBookAuthor;
+        @BindView(R.id.icon_book_lend)
+        ImageView imageViewIconLend;
 
 
         public ViewHolder(View itemView) {

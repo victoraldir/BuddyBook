@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -16,13 +16,21 @@
         <item name="android:scaleType">centerCrop</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="BookToolbar">
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
+    <style name="BookToolbar.Title">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="BookToolbar.Subtitle">
+        <item name="android:textColor">@color/secondary_text</item>
+        <item name="android:textSize">10sp</item>
+    </style>
 
 </resources>

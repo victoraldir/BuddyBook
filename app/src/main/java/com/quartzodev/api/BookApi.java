@@ -17,7 +17,17 @@ public class BookApi {
     @SerializedName("volumeInfo")
     public VolumeInfo volumeInfo;
 
+    public Lend lend;
+
     public BookApi() {
+    }
+
+    public Lend getLend() {
+        return lend;
+    }
+
+    public void setLend(Lend lend) {
+        this.lend = lend;
     }
 
     public String getId() {

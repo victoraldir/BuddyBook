@@ -48,16 +48,13 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     private static final String ARG_FOLDER_NAME = "mFolderName";
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
-//    @BindView(R.id.grid_book_progress_bar)
-//    ProgressBar mProgressBar;
-
     private BookGridAdapter mAdapter;
     private String mUserId;
     private String mFolderId;
     private String mFolderName;
     private int mFlag;
     private OnGridFragmentInteractionListener mListener;
-    FirebaseDatabaseHelper mFirebaseDatabaseHelper;
+    private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
     public static BookGridFragment newInstanceCustomFolder(String userId, String folderId, String folderName, int flag) {
         Bundle arguments = new Bundle();
@@ -72,12 +69,13 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
 
     public void updateContent(String userId, String folderId, String folderName, int flag) {
 
-        mFirebaseDatabaseHelper.detachBookFolderChildEventListener(mUserId,mFolderId,this);
-
         mUserId = userId;
         mFolderId = folderId;
         mFlag = flag;
         mFolderName = folderName;
+
+        detachFirebaseListener();
+
         getActivity().getSupportLoaderManager().restartLoader(mFlag, null, this);
     }
 
@@ -105,6 +103,12 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     }
 
     @Override
+    public void onResume() {
+        getActivity().getSupportLoaderManager().restartLoader(mFlag, null, this);
+        super.onResume();
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getActivity().getSupportLoaderManager().destroyLoader(mFlag);
@@ -119,7 +123,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         View rootView = inflater.inflate(R.layout.fragment_grid_book, container, false);
         ButterKnife.bind(this, rootView);
 
-        mAdapter = new BookGridAdapter(getActivity(), new ArrayList<BookApi>(), mFolderId, mListener,mFlag);
+        mAdapter = new BookGridAdapter(getActivity(), new ArrayList<BookApi>(), mFolderId, mListener,mFlag, this);
         mRecyclerView.setAdapter(mAdapter);
 
         int columnCount = getResources().getInteger(R.integer.list_column_count);
@@ -149,19 +153,17 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public Loader<Folder> onCreateLoader(int id, Bundle args) {
 
+        detachFirebaseListener();
+
         setLoading(true);
 
         FetchFolderTask task = null;
 
-        //TODO create constants here!
         if (mFlag == FLAG_TOP_BOOKS_FOLDER) {
-            //Registering listener do detect operations
-            mFirebaseDatabaseHelper.attachBookFolderChildEventListener(mUserId,mFirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,this);
             task = new FetchFolderTask(mUserId, null, getActivity(), FetchFolderTask.FETCH_POPULAR_FOLDER);
         } else if (mFlag == FLAG_MY_BOOKS_FOLDER) {
             task = new FetchFolderTask(mUserId, null, getActivity(), FetchFolderTask.FETCH_MY_BOOKS_FOLDER);
         } else if (mFlag == FLAG_CUSTOM_FOLDER) {
-            mFirebaseDatabaseHelper.attachBookFolderChildEventListener(mUserId,mFolderId,this);
             task = new FetchFolderTask(mUserId, mFolderId, getActivity(), FetchFolderTask.FETCH_CUSTOM_FOLDER);
         }
 
@@ -171,6 +173,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
 
         return task;
     }
+
 
     public void setLoading(boolean flag) {
         ViewGroup container = (ViewGroup) this.getView();
@@ -194,6 +197,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         setLoading(false);
         updateToolbarTitle();
 
+        attachFirebaseListener();
     }
 
     @Override
@@ -217,7 +221,27 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        mFirebaseDatabaseHelper.detachBookFolderChildEventListener(mUserId,mFolderId,this);
+
+//        mFirebaseDatabaseHelper.detachBookFolderChildEventListener(mUserId,mFolderId,this);
+
+        detachFirebaseListener();
+
+    }
+
+    public void detachFirebaseListener(){
+        if (mFlag == FLAG_MY_BOOKS_FOLDER) {
+            mFirebaseDatabaseHelper.detachBookFolderChildEventListener(mUserId,mFirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,this);
+        } else if (mFlag == FLAG_CUSTOM_FOLDER) {
+            mFirebaseDatabaseHelper.detachBookFolderChildEventListener(mUserId,mFolderId,this);
+        }
+    }
+
+    public void attachFirebaseListener(){
+        if (mFlag == FLAG_MY_BOOKS_FOLDER) {
+            mFirebaseDatabaseHelper.attachBookFolderChildEventListener(mUserId,mFirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,this);
+        } else if (mFlag == FLAG_CUSTOM_FOLDER) {
+            mFirebaseDatabaseHelper.attachBookFolderChildEventListener(mUserId,mFolderId,this);
+        }
     }
 
     @Override
@@ -262,5 +286,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         void onClickListenerBookGridInteraction(String mFolderId, BookApi book, DynamicImageView imageView);
         void onDeleteBookClickListener(String mFolderId, BookApi book);
         void onAddBookToFolderClickListener(String mFolderId, BookApi book);
+        void onCopyBookToFolderClickListener(String mFolderId, BookApi book);
+        void onLendBookClickListener(BookApi book);
     }
 }

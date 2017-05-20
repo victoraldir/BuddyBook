@@ -8,9 +8,13 @@ import android.view.MenuItem;
 
 import com.quartzodev.fragments.DetailActivityFragment;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity {
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     public static final String ARG_BOOK_ID = "bookId";
     public static final String ARG_FOLDER_ID = "folderId";
@@ -25,7 +29,6 @@ public class DetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -41,9 +44,7 @@ public class DetailActivity extends AppCompatActivity {
         getSupportFragmentManager().popBackStackImmediate();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.detail_container, newFragment).commit();
-        //transaction.addToBackStack(null);
 
-        //transaction.commit();
 
     }
 
@@ -61,7 +62,6 @@ public class DetailActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-            //this.finish();
             supportFinishAfterTransition();
         } else {
             getSupportFragmentManager().popBackStack();

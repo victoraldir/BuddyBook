@@ -2,6 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
@@ -44,34 +45,46 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/book_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:minHeight="?attr/actionBarSize"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 >
-                <!--
-                <TextView
-                    android:id="@+id/book_title"
-                    style="@style/TextAppearance.AppCompat.Subhead"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="2"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingTop="16dp"
-                    tools:text="book_title" />
 
-                <TextView
-                    android:id="@+id/book_author"
-                    style="@style/TextAppearance.AppCompat.Body1"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    tools:text="book_author" />
-                   -->
+                    android:layout_height="80dp"
+                    android:paddingBottom="6dp"
+                    android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/book_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="2"
+                            tools:text="book_title"
+                            android:textAppearance="@style/BookToolbar.Title"/>
+
+                        <TextView
+                            android:id="@+id/book_author"
+                            android:layout_weight="1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:maxLines="1"
+                            tools:text="book_author"
+                            android:textAppearance="@style/BookToolbar.Subtitle"
+                            android:scaleType="fitXY"/>
+
+                    <com.quartzodev.views.SquareImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/icon_libraries"
+                        android:layout_gravity="bottom"
+                        android:id="@+id/icon_book_lend"
+                        android:visibility="gone"
+                        />
+
+                </LinearLayout>
+
 
             </android.support.v7.widget.Toolbar>
         </FrameLayout>

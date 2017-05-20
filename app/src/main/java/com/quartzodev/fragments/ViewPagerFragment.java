@@ -34,6 +34,10 @@ public class ViewPagerFragment extends Fragment {
         return fragment;
     }
 
+    public void forceNotify(){
+        mViewPagerAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
