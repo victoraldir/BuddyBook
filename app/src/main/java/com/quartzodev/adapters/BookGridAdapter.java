@@ -90,7 +90,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         }
     }
 
-    private void updateAdapterParent(){
+    public void updateAdapterParent(){
         if(mParent != null && mParent.getParentFragment() != null) {
             ((ViewPagerFragment) mParent.getParentFragment()).forceNotify();
         }

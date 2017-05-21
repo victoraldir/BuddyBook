@@ -68,6 +68,9 @@
     <string name="barcode_error">"Error reading barcode: %1$s"</string>
     <string name="activity_title">Read Barcode</string>
     <string name="point_bar_code">Point to a bar code. Pinch/Stretch to zoom</string>
+    <string name="action_share">Share</string>
+    <string name="checkbook">Check this book</string>
+    <string name="borrowed_book">Borrowed book</string>
 
 
 </resources>

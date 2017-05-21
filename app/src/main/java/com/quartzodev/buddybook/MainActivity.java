@@ -527,6 +527,12 @@ public class MainActivity extends AppCompatActivity
         bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
         bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, mFolderListComma);
 
+        if(folderId == FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER){
+            bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK,true);
+        }else {
+            bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK,false);
+        }
+
         //if(currentFragment instanceof  SearchResultFragment){
         Gson gson = new Gson();
         bundle.putString(DetailActivity.ARG_BOOK_JSON, gson.toJson(book));
@@ -615,6 +621,7 @@ public class MainActivity extends AppCompatActivity
                         .show();
 
                 if(!id.equals(folderId)) {
+                    book.setLend(null);
                     mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
                 }
 

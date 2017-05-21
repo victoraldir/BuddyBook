@@ -257,6 +257,12 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
+        Log.d(TAG,"onChildChanged FIRED " + dataSnapshot.toString());
+        if (dataSnapshot.getValue() != null) {
+
+            mAdapter.updateAdapterParent();
+        }
+
     }
 
     @Override

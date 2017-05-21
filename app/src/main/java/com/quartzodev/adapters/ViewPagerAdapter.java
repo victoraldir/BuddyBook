@@ -1,6 +1,7 @@
 package com.quartzodev.adapters;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -26,6 +27,11 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
         mContext = context;
         this.mUserId = userId;
+    }
+
+    @Override
+    public Parcelable saveState() {
+        return null;
     }
 
     @Override
