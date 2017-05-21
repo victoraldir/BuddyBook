@@ -164,9 +164,13 @@ public class FirebaseDatabaseHelper {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).updateChildren(Collections.singletonMap(bookApi.getId(),(Object) bookApi));
     }
 
-//    public void deleteBookFolder(String userId, String folderId, BookApi bookApi) {
-//        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).removeValue();
-//    }
+    public void attachUpdateBookChildListener(String userId, String folderId, BookApi bookApi, ValueEventListener listener){
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).addValueEventListener(listener);
+    }
+
+    public void detachUpdateBookChildListener(String userId, String folderId, BookApi bookApi, ValueEventListener listener){
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).addValueEventListener(listener);
+    }
 
     public void insertBookFolder(String userId, String folderId, BookApi bookApi) {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child("books").updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));

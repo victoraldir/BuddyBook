@@ -11,6 +11,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,14 +26,24 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.quartzodev.api.BookApi;
 import com.quartzodev.api.VolumeInfo;
 import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.task.FetchBookTask;
 import com.quartzodev.utils.DialogUtils;
+import com.quartzodev.views.DynamicImageView;
+
+import net.danlew.android.joda.JodaTimeAndroid;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Interval;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,7 +53,8 @@ import butterknife.ButterKnife;
  */
 public class DetailActivityFragment extends Fragment implements View.OnClickListener,
         DialogInterface.OnClickListener,
-        FirebaseDatabaseHelper.OnDataSnapshotListener {
+        FirebaseDatabaseHelper.OnDataSnapshotListener,
+        ValueEventListener {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
     private static final String MOVIE_SHARE_HASHTAG = "#BuddyBook ";
@@ -76,11 +88,11 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @BindView(R.id.detail_textview_receiver_date)
     @Nullable
     TextView textLentDate;
-    //    public static final String ARG_BOOK_ID = "bookId";
-//    public static final String ARG_FOLDER_ID = "folderId";
-//    public static final String ARG_USER_ID = "userId";
-//    public static final String ARG_FOLDER_LIST_ID = "folderListId";
-//    public static final String ARG_BOOK_JSON = "bookJson";
+
+    @BindView(R.id.card_book_borrowed)
+    @Nullable
+    CardView cardViewBookBorrowed;
+
     private String mBookId;
     private String mBookJson;
     private String mFolderId;
@@ -92,6 +104,8 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     private MenuItem menushareItem;
     private ShareActionProvider mShareActionProvider;
     private Boolean isLentBook;
+
+    private OnDetailInteractionListener mListener;
 
     public DetailActivityFragment() {
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
@@ -121,6 +135,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         mBookJson = getArguments().getString(DetailActivity.ARG_BOOK_JSON);
         isLentBook = getArguments().getBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK);
         mContext = getContext();
+        JodaTimeAndroid.init(getActivity());
     }
 
     @Override
@@ -157,11 +172,14 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Toast.makeText(mContext, "Folder list is: " + mFolderListComma, Toast.LENGTH_SHORT).show();
-        //getLoaderManager().initLoader(LOADER_ID_BOOK,null,this).forceLoad();
+        loadBook();
+    }
+
+    public void loadBook(){
         mFirebaseDatabaseHelper.findBook(mUserId, mFolderId, mBookId, this);
     }
 
-    private void loadBookDetails(BookApi bookApi) {
+    private void loadBookDetails(final BookApi bookApi) {
 
         Log.d(TAG, "Should detail book: " + bookApi.getVolumeInfo().getDescription());
 
@@ -183,39 +201,67 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             mDescription.setText(bookApi.getVolumeInfo().getDescription());
             mPublishedDate.setText(bookApi.getVolumeInfo().getPublishedDate());
 
-            ActionBar actionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+            if(getActivity() != null) {
+                ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
-            actionBar.setTitle(bookApi.getVolumeInfo().getTitle());
-            actionBar.setSubtitle(bookApi.getVolumeInfo().getAuthors() != null ? bookApi.getVolumeInfo().getAuthors().get(0) : "");
-
+                actionBar.setTitle(bookApi.getVolumeInfo().getTitle());
+                actionBar.setSubtitle(bookApi.getVolumeInfo().getAuthors() != null ? bookApi.getVolumeInfo().getAuthors().get(0) : "");
+            }
             btnBookMark.setOnClickListener(this);
 
-            if(bookApi.getLend() != null){
-                textReceiverEmail.setText(bookApi.getLend().getReceiverEmail());
-                textReceiverName.setText(bookApi.getLend().getReceiverName());
-                textLentDate.setText(bookApi.getLend().getLendDate().toString());
-                btnLendBook.setImageResource(R.drawable.ic_assignment_return_black_24dp);
+            if(isLentBook) {
+
+                if (bookApi.getLend() != null) {
+
+                    DateTime lendDate = new DateTime(bookApi.getLend().getLendDate());
+
+                    Days days = Days.daysBetween(lendDate, DateTime.now());
+
+                    textReceiverEmail.setText(String.format(getString(R.string.lent_to_email), bookApi.getLend().getReceiverEmail()));
+                    textReceiverName.setText(String.format(getString(R.string.lent_to), bookApi.getLend().getReceiverName()));
+                    textLentDate.setText(String.format(getString(R.string.lent_day_ago), days.getDays()));
+                    btnLendBook.setImageResource(R.drawable.ic_assignment_return_black_24dp);
+                    cardViewBookBorrowed.setVisibility(View.VISIBLE);
+
+                    btnLendBook.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            detachFirebaseListener();
+                            attachFirebaseListener();
+                            mListener.onReturnBook(bookApi);
+                        }
+                    });
+
+                } else {
+
+                    btnLendBook.setImageResource(R.drawable.ic_card_giftcard_black_24dp);
+                    cardViewBookBorrowed.setVisibility(View.GONE);
+
+                    btnLendBook.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            detachFirebaseListener();
+                            attachFirebaseListener();
+                            mListener.onLendBook(bookApi);
+                        }
+                    });
+
+                }
             }
 
         }
+
     }
 
-//    @Override
-//    public Loader<BookApi> onCreateLoader(int id, Bundle args) {
-//        return new FetchBookTask(mContext, mUserId, mFolderId, mBookId);
-//    }
-//
-//    @Override
-//    public void onLoadFinished(Loader<BookApi> loader, BookApi data) {
-//        mBookSelected = data;
-//        loadBookDetails(mBookSelected);
-//
-//    }
-//
-//    @Override
-//    public void onLoaderReset(Loader<BookApi> loader) {
-//    }
+    public void attachFirebaseListener(){
+        mFirebaseDatabaseHelper.attachUpdateBookChildListener(mUserId,FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,mBookSelected,this);
+    }
 
+    public void detachFirebaseListener(){
+        if(mBookSelected != null) {
+            mFirebaseDatabaseHelper.detachUpdateBookChildListener(mUserId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, mBookSelected, this);
+        }
+    }
 
     @Override
     public void onClick(View v) {
@@ -252,8 +298,44 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             Gson gson = new Gson();
             mBookSelected = gson.fromJson(mBookJson, BookApi.class);
         }
+        if(isAdded()) {
+            loadBookDetails(mBookSelected);
+        }
 
-        loadBookDetails(mBookSelected);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnDetailInteractionListener) {
+            mListener = (OnDetailInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnDetailInteractionListener");
+        }
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        detachFirebaseListener();
+    }
+
+    @Override
+    public void onDataChange(DataSnapshot dataSnapshot) {
+//        Log.d(TAG, "onDataChange fired: " + dataSnapshot.toString());
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+//        Log.d(TAG, "onCancelled fired: " + databaseError.toString());
+    }
+
+    public interface OnDetailInteractionListener {
+
+        void onLendBook(BookApi bookApi);
+        void onReturnBook(BookApi bookApi);
 
     }
 }

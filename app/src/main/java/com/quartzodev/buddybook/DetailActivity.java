@@ -6,12 +6,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.quartzodev.api.BookApi;
+import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.fragments.DetailActivityFragment;
+import com.quartzodev.utils.DialogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements DetailActivityFragment.OnDetailInteractionListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -23,6 +26,9 @@ public class DetailActivity extends AppCompatActivity {
     public static final String ARG_BOOK_JSON = "bookJson";
     public static final String ARG_FLAG_IS_LENT_BOOK = "isLentBook";
 
+    private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
+    private String mUserId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,17 +37,18 @@ public class DetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
 
         String bookId = getIntent().getExtras().getString(ARG_BOOK_ID);
         String folderId = getIntent().getExtras().getString(ARG_FOLDER_ID);
-        String userId = getIntent().getExtras().getString(ARG_USER_ID);
+        mUserId = getIntent().getExtras().getString(ARG_USER_ID);
         String folderListId = getIntent().getExtras().getString(ARG_FOLDER_LIST_ID);
         String bookJson = getIntent().getExtras().getString(ARG_BOOK_JSON);
         boolean isLent = getIntent().getExtras().getBoolean(ARG_FLAG_IS_LENT_BOOK);
 
-        DetailActivityFragment newFragment = DetailActivityFragment.newInstance(userId, bookId, folderId, folderListId, bookJson,isLent);
+        DetailActivityFragment newFragment = DetailActivityFragment.newInstance(mUserId, bookId, folderId, folderListId, bookJson,isLent);
 
         getSupportFragmentManager().popBackStackImmediate();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -68,5 +75,19 @@ public class DetailActivity extends AppCompatActivity {
         } else {
             getSupportFragmentManager().popBackStack();
         }
+    }
+
+    @Override
+    public void onLendBook(BookApi bookApi) {
+        DialogUtils.alertDialogLendBook(this,mFirebaseDatabaseHelper,mUserId,bookApi);
+    }
+
+    @Override
+    public void onReturnBook(BookApi bookApi) {
+        DialogUtils.alertDialogReturnBook(this,mFirebaseDatabaseHelper,mUserId,bookApi);
+    }
+
+    public void loadBook(){
+        ((DetailActivityFragment) getSupportFragmentManager().findFragmentById(R.id.detail_container)).loadBook();
     }
 }

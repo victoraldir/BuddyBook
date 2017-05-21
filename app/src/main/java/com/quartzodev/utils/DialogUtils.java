@@ -9,9 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.quartzodev.api.BookApi;
 import com.quartzodev.api.Lend;
+import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
@@ -185,6 +187,14 @@ public class DialogUtils {
 
                             mFirebaseDatabaseHelper.updateBook(userId,FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,book);
 
+                            try {
+                                DetailActivity detailActivity = ((DetailActivity) activity);
+
+                                if (detailActivity != null) {
+                                    detailActivity.loadBook();
+                                }
+                            }catch (Exception ex){}
+
                             dialog.dismiss();
 
                         }
@@ -198,6 +208,35 @@ public class DialogUtils {
 
         dialog.show();
 
+    }
+
+
+    public static void alertDialogReturnBook(final Activity activity,
+                                             final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
+                                             final String userId,
+                                             final BookApi book){
+
+        final AlertDialog dialog = new AlertDialog.Builder(activity)
+                .setTitle("Returning a book?")
+                .setMessage("Is Maco returning this book?")
+                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        BookApi updatedBook = book;
+                        updatedBook.setLend(null);
+                        mFirebaseDatabaseHelper.updateBook(userId,FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,updatedBook);
+
+                        try {
+                            ((DetailActivity) activity).loadBook(); //TODO make this reload better. Error prone
+                        }catch (Exception ex){}
+                    }
+                })
+                .setNegativeButton("Cancel",null)
+                .setCancelable(true)
+                .create();
+
+        dialog.show();
 
     }
 }

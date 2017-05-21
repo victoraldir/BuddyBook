@@ -9,6 +9,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -127,8 +128,8 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         mRecyclerView.setAdapter(mAdapter);
 
         int columnCount = getResources().getInteger(R.integer.list_column_count);
-        GridLayoutManager sglm =
-                new GridLayoutManager(getActivity(), columnCount);
+        StaggeredGridLayoutManager sglm =
+                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(sglm);
 
         if(mFolderName != null) {
@@ -222,8 +223,6 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         super.onDetach();
         mListener = null;
 
-//        mFirebaseDatabaseHelper.detachBookFolderChildEventListener(mUserId,mFolderId,this);
-
         detachFirebaseListener();
 
     }
@@ -294,5 +293,6 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         void onAddBookToFolderClickListener(String mFolderId, BookApi book);
         void onCopyBookToFolderClickListener(String mFolderId, BookApi book);
         void onLendBookClickListener(BookApi book);
+        void onReturnBookClickListener(BookApi book);
     }
 }

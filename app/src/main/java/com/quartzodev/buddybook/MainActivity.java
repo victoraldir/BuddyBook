@@ -621,7 +621,7 @@ public class MainActivity extends AppCompatActivity
                         .show();
 
                 if(!id.equals(folderId)) {
-                    book.setLend(null);
+                    //book.setLend(null);
                     mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
                 }
 
@@ -633,6 +633,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLendBookClickListener(BookApi book) {
         DialogUtils.alertDialogLendBook(this, mFirebaseDatabaseHelper,mUser.getUid(),book);
+    }
+
+    @Override
+    public void onReturnBookClickListener(BookApi book) {
+        DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper,mUser.getUid(),book);
     }
 
     @Override

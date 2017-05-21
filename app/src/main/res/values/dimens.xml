@@ -10,4 +10,6 @@
     <dimen name="text_margin">16dp</dimen>
 
     <dimen name="search_view_inset">5dp</dimen>
+
+    <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.25</item>
 </resources>

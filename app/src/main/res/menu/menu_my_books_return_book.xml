@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.quartzodev.buddybook.DetailActivity">
+
+    <item
+        android:id="@+id/action_return_lend"
+        android:orderInCategory="100"
+        android:title="@string/action_return_lend"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_copy"
+        android:orderInCategory="200"
+        android:title="@string/action_copy"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_delete"
+        android:orderInCategory="300"
+        android:title="@string/action_remove"
+        app:showAsAction="never" />
+</menu>

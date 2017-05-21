@@ -8,7 +8,8 @@
     <string name="action_sign_out">Sign Out</string>
     <string name="action_remove">Remove</string>
     <string name="action_copy">Copy to folder...</string>
-    <string name="action_lend">Lend this book...</string>
+    <string name="action_lend">Lend this book</string>
+    <string name="action_return_lend">Return this book</string>
     <string name="action_have_this">I have this</string>
     <string name="action_move_to">Move to folder...</string>
 
@@ -53,6 +54,10 @@
     <string name="dialog_name_hint">Name</string>
     <string name="dialog_email_hint">Email</string>
 
+    <string name="lent_to">Lent to: %1$s</string>
+    <string name="lent_to_email">Email: %1$s</string>
+    <string name="lent_day_ago">Date:%3d days ago</string>
+
     <!-- TODO barcode stuff. Review them! -->
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
@@ -72,5 +77,9 @@
     <string name="checkbook">Check this book</string>
     <string name="borrowed_book">Borrowed book</string>
 
+
+    <string name="lorem_ipsum_short">Lorem ipsum dolor sit amet</string>
+    <string name="lorem_ipsum_medium">Lorem ipsum dolor sit amet,consectetur adipiscing elit</string>
+    <string name="lorem_ipsum_large">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
 
 </resources>

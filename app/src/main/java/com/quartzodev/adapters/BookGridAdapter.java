@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -113,14 +114,12 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
         final BookApi book = mBookList.get(position);
 
-        if(book.getLend() != null){
-            holder.imageViewIconLend.setVisibility(View.VISIBLE);
+        if(mType == BookGridFragment.FLAG_MY_BOOKS_FOLDER && book.getLend() != null){
+            holder.containerIconLend.setVisibility(View.VISIBLE);
         }
 
         holder.textViewBookTitle.setText(book.getVolumeInfo().getTitle());
         holder.textViewBookAuthor.setText(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
-        //holder.toolbar.setTitle(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
-        //holder.toolbar.setSubtitle(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
 
         holder.toolbar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +134,12 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
                     holder.toolbar.inflateMenu(R.menu.menu_folders);
                     break;
                 case BookGridFragment.FLAG_MY_BOOKS_FOLDER:
-                    holder.toolbar.inflateMenu(R.menu.menu_my_books);
+                    if(book.getLend() == null){
+                        holder.toolbar.inflateMenu(R.menu.menu_my_books);
+                    }else{
+                        holder.toolbar.inflateMenu(R.menu.menu_my_books_return_book);
+                    }
+
                     break;
                 case BookGridFragment.FLAG_TOP_BOOKS_FOLDER:
                     break;
@@ -163,6 +167,9 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
                         break;
                     case R.id.action_lend:
                         mListener.onLendBookClickListener(book);
+                        break;
+                    case R.id.action_return_lend:
+                        mListener.onReturnBookClickListener(book);
                         break;
                 }
 
@@ -205,7 +212,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         @BindView(R.id.book_author)
         TextView textViewBookAuthor;
         @BindView(R.id.icon_book_lend)
-        ImageView imageViewIconLend;
+        FrameLayout containerIconLend;
 
 
         public ViewHolder(View itemView) {

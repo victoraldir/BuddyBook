@@ -33,6 +33,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -52,6 +53,9 @@ import com.quartzodev.ui.camera.CameraSourcePreview;
 import com.quartzodev.ui.camera.GraphicOverlay;
 
 import java.io.IOException;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Activity for the multi-tracker app.  This app detects barcodes and displays the value with the
@@ -76,6 +80,9 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     private ScaleGestureDetector scaleGestureDetector;
     private GestureDetector gestureDetector;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     /**
      * Initializes the UI and creates the detector pipeline.
      */
@@ -83,6 +90,10 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.barcode_capture);
+
+        ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
