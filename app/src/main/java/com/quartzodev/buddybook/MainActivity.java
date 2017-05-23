@@ -207,14 +207,14 @@ public class MainActivity extends AppCompatActivity
 
     private void updateFolderList() {
 
-        //if (mRetainedFolderFragment == null) {
+        if (mRetainedFolderFragment == null) {
 
             mRetainedFolderFragment = FolderListFragment.newInstance(mUser.getUid());
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(mFolderListContainer.getId(), mRetainedFolderFragment);
             transaction.commit();
 
-        //}
+        }
 
     }
 
@@ -396,11 +396,11 @@ public class MainActivity extends AppCompatActivity
                 mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
 
 
-                mSearchResultFragment.setRetainInstance(true);
+                //mSearchResultFragment.setRetainInstance(true);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_main_container, mSearchResultFragment).commit();
 
-                mSearchView.requestFocus();
+                //mSearchView.requestFocus();
 
                 return true;
             }

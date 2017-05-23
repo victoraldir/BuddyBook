@@ -150,7 +150,7 @@ public class FirebaseDatabaseHelper {
         ref.addChildEventListener(listener);
     }
 
-    public void detacheFetchFolders(String userId, ChildEventListener listener) {
+    public void detachFetchFolders(String userId, ChildEventListener listener) {
         DatabaseReference ref = mDatabaseReference.child(userId).child(REF_FOLDERS);
         ref.removeEventListener(listener);
     }
@@ -201,8 +201,12 @@ public class FirebaseDatabaseHelper {
         return new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                onDataSnapshotListener.onDataSnapshotListenerAvailable(dataSnapshot);
-                notifyCaller(onDataSnapshotListener);
+                try {
+                    onDataSnapshotListener.onDataSnapshotListenerAvailable(dataSnapshot);
+                    notifyCaller(onDataSnapshotListener);
+                }catch (Exception ex){
+                    Log.e(TAG,ex.getMessage());
+                }
             }
 
             @Override

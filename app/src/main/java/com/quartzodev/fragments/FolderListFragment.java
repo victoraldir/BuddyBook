@@ -159,7 +159,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        mFirebaseDatabaseHelper.detacheFetchFolders(mUserId,this);
+        mFirebaseDatabaseHelper.detachFetchFolders(mUserId,this);
     }
 
     @Override
