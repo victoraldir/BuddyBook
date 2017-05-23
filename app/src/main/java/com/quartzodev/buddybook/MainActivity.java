@@ -1,6 +1,7 @@
 package com.quartzodev.buddybook;
 
 import android.app.SearchManager;
+import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -41,6 +42,8 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
 import com.quartzodev.api.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
@@ -54,6 +57,7 @@ import com.quartzodev.provider.SuggestionProvider;
 import com.quartzodev.ui.BarcodeCaptureActivity;
 import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.views.DynamicImageView;
+import com.quartzodev.widgets.BuddyBookWidgetProvider;
 import com.quartzodev.widgets.CircleTransform;
 
 import java.util.Arrays;
@@ -71,6 +75,8 @@ public class MainActivity extends AppCompatActivity
         SearchView.OnQueryTextListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    public static final String EXTRA_USER_ID = "userId";
 
     private static final int RC_SIGN_IN = 1;
     private static final int RC_BARCODE_CAPTURE = 2;
@@ -164,12 +170,26 @@ public class MainActivity extends AppCompatActivity
         if (mUser == null) {
             mUser = User.setupUserFirstTime(firebaseUser, mContext);
             mFirebaseDatabaseHelper.fetchUserById(mUser.getUid(), this);
-            loadProfileOnDrawer();
-        } else {
-            loadProfileOnDrawer();
+        }else if(mUser.getUid().equals(firebaseUser.getUid())){
+            mUser = User.setupUserFirstTime(firebaseUser, mContext);
+            mFirebaseDatabaseHelper.fetchUserById(mUser.getUid(), this);
         }
 
-        updateFolderList();
+    }
+
+    public void updateWidget(){
+        Intent intent = new Intent(this,BuddyBookWidgetProvider.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        // Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
+        // since it seems the onUpdate() is only fired on that:
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(mContext);
+        int appWidgetIds[] = appWidgetManager
+                .getAppWidgetIds(new ComponentName(mContext, BuddyBookWidgetProvider.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,appWidgetIds);
+
+        intent.putExtra(EXTRA_USER_ID,mUser.getUid());
+
+        sendBroadcast(intent);
     }
 
     private void loadProfileOnDrawer() {
@@ -187,14 +207,14 @@ public class MainActivity extends AppCompatActivity
 
     private void updateFolderList() {
 
-        if (mRetainedFolderFragment == null) {
+        //if (mRetainedFolderFragment == null) {
 
             mRetainedFolderFragment = FolderListFragment.newInstance(mUser.getUid());
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(mFolderListContainer.getId(), mRetainedFolderFragment);
             transaction.commit();
 
-        }
+        //}
 
     }
 
@@ -504,8 +524,19 @@ public class MainActivity extends AppCompatActivity
         if (dataSnapshot.getValue() != null) {
             Log.d(TAG, "User is already in database");
             mFirebaseDatabaseHelper.updateUserLastActivity(mUser.getUid());
+            loadProfileOnDrawer();
+            updateFolderList();
+            updateWidget();
         } else {
-            mFirebaseDatabaseHelper.insertUser(mUser);
+            mFirebaseDatabaseHelper.insertUser(mUser, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    loadProfileOnDrawer();
+                    updateFolderList();
+                    updateWidget();
+                }
+            });
+
         }
 
         Snackbar.make(mCoordinatorLayout, getText(R.string.success_sign_in), Snackbar.LENGTH_SHORT).show();
@@ -621,7 +652,6 @@ public class MainActivity extends AppCompatActivity
                         .show();
 
                 if(!id.equals(folderId)) {
-                    //book.setLend(null);
                     mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
                 }
 
@@ -644,7 +674,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onQueryTextSubmit(String query) {
 
         if (query != null && !query.isEmpty()) {
-//            setProgressBar(true);
 
             SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
                     SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);

@@ -48,47 +48,6 @@ public class User implements Parcelable {
         this.lastActivity = lastActivity;
     }
 
-//    private static Map<String, Folder> generateFakeFolderMap(int rows){
-//
-//        Map<String, Folder> folderList = new HashMap<>();
-//
-//        for(int x = 0; x < rows; x++){
-//
-//            Folder folder = new Folder("Custom folder " + x);
-//
-//            Book book = new Book();
-//            book.photoUrl = "http://www.gweissert.com/wp-content/uploads/self-healing-and-self-care-books.jpg";
-//            book.description = "book test " + x;
-//            book.title = "Tittle " + x;
-//            book.authors = "Author test " + x;
-//
-//            folder.setBooks(Collections.singletonMap(book.description,book));
-//            folder.setId(UUID.randomUUID().toString());
-//
-//            folderList.put(folder.getId(),folder);
-//        }
-//
-//        return folderList;
-//    }
-//
-//    private static Map<String, Book> generateFakeBooksMap(int rows){
-//
-//        Map<String, Book> bookHashMap = new HashMap<>();
-//
-//
-//        for(int x = 0; x < rows; x++){
-//            Book book = new Book();
-//            book.photoUrl = "http://www.gweissert.com/wp-content/uploads/self-healing-and-self-care-books.jpg";
-//            book.description = "book test " + x;
-//            book.title = "Tittle " + x;
-//            book.authors = "Author test " + x;
-//
-//            bookHashMap.put(book.description,book);
-//        }
-//
-//        return bookHashMap;
-//    }
-
     private User(Parcel in) {
         uid = in.readString();
         email = in.readString();
@@ -123,14 +82,6 @@ public class User implements Parcelable {
         Folder myBooksFolder = new Folder(context.getResources().getString(R.string.tab_my_books));
         myBooksFolder.setId(UUID.randomUUID().toString());
         user.setFolders(Collections.singletonMap(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, myBooksFolder));
-//
-//        myBooksFolder.setBooks(generateFakeBooksMap(3));
-//
-//
-//        //user.setMyBooksFolder(myBooksFolder);
-//
-//        user.setFolders(generateFakeFolderMap(10));
-
 
         return user;
 

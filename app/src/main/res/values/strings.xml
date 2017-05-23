@@ -20,6 +20,8 @@
 
     <string name="success_sign_in">You\'re now signed in!</string>
 
+    <string name="widget_cd">Stock hawk widget</string>
+
     <string name="facebook_application_id" translatable="false">260358024375061</string>
     <!-- Facebook Application ID, prefixed by 'fb'.  Enables Chrome Custom tabs. -->
     <string name="facebook_login_protocol_scheme" translatable="false">fb260358024375061</string>
@@ -81,5 +83,6 @@
     <string name="lorem_ipsum_short">Lorem ipsum dolor sit amet</string>
     <string name="lorem_ipsum_medium">Lorem ipsum dolor sit amet,consectetur adipiscing elit</string>
     <string name="lorem_ipsum_large">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="empty_list">No data</string>
 
 </resources>

@@ -175,11 +175,13 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
                 /**
                  * Just to don't list My Books on the RecycleView
                  */
-//                if(folder.getId() != null && folder.getDescription() != null &&
-//                        !folder.getDescription().equals(getString(R.string.tab_my_books)))
-//                folderList.add(folder);
+                if(folder.getId() != null && folder.getDescription() != null &&
+                        !folder.getDescription().equals(getString(R.string.tab_my_books))) {
 
-                folderList.add(folder);
+                    folderList.add(folder);
+                }
+
+                //folderList.add(folder);
             }
 
             mFolderList = folderList;

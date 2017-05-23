@@ -37,6 +37,7 @@ public class FirebaseDatabaseHelper {
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseDatabase.setPersistenceEnabled(true);
         mDatabaseReference = mFirebaseDatabase.getReference().child(ROOT);
+        mDatabaseReference.keepSynced(true);
     }
 
     public static FirebaseDatabaseHelper getInstance() {
@@ -45,8 +46,8 @@ public class FirebaseDatabaseHelper {
         return mInstance;
     }
 
-    public void insertUser(User user) {
-        mDatabaseReference.child(user.getUid()).setValue(user);
+    public void insertUser(User user, DatabaseReference.CompletionListener completionListener) {
+        mDatabaseReference.updateChildren(Collections.singletonMap(user.getUid(),(Object) user), completionListener);
     }
 
     public void updateUserLastActivity(String userId) {
@@ -103,6 +104,13 @@ public class FirebaseDatabaseHelper {
 
     }
 
+    public ValueEventListener fetchLentBooks(String userId, final ValueEventListener valueEventListener) {
+
+        return mDatabaseReference.child(userId).child(REF_FOLDERS).child(REF_MY_BOOKS_FOLDER)
+                .addValueEventListener(valueEventListener);
+
+    }
+
     public void findBook(String userId, String folderId, String bookId, final OnDataSnapshotListener onDataSnapshotListener) {
 
         if (folderId == null) {
@@ -129,9 +137,11 @@ public class FirebaseDatabaseHelper {
         DatabaseReference ref = mDatabaseReference.child(userId).child(REF_FOLDERS);
         //ref.addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
-        ref.orderByChild("custom")
-                .equalTo(true)
-                .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+        ref.addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+
+//        ref.orderByChild("custom")
+//                .equalTo(true)
+//                .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
     }
 

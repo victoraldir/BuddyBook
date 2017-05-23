@@ -135,7 +135,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         mBookJson = getArguments().getString(DetailActivity.ARG_BOOK_JSON);
         isLentBook = getArguments().getBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK);
         mContext = getContext();
-        JodaTimeAndroid.init(getActivity());
     }
 
     @Override
