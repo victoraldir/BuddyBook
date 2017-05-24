@@ -44,6 +44,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.quartzodev.api.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
@@ -55,6 +57,7 @@ import com.quartzodev.fragments.SearchResultFragment;
 import com.quartzodev.fragments.ViewPagerFragment;
 import com.quartzodev.provider.SuggestionProvider;
 import com.quartzodev.ui.BarcodeCaptureActivity;
+import com.quartzodev.utils.ConnectionUtils;
 import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.views.CircleTransform;
 import com.quartzodev.views.DynamicImageView;
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         FolderListFragment.OnListFragmentInteractionListener,
         FirebaseAuth.AuthStateListener,
-        FirebaseDatabaseHelper.OnDataSnapshotListener,
+
         BookGridFragment.OnGridFragmentInteractionListener,
         SearchView.OnQueryTextListener {
 
@@ -94,6 +97,8 @@ public class MainActivity extends AppCompatActivity
     TextView mTextViewMessage;
     @BindView(R.id.fragment_main_container)
     FrameLayout mFrameLayoutContainer;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
     private ViewPagerFragment mRetainedViewPagerFragment;
     private ImageView mImageViewProfile;
@@ -135,37 +140,37 @@ public class MainActivity extends AppCompatActivity
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                // launch barcode activity.
-                Intent intent = new Intent(mContext, BarcodeCaptureActivity.class);
-                intent.putExtra(BarcodeCaptureActivity.AutoFocus, true); //Automatic focus
-                intent.putExtra(BarcodeCaptureActivity.UseFlash, false); //Flash false
-
-                startActivityForResult(intent, RC_BARCODE_CAPTURE);
-
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawer.setDrawerListener(toggle);
-        toggle.syncState();
-
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        getSupportFragmentManager().addOnBackStackChangedListener(
-                new FragmentManager.OnBackStackChangedListener() {
-                    public void onBackStackChanged() {
+        if(ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
+            fab.setVisibility(View.VISIBLE);
 
-                    }
-                });
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
+                    // launch barcode activity.
+                    Intent intent = new Intent(mContext, BarcodeCaptureActivity.class);
+                    intent.putExtra(BarcodeCaptureActivity.AutoFocus, true); //Automatic focus
+                    intent.putExtra(BarcodeCaptureActivity.UseFlash, false); //Flash false
+
+                    startActivityForResult(intent, RC_BARCODE_CAPTURE);
+
+                }
+            });
+
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            mDrawer.setDrawerListener(toggle);
+            toggle.syncState();
+        }
+
+        if(mFirebaseAuth.getCurrentUser() != null){
+            onSignedIn(mFirebaseAuth.getCurrentUser());
+        }else{
+            mFirebaseAuth.addAuthStateListener(this);
+            launchLoginActivityResult();
+        }
     }
 
     public void onSignedIn(final FirebaseUser firebaseUser) {
@@ -173,9 +178,33 @@ public class MainActivity extends AppCompatActivity
         if (mUser == null ||
                 mUser.getUid().equals(firebaseUser.getUid())) {
             mUser = User.setupUserFirstTime(firebaseUser, mContext);
-            mFirebaseDatabaseHelper.fetchUserById(mUser.getUid(), this);
+
+            mFirebaseDatabaseHelper.fetchUserById(mUser.getUid(), new FirebaseDatabaseHelper.OnDataSnapshotListener() {
+                @Override
+                public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
+                    updateUser(dataSnapshot);
+                }
+            });
+        }
+    }
+
+    private void updateUser(DataSnapshot dataSnapshot){
+
+        if (dataSnapshot.getValue() != null) {
+
+            Log.d(TAG, "User is already in database");
+            mFirebaseDatabaseHelper.updateUserLastActivity(mUser.getUid());
+            loadApplication();
+        } else {
+            mFirebaseDatabaseHelper.insertUser(mUser, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    relaunchActivity();
+                }
+            });
         }
 
+        Snackbar.make(mCoordinatorLayout, getText(R.string.success_sign_in), Snackbar.LENGTH_SHORT).show();
     }
 
     public void updateWidget() {
@@ -264,6 +293,28 @@ public class MainActivity extends AppCompatActivity
                 mTextViewMessage.setVisibility(View.VISIBLE);
                 mFrameLayoutContainer.setVisibility(View.GONE);
                 mTextViewMessage.setText(getString(R.string.no_internet));
+
+                final DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+                connectedRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        boolean connected = snapshot.getValue(Boolean.class);
+                        if (connected) {
+
+                            connectedRef.removeEventListener(this);
+                            //Toast.makeText(mContext, "Connected", Toast.LENGTH_SHORT).show();
+                            relaunchActivity();
+                        } else {
+                            //Toast.makeText(mContext, "Not connected", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+                    }
+                });
+
+
             }else{
                 mTextViewMessage.setVisibility(View.GONE);
                 mFrameLayoutContainer.setVisibility(View.VISIBLE);
@@ -368,68 +419,70 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        if(ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
+            getMenuInflater().inflate(R.menu.main, menu);
 
-        // Retrieve the SearchView and plug it into SearchManager
-        //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        mSearchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+            // Retrieve the SearchView and plug it into SearchManager
+            //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+            mSearchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
 
-        mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int position) {
+            mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                @Override
+                public boolean onSuggestionSelect(int position) {
 
-                return false;
+                    return false;
+                }
+
+                @Override
+                public boolean onSuggestionClick(int position) {
+
+                    return false;
+                }
+            });
+
+            if (mCurrQuery != null) {
+                //TODO open searchView programaticaly
+                mSearchView.requestFocus();
+                mSearchView.setQuery(mCurrQuery, true);
             }
 
-            @Override
-            public boolean onSuggestionClick(int position) {
+            SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
 
-                return false;
-            }
-        });
+            mSearchView.setOnQueryTextListener(this);
 
-        if (mCurrQuery != null) {
-            //TODO open searchView programaticaly
-            mSearchView.requestFocus();
-            mSearchView.setQuery(mCurrQuery, true);
+            MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
+                @Override
+                public boolean onMenuItemActionExpand(MenuItem item) {
+                    //Toast.makeText(mContext, "Search view's been clicked", Toast.LENGTH_SHORT).show();
+
+                    mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
+
+                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_main_container, mSearchResultFragment).commit();
+
+                    return true;
+                }
+
+                @Override
+                public boolean onMenuItemActionCollapse(MenuItem item) {
+                    //Toast.makeText(mContext, "Search's been closed", Toast.LENGTH_SHORT).show();
+
+                    FragmentManager fm = getSupportFragmentManager();
+
+                    FragmentTransaction transaction = fm.beginTransaction();
+                    transaction.remove(mSearchResultFragment);
+                    transaction.replace(R.id.fragment_main_container, ViewPagerFragment.newInstance(mUser.getUid())); //TODO check the best way to get it done.
+                    transaction.commit();
+
+                    return true;
+                }
+            });
+
+            ComponentName componentName = new ComponentName(mContext, MainActivity.class);
+
+            mSearchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
+
         }
-
-        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-
-        mSearchView.setOnQueryTextListener(this);
-
-        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                //Toast.makeText(mContext, "Search view's been clicked", Toast.LENGTH_SHORT).show();
-
-                mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
-
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_main_container, mSearchResultFragment).commit();
-
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                //Toast.makeText(mContext, "Search's been closed", Toast.LENGTH_SHORT).show();
-
-                FragmentManager fm = getSupportFragmentManager();
-
-                FragmentTransaction transaction = fm.beginTransaction();
-                transaction.remove(mSearchResultFragment);
-                transaction.replace(R.id.fragment_main_container, ViewPagerFragment.newInstance(mUser.getUid())); //TODO check the best way to get it done.
-                transaction.commit();
-
-                return true;
-            }
-        });
-
-        ComponentName componentName = new ComponentName(mContext, MainActivity.class);
-
-        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
-
         return true;
 
     }
@@ -447,6 +500,12 @@ public class MainActivity extends AppCompatActivity
 
                 mUser = null;
                 AuthUI.getInstance().signOut(this);
+                if(ConnectionUtils.isNetworkConnected(getApplication())) {
+                    mFirebaseAuth.addAuthStateListener(this);
+                    launchLoginActivityResult();
+                }else{
+                    relaunchActivity();
+                }
 
                 return true;
         }
@@ -513,9 +572,11 @@ public class MainActivity extends AppCompatActivity
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
         if (firebaseUser == null) {
-            launchLoginActivityResult();
+            //launchLoginActivityResult();
         } else {
-            onSignedIn(firebaseUser);
+            mFirebaseAuth.removeAuthStateListener(this);
+            //onSignedIn(firebaseUser);
+            relaunchActivity();
         }
     }
 
@@ -523,30 +584,6 @@ public class MainActivity extends AppCompatActivity
         loadProfileOnDrawer();
         updateFolderList();
         updateWidget();
-    }
-
-    @Override
-    public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
-
-        if (dataSnapshot.getValue() != null) {
-
-            Log.d(TAG, "User is already in database");
-            mFirebaseDatabaseHelper.updateUserLastActivity(mUser.getUid());
-
-            loadApplication();
-
-        } else {
-
-            mFirebaseDatabaseHelper.insertUser(mUser, new DatabaseReference.CompletionListener() {
-                @Override
-                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    relaunchActivity();
-                }
-            });
-        }
-
-        Snackbar.make(mCoordinatorLayout, getText(R.string.success_sign_in), Snackbar.LENGTH_SHORT).show();
-
     }
 
     public void relaunchActivity() {
@@ -713,7 +750,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        mFirebaseAuth.addAuthStateListener(this);
     }
 
     /**
@@ -722,6 +758,5 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        mFirebaseAuth.removeAuthStateListener(this);
     }
 }
