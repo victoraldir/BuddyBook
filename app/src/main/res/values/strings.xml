@@ -20,7 +20,13 @@
 
     <string name="success_sign_in">You\'re now signed in!</string>
 
+    <string name="success_lend_book">Book\'s been lent successfully!</string>
+
     <string name="widget_cd">Stock hawk widget</string>
+
+    <string name="dialog_return_book_title">Returning a book?</string>
+    <string name="dialog_return_book_body">Is %1$s returning this book?</string>
+
 
     <string name="facebook_application_id" translatable="false">260358024375061</string>
     <!-- Facebook Application ID, prefixed by 'fb'.  Enables Chrome Custom tabs. -->
@@ -43,6 +49,9 @@
 
     <string name="lend_name_empty">Name cannot be empty</string>
     <string name="lend_email_empty">Email cannot be empty</string>
+    <string name="lend_email_invalid">Email invalid</string>
+
+    <string name="no_internet">No internet connection</string>
 
     <string name="dialog_btn_positive">Yes</string>
     <string name="dialog_btn_ok">OK</string>
@@ -59,6 +68,7 @@
     <string name="lent_to">Lent to: %1$s</string>
     <string name="lent_to_email">Email: %1$s</string>
     <string name="lent_day_ago">Date:%3d days ago</string>
+    <string name="day_ago">%3d days \n ago</string>
 
     <!-- TODO barcode stuff. Review them! -->
     <string name="ok">OK</string>
@@ -84,5 +94,18 @@
     <string name="lorem_ipsum_medium">Lorem ipsum dolor sit amet,consectetur adipiscing elit</string>
     <string name="lorem_ipsum_large">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <string name="empty_list">No data</string>
+    <string name="move_to_folder_cd">Move to folder button</string>
+    <string name="lent_book_cd">Lend book action</string>
+    <string name="folder_icon_cd">Folder icon</string>
+    <string name="add_new_folder_cd">Add new folder action</string>
+    <string name="my_books_folder_cd">My books folder</string>
+    <string name="profile_icon_cd">Profile Icon</string>
+    <string name="folders">Folders</string>
+    <string name="add_new_folder">Add new folder</string>
+    <string name="communicate">Communicate</string>
+    <string name="share">Share</string>
+    <string name="name">Name</string>
+    <string name="book_title">Book Title</string>
+    <string name="search">Search</string>
 
 </resources>

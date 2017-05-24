@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/list_item_widget_lend"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    android:gravity="center_vertical"
-    android:id="@+id/list_item_widget_lend"
-    android:orientation="horizontal"
-    android:layout_marginStart="@dimen/activity_detail_horizontal_margin"
     android:layout_marginEnd="@dimen/activity_detail_horizontal_margin"
-    android:baselineAligned="false">
+    android:layout_marginStart="@dimen/activity_detail_horizontal_margin"
+    android:baselineAligned="false"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_weight="1"
         android:gravity="center_vertical"
-        android:layout_weight="1">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/book_title"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:maxLines="2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             tools:text="Book title" />
 
         <TextView
             android:id="@+id/receiver_name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLength="15"
-            android:scrollHorizontally="true"
             android:ellipsize="end"
             android:lines="1"
-            tools:text="Receiver: Victor"/>
+            android:maxLength="15"
+            android:scrollHorizontally="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            tools:text="Receiver: Victor" />
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/lend_days"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"

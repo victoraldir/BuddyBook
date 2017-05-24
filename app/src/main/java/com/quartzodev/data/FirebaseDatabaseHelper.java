@@ -47,7 +47,7 @@ public class FirebaseDatabaseHelper {
     }
 
     public void insertUser(User user, DatabaseReference.CompletionListener completionListener) {
-        mDatabaseReference.updateChildren(Collections.singletonMap(user.getUid(),(Object) user), completionListener);
+        mDatabaseReference.updateChildren(Collections.singletonMap(user.getUid(), (Object) user), completionListener);
     }
 
     public void updateUserLastActivity(String userId) {
@@ -89,11 +89,11 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public ChildEventListener attachBookFolderChildEventListener(String userId, String folderId, ChildEventListener listener){
+    public ChildEventListener attachBookFolderChildEventListener(String userId, String folderId, ChildEventListener listener) {
         return mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).addChildEventListener(listener);
     }
 
-    public void detachBookFolderChildEventListener(String userId, String folderId, ChildEventListener listener){
+    public void detachBookFolderChildEventListener(String userId, String folderId, ChildEventListener listener) {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).removeEventListener(listener);
     }
 
@@ -170,15 +170,15 @@ public class FirebaseDatabaseHelper {
         df.setValue(folder);
     }
 
-    public void updateBook(String userId, String folderId, BookApi bookApi){
-        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).updateChildren(Collections.singletonMap(bookApi.getId(),(Object) bookApi));
+    public void updateBook(String userId, String folderId, BookApi bookApi) {
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
     }
 
-    public void attachUpdateBookChildListener(String userId, String folderId, BookApi bookApi, ValueEventListener listener){
+    public void attachUpdateBookChildListener(String userId, String folderId, BookApi bookApi, ValueEventListener listener) {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).addValueEventListener(listener);
     }
 
-    public void detachUpdateBookChildListener(String userId, String folderId, BookApi bookApi, ValueEventListener listener){
+    public void detachUpdateBookChildListener(String userId, String folderId, BookApi bookApi, ValueEventListener listener) {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).addValueEventListener(listener);
     }
 
@@ -204,8 +204,8 @@ public class FirebaseDatabaseHelper {
                 try {
                     onDataSnapshotListener.onDataSnapshotListenerAvailable(dataSnapshot);
                     notifyCaller(onDataSnapshotListener);
-                }catch (Exception ex){
-                    Log.e(TAG,ex.getMessage());
+                } catch (Exception ex) {
+                    Log.e(TAG, ex.getMessage());
                 }
             }
 

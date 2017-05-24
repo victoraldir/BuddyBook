@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/divider"
     android:orientation="vertical"
     android:padding="@dimen/widget_margin">
 
@@ -13,7 +14,7 @@
         android:divider="@null"
         android:dividerHeight="0dp"
         android:visibility="gone"
-        tools:listitem="@layout/list_item_widget_lend"/>
+        tools:listitem="@layout/list_item_widget_lend" />
 
     <TextView
         android:id="@+id/widget_empty"
@@ -22,6 +23,6 @@
         android:layout_height="match_parent"
         android:fontFamily="sans-serif-condensed"
         android:gravity="center"
-        android:text="@string/empty_list"/>
+        android:text="@string/empty_list" />
 
 </LinearLayout>

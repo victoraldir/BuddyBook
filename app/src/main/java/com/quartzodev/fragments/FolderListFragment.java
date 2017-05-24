@@ -100,7 +100,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mFirebaseDatabaseHelper.fetchFolders(mUserId, this);
-        mFirebaseDatabaseHelper.attachFetchFolders(mUserId,this);
+        mFirebaseDatabaseHelper.attachFetchFolders(mUserId, this);
     }
 
     @Override
@@ -159,7 +159,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        mFirebaseDatabaseHelper.detachFetchFolders(mUserId,this);
+        mFirebaseDatabaseHelper.detachFetchFolders(mUserId, this);
     }
 
     @Override
@@ -175,7 +175,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
                 /**
                  * Just to don't list My Books on the RecycleView
                  */
-                if(folder.getId() != null && folder.getDescription() != null &&
+                if (folder.getId() != null && folder.getDescription() != null &&
                         !folder.getDescription().equals(getString(R.string.tab_my_books))) {
 
                     folderList.add(folder);
@@ -187,8 +187,8 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
             mFolderList = folderList;
             myFolderRecyclerViewAdapter.swap(mFolderList);
 
-            if(mListener != null)
-            mListener.onFolderListIsAvailable(folderList, getmFolderListCommaSeparated());
+            if (mListener != null)
+                mListener.onFolderListIsAvailable(folderList, getmFolderListCommaSeparated());
         }
     }
 

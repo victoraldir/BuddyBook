@@ -36,9 +36,9 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public void finishUpdate(ViewGroup container) {
-        try{
+        try {
             super.finishUpdate(container);
-        } catch (NullPointerException nullPointerException){
+        } catch (NullPointerException nullPointerException) {
             System.out.println("Catch the NullPointerException in FragmentPagerAdapter.finishUpdate");
         }
     }
@@ -49,9 +49,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public int getItemPosition(Object object){
+    public int getItemPosition(Object object) {
         return POSITION_NONE;
     }
+
     @Override
     public Fragment getItem(int position) {
 

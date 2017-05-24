@@ -125,6 +125,7 @@ public class CameraSource {
      * native code later (avoids a potential copy).
      */
     private Map<byte[], ByteBuffer> mBytesToByteBuffer = new HashMap<>();
+
     /**
      * Only allow creation via the builder class.
      */

@@ -3,13 +3,12 @@ package com.quartzodev.views;
 import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 /**
  * Created by victoraldir on 20/05/2017.
  */
 
-public class SquareImageView  extends AppCompatImageView {
+public class SquareImageView extends AppCompatImageView {
 
 
     public SquareImageView(Context context) {

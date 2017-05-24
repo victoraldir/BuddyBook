@@ -4,20 +4,18 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Binder;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.quartzodev.api.BookApi;
-import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
-import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 
@@ -36,36 +34,45 @@ public class BuddyBookWidgetService extends RemoteViewsService {
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
 
-        String userId = intent.getExtras().getString(MainActivity.EXTRA_USER_ID);
-
-        return new ListRemoteViewFactory(getApplicationContext(), userId);
+        return new ListRemoteViewFactory(getApplicationContext());
     }
 
-    public class ListRemoteViewFactory implements RemoteViewsFactory, ValueEventListener {
+    public class ListRemoteViewFactory implements RemoteViewsFactory,
+            ValueEventListener,
+            FirebaseAuth.AuthStateListener {
 
         private final String TAG = ListRemoteViewFactory.class.getSimpleName();
-        private String mUserId;
-
         List<BookApi> mData = new ArrayList<>();
         FirebaseDatabaseHelper mFirebaseDatabaseHelper;
-
+        FirebaseAuth mFirebaseAuth;
+        private String mUserId;
         private Context mContext;
 
-        public ListRemoteViewFactory(Context context, String userId){
+        public ListRemoteViewFactory(Context context) {
             mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
             mContext = context;
-            mUserId = userId;
-            loadBookList();
-            FirebaseAuth.getInstance().getCurrentUser().getEmail();
+            //mUserId = userId;
+
+            mFirebaseAuth = FirebaseAuth.getInstance();
+
+            FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
+
+            if (firebaseUser != null) {
+                mUserId = firebaseUser.getUid();
+                loadBookList();
+            }
         }
 
         @Override
         public void onCreate() {
 //            loadBookList();
+            mFirebaseAuth.addAuthStateListener(this);
         }
 
-        public void loadBookList(){
-            mFirebaseDatabaseHelper.fetchLentBooks(mUserId,this);
+        public void loadBookList() {
+            if (mUserId != null) {
+                mFirebaseDatabaseHelper.fetchLentBooks(mUserId, this);
+            }
         }
 
         @Override
@@ -76,6 +83,7 @@ public class BuddyBookWidgetService extends RemoteViewsService {
         @Override
         public void onDestroy() {
             mData = new ArrayList<>();
+            mFirebaseAuth.removeAuthStateListener(this);
         }
 
         @Override
@@ -86,7 +94,7 @@ public class BuddyBookWidgetService extends RemoteViewsService {
         @Override
         public RemoteViews getViewAt(int position) {
 
-            if(mData.isEmpty()){
+            if (mData.isEmpty()) {
                 return null;
             }
 
@@ -100,8 +108,8 @@ public class BuddyBookWidgetService extends RemoteViewsService {
             Days days = Days.daysBetween(lendDate, DateTime.now());
 
             remoteViews.setTextViewText(R.id.book_title, bookApi.getVolumeInfo().getTitle());
-            remoteViews.setTextViewText(R.id.receiver_name, bookApi.getLend().getReceiverName());
-            remoteViews.setTextViewText(R.id.lend_days, days.getDays() + " Days \n ago");
+            remoteViews.setTextViewText(R.id.receiver_name, String.format(getString(R.string.lent_to),bookApi.getLend().getReceiverName()));
+            remoteViews.setTextViewText(R.id.lend_days, String.format(getString(R.string.day_ago),days.getDays()));
 
             return remoteViews;
         }
@@ -129,13 +137,13 @@ public class BuddyBookWidgetService extends RemoteViewsService {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
 
-            if(dataSnapshot.getValue() != null){
+            if (dataSnapshot.getValue() != null) {
 
                 Folder folder = dataSnapshot.getValue(Folder.class);
 
                 List<BookApi> listLend = new ArrayList<>();
 
-                if(folder.getBooks() != null) {
+                if (folder.getBooks() != null) {
 
                     for (BookApi bookApi : folder.getBooks().values()) {
                         if (bookApi.getLend() != null) {
@@ -145,11 +153,7 @@ public class BuddyBookWidgetService extends RemoteViewsService {
 
                     mData = new ArrayList<>(listLend);
 
-                    AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(mContext);
-                    int appWidgetIds[] = appWidgetManager
-                            .getAppWidgetIds(new ComponentName(mContext, BuddyBookWidgetProvider.class));
-                    appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
-
+                    updateWidget();
                 }
             }
 
@@ -157,7 +161,29 @@ public class BuddyBookWidgetService extends RemoteViewsService {
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            Log.d(TAG,"onDataChange fired");
+            Log.d(TAG, "onDataChange fired");
+        }
+
+        @Override
+        public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
+            if (firebaseUser == null) {
+                mData = new ArrayList<>();
+                updateWidget();
+            } else {
+                loadBookList();
+            }
+
+        }
+
+        private void updateWidget() {
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(mContext);
+            int appWidgetIds[] = appWidgetManager
+                    .getAppWidgetIds(new ComponentName(mContext, BuddyBookWidgetProvider.class));
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list);
+
         }
     }
 }

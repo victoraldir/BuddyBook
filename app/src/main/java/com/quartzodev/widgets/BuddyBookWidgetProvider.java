@@ -2,9 +2,10 @@ package com.quartzodev.widgets;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -36,20 +37,18 @@ public class BuddyBookWidgetProvider extends AppWidgetProvider {
                 setRemoteAdapterV11(context, remoteViews);
             }
 
-           // Intent clickIntentTemplate = new Intent(context, DetailActivity.class);
+            Intent clickIntentTemplate = new Intent(context, DetailActivity.class);
 
+            PendingIntent pendingIntentTemplate = TaskStackBuilder.create(context)
+                    .addNextIntentWithParentStack(clickIntentTemplate)
+                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-
-//            PendingIntent pendingIntentTemplate = TaskStackBuilder.create(context)
-//                    .addNextIntentWithParentStack(clickIntentTemplate)
-//                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-//            remoteViews.setPendingIntentTemplate(R.id.widget_list, pendingIntentTemplate);
+            remoteViews.setPendingIntentTemplate(R.id.widget_list, pendingIntentTemplate);
             remoteViews.setEmptyView(R.id.widget_list, R.id.widget_empty);
             remoteViews.setContentDescription(R.id.widget_list, context.getString(R.string.widget_cd));
             appWidgetManager.updateAppWidget(widgetId, remoteViews);
 
-            appWidgetManager.notifyAppWidgetViewDataChanged(widgetId,R.id.widget_list);
+            appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.widget_list);
 
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
@@ -76,9 +75,9 @@ public class BuddyBookWidgetProvider extends AppWidgetProvider {
         views.setRemoteAdapter(0, R.id.widget_list, createRemoteAdapterIntent(context));
     }
 
-    private Intent createRemoteAdapterIntent(Context context){
+    private Intent createRemoteAdapterIntent(Context context) {
         Intent it = new Intent(context, BuddyBookWidgetService.class);
-        it.putExtra(MainActivity.EXTRA_USER_ID,mUserId);
+        it.putExtra(MainActivity.EXTRA_USER_ID, mUserId);
         return it;
     }
 

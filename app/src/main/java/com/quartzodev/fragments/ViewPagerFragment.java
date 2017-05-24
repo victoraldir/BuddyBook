@@ -34,7 +34,7 @@ public class ViewPagerFragment extends Fragment {
         return fragment;
     }
 
-    public void forceNotify(){
+    public void forceNotify() {
         mViewPagerAdapter.notifyDataSetChanged();
     }
 

@@ -11,7 +11,7 @@ public class Lend {
     public String receiverEmail;
     public Date lendDate;
 
-    public Lend(){
+    public Lend() {
 
     }
 

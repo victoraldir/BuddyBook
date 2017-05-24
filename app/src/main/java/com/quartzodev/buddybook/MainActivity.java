@@ -56,9 +56,9 @@ import com.quartzodev.fragments.ViewPagerFragment;
 import com.quartzodev.provider.SuggestionProvider;
 import com.quartzodev.ui.BarcodeCaptureActivity;
 import com.quartzodev.utils.DialogUtils;
+import com.quartzodev.views.CircleTransform;
 import com.quartzodev.views.DynamicImageView;
 import com.quartzodev.widgets.BuddyBookWidgetProvider;
-import com.quartzodev.widgets.CircleTransform;
 
 import java.util.Arrays;
 import java.util.List;
@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity
     private static final String TAG = MainActivity.class.getSimpleName();
 
     public static final String EXTRA_USER_ID = "userId";
-
     private static final int RC_SIGN_IN = 1;
     private static final int RC_BARCODE_CAPTURE = 2;
     private static final String KEY_PARCELABLE_USER = "userKey";
@@ -88,9 +87,13 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
     @BindView(R.id.drawer_layout)
-    DrawerLayout drawer;
+    DrawerLayout mDrawer;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.main_message)
+    TextView mTextViewMessage;
+    @BindView(R.id.fragment_main_container)
+    FrameLayout mFrameLayoutContainer;
 
     private ViewPagerFragment mRetainedViewPagerFragment;
     private ImageView mImageViewProfile;
@@ -150,8 +153,8 @@ public class MainActivity extends AppCompatActivity
         });
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar , R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.setDrawerListener(toggle);
         toggle.syncState();
 
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -167,27 +170,24 @@ public class MainActivity extends AppCompatActivity
 
     public void onSignedIn(final FirebaseUser firebaseUser) {
 
-        if (mUser == null) {
-            mUser = User.setupUserFirstTime(firebaseUser, mContext);
-            mFirebaseDatabaseHelper.fetchUserById(mUser.getUid(), this);
-        }else if(mUser.getUid().equals(firebaseUser.getUid())){
+        if (mUser == null ||
+                mUser.getUid().equals(firebaseUser.getUid())) {
             mUser = User.setupUserFirstTime(firebaseUser, mContext);
             mFirebaseDatabaseHelper.fetchUserById(mUser.getUid(), this);
         }
 
     }
 
-    public void updateWidget(){
-        Intent intent = new Intent(this,BuddyBookWidgetProvider.class);
+    public void updateWidget() {
+        Intent intent = new Intent(this, BuddyBookWidgetProvider.class);
         intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         // Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
         // since it seems the onUpdate() is only fired on that:
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(mContext);
         int appWidgetIds[] = appWidgetManager
                 .getAppWidgetIds(new ComponentName(mContext, BuddyBookWidgetProvider.class));
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS,appWidgetIds);
 
-        intent.putExtra(EXTRA_USER_ID,mUser.getUid());
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds);
 
         sendBroadcast(intent);
     }
@@ -207,14 +207,14 @@ public class MainActivity extends AppCompatActivity
 
     private void updateFolderList() {
 
-        if (mRetainedFolderFragment == null) {
+        // if (mRetainedFolderFragment == null) {
 
-            mRetainedFolderFragment = FolderListFragment.newInstance(mUser.getUid());
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(mFolderListContainer.getId(), mRetainedFolderFragment);
-            transaction.commit();
+        mRetainedFolderFragment = FolderListFragment.newInstance(mUser.getUid());
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(mFolderListContainer.getId(), mRetainedFolderFragment);
+        transaction.commit();
 
-        }
+        //}
 
     }
 
@@ -240,11 +240,11 @@ public class MainActivity extends AppCompatActivity
 
         if (mCurrentGridFragment instanceof BookGridFragment) {
 
-            ((BookGridFragment) mCurrentGridFragment).updateContent(mUser.getUid(), folder.getId(),folder.getDescription(), BookGridFragment.FLAG_CUSTOM_FOLDER);
+            ((BookGridFragment) mCurrentGridFragment).updateContent(mUser.getUid(), folder.getId(), folder.getDescription(), BookGridFragment.FLAG_CUSTOM_FOLDER);
 
         } else {
 
-            Fragment newFragment = BookGridFragment.newInstanceCustomFolder(mUser.getUid(), folder.getId(),folder.getDescription(), BookGridFragment.FLAG_CUSTOM_FOLDER);
+            Fragment newFragment = BookGridFragment.newInstanceCustomFolder(mUser.getUid(), folder.getId(), folder.getDescription(), BookGridFragment.FLAG_CUSTOM_FOLDER);
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_main_container, newFragment);
@@ -259,6 +259,16 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
+
+            if (resultCode == 10){
+                mTextViewMessage.setVisibility(View.VISIBLE);
+                mFrameLayoutContainer.setVisibility(View.GONE);
+                mTextViewMessage.setText(getString(R.string.no_internet));
+            }else{
+                mTextViewMessage.setVisibility(View.GONE);
+                mFrameLayoutContainer.setVisibility(View.VISIBLE);
+            }
+
             if (resultCode == RESULT_CANCELED) finish();
         } else if (requestCode == RC_BARCODE_CAPTURE) {
             if (requestCode == RC_BARCODE_CAPTURE) {
@@ -334,7 +344,7 @@ public class MainActivity extends AppCompatActivity
         if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_SEARCH)) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             //TODO do my query
-            Toast.makeText(mContext, query, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext, query, Toast.LENGTH_SHORT).show();
 
             SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
                     SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
@@ -391,23 +401,19 @@ public class MainActivity extends AppCompatActivity
         MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                Toast.makeText(mContext, "Search view's been clicked", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "Search view's been clicked", Toast.LENGTH_SHORT).show();
 
                 mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
 
-
-                //mSearchResultFragment.setRetainInstance(true);
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_main_container, mSearchResultFragment).commit();
-
-                //mSearchView.requestFocus();
 
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                Toast.makeText(mContext, "Search's been closed", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "Search's been closed", Toast.LENGTH_SHORT).show();
 
                 FragmentManager fm = getSupportFragmentManager();
 
@@ -436,10 +442,6 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         switch (id) {
-
-            case R.id.action_settings:
-
-                return true;
 
             case R.id.action_sign_out:
 
@@ -471,7 +473,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLongClickListenerFolderListInteraction(final Folder folder) {
-        Toast.makeText(mContext, folder.toString(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(mContext, folder.toString(), Toast.LENGTH_SHORT).show();
 
         DialogUtils.alertDialogDeleteFolder(mContext, folder, new DialogInterface.OnClickListener() {
             @Override
@@ -485,7 +487,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClickListenerFolderListInteraction(Folder folder) {
 
-        drawer.closeDrawer(GravityCompat.START);
+        mDrawer.closeDrawer(GravityCompat.START);
         mFolderId = folder != null ? folder.getId() : null;
         loadCustomFolder(folder);
     }
@@ -514,38 +516,49 @@ public class MainActivity extends AppCompatActivity
             launchLoginActivityResult();
         } else {
             onSignedIn(firebaseUser);
-
         }
+    }
+
+    private void loadApplication() {
+        loadProfileOnDrawer();
+        updateFolderList();
+        updateWidget();
     }
 
     @Override
     public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
 
         if (dataSnapshot.getValue() != null) {
+
             Log.d(TAG, "User is already in database");
             mFirebaseDatabaseHelper.updateUserLastActivity(mUser.getUid());
-            loadProfileOnDrawer();
-            updateFolderList();
-            updateWidget();
+
+            loadApplication();
+
         } else {
+
             mFirebaseDatabaseHelper.insertUser(mUser, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    loadProfileOnDrawer();
-                    updateFolderList();
-                    updateWidget();
+                    relaunchActivity();
                 }
             });
-
         }
 
         Snackbar.make(mCoordinatorLayout, getText(R.string.success_sign_in), Snackbar.LENGTH_SHORT).show();
 
     }
 
+    public void relaunchActivity() {
+        Intent it = new Intent(mContext, MainActivity.class);
+        it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(it);
+        finish();
+    }
+
     @Override
     public void onClickListenerBookGridInteraction(String folderId, BookApi book, DynamicImageView imageView) {
-        Toast.makeText(mContext, "Should open details for book id: " + book.getVolumeInfo().getTitle() + " Folder id: " + folderId, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(mContext, "Should open details for book id: " + book.getVolumeInfo().getTitle() + " Folder id: " + folderId, Toast.LENGTH_SHORT).show();
 
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
@@ -558,10 +571,10 @@ public class MainActivity extends AppCompatActivity
         bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
         bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, mFolderListComma);
 
-        if(folderId == FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER){
-            bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK,true);
-        }else {
-            bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK,false);
+        if (folderId == FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER) {
+            bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK, true);
+        } else {
+            bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK, false);
         }
 
         //if(currentFragment instanceof  SearchResultFragment){
@@ -583,14 +596,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDeleteBookClickListener(final String mFolderId, final BookApi book) {
-        mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(),mFolderId,book);
+        mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), mFolderId, book);
 
         Snackbar.make(mCoordinatorLayout, getString(R.string.deleted_folder), Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.redo), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                            mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), mFolderId, book);
+                        mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), mFolderId, book);
 
                     }
                 }).show();
@@ -599,12 +612,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onAddBookToFolderClickListener(final String folderId, final BookApi book) {
 
-        if(folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)){ //I have this operation
+        if (folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //I have this operation
 
             Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.added_to_folder),
                     getString(R.string.tab_my_books)), Snackbar.LENGTH_SHORT).show();
 
-            mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(),folderId,book);
+            mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book);
             return;
         }
 
@@ -616,18 +629,18 @@ public class MainActivity extends AppCompatActivity
                 final String id = unFormatted.split("=")[1];
                 String name = unFormatted.split("=")[0];
 
-                Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.added_to_folder),name), Snackbar.LENGTH_LONG)
+                Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.added_to_folder), name), Snackbar.LENGTH_LONG)
                         .setAction(getString(R.string.redo), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if(!id.equals(folderId)) {
+                                if (!id.equals(folderId)) {
                                     mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book);
                                     mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), id, book);
                                 }
                             }
                         }).show();
 
-                if(!id.equals(folderId)) {
+                if (!id.equals(folderId)) {
                     mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
                     mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), folderId, book);
                 }
@@ -637,7 +650,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void  onCopyBookToFolderClickListener(final String folderId, final BookApi book){
+    public void onCopyBookToFolderClickListener(final String folderId, final BookApi book) {
 
 
         DialogUtils.alertDialogListFolder(mContext, mFolderListComma, new DialogInterface.OnClickListener() {
@@ -648,10 +661,10 @@ public class MainActivity extends AppCompatActivity
                 final String id = unFormatted.split("=")[1];
                 String name = unFormatted.split("=")[0];
 
-                Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.copied_to_folder),name), Snackbar.LENGTH_LONG)
+                Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.copied_to_folder), name), Snackbar.LENGTH_LONG)
                         .show();
 
-                if(!id.equals(folderId)) {
+                if (!id.equals(folderId)) {
                     mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
                 }
 
@@ -662,12 +675,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLendBookClickListener(BookApi book) {
-        DialogUtils.alertDialogLendBook(this, mFirebaseDatabaseHelper,mUser.getUid(),book);
+        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUser.getUid(), book);
     }
 
     @Override
     public void onReturnBookClickListener(BookApi book) {
-        DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper,mUser.getUid(),book);
+        DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUser.getUid(), book);
     }
 
     @Override

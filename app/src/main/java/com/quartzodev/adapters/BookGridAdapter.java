@@ -62,7 +62,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         return vh;
     }
 
-    public void setFolderId(String folderId){
+    public void setFolderId(String folderId) {
         clearList();
         mFolderId = folderId;
     }
@@ -75,24 +75,24 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    public void removeItem(BookApi bookApi){
-        if(mBookList != null){
+    public void removeItem(BookApi bookApi) {
+        if (mBookList != null) {
             mBookList.remove(bookApi);
             notifyDataSetChanged();
             updateAdapterParent();
         }
     }
 
-    public void addItem(BookApi bookApi){
-        if(mBookList != null && !mBookList.contains(bookApi)){
+    public void addItem(BookApi bookApi) {
+        if (mBookList != null && !mBookList.contains(bookApi)) {
             mBookList.add(bookApi);
             notifyDataSetChanged();
             updateAdapterParent();
         }
     }
 
-    public void updateAdapterParent(){
-        if(mParent != null && mParent.getParentFragment() != null) {
+    public void updateAdapterParent() {
+        if (mParent != null && mParent.getParentFragment() != null) {
             ((ViewPagerFragment) mParent.getParentFragment()).forceNotify();
         }
     }
@@ -114,7 +114,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
         final BookApi book = mBookList.get(position);
 
-        if(mType == BookGridFragment.FLAG_MY_BOOKS_FOLDER && book.getLend() != null){
+        if (mType == BookGridFragment.FLAG_MY_BOOKS_FOLDER && book.getLend() != null) {
             holder.containerIconLend.setVisibility(View.VISIBLE);
         }
 
@@ -128,15 +128,15 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
             }
         });
 
-        if(!holder.toolbar.getMenu().hasVisibleItems()) {
-            switch (mType){
+        if (!holder.toolbar.getMenu().hasVisibleItems()) {
+            switch (mType) {
                 case BookGridFragment.FLAG_CUSTOM_FOLDER:
                     holder.toolbar.inflateMenu(R.menu.menu_folders);
                     break;
                 case BookGridFragment.FLAG_MY_BOOKS_FOLDER:
-                    if(book.getLend() == null){
+                    if (book.getLend() == null) {
                         holder.toolbar.inflateMenu(R.menu.menu_my_books);
-                    }else{
+                    } else {
                         holder.toolbar.inflateMenu(R.menu.menu_my_books_return_book);
                     }
 
@@ -152,18 +152,18 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
                 int menuId = item.getItemId();
 
-                switch (menuId){
+                switch (menuId) {
                     case R.id.action_delete:
-                        mListener.onDeleteBookClickListener(mFolderId,book);
+                        mListener.onDeleteBookClickListener(mFolderId, book);
                         break;
                     case R.id.action_have_this:
-                        mListener.onAddBookToFolderClickListener(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,book);
+                        mListener.onAddBookToFolderClickListener(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, book);
                         break;
                     case R.id.action_move_folder:
-                        mListener.onAddBookToFolderClickListener(mFolderId,book);
+                        mListener.onAddBookToFolderClickListener(mFolderId, book);
                         break;
                     case R.id.action_copy:
-                        mListener.onCopyBookToFolderClickListener(mFolderId,book);
+                        mListener.onCopyBookToFolderClickListener(mFolderId, book);
                         break;
                     case R.id.action_lend:
                         mListener.onLendBookClickListener(book);
@@ -183,6 +183,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
                     .centerCrop()
                     .placeholder(android.R.drawable.sym_def_app_icon)
                     .error(android.R.drawable.ic_dialog_alert)
+                    .crossFade()
                     .into(holder.imageViewthumbnail);
         }
 

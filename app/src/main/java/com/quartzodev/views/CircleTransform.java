@@ -1,4 +1,4 @@
-package com.quartzodev.widgets;
+package com.quartzodev.views;
 
 import android.content.Context;
 import android.graphics.Bitmap;

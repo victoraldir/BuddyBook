@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.quartzodev.fragments.DetailActivityFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.quartzodev.fragments.DetailActivityFragment">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -29,6 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -36,23 +37,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="4"
-                    android:text="Book Title"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-                    />
+                    tools:text="@string/book_title"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title" />
 
                 <TextView
                     android:id="@+id/detail_textview_author"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Lenivitz Papu"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_weight="1"/>
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    tools:text="Lenivitz Papu"
+                    app:layout_constraintRight_toRightOf="parent" />
 
                 <TextView
                     android:id="@+id/detail_textview_published_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="23 June 2016" />
+                    tools:text="23 June 2016" />
 
             </LinearLayout>
 
@@ -73,19 +73,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                >
+                android:gravity="center_horizontal">
 
                 <ImageView
                     android:id="@+id/detail_imageView_bookmark"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    app:srcCompat="@drawable/ic_folder_black_24dp"
+                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="40dp"
                     android:layout_marginRight="40dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    />
+                    app:srcCompat="@drawable/ic_folder_black_24dp"
+                    android:contentDescription="@string/move_to_folder_cd"/>
 
             </LinearLayout>
 
@@ -97,13 +96,13 @@
             android:layout_margin="8dp">
 
             <TextView
-                android:layout_margin="8dp"
                 android:id="@+id/detail_textview_description"
+                style="?android:attr/textAppearanceMedium"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:text="@string/lorem_ipsum_large"
+                android:layout_margin="8dp"
                 android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
-                style="?android:attr/textAppearanceMedium"/>
+                tools:text="@string/lorem_ipsum_large" />
 
 
         </android.support.v7.widget.CardView>

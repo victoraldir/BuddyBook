@@ -4,18 +4,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.quartzodev.api.BookApi;
 import com.quartzodev.api.Lend;
 import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.R;
-import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 
@@ -135,9 +135,10 @@ public class DialogUtils {
     }
 
     public static void alertDialogLendBook(final Activity activity,
+                                           final CoordinatorLayout coordinatorLayout,
                                            final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
                                            final String userId,
-                                            final BookApi book){
+                                           final BookApi book) {
 
         LayoutInflater inflater = activity.getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_lend_book, null);
@@ -155,6 +156,7 @@ public class DialogUtils {
         final TextInputLayout nameInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_input_layout_name);
 
         final EditText emailEdtText = (EditText) view.findViewById(R.id.edittext_receiver_email);
+        emailEdtText.setSingleLine(true);
 
         final TextInputLayout emailInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_input_layout_email);
 
@@ -177,7 +179,9 @@ public class DialogUtils {
 
                             emailInputLayout.setError(activity.getString(R.string.lend_email_empty));
 
-                        } else {
+                        }else if(!isValidEmail(emailEdtText.getText().toString())) {
+                            emailInputLayout.setError(activity.getString(R.string.lend_email_invalid));
+                        }else {
 
                             Lend lend = new Lend(nameEdtText.getText().toString(),
                                     emailEdtText.getText().toString(),
@@ -185,7 +189,7 @@ public class DialogUtils {
 
                             book.setLend(lend);
 
-                            mFirebaseDatabaseHelper.updateBook(userId,FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,book);
+                            mFirebaseDatabaseHelper.updateBook(userId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, book);
 
                             try {
                                 DetailActivity detailActivity = ((DetailActivity) activity);
@@ -193,14 +197,14 @@ public class DialogUtils {
                                 if (detailActivity != null) {
                                     detailActivity.loadBook();
                                 }
-                            }catch (Exception ex){}
+                            } catch (Exception ex) {
+                            }
 
                             dialog.dismiss();
 
+                            Snackbar.make(coordinatorLayout, activity.getText(R.string.success_lend_book), Snackbar.LENGTH_SHORT).show();
+
                         }
-
-
-
                     }
                 });
             }
@@ -210,29 +214,37 @@ public class DialogUtils {
 
     }
 
+    public final static boolean isValidEmail(CharSequence target) {
+        if (target == null) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        }
+    }
 
     public static void alertDialogReturnBook(final Activity activity,
                                              final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
                                              final String userId,
-                                             final BookApi book){
+                                             final BookApi book) {
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
-                .setTitle("Returning a book?")
-                .setMessage("Is Maco returning this book?")
-                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                .setTitle(activity.getString(R.string.dialog_return_book_title))
+                .setMessage(String.format(activity.getString(R.string.dialog_return_book_body), book.getLend().getReceiverName()))
+                .setPositiveButton(activity.getString(R.string.dialog_btn_positive), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                         BookApi updatedBook = book;
                         updatedBook.setLend(null);
-                        mFirebaseDatabaseHelper.updateBook(userId,FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,updatedBook);
+                        mFirebaseDatabaseHelper.updateBook(userId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, updatedBook);
 
                         try {
                             ((DetailActivity) activity).loadBook(); //TODO make this reload better. Error prone
-                        }catch (Exception ex){}
+                        } catch (Exception ex) {
+                        }
                     }
                 })
-                .setNegativeButton("Cancel",null)
+                .setNegativeButton(activity.getString(R.string.dialog_btn_cancel), null)
                 .setCancelable(true)
                 .create();
 

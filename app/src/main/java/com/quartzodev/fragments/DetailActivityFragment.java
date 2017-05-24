@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,17 +31,11 @@ import com.quartzodev.api.BookApi;
 import com.quartzodev.api.VolumeInfo;
 import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.R;
-import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
-import com.quartzodev.task.FetchBookTask;
 import com.quartzodev.utils.DialogUtils;
-import com.quartzodev.views.DynamicImageView;
-
-import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.joda.time.Interval;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,7 +51,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     private static final String TAG = DetailActivity.class.getSimpleName();
     private static final String MOVIE_SHARE_HASHTAG = "#BuddyBook ";
 
-    private static final int LOADER_ID_BOOK = 1;
     @BindView(R.id.detail_imageview_thumb)
     ImageView mPhoto;
     @BindView(R.id.detail_textview_title)
@@ -71,27 +62,25 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @BindView(R.id.detail_textview_description)
     TextView mDescription;
     @BindView(R.id.detail_imageView_bookmark)
-    ImageView btnBookMark;
-
+    ImageView mBtnBookMark;
     @BindView(R.id.detail_imageView_lend_book)
     @Nullable
-    ImageView btnLendBook;
-
+    ImageView mBtnLendBook;
     @BindView(R.id.detail_textview_receiver_name)
     @Nullable
-    TextView textReceiverName;
-
+    TextView mTextReceiverName;
     @BindView(R.id.detail_textview_receiver_email)
     @Nullable
-    TextView textReceiverEmail;
-
+    TextView mTextReceiverEmail;
     @BindView(R.id.detail_textview_receiver_date)
     @Nullable
-    TextView textLentDate;
-
+    TextView mTextLentDate;
     @BindView(R.id.card_book_borrowed)
     @Nullable
-    CardView cardViewBookBorrowed;
+    CardView mCardViewBookBorrowed;
+    @BindView(R.id.card_book_description)
+    @Nullable
+    CardView mCardViewBookDescription;
 
     private String mBookId;
     private String mBookJson;
@@ -103,8 +92,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private MenuItem menushareItem;
     private ShareActionProvider mShareActionProvider;
-    private Boolean isLentBook;
-
+    private Boolean mIsLentBook;
     private OnDetailInteractionListener mListener;
 
     public DetailActivityFragment() {
@@ -133,7 +121,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         mUserId = getArguments().getString(DetailActivity.ARG_USER_ID);
         mFolderListComma = getArguments().getString(DetailActivity.ARG_FOLDER_LIST_ID);
         mBookJson = getArguments().getString(DetailActivity.ARG_BOOK_JSON);
-        isLentBook = getArguments().getBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK);
+        mIsLentBook = getArguments().getBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK);
         mContext = getContext();
     }
 
@@ -143,9 +131,9 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
         View view;
 
-        if(isLentBook){
+        if (mIsLentBook) {
             view = inflater.inflate(R.layout.fragment_detail_lent_book, container, false);
-        }else{
+        } else {
             view = inflater.inflate(R.layout.fragment_detail, container, false);
         }
 
@@ -161,7 +149,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         inflater.inflate(R.menu.menu_detail, menu);
         menushareItem = menu.findItem(R.id.action_share);
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menushareItem);
-        if(mBookSelected != null) {
+        if (mBookSelected != null) {
             menushareItem.setVisible(true);
             mShareActionProvider.setShareIntent(createShareBookIntent(mBookSelected));
         }
@@ -170,11 +158,11 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Toast.makeText(mContext, "Folder list is: " + mFolderListComma, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(mContext, "Folder list is: " + mFolderListComma, Toast.LENGTH_SHORT).show();
         loadBook();
     }
 
-    public void loadBook(){
+    public void loadBook() {
         mFirebaseDatabaseHelper.findBook(mUserId, mFolderId, mBookId, this);
     }
 
@@ -197,18 +185,22 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
             mTitle.setText(bookApi.getVolumeInfo().getTitle());
             mAuthor.setText(bookApi.getVolumeInfo().getAuthors() != null ? bookApi.getVolumeInfo().getAuthors().get(0) : "");
-            mDescription.setText(bookApi.getVolumeInfo().getDescription());
             mPublishedDate.setText(bookApi.getVolumeInfo().getPublishedDate());
 
-            if(getActivity() != null) {
+            if(bookApi.getVolumeInfo().getDescription() != null && !bookApi.getVolumeInfo().getDescription().isEmpty()){
+                mDescription.setText(bookApi.getVolumeInfo().getDescription());
+                //mCardViewBookDescription.setVisibility(View.VISIBLE);
+            }
+
+            if (getActivity() != null) {
                 ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
 
                 actionBar.setTitle(bookApi.getVolumeInfo().getTitle());
                 actionBar.setSubtitle(bookApi.getVolumeInfo().getAuthors() != null ? bookApi.getVolumeInfo().getAuthors().get(0) : "");
             }
-            btnBookMark.setOnClickListener(this);
+            mBtnBookMark.setOnClickListener(this);
 
-            if(isLentBook) {
+            if (mIsLentBook) {
 
                 if (bookApi.getLend() != null) {
 
@@ -216,13 +208,13 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
                     Days days = Days.daysBetween(lendDate, DateTime.now());
 
-                    textReceiverEmail.setText(String.format(getString(R.string.lent_to_email), bookApi.getLend().getReceiverEmail()));
-                    textReceiverName.setText(String.format(getString(R.string.lent_to), bookApi.getLend().getReceiverName()));
-                    textLentDate.setText(String.format(getString(R.string.lent_day_ago), days.getDays()));
-                    btnLendBook.setImageResource(R.drawable.ic_assignment_return_black_24dp);
-                    cardViewBookBorrowed.setVisibility(View.VISIBLE);
+                    mTextReceiverEmail.setText(String.format(getString(R.string.lent_to_email), bookApi.getLend().getReceiverEmail()));
+                    mTextReceiverName.setText(String.format(getString(R.string.lent_to), bookApi.getLend().getReceiverName()));
+                    mTextLentDate.setText(String.format(getString(R.string.lent_day_ago), days.getDays()));
+                    mBtnLendBook.setImageResource(R.drawable.ic_assignment_return_black_24dp);
+                    mCardViewBookBorrowed.setVisibility(View.VISIBLE);
 
-                    btnLendBook.setOnClickListener(new View.OnClickListener() {
+                    mBtnLendBook.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             detachFirebaseListener();
@@ -233,10 +225,10 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
                 } else {
 
-                    btnLendBook.setImageResource(R.drawable.ic_card_giftcard_black_24dp);
-                    cardViewBookBorrowed.setVisibility(View.GONE);
+                    mBtnLendBook.setImageResource(R.drawable.ic_card_giftcard_black_24dp);
+                    mCardViewBookBorrowed.setVisibility(View.GONE);
 
-                    btnLendBook.setOnClickListener(new View.OnClickListener() {
+                    mBtnLendBook.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             detachFirebaseListener();
@@ -252,12 +244,12 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     }
 
-    public void attachFirebaseListener(){
-        mFirebaseDatabaseHelper.attachUpdateBookChildListener(mUserId,FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,mBookSelected,this);
+    public void attachFirebaseListener() {
+        mFirebaseDatabaseHelper.attachUpdateBookChildListener(mUserId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, mBookSelected, this);
     }
 
-    public void detachFirebaseListener(){
-        if(mBookSelected != null) {
+    public void detachFirebaseListener() {
+        if (mBookSelected != null) {
             mFirebaseDatabaseHelper.detachUpdateBookChildListener(mUserId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, mBookSelected, this);
         }
     }
@@ -273,7 +265,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         String unFormatted = mFolderListComma.split(",")[which];
         String id = unFormatted.split("=")[1];
 
-        Toast.makeText(mContext, "Position: " + which, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(mContext, "Position: " + which, Toast.LENGTH_SHORT).show();
         FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId, id, mBookSelected);
         dialog.dismiss();
     }
@@ -297,7 +289,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             Gson gson = new Gson();
             mBookSelected = gson.fromJson(mBookJson, BookApi.class);
         }
-        if(isAdded()) {
+        if (isAdded()) {
             loadBookDetails(mBookSelected);
         }
 
@@ -334,6 +326,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     public interface OnDetailInteractionListener {
 
         void onLendBook(BookApi bookApi);
+
         void onReturnBook(BookApi bookApi);
 
     }

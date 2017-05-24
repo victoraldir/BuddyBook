@@ -44,7 +44,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     private String mFolderId;
     private String mISBN;
 
-//    @BindView(R.id.grid_book_progress_bar)
+    //    @BindView(R.id.grid_book_progress_bar)
 //    ProgressBar mProgressBar;
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
     private LoaderManager mLoadManager;

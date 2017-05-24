@@ -1,6 +1,7 @@
 package com.quartzodev.buddybook;
 
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,16 +17,17 @@ import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity implements DetailActivityFragment.OnDetailInteractionListener {
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
-
     public static final String ARG_BOOK_ID = "bookId";
     public static final String ARG_FOLDER_ID = "folderId";
     public static final String ARG_USER_ID = "userId";
     public static final String ARG_FOLDER_LIST_ID = "folderListId";
     public static final String ARG_BOOK_JSON = "bookJson";
     public static final String ARG_FLAG_IS_LENT_BOOK = "isLentBook";
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
+    @BindView(R.id.detail_coordinator)
+    CoordinatorLayout mCoordinatorLayout;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private String mUserId;
 
@@ -48,7 +50,7 @@ public class DetailActivity extends AppCompatActivity implements DetailActivityF
         String bookJson = getIntent().getExtras().getString(ARG_BOOK_JSON);
         boolean isLent = getIntent().getExtras().getBoolean(ARG_FLAG_IS_LENT_BOOK);
 
-        DetailActivityFragment newFragment = DetailActivityFragment.newInstance(mUserId, bookId, folderId, folderListId, bookJson,isLent);
+        DetailActivityFragment newFragment = DetailActivityFragment.newInstance(mUserId, bookId, folderId, folderListId, bookJson, isLent);
 
         getSupportFragmentManager().popBackStackImmediate();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -79,15 +81,15 @@ public class DetailActivity extends AppCompatActivity implements DetailActivityF
 
     @Override
     public void onLendBook(BookApi bookApi) {
-        DialogUtils.alertDialogLendBook(this,mFirebaseDatabaseHelper,mUserId,bookApi);
+        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUserId, bookApi);
     }
 
     @Override
     public void onReturnBook(BookApi bookApi) {
-        DialogUtils.alertDialogReturnBook(this,mFirebaseDatabaseHelper,mUserId,bookApi);
+        DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUserId, bookApi);
     }
 
-    public void loadBook(){
+    public void loadBook() {
         ((DetailActivityFragment) getSupportFragmentManager().findFragmentById(R.id.detail_container)).loadBook();
     }
 }

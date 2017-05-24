@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp">
+
         <EditText
             android:id="@+id/edittext_receiver_name"
             android:layout_width="match_parent"
@@ -27,13 +28,15 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp">
+
         <EditText
             android:id="@+id/edittext_receiver_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/dialog_email_hint"
-            android:maxLines="1" />
+            android:maxLines="1"
+            android:maxLength="35"/>
     </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

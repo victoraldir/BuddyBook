@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -124,7 +123,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         View rootView = inflater.inflate(R.layout.fragment_grid_book, container, false);
         ButterKnife.bind(this, rootView);
 
-        mAdapter = new BookGridAdapter(getActivity(), new ArrayList<BookApi>(), mFolderId, mListener,mFlag, this);
+        mAdapter = new BookGridAdapter(getActivity(), new ArrayList<BookApi>(), mFolderId, mListener, mFlag, this);
         mRecyclerView.setAdapter(mAdapter);
 
         int columnCount = getResources().getInteger(R.integer.list_column_count);
@@ -132,7 +131,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
                 new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(sglm);
 
-        if(mFolderName != null) {
+        if (mFolderName != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(mFolderName);
         }
 
@@ -141,8 +140,8 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         return rootView;
     }
 
-    private void updateToolbarTitle(){
-        if(getActivity() != null) {
+    private void updateToolbarTitle() {
+        if (getActivity() != null) {
             if (mFolderName != null) {
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(mFolderName);
             } else {
@@ -169,7 +168,6 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         }
 
         task.forceLoad();
-
 
 
         return task;
@@ -227,25 +225,25 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
 
     }
 
-    public void detachFirebaseListener(){
+    public void detachFirebaseListener() {
         if (mFlag == FLAG_MY_BOOKS_FOLDER) {
-            mFirebaseDatabaseHelper.detachBookFolderChildEventListener(mUserId,mFirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,this);
+            mFirebaseDatabaseHelper.detachBookFolderChildEventListener(mUserId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, this);
         } else if (mFlag == FLAG_CUSTOM_FOLDER) {
-            mFirebaseDatabaseHelper.detachBookFolderChildEventListener(mUserId,mFolderId,this);
+            mFirebaseDatabaseHelper.detachBookFolderChildEventListener(mUserId, mFolderId, this);
         }
     }
 
-    public void attachFirebaseListener(){
+    public void attachFirebaseListener() {
         if (mFlag == FLAG_MY_BOOKS_FOLDER) {
-            mFirebaseDatabaseHelper.attachBookFolderChildEventListener(mUserId,mFirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,this);
+            mFirebaseDatabaseHelper.attachBookFolderChildEventListener(mUserId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, this);
         } else if (mFlag == FLAG_CUSTOM_FOLDER) {
-            mFirebaseDatabaseHelper.attachBookFolderChildEventListener(mUserId,mFolderId,this);
+            mFirebaseDatabaseHelper.attachBookFolderChildEventListener(mUserId, mFolderId, this);
         }
     }
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        Log.d(TAG,"onChildAdded FIRED " + dataSnapshot.toString());
+        Log.d(TAG, "onChildAdded FIRED " + dataSnapshot.toString());
 
         if (dataSnapshot.getValue() != null) {
             BookApi bookApi = dataSnapshot.getValue(BookApi.class);
@@ -256,7 +254,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-        Log.d(TAG,"onChildChanged FIRED " + dataSnapshot.toString());
+        Log.d(TAG, "onChildChanged FIRED " + dataSnapshot.toString());
         if (dataSnapshot.getValue() != null) {
 
             mAdapter.updateAdapterParent();
@@ -267,7 +265,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-        Log.d(TAG,"onChildRemoved FIRED " + dataSnapshot.toString());
+        Log.d(TAG, "onChildRemoved FIRED " + dataSnapshot.toString());
 
         if (dataSnapshot.getValue() != null) {
             BookApi bookApi = dataSnapshot.getValue(BookApi.class);
@@ -289,10 +287,15 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     public interface OnGridFragmentInteractionListener {
 
         void onClickListenerBookGridInteraction(String mFolderId, BookApi book, DynamicImageView imageView);
+
         void onDeleteBookClickListener(String mFolderId, BookApi book);
+
         void onAddBookToFolderClickListener(String mFolderId, BookApi book);
+
         void onCopyBookToFolderClickListener(String mFolderId, BookApi book);
+
         void onLendBookClickListener(BookApi book);
+
         void onReturnBookClickListener(BookApi book);
     }
 }
