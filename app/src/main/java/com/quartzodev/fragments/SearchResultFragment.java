@@ -48,6 +48,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 //    ProgressBar mProgressBar;
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
     private LoaderManager mLoadManager;
+    private Context mContext;
 
     //TODO Stop request when rotating
     public static SearchResultFragment newInstance(String userId, String folderId, String isbn) {
@@ -61,6 +62,8 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         return fragment;
 
     }
+
+
 
     @Nullable
     @Override
@@ -82,6 +85,8 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         if (getArguments().containsKey(ARG_ISBN)) {
             mISBN = getArguments().getString(ARG_ISBN);
         }
+
+        mContext = getContext();
 
         return rootView;
     }
@@ -192,28 +197,33 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public Loader<List<BookApi>> onCreateLoader(int id, Bundle args) {
-        setLoading(true);
 
-        if (args != null && args.containsKey(ARG_QUERY)) {
+        if(mContext != null) {
 
-            if (args.containsKey(ARG_MAX_RESULT)) {
+            setLoading(true);
+            if (args != null && args.containsKey(ARG_QUERY)) {
 
-                return new SearchTask(getContext(),
-                        args.getString(ARG_QUERY),
-                        args.getInt(ARG_MAX_RESULT));
+                if (args.containsKey(ARG_MAX_RESULT)) {
 
-            } else {
+                    return new SearchTask(mContext,
+                            args.getString(ARG_QUERY),
+                            args.getInt(ARG_MAX_RESULT));
+
+                } else {
 
 
-                return new SearchTask(getContext(),
-                        args.getString(ARG_QUERY),
-                        null);
+                    return new SearchTask(mContext,
+                            args.getString(ARG_QUERY),
+                            null);
+                }
             }
+
+            return new SearchTask(mContext,
+                    "",
+                    null);
         }
 
-        return new SearchTask(getContext(),
-                "",
-                null);
+        return null;
     }
 
     @Override

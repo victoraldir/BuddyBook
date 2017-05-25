@@ -179,11 +179,17 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
 
         if (container != null) {
             if (flag) {
+                container.findViewById(R.id.fragment_grid_message).setVisibility(View.GONE);
                 container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.VISIBLE);
                 container.findViewById(R.id.recycler_view_books).setVisibility(View.INVISIBLE);
             } else {
                 container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.INVISIBLE);
                 container.findViewById(R.id.recycler_view_books).setVisibility(View.VISIBLE);
+                if(mAdapter.getItemCount() == 0){
+                    container.findViewById(R.id.fragment_grid_message).setVisibility(View.VISIBLE);
+                }else{
+                    container.findViewById(R.id.fragment_grid_message).setVisibility(View.GONE);
+                }
             }
         }
     }

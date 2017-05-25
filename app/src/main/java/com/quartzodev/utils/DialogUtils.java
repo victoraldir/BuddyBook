@@ -56,7 +56,7 @@ public class DialogUtils {
 
 
         builder.setTitle(R.string.pick_folder)
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(context.getString(R.string.dialog_btn_cancel), null)
                 .setItems(formatFolderList(foldersCommaSep), onClickListener);
 
         AlertDialog alertDialog = builder.create();
@@ -67,14 +67,19 @@ public class DialogUtils {
 
     private static String[] formatFolderList(String folderList) {
 
-        String[] unFormatedList = folderList.split(",");
+        String[] newList = new String[0];
 
-        String[] newList = new String[unFormatedList.length];
+        if(folderList != null) {
+            String[] unFormatedList = folderList.split(",");
 
-        for (int x = 0; x < unFormatedList.length; x++) {
-            newList[x] = unFormatedList[x].split("=")[0];
+            newList = new String[unFormatedList.length];
+
+            for (int x = 0; x < unFormatedList.length; x++) {
+                newList[x] = unFormatedList[x].split("=")[0];
+            }
+
         }
-
+        
         return newList;
     }
 
@@ -89,12 +94,13 @@ public class DialogUtils {
 
         final EditText urlEditText = (EditText) view.findViewById(R.id.edittext_add_folder_description);
         urlEditText.setSingleLine(true);
+        urlEditText.setContentDescription(activity.getString(R.string.receiver_name_cd));
         final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.signup_input_layout_name);
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setTitle(R.string.item_add_folder)
-                .setPositiveButton("Ok", null)
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton(activity.getString(R.string.ok), null)
+                .setNegativeButton(activity.getString(R.string.dialog_btn_cancel), null)
                 .setView(view)
                 .create();
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -145,18 +151,20 @@ public class DialogUtils {
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setTitle(R.string.dialog_title_lend)
-                .setPositiveButton("Ok", null)
-                .setNegativeButton("Cancel", null)
+                .setPositiveButton(activity.getString(R.string.ok), null)
+                .setNegativeButton(activity.getString(R.string.dialog_btn_cancel), null)
                 .setView(view)
                 .create();
 
         final EditText nameEdtText = (EditText) view.findViewById(R.id.edittext_receiver_name);
         nameEdtText.setSingleLine(true);
+        nameEdtText.setContentDescription(activity.getString(R.string.receiver_name_cd));
 
         final TextInputLayout nameInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_input_layout_name);
 
         final EditText emailEdtText = (EditText) view.findViewById(R.id.edittext_receiver_email);
         emailEdtText.setSingleLine(true);
+        nameEdtText.setContentDescription(activity.getString(R.string.receiver_email_cd));
 
         final TextInputLayout emailInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_input_layout_email);
 

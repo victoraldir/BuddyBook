@@ -68,7 +68,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp">
+            android:layout_marginRight="8dp"
+            android:id="@+id/card_actions">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -159,8 +160,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
-            android:id="@+id/card_book_description"
-            android:visibility="gone">
+            android:id="@+id/card_book_description">
 
             <TextView
                 android:id="@+id/detail_textview_description"

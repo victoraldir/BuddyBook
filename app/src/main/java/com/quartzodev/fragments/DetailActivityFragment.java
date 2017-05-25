@@ -82,6 +82,9 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @Nullable
     CardView mCardViewBookDescription;
 
+    @BindView(R.id.card_actions)
+    CardView mCardViewActions;
+
     private String mBookId;
     private String mBookJson;
     private String mFolderId;
@@ -158,7 +161,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //Toast.makeText(mContext, "Folder list is: " + mFolderListComma, Toast.LENGTH_SHORT).show();
         loadBook();
     }
 
@@ -167,8 +169,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     }
 
     private void loadBookDetails(final BookApi bookApi) {
-
-        Log.d(TAG, "Should detail book: " + bookApi.getVolumeInfo().getDescription());
 
         if (bookApi != null) {
 
@@ -181,6 +181,10 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                         .placeholder(android.R.drawable.sym_def_app_icon)
                         .error(android.R.drawable.ic_dialog_alert)
                         .into(mPhoto);
+
+                String str = String.format(getString(R.string.cover_book_cd),volumeInfo.getTitle());
+
+                mPhoto.setContentDescription(str);
             }
 
             mTitle.setText(bookApi.getVolumeInfo().getTitle());
@@ -189,7 +193,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
             if(bookApi.getVolumeInfo().getDescription() != null && !bookApi.getVolumeInfo().getDescription().isEmpty()){
                 mDescription.setText(bookApi.getVolumeInfo().getDescription());
-                //mCardViewBookDescription.setVisibility(View.VISIBLE);
             }
 
             if (getActivity() != null) {
@@ -198,7 +201,13 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                 actionBar.setTitle(bookApi.getVolumeInfo().getTitle());
                 actionBar.setSubtitle(bookApi.getVolumeInfo().getAuthors() != null ? bookApi.getVolumeInfo().getAuthors().get(0) : "");
             }
-            mBtnBookMark.setOnClickListener(this);
+
+            if(mFolderListComma != null) {
+                mBtnBookMark.setOnClickListener(this);
+                mBtnBookMark.setContentDescription(getString(R.string.move_to_folder_cd));
+            }else{
+                mCardViewActions.setVisibility(View.GONE);
+            }
 
             if (mIsLentBook) {
 
@@ -212,6 +221,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                     mTextReceiverName.setText(String.format(getString(R.string.lent_to), bookApi.getLend().getReceiverName()));
                     mTextLentDate.setText(String.format(getString(R.string.lent_day_ago), days.getDays()));
                     mBtnLendBook.setImageResource(R.drawable.ic_assignment_return_black_24dp);
+                    mBtnLendBook.setContentDescription(getString(R.string.btn_return_book_cd));
                     mCardViewBookBorrowed.setVisibility(View.VISIBLE);
 
                     mBtnLendBook.setOnClickListener(new View.OnClickListener() {
@@ -226,6 +236,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                 } else {
 
                     mBtnLendBook.setImageResource(R.drawable.ic_card_giftcard_black_24dp);
+                    mBtnLendBook.setContentDescription(getString(R.string.btn_lend_book_cd));
                     mCardViewBookBorrowed.setVisibility(View.GONE);
 
                     mBtnLendBook.setOnClickListener(new View.OnClickListener() {
@@ -265,7 +276,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         String unFormatted = mFolderListComma.split(",")[which];
         String id = unFormatted.split("=")[1];
 
-        //Toast.makeText(mContext, "Position: " + which, Toast.LENGTH_SHORT).show();
         FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId, id, mBookSelected);
         dialog.dismiss();
     }

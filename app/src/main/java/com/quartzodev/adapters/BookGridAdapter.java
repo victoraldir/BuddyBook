@@ -185,6 +185,10 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
                     .error(android.R.drawable.ic_dialog_alert)
                     .crossFade()
                     .into(holder.imageViewthumbnail);
+
+            holder.imageViewthumbnail.setContentDescription(
+                    String.format(mContext.getString(R.string.cover_book_cd),book.getVolumeInfo()
+                            .getTitle()));
         }
 
         holder.view.setOnClickListener(new View.OnClickListener() {

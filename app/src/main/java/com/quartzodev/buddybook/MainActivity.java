@@ -144,7 +144,6 @@ public class MainActivity extends AppCompatActivity
 
         if(ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
             fab.setVisibility(View.VISIBLE);
-
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -236,14 +235,11 @@ public class MainActivity extends AppCompatActivity
 
     private void updateFolderList() {
 
-        // if (mRetainedFolderFragment == null) {
-
         mRetainedFolderFragment = FolderListFragment.newInstance(mUser.getUid());
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(mFolderListContainer.getId(), mRetainedFolderFragment);
         transaction.commit();
 
-        //}
 
     }
 
@@ -300,12 +296,8 @@ public class MainActivity extends AppCompatActivity
                     public void onDataChange(DataSnapshot snapshot) {
                         boolean connected = snapshot.getValue(Boolean.class);
                         if (connected) {
-
                             connectedRef.removeEventListener(this);
-                            //Toast.makeText(mContext, "Connected", Toast.LENGTH_SHORT).show();
                             relaunchActivity();
-                        } else {
-                            //Toast.makeText(mContext, "Not connected", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -394,8 +386,6 @@ public class MainActivity extends AppCompatActivity
 
         if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_SEARCH)) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            //TODO do my query
-            //Toast.makeText(mContext, query, Toast.LENGTH_SHORT).show();
 
             SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
                     SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
@@ -409,6 +399,14 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        if (intent == null) {
+            intent = new Intent();
+        }
+
+        super.startActivityForResult(intent, requestCode);
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -453,7 +451,6 @@ public class MainActivity extends AppCompatActivity
             MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem item) {
-                    //Toast.makeText(mContext, "Search view's been clicked", Toast.LENGTH_SHORT).show();
 
                     mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
 
@@ -465,7 +462,6 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public boolean onMenuItemActionCollapse(MenuItem item) {
-                    //Toast.makeText(mContext, "Search's been closed", Toast.LENGTH_SHORT).show();
 
                     FragmentManager fm = getSupportFragmentManager();
 
@@ -532,7 +528,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLongClickListenerFolderListInteraction(final Folder folder) {
-        //Toast.makeText(mContext, folder.toString(), Toast.LENGTH_SHORT).show();
 
         DialogUtils.alertDialogDeleteFolder(mContext, folder, new DialogInterface.OnClickListener() {
             @Override
@@ -571,11 +566,8 @@ public class MainActivity extends AppCompatActivity
 
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
 
-        if (firebaseUser == null) {
-            //launchLoginActivityResult();
-        } else {
+        if (firebaseUser != null) {
             mFirebaseAuth.removeAuthStateListener(this);
-            //onSignedIn(firebaseUser);
             relaunchActivity();
         }
     }
@@ -595,9 +587,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClickListenerBookGridInteraction(String folderId, BookApi book, DynamicImageView imageView) {
-        //Toast.makeText(mContext, "Should open details for book id: " + book.getVolumeInfo().getTitle() + " Folder id: " + folderId, Toast.LENGTH_SHORT).show();
-
-        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
         mFirebaseDatabaseHelper.insertBookSearchHistory(mUser.getUid(), book); //Insert book
 
@@ -614,10 +603,8 @@ public class MainActivity extends AppCompatActivity
             bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK, false);
         }
 
-        //if(currentFragment instanceof  SearchResultFragment){
         Gson gson = new Gson();
         bundle.putString(DetailActivity.ARG_BOOK_JSON, gson.toJson(book));
-        //}
 
         it.putExtras(bundle);
 

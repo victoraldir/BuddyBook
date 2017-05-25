@@ -39,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:gravity="center_horizontal|center_vertical" />
 
     </LinearLayout>
@@ -52,6 +53,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@mipmap/ic_barcode_scan_white"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:contentDescription="@string/btn_scan_book_cd"/>
 
 </android.support.design.widget.CoordinatorLayout>

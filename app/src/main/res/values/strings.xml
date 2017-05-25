@@ -56,7 +56,7 @@
     <string name="dialog_btn_positive">Yes</string>
     <string name="dialog_btn_ok">OK</string>
     <string name="dialog_btn_cancel">Cancel</string>
-    <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_detail">Book details</string>
     <string name="error_adding_card">Error loading fragments</string>
     <string name="simple_scanner_activity">Bar code reader</string>
 
@@ -69,6 +69,14 @@
     <string name="lent_to_email">Email: %1$s</string>
     <string name="lent_day_ago">Date:%3d days ago</string>
     <string name="day_ago">%3d days \n ago</string>
+
+    <string name="folder_empty">Folder is empty</string>
+
+    <string name="btn_scan_book_cd">Scan book ISBN code</string>
+
+    <string name="cover_book_cd">Book cover: %1$s</string>
+
+    <string name="receiver_name_cd">Receiver name</string>
 
     <!-- TODO barcode stuff. Review them! -->
     <string name="ok">OK</string>
@@ -94,7 +102,7 @@
     <string name="lorem_ipsum_medium">Lorem ipsum dolor sit amet,consectetur adipiscing elit</string>
     <string name="lorem_ipsum_large">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <string name="empty_list">No data</string>
-    <string name="move_to_folder_cd">Move to folder button</string>
+    <string name="move_to_folder_cd">Move to folder</string>
     <string name="lent_book_cd">Lend book action</string>
     <string name="folder_icon_cd">Folder icon</string>
     <string name="add_new_folder_cd">Add new folder action</string>
@@ -107,5 +115,9 @@
     <string name="name">Name</string>
     <string name="book_title">Book Title</string>
     <string name="search">Search</string>
+    <string name="borrowed_book_icon_cd">Borrowed book icon</string>
+    <string name="btn_return_book_cd">Return this book</string>
+    <string name="btn_lend_book_cd">Lend this book</string>
+    <string name="receiver_email_cd">Receiver email</string>
 
 </resources>
