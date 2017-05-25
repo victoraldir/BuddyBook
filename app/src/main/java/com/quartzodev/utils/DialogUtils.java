@@ -164,7 +164,7 @@ public class DialogUtils {
 
         final EditText emailEdtText = (EditText) view.findViewById(R.id.edittext_receiver_email);
         emailEdtText.setSingleLine(true);
-        nameEdtText.setContentDescription(activity.getString(R.string.receiver_email_cd));
+        emailEdtText.setContentDescription(activity.getString(R.string.receiver_email_cd));
 
         final TextInputLayout emailInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_input_layout_email);
 
@@ -247,7 +247,7 @@ public class DialogUtils {
                         mFirebaseDatabaseHelper.updateBook(userId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, updatedBook);
 
                         try {
-                            ((DetailActivity) activity).loadBook(); //TODO make this reload better. Error prone
+                            ((DetailActivity) activity).loadBook();
                         } catch (Exception ex) {
                         }
                     }
