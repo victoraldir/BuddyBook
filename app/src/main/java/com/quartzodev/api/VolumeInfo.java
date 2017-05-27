@@ -1,5 +1,7 @@
 package com.quartzodev.api;
 
+import android.support.annotation.Keep;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -8,7 +10,11 @@ import java.util.List;
  * Created by victoraldir on 12/04/2017.
  */
 
+@Keep
 public class VolumeInfo {
+
+    public VolumeInfo() {
+    }
 
     @SerializedName("title")
     public String title;
@@ -28,8 +34,6 @@ public class VolumeInfo {
     @SerializedName("imageLinks")
     public ImageLink imageLink;
 
-    public VolumeInfo() {
-    }
 
     public String getTitle() {
         return title;

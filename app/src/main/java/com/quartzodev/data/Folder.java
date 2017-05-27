@@ -1,6 +1,7 @@
 package com.quartzodev.data;
 
 import android.os.Parcel;
+import android.support.annotation.Keep;
 
 import com.quartzodev.api.BookApi;
 
@@ -9,17 +10,16 @@ import java.util.Map;
 /**
  * Created by victoraldir on 26/03/2017.
  */
-
+@Keep
 public class Folder {
+
+    public Folder() {
+    }
 
     private String id;
     private String description;
     private boolean isCustom;
     private Map<String, BookApi> books;
-
-    public Folder() {
-
-    }
 
     public Folder(String description) {
         this.description = description;

@@ -1,11 +1,14 @@
 package com.quartzodev.api;
 
+import android.support.annotation.Keep;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by victoraldir on 23/03/2017.
  */
 
+@Keep
 public class BookApi {
 
     @SerializedName("id")

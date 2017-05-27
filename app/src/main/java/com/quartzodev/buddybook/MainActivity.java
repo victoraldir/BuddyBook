@@ -422,7 +422,8 @@ public class MainActivity extends AppCompatActivity
 
             // Retrieve the SearchView and plug it into SearchManager
             //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-            mSearchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+            MenuItem searchItem = menu.findItem(R.id.action_search);
+            mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
             mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
                 @Override

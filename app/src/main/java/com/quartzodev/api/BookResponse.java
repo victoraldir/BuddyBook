@@ -10,6 +10,9 @@ import java.util.List;
 
 public class BookResponse {
 
+    public BookResponse() {
+    }
+
     @SerializedName("kind")
     public String kind;
     @SerializedName("totalItems")
