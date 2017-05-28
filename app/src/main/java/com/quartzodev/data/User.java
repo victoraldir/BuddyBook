@@ -79,8 +79,11 @@ public class User implements Parcelable {
 
         }
 
-        Folder myBooksFolder = new Folder(context.getResources().getString(R.string.tab_my_books));
+        Folder myBooksFolder = new Folder();
         myBooksFolder.setId(UUID.randomUUID().toString());
+        myBooksFolder.setDescription(context.getResources().getString(R.string.tab_my_books));
+        myBooksFolder.setCustom(false);
+
         user.setFolders(Collections.singletonMap(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, myBooksFolder));
 
         return user;

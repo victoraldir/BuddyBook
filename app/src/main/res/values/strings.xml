@@ -78,6 +78,8 @@
 
     <string name="receiver_name_cd">Receiver name</string>
 
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+
     <!-- TODO barcode stuff. Review them! -->
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>

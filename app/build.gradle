@@ -27,9 +27,9 @@ android {
         release {
             shrinkResources true
             minifyEnabled true
-            proguardFile "proguard-butterknife-7.pro"
-            proguardFile "proguard-google-play-services.pro"
-            proguardFile "proguard-support-v7-appcompat.pro"
+//            proguardFile "proguard-butterknife-7.pro"
+//            proguardFile "proguard-google-play-services.pro"
+//            proguardFile "proguard-support-v7-appcompat.pro"
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -38,6 +38,15 @@ android {
             minifyEnabled true
             useProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        productFlavors{
+            free{
+                applicationId 'com.quartzodev.buddybook.free'
+            }
+            paid{
+                applicationId 'com.quartzodev.buddybook.paid'
+            }
         }
 
         buildTypes.each {
@@ -79,6 +88,9 @@ dependencies {
 
     //Joda
     compile 'net.danlew:android.joda:2.9.9'
+
+    //Admobi
+    freeCompile 'com.google.android.gms:play-services-ads:10.2.0'
 
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'

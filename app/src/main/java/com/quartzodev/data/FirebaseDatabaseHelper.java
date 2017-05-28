@@ -9,12 +9,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.quartzodev.api.BookApi;
+import com.quartzodev.buddybook.R;
 import com.quartzodev.task.FetchFolderTask;
 import com.quartzodev.utils.DateUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by victoraldir on 29/03/2017.
@@ -168,6 +170,18 @@ public class FirebaseDatabaseHelper {
         folder.setCustom(true);
 
         df.setValue(folder);
+    }
+
+    public void insertDefaulFolder(String userId, String description, DatabaseReference.CompletionListener completionListener) {
+        DatabaseReference df = mDatabaseReference.child(userId).child(REF_FOLDERS).child(REF_MY_BOOKS_FOLDER);
+
+        Folder myBooksFolder = new Folder();
+        myBooksFolder.setId(UUID.randomUUID().toString());
+        myBooksFolder.setDescription(description);
+        myBooksFolder.setCustom(false);
+
+        df.setValue(myBooksFolder,completionListener);
+
     }
 
     public void updateBook(String userId, String folderId, BookApi bookApi) {

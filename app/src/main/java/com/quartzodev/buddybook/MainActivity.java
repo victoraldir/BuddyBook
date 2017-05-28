@@ -33,7 +33,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
@@ -198,7 +197,18 @@ public class MainActivity extends AppCompatActivity
             mFirebaseDatabaseHelper.insertUser(mUser, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    relaunchActivity();
+
+                    if(databaseError == null){
+                        mFirebaseDatabaseHelper.insertDefaulFolder(
+                                mUser.getUid(),
+                                mContext.getResources().getString(R.string.tab_my_books), new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                relaunchActivity();
+                            }
+                        });
+                    }
+
                 }
             });
         }

@@ -166,9 +166,9 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
         Log.d(TAG, "DataSnapshot of folders Query: " + dataSnapshot != null ? dataSnapshot.toString() : "EMPTY");
 
-        if (dataSnapshot.getValue() != null) {
+        List<Folder> folderList = new ArrayList<>();
 
-            List<Folder> folderList = new ArrayList<>();
+        if (dataSnapshot.getValue() != null) {
 
             for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                 Folder folder = postSnapshot.getValue(Folder.class);
@@ -187,9 +187,10 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
             mFolderList = folderList;
             myFolderRecyclerViewAdapter.swap(mFolderList);
 
-            if (mListener != null)
-                mListener.onFolderListIsAvailable(folderList, getmFolderListCommaSeparated());
         }
+
+        if (mListener != null)
+            mListener.onFolderListIsAvailable(folderList, getmFolderListCommaSeparated());
     }
 
     @Override
