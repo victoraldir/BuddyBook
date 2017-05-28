@@ -5,8 +5,8 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import com.quartzodev.api.APIService;
-import com.quartzodev.api.BookApi;
-import com.quartzodev.api.BookResponse;
+import com.quartzodev.data.BookApi;
+import com.quartzodev.data.BookResponse;
 
 import java.io.IOException;
 import java.util.List;

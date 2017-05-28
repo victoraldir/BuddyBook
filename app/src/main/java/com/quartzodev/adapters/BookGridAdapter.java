@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.quartzodev.api.BookApi;
+import com.quartzodev.data.BookApi;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;

@@ -8,8 +8,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.quartzodev.api.BookApi;
-import com.quartzodev.buddybook.R;
 import com.quartzodev.task.FetchFolderTask;
 import com.quartzodev.utils.DateUtils;
 

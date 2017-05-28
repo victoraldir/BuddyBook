@@ -7,7 +7,7 @@ android {
         applicationId "com.quartzodev.buddybook"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 1
+        versionCode 3
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -25,17 +25,14 @@ android {
 
     buildTypes {
         release {
-            shrinkResources true
-            minifyEnabled true
-//            proguardFile "proguard-butterknife-7.pro"
-//            proguardFile "proguard-google-play-services.pro"
-//            proguardFile "proguard-support-v7-appcompat.pro"
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true  // shrink
+            useProguard true    // obfuscate
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
 
         debug {
-            minifyEnabled true
+            minifyEnabled false
             useProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -82,13 +79,10 @@ dependencies {
     //Firebase
     compile 'com.google.firebase:firebase-database:10.2.0'
     compile 'com.firebaseui:firebase-ui-auth:1.2.0'
-
     //Google Vision
     compile 'com.google.android.gms:play-services-vision:10.2.0'
-
     //Joda
     compile 'net.danlew:android.joda:2.9.9'
-
     //Admobi
     freeCompile 'com.google.android.gms:play-services-ads:10.2.0'
 

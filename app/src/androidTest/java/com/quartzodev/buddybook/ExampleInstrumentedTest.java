@@ -6,8 +6,8 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.quartzodev.api.APIService;
-import com.quartzodev.api.BookApi;
-import com.quartzodev.api.BookResponse;
+import com.quartzodev.data.BookApi;
+import com.quartzodev.data.BookResponse;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 
 import org.junit.Test;

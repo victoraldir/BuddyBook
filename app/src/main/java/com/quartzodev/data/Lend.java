@@ -1,4 +1,4 @@
-package com.quartzodev.api;
+package com.quartzodev.data;
 
 import java.util.Date;
 

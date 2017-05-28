@@ -1,6 +1,7 @@
 package com.quartzodev.api;
 
 import com.quartzodev.buddybook.BuildConfig;
+import com.quartzodev.data.BookResponse;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;

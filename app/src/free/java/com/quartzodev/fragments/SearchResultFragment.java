@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.quartzodev.adapters.BookGridAdapter;
-import com.quartzodev.api.BookApi;
+import com.quartzodev.data.BookApi;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.task.SearchTask;
 

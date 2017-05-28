@@ -12,8 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.quartzodev.api.BookApi;
-import com.quartzodev.api.Lend;
+import com.quartzodev.data.BookApi;
+import com.quartzodev.data.Lend;
 import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.FirebaseDatabaseHelper;

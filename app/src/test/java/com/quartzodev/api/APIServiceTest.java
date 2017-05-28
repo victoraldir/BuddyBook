@@ -2,6 +2,9 @@ package com.quartzodev.api;
 
 import android.util.Log;
 
+import com.quartzodev.data.BookApi;
+import com.quartzodev.data.BookResponse;
+
 import org.junit.Test;
 
 import java.io.IOException;

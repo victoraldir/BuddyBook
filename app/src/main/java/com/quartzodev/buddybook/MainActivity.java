@@ -46,7 +46,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.quartzodev.api.BookApi;
+import com.quartzodev.data.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.data.User;
@@ -72,7 +72,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         FolderListFragment.OnListFragmentInteractionListener,
         FirebaseAuth.AuthStateListener,
-
         BookGridFragment.OnGridFragmentInteractionListener,
         SearchView.OnQueryTextListener {
 
@@ -409,14 +408,14 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        if (intent == null) {
-            intent = new Intent();
-        }
-
-        super.startActivityForResult(intent, requestCode);
-    }
+//    @Override
+//    public void startActivityForResult(Intent intent, int requestCode) {
+//        if (intent == null) {
+//            intent = new Intent();
+//        }
+//
+//        super.startActivityForResult(intent, requestCode);
+//    }
 
     @Override
     protected void onNewIntent(Intent intent) {

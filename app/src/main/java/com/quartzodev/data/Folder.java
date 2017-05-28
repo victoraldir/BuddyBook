@@ -3,8 +3,6 @@ package com.quartzodev.data;
 import android.os.Parcel;
 import android.support.annotation.Keep;
 
-import com.quartzodev.api.BookApi;
-
 import java.util.Map;
 
 /**
