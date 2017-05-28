@@ -41,6 +41,8 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -84,6 +86,8 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     private GestureDetector gestureDetector;
 
     private InterstitialAd mInterstitialAd;
+    private AdManager adManager;
+    private Barcode mBarcode;
 
     /**
      * Initializes the UI and creates the detector pipeline.
@@ -94,7 +98,11 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         setContentView(R.layout.barcode_capture);
 
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+        mInterstitialAd.setAdUnitId(getString(R.string.ad_unit_test));
+
+        adManager = new AdManager();
+
+        mInterstitialAd.setAdListener(adManager);
 
         ButterKnife.bind(this);
 
@@ -125,6 +133,31 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
                 Snackbar.LENGTH_LONG)
                 .show();
     }
+
+    private void sendResultMainActivity(){
+        Intent data = new Intent();
+        data.putExtra(BarcodeObject, mBarcode);
+        setResult(CommonStatusCodes.SUCCESS, data);
+        finish();
+    }
+
+    private void loadAdRequest(){
+        if(!mInterstitialAd.isLoading()) {
+            AdRequest request = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+            mInterstitialAd.loadAd(request);
+        }
+    }
+
+    private void showInterstitialAd(){
+        if(mInterstitialAd.isLoaded()){
+            mInterstitialAd.show();
+            adManager.flagAdIsOpen = true;
+        }else {
+            sendResultMainActivity();
+        }
+    }
+
+
 
     /**
      * Handles the requesting of the camera permission.  This includes
@@ -245,6 +278,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     @Override
     protected void onResume() {
         super.onResume();
+        loadAdRequest();
         startCameraSource();
     }
 
@@ -394,12 +428,14 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     @Override
     public void onBarcodeCreated(Barcode barcode) {
 
+        mBarcode = barcode;
         vibrateDetection();
 
-        Intent data = new Intent();
-        data.putExtra(BarcodeObject, barcode);
-        setResult(CommonStatusCodes.SUCCESS, data);
-        finish();
+        runOnUiThread(new Runnable() {
+            @Override public void run() {
+                showInterstitialAd();
+            }
+        });
     }
 
     private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -460,6 +496,28 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
             mCameraSource.doZoom(detector.getScaleFactor());
+        }
+    }
+
+    public class AdManager extends AdListener{
+
+        public boolean flagAdIsOpen;
+
+        public AdManager(){
+            flagAdIsOpen = false;
+        }
+
+        @Override
+        public void onAdOpened() {
+            super.onAdOpened();
+            //flagAdIsOpen = true;
+        }
+
+        @Override
+        public void onAdClosed() {
+            super.onAdClosed();
+            flagAdIsOpen = false;
+            sendResultMainActivity();
         }
     }
 }

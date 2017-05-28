@@ -78,7 +78,9 @@
 
     <string name="receiver_name_cd">Receiver name</string>
 
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="ad_app_id">ca-app-pub-6526073251385305~4440436428</string>
+    <string name="ad_inter_scanner_activity">ca-app-pub-6526073251385305/</string>
+    <string name="ad_unit_test">ca-app-pub-3940256099942544/1033173712</string>
 
     <!-- TODO barcode stuff. Review them! -->
     <string name="ok">OK</string>
