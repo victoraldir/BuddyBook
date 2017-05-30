@@ -47,7 +47,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     tools:text="Lenivitz Papu"
-                    app:layout_constraintRight_toRightOf="parent" />
+                     />
 
                 <TextView
                     android:id="@+id/detail_textview_published_date"

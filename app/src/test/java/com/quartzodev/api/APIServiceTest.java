@@ -29,7 +29,7 @@ public class APIServiceTest {
             @Override
             public void onResponse(Call<BookResponse> call, Response<BookResponse> response) {
 
-                List<BookApi> bookList = response.body().items;
+                //List<BookApi> bookList = response.body().items;
 
 
                 Log.d(TAG, call.toString());
