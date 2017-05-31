@@ -16,6 +16,9 @@
         android:orientation="vertical">
 
         <!--suppress AndroidLintContentDescription -->
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
         <com.quartzodev.views.DynamicImageView
             android:id="@+id/thumbnail"
             android:layout_width="wrap_content"
@@ -25,6 +28,19 @@
             android:transitionName="@string/transition_image"
             tools:layout_width="200dp"
             tools:src="@drawable/com_facebook_profile_picture_blank_portrait" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:id="@+id/icon_book_lend"
+                android:visibility="gone"
+                android:padding="8dp"
+                android:background="@color/tw__solid_white"
+                android:src="@drawable/ic_swap_horiz"
+                android:contentDescription="@string/borrowed_book_icon_cd"/>
+
+        </FrameLayout>
 
         <FrameLayout
             android:id="@+id/meta_bar"
@@ -65,23 +81,6 @@
                         android:scaleType="fitXY"
                         android:textAppearance="@style/BookToolbar.Subtitle"
                         tools:text="book_author" />
-
-                    <FrameLayout
-                        android:id="@+id/icon_book_lend"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:paddingTop="8dp"
-                        android:visibility="gone">
-
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@drawable/icon_libraries"
-                            android:contentDescription="@string/borrowed_book_icon_cd"/>
-
-                    </FrameLayout>
-
 
                 </LinearLayout>
 

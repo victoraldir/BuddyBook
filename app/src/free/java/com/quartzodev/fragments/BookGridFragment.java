@@ -262,6 +262,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         if (dataSnapshot.getValue() != null) {
             BookApi bookApi = dataSnapshot.getValue(BookApi.class);
             mAdapter.addItem(bookApi);
+            setLoading(false);
         }
     }
 
@@ -284,6 +285,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         if (dataSnapshot.getValue() != null) {
             BookApi bookApi = dataSnapshot.getValue(BookApi.class);
             mAdapter.removeItem(bookApi);
+            setLoading(false);
         }
 
     }

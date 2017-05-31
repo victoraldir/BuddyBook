@@ -1,5 +1,6 @@
 package com.quartzodev.buddybook;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -36,6 +37,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.ErrorCodes;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,7 +60,6 @@ import com.quartzodev.provider.SuggestionProvider;
 import com.quartzodev.ui.BarcodeCaptureActivity;
 import com.quartzodev.utils.ConnectionUtils;
 import com.quartzodev.utils.DialogUtils;
-import com.quartzodev.views.CircleTransform;
 import com.quartzodev.views.DynamicImageView;
 import com.quartzodev.widgets.BuddyBookWidgetProvider;
 
@@ -236,9 +237,6 @@ public class MainActivity extends AppCompatActivity
 
         Glide.with(this)
                 .load(mUser.getPhotoUrl())
-                .centerCrop()
-                .placeholder(android.R.drawable.sym_def_app_icon)
-                .transform(new CircleTransform(mContext))
                 .into(mImageViewProfile);
     }
 
@@ -292,9 +290,16 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
+
         if (requestCode == RC_SIGN_IN) {
 
-            if (resultCode == 10){
+            if (resultCode == ErrorCodes.UNKNOWN_ERROR){
+                AuthUI.getInstance().signOut(this);
+                finish();
+            }
+
+            if (resultCode == ErrorCodes.NO_NETWORK){
                 mTextViewMessage.setVisibility(View.VISIBLE);
                 mFrameLayoutContainer.setVisibility(View.GONE);
                 mTextViewMessage.setText(getString(R.string.no_internet));
@@ -368,16 +373,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void launchLoginActivityResult() {
-        startActivityForResult(
+        ((Activity) mContext).startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setIsSmartLockEnabled(false)
                         .setTheme(R.style.LoginTheme)
+                        .setIsSmartLockEnabled(!BuildConfig.DEBUG)
                         .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                 new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
                                 new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
                         .build(),
                 RC_SIGN_IN);
+
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_right);
+
+
+
+
     }
 
     @Override

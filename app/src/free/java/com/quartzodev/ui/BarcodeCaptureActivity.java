@@ -98,7 +98,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         setContentView(R.layout.barcode_capture);
 
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId(getString(R.string.ad_unit_test));
+        mInterstitialAd.setAdUnitId(getString(R.string.ad_inter_scanner_activity));
 
         adManager = new AdManager();
 
@@ -143,7 +143,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
     private void loadAdRequest(){
         if(!mInterstitialAd.isLoading()) {
-            AdRequest request = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+            AdRequest request = new AdRequest.Builder().build();
             mInterstitialAd.loadAd(request);
         }
     }

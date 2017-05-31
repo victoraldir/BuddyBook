@@ -18,7 +18,7 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
--keepattributes SourceFile,LineNumberTable
+#-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
@@ -29,5 +29,14 @@
 -keep class com.quartzodev.data.**  { *; }
 -keep class com.firebase.**  { *; }
 
+#Retrofit
+-dontwarn okio.**
+-dontwarn javax.annotation.**
 
+#glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
 

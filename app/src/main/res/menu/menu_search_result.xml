@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.quartzodev.buddybook.DetailActivity">
+
+    <item
+        android:id="@+id/action_have_this"
+        android:orderInCategory="100"
+        android:title="@string/action_have_this"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_copy"
+        android:orderInCategory="200"
+        android:title="@string/action_copy"
+        app:showAsAction="never" />
+
+</menu>

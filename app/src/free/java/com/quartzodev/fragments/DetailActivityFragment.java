@@ -185,9 +185,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             if (volumeInfo != null && bookApi.getVolumeInfo().getImageLink() != null) {
                 Glide.with(mContext)
                         .load(volumeInfo.getImageLink().getThumbnail())
-                        .centerCrop()
-                        .placeholder(android.R.drawable.sym_def_app_icon)
-                        .error(android.R.drawable.ic_dialog_alert)
                         .into(mPhoto);
 
                 String str = String.format(getString(R.string.cover_book_cd),volumeInfo.getTitle());

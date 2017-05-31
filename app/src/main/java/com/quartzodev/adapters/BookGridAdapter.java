@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -109,6 +111,23 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         this.notifyDataSetChanged();
     }
 
+    /**
+     * Here is the key method to apply the animation
+     */
+    private int lastPosition = -1;
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
+
+
+
     @Override
     public void onBindViewHolder(final BookGridAdapter.ViewHolder holder, int position) {
 
@@ -142,6 +161,9 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
                     break;
                 case BookGridFragment.FLAG_TOP_BOOKS_FOLDER:
+                    break;
+                case BookGridFragment.FLAG_SEARCH:
+                    holder.toolbar.inflateMenu(R.menu.menu_search_result);
                     break;
             }
         }
@@ -178,12 +200,9 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         });
 
         if (book.getVolumeInfo().getImageLink() != null) {
+
             Glide.with(mContext)
                     .load(book.getVolumeInfo().getImageLink().getThumbnail())
-                    .centerCrop()
-                    .placeholder(android.R.drawable.sym_def_app_icon)
-                    .error(android.R.drawable.ic_dialog_alert)
-                    .crossFade()
                     .into(holder.imageViewthumbnail);
 
             holder.imageViewthumbnail.setContentDescription(
@@ -198,6 +217,8 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
             }
         });
 
+        // call Animation function
+        setAnimation(holder.itemView, position);
     }
 
     @Override
@@ -217,7 +238,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         @BindView(R.id.book_author)
         TextView textViewBookAuthor;
         @BindView(R.id.icon_book_lend)
-        FrameLayout containerIconLend;
+        ImageView containerIconLend;
 
 
         public ViewHolder(View itemView) {
