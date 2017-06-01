@@ -5,6 +5,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="action_clear_search">Clear search history</string>
     <string name="action_sign_out">Sign Out</string>
     <string name="action_remove">Remove</string>
     <string name="action_copy">Copy to folder...</string>
@@ -125,5 +126,6 @@
     <string name="btn_return_book_cd">Return this book</string>
     <string name="btn_lend_book_cd">Lend this book</string>
     <string name="receiver_email_cd">Receiver email</string>
+    <string name="search_clear">Search history is clear</string>
 
 </resources>

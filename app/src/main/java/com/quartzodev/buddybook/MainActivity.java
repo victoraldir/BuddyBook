@@ -34,6 +34,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity
     private List<Folder> mFolderList;
     private String mFolderListComma;
     private FrameLayout mFolderListContainer;
+    private SearchRecentSuggestions mSuggestions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +130,9 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+
+        mSuggestions = new SearchRecentSuggestions(this,
+                SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
 
         mContext = this;
 
@@ -411,9 +416,7 @@ public class MainActivity extends AppCompatActivity
         if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_SEARCH)) {
             String query = intent.getStringExtra(SearchManager.QUERY);
 
-            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-                    SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
-            suggestions.saveRecentQuery(query, null);
+            mSuggestions.saveRecentQuery(query, null);
 
             mSearchResultFragment.executeSearch(query, null);
             mSearchView.clearFocus();
@@ -529,6 +532,11 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 return true;
+
+            case  R.id.action_clear_search:
+                mSuggestions.clearHistory();
+                Snackbar.make(mCoordinatorLayout,getString(R.string.search_clear),Snackbar.LENGTH_LONG).show();
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -737,9 +745,7 @@ public class MainActivity extends AppCompatActivity
 
         if (query != null && !query.isEmpty()) {
 
-            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
-                    SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
-            suggestions.saveRecentQuery(query, null);
+            mSuggestions.saveRecentQuery(query, null);
 
             mSearchResultFragment.executeSearch(query, null);
             mSearchView.clearFocus();
