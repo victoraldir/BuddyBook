@@ -36,6 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -68,6 +69,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -237,6 +239,7 @@ public class MainActivity extends AppCompatActivity
 
         Glide.with(this)
                 .load(mUser.getPhotoUrl())
+                .apply(RequestOptions.circleCropTransform())
                 .into(mImageViewProfile);
     }
 
@@ -477,7 +480,8 @@ public class MainActivity extends AppCompatActivity
                     mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
 
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_main_container, mSearchResultFragment).commit();
+                    transaction.add(R.id.fragment_main_container, mSearchResultFragment);
+                    transaction.commitNow();
 
                     return true;
                 }
@@ -489,8 +493,7 @@ public class MainActivity extends AppCompatActivity
 
                     FragmentTransaction transaction = fm.beginTransaction();
                     transaction.remove(mSearchResultFragment);
-                    transaction.replace(R.id.fragment_main_container, ViewPagerFragment.newInstance(mUser.getUid())); //TODO check the best way to get it done.
-                    transaction.commit();
+                    transaction.commitNow();
 
                     return true;
                 }
@@ -767,5 +770,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }

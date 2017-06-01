@@ -26,9 +26,12 @@ public class SearchTask extends AsyncTaskLoader<List<BookApi>> {
     private Integer mMaxResult;
     private List<BookApi> mData;
 
+    public SearchTask(Context context) {
+        super(context);
+    }
+
     public SearchTask(Context context, String query, Integer maxResult) {
         super(context);
-//        mContainer = container;
         mQuery = query;
         mMaxResult = maxResult;
     }
@@ -67,6 +70,8 @@ public class SearchTask extends AsyncTaskLoader<List<BookApi>> {
 
     @Override
     public List<BookApi> loadInBackground() {
+
+        if(mQuery == null) return null;
 
         try {
 

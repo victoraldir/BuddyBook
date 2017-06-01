@@ -187,8 +187,9 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
         if(mContext != null) {
 
-            setLoading(true);
             if (args != null && args.containsKey(ARG_QUERY)) {
+
+                setLoading(true);
 
                 if (args.containsKey(ARG_MAX_RESULT)) {
 
@@ -198,19 +199,14 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
                 } else {
 
-
                     return new SearchTask(mContext,
                             args.getString(ARG_QUERY),
                             null);
                 }
             }
-
-            return new SearchTask(mContext,
-                    "",
-                    null);
         }
 
-        return null;
+        return new SearchTask(mContext);
     }
 
     @Override

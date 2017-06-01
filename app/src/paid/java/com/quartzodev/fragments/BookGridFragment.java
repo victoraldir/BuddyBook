@@ -127,9 +127,9 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         mRecyclerView.setAdapter(mAdapter);
 
         int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm =
-                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(sglm);
+        GridLayoutManager gridLayoutManager =
+                new GridLayoutManager(getContext(), columnCount);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
 
         if (mFolderName != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(mFolderName);

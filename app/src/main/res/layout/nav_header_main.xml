@@ -20,7 +20,7 @@
         android:scaleType="centerCrop"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-        <com.quartzodev.views.SquareImageView
+        <ImageView
             android:id="@+id/main_imageview_user_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

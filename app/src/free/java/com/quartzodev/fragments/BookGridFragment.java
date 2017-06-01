@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -131,9 +132,9 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         mRecyclerView.setAdapter(mAdapter);
 
         int columnCount = getResources().getInteger(R.integer.list_column_count);
-        StaggeredGridLayoutManager sglm =
-                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(sglm);
+        GridLayoutManager gridLayoutManager =
+                new GridLayoutManager(getContext(), columnCount);
+        mRecyclerView.setLayoutManager(gridLayoutManager);
 
         if (mFolderName != null) {
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(mFolderName);

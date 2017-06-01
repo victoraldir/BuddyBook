@@ -1,5 +1,6 @@
 package com.quartzodev.buddybook;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentTransaction;
@@ -14,6 +15,7 @@ import com.quartzodev.utils.DialogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class DetailActivity extends AppCompatActivity implements DetailActivityFragment.OnDetailInteractionListener {
 
@@ -91,5 +93,10 @@ public class DetailActivity extends AppCompatActivity implements DetailActivityF
 
     public void loadBook() {
         ((DetailActivityFragment) getSupportFragmentManager().findFragmentById(R.id.detail_container)).loadBook();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }
