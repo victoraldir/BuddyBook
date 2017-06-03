@@ -70,7 +70,9 @@ dependencies {
 
     //Firebase
     compile 'com.google.firebase:firebase-database:10.2.0'
-    compile 'com.firebaseui:firebase-ui-auth:1.2.0'
+    //compile 'com.firebaseui:firebase-ui-auth:1.2.0'
+    compile 'com.github.victoraldir.FirebaseUI-Android:firebase-ui-auth:-SNAPSHOT'
+
     //Google Vision
     compile 'com.google.android.gms:play-services-vision:10.2.0'
     //Joda
