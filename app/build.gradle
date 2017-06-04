@@ -66,12 +66,19 @@ dependencies {
 
     compile 'com.jakewharton:butterknife:8.6.0'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.github.bumptech.glide:glide:4.0.0-RC0'
 
-    //Firebase
+    compile ('com.github.bumptech.glide:glide:4.0.0-RC0'){
+        compile 'com.android.support:support-v4:25.3.1'
+    }
+
+    //Firebase DB
     compile 'com.google.firebase:firebase-database:10.2.0'
     //compile 'com.firebaseui:firebase-ui-auth:1.2.0'
+    //Firebase Auth
     compile 'com.github.victoraldir.FirebaseUI-Android:firebase-ui-auth:-SNAPSHOT'
+
+    //Firebase remote config
+    compile 'com.google.firebase:firebase-config:10.2.0'
 
     //Google Vision
     compile 'com.google.android.gms:play-services-vision:10.2.0'
@@ -81,6 +88,12 @@ dependencies {
     freeCompile 'com.google.android.gms:play-services-ads:10.2.0'
     //Calligraphy
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
+
+    //Okhttp
+    compile 'com.squareup.okhttp3:okhttp:3.8.0'
+
+    //OKhttp Glide integration
+    compile "com.github.bumptech.glide:okhttp3-integration:4.0.0-RC0"
 
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'

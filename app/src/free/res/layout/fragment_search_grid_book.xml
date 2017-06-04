@@ -17,7 +17,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layoutManager="android.support.v7.widget.StaggeredGridLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.quartzodev.buddybook.MainActivity"
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center_horizontal|center_vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical"
         android:layout_weight="1">
         <TextView
@@ -36,21 +36,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            tools:text="@string/folder_empty"
-            android:text="@string/folder_empty" />
+            tools:text="@string/search_empty"
+            android:text="@string/search_empty" />
         <TextView
             android:gravity="center_horizontal|center_vertical"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
-            tools:text="@string/folder_empty_hint"
-            android:text="@string/folder_empty_hint" />
-
-        <Button
-            android:onClick="searchHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_search_hint"/>
+            tools:text="@string/search_empty_hint"
+            android:text="@string/search_empty_hint" />
 
     </LinearLayout>
 

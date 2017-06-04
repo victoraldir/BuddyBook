@@ -127,5 +127,12 @@
     <string name="btn_lend_book_cd">Lend this book</string>
     <string name="receiver_email_cd">Receiver email</string>
     <string name="search_clear">Search history is clear</string>
+    <string name="dialog_upgrade">Upgrade to pro</string>
+    <string name="dialog_upgrade_message">You reached out the free tier of usage. Please, upgrade to pro version and get unlimited folders and books with no ads. Plus, you pay me a coffee =D</string>
+    <string name="dialog_btn_updgate">Upgrade to PRO</string>
+    <string name="folder_empty_hint">You can get started by searching for a book or scaning a bar code</string>
+    <string name="btn_search_hint">Search</string>
+    <string name="search_empty">Nothing to show</string>
+    <string name="search_empty_hint">Type a title, author or ISBN</string>
 
 </resources>

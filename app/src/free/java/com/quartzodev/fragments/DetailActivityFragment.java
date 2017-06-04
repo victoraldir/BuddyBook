@@ -47,7 +47,7 @@ import butterknife.ButterKnife;
 public class DetailActivityFragment extends Fragment implements View.OnClickListener,
         DialogInterface.OnClickListener,
         FirebaseDatabaseHelper.OnDataSnapshotListener,
-        ValueEventListener {
+        ValueEventListener{
 
     private static final String TAG = DetailActivity.class.getSimpleName();
     private static final String MOVIE_SHARE_HASHTAG = "#BuddyBook ";
@@ -281,7 +281,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         String unFormatted = mFolderListComma.split(",")[which];
         String id = unFormatted.split("=")[1];
 
-        FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId, id, mBookSelected);
+        FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId, id, mBookSelected,(DetailActivity) getActivity());
         dialog.dismiss();
     }
 

@@ -181,7 +181,6 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
                     folderList.add(folder);
                 }
 
-                //folderList.add(folder);
             }
 
             mFolderList = folderList;

@@ -68,7 +68,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_grid_book, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_search_grid_book, container, false);
 
         ButterKnife.bind(this, rootView);
 

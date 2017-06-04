@@ -3,6 +3,7 @@ package com.quartzodev.buddybook;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +18,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class DetailActivity extends AppCompatActivity implements DetailActivityFragment.OnDetailInteractionListener {
+public class DetailActivity extends AppCompatActivity implements
+        DetailActivityFragment.OnDetailInteractionListener,
+        FirebaseDatabaseHelper.OnPaidOperationListener{
 
     public static final String ARG_BOOK_ID = "bookId";
     public static final String ARG_FOLDER_ID = "folderId";
@@ -98,5 +101,23 @@ public class DetailActivity extends AppCompatActivity implements DetailActivityF
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    public void onInsertBook(boolean success) {
+        if(success){
+            Snackbar.make(mCoordinatorLayout,"Success!",Snackbar.LENGTH_SHORT).show();
+        }else{
+            Snackbar.make(mCoordinatorLayout,"You have to upgrade!",Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onInsertFolder(boolean success) {
+        if(success){
+            Snackbar.make(mCoordinatorLayout,"Success!",Snackbar.LENGTH_SHORT).show();
+        }else{
+            Snackbar.make(mCoordinatorLayout,"You have to upgrade!",Snackbar.LENGTH_SHORT).show();
+        }
     }
 }

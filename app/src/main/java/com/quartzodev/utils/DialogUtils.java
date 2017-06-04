@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.data.BookApi;
 import com.quartzodev.data.Lend;
 import com.quartzodev.buddybook.DetailActivity;
@@ -126,7 +129,11 @@ public class DialogUtils {
 
                             Folder newFolder = new Folder(urlEditText.getText().toString());
 
-                            mFirebaseDatabaseHelper.insertFolder(userId, newFolder);
+                            if(activity instanceof DetailActivity){
+                                mFirebaseDatabaseHelper.insertFolder(userId, newFolder,(DetailActivity) activity);
+                            }else{
+                                mFirebaseDatabaseHelper.insertFolder(userId, newFolder,(MainActivity) activity);
+                            }
 
                             dialog.dismiss();
                         }
@@ -258,5 +265,31 @@ public class DialogUtils {
 
         dialog.show();
 
+    }
+
+    public static void alertDialogUpgradePro(final Activity activity){
+
+        final AlertDialog dialog = new AlertDialog.Builder(activity)
+                .setTitle(R.string.dialog_upgrade)
+                .setMessage(R.string.dialog_upgrade_message)
+                .setPositiveButton(R.string.dialog_btn_updgate, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        final String appPackageName = activity.getPackageName(); // getPackageName() from Context or Activity object
+                        try {
+                            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                        } catch (android.content.ActivityNotFoundException anfe) {
+                            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                        }
+
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(activity.getString(R.string.dialog_btn_cancel),null)
+                .setCancelable(true)
+                .create();
+
+        dialog.show();
     }
 }

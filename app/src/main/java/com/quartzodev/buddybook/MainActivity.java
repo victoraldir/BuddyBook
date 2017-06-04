@@ -23,6 +23,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -41,6 +42,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,6 +54,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
 import com.quartzodev.data.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
@@ -77,7 +84,8 @@ public class MainActivity extends AppCompatActivity
         FolderListFragment.OnListFragmentInteractionListener,
         FirebaseAuth.AuthStateListener,
         BookGridFragment.OnGridFragmentInteractionListener,
-        SearchView.OnQueryTextListener {
+        SearchView.OnQueryTextListener,
+        FirebaseDatabaseHelper.OnPaidOperationListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -116,6 +124,7 @@ public class MainActivity extends AppCompatActivity
     private String mFolderId;
     private SearchResultFragment mSearchResultFragment;
     private SearchView mSearchView;
+    private MenuItem mSearchItem;
     private FolderListFragment mRetainedFolderFragment;
     private String mCurrQuery;
     private List<Folder> mFolderList;
@@ -145,7 +154,6 @@ public class MainActivity extends AppCompatActivity
         //Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
-
         mNavigationView.setNavigationItemSelectedListener(this);
 
         if(ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
@@ -176,6 +184,14 @@ public class MainActivity extends AppCompatActivity
             mFirebaseAuth.addAuthStateListener(this);
             launchLoginActivityResult();
         }
+    }
+
+
+
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
     }
 
     public void onSignedIn(final FirebaseUser firebaseUser) {
@@ -255,7 +271,6 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(mFolderListContainer.getId(), mRetainedFolderFragment);
         transaction.commit();
 
-
     }
 
 
@@ -297,8 +312,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
 
         if (requestCode == RC_SIGN_IN) {
 
@@ -449,8 +462,8 @@ public class MainActivity extends AppCompatActivity
 
             // Retrieve the SearchView and plug it into SearchManager
             //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-            MenuItem searchItem = menu.findItem(R.id.action_search);
-            mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+            mSearchItem = menu.findItem(R.id.action_search);
+            mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
 
             mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
                 @Override
@@ -660,7 +673,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), mFolderId, book);
+                        mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), mFolderId, book, (MainActivity) mContext);
 
                     }
                 }).show();
@@ -674,7 +687,7 @@ public class MainActivity extends AppCompatActivity
             Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.added_to_folder),
                     getString(R.string.tab_my_books)), Snackbar.LENGTH_SHORT).show();
 
-            mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book);
+            mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book, this);
             return;
         }
 
@@ -691,14 +704,14 @@ public class MainActivity extends AppCompatActivity
                             @Override
                             public void onClick(View v) {
                                 if (!id.equals(folderId)) {
-                                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book);
+                                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book,(MainActivity) mContext);
                                     mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), id, book);
                                 }
                             }
                         }).show();
 
                 if (!id.equals(folderId)) {
-                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
+                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book, (MainActivity) mContext);
                     mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), folderId, book);
                 }
 
@@ -722,7 +735,7 @@ public class MainActivity extends AppCompatActivity
                         .show();
 
                 if (!id.equals(folderId)) {
-                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
+                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book, (MainActivity) mContext);
                 }
 
             }
@@ -755,6 +768,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void searchHint(View view){
+        mSearchItem.expandActionView();
+    }
+
     @Override
     public boolean onQueryTextChange(String newText) {
 
@@ -781,5 +798,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    public void onInsertBook(boolean success) {
+        if(!success){
+            DialogUtils.alertDialogUpgradePro(this);
+        }
+    }
+
+    @Override
+    public void onInsertFolder(boolean success) {
+
+        if(!success){
+            DialogUtils.alertDialogUpgradePro(this);
+        }
     }
 }
