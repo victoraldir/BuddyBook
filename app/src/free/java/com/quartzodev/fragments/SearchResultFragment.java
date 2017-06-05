@@ -8,18 +8,23 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.database.DataSnapshot;
 import com.quartzodev.adapters.BookGridAdapter;
 import com.quartzodev.data.BookApi;
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.task.SearchTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -29,7 +34,10 @@ import butterknife.ButterKnife;
  * Created by victoraldir on 24/03/2017.
  */
 
-public class SearchResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<BookApi>> {
+public class SearchResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<BookApi>>,
+        FirebaseDatabaseHelper.OnDataSnapshotListener {
+
+    private static final String TAG = SearchResultFragment.class.getSimpleName();
 
     private static final int LOADER_ID_SEARCH = 3;
 
@@ -48,6 +56,8 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     private LoaderManager mLoadManager;
     private Context mContext;
     private AdView mAdView;
+    private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
+    private String mUserId;
 
     //TODO Stop request when rotating
     public static SearchResultFragment newInstance(String userId, String folderId, String isbn) {
@@ -62,8 +72,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     }
 
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -72,7 +80,12 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
         ButterKnife.bind(this, rootView);
 
-        mAdapter = new BookGridAdapter(getActivity(), new ArrayList<BookApi>(), mFolderId, mListener, BookGridFragment.FLAG_SEARCH, null);
+        mAdapter = new BookGridAdapter(getActivity(),
+                new HashSet<BookApi>(),
+                mFolderId,
+                mListener,
+                BookGridFragment.FLAG_SEARCH,
+                null);
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -85,11 +98,19 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
             mISBN = getArguments().getString(ARG_ISBN);
         }
 
+        if (getArguments().containsKey(ARG_USER_ID)) {
+            mUserId = getArguments().getString(ARG_USER_ID);
+        }
+
         mContext = getContext();
+
+        mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
 
         mAdView = (AdView) rootView.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+
 
         return rootView;
     }
@@ -115,6 +136,8 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     public void executeSearch(String query, Integer maxResult) {
 
+        mAdapter.clearList();
+
         Bundle bundle = new Bundle();
         bundle.putString(ARG_QUERY, query);
         if (maxResult != null) {
@@ -137,7 +160,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
             }
 
         }
-
     }
 
     @Override
@@ -156,11 +178,17 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
         if (container != null) {
             if (flag) {
+                container.findViewById(R.id.fragment_grid_message).setVisibility(View.GONE);
                 container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.VISIBLE);
-                container.findViewById(R.id.recycler_view_books).setVisibility(View.INVISIBLE);
+                container.findViewById(R.id.recycler_view_books).setVisibility(View.GONE);
             } else {
                 container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.INVISIBLE);
                 container.findViewById(R.id.recycler_view_books).setVisibility(View.VISIBLE);
+                if(mAdapter.getItemCount() == 0){
+                    container.findViewById(R.id.fragment_grid_message).setVisibility(View.VISIBLE);
+                }else{
+                    container.findViewById(R.id.fragment_grid_message).setVisibility(View.GONE);
+                }
             }
         }
     }
@@ -191,6 +219,9 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
                 setLoading(true);
 
+                //Local search
+                mFirebaseDatabaseHelper.findBookSearch(mUserId,mFolderId,args.getString(ARG_QUERY),this);
+
                 if (args.containsKey(ARG_MAX_RESULT)) {
 
                     return new SearchTask(mContext,
@@ -203,6 +234,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
                             args.getString(ARG_QUERY),
                             null);
                 }
+
             }
         }
 
@@ -211,8 +243,8 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<List<BookApi>> loader, List<BookApi> data) {
-        setLoading(false);
         mAdapter.swap(data);
+        setLoading(false);
     }
 
     @Override
@@ -220,4 +252,21 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     }
 
+    @Override
+    public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
+
+        List<BookApi> bookApis = new ArrayList<>();
+
+        for (DataSnapshot child : dataSnapshot.getChildren()) {
+            BookApi book = child.getValue(BookApi.class);
+            bookApis.add(book);
+        }
+
+        mAdapter.merge(bookApis);
+        setLoading(false);
+
+        Log.d(TAG,dataSnapshot.toString());
+
+    }
 }
+//3iNkAAAAcAAJ

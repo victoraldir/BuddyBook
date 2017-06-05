@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     tools:context="com.quartzodev.buddybook.MainActivity"
     android:background="@color/background"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:onClick="doNothing">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_books"

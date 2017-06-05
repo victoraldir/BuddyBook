@@ -29,6 +29,7 @@ import com.quartzodev.task.FetchFolderTask;
 import com.quartzodev.views.DynamicImageView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -128,7 +129,12 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         View rootView = inflater.inflate(R.layout.fragment_grid_book, container, false);
         ButterKnife.bind(this, rootView);
 
-        mAdapter = new BookGridAdapter(getActivity(), new ArrayList<BookApi>(), mFolderId, mListener, mFlag, this);
+        mAdapter = new BookGridAdapter(getActivity(),
+                new HashSet<BookApi>(),
+                mFolderId, mListener,
+                mFlag,
+                this);
+
         mRecyclerView.setAdapter(mAdapter);
 
         int columnCount = getResources().getInteger(R.integer.list_column_count);

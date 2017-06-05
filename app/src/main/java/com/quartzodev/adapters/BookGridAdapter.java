@@ -23,7 +23,9 @@ import com.quartzodev.fragments.ViewPagerFragment;
 import com.quartzodev.views.DynamicImageView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,13 +38,13 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
 
     private Context mContext;
-    private List<BookApi> mBookList = new ArrayList<>();
+    private Set<BookApi> mBookList = new HashSet<>();
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
     private String mFolderId;
     private int mType;
     private BookGridFragment mParent;
 
-    public BookGridAdapter(Context mContext, List<BookApi> bookList,
+    public BookGridAdapter(Context mContext, Set<BookApi> bookList,
                            String folderId,
                            BookGridFragment.OnGridFragmentInteractionListener listener,
                            int type,
@@ -72,7 +74,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     public void swap(Folder folder) {
         clearList();
         if (folder != null && folder.getBooks() != null) {
-            this.mBookList = new ArrayList<>(folder.getBooks().values());
+            this.mBookList = new HashSet<>(folder.getBooks().values());
         }
         notifyDataSetChanged();
     }
@@ -99,13 +101,20 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         }
     }
 
-    private void clearList() {
+    public void clearList() {
         this.mBookList.clear();
+        this.notifyDataSetChanged();
     }
 
 
     public void swap(List<BookApi> bookApiList) {
-        mBookList.clear();
+        //mBookList.clear();
+        if (bookApiList != null)
+            mBookList.addAll(bookApiList);
+        this.notifyDataSetChanged();
+    }
+
+    public void merge(List<BookApi> bookApiList) {
         if (bookApiList != null)
             mBookList.addAll(bookApiList);
         this.notifyDataSetChanged();
@@ -131,7 +140,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     @Override
     public void onBindViewHolder(final BookGridAdapter.ViewHolder holder, int position) {
 
-        final BookApi book = mBookList.get(position);
+        final BookApi book = new ArrayList<>(mBookList).get(position);
 
         if (mType == BookGridFragment.FLAG_MY_BOOKS_FOLDER && book.getLend() != null) {
             holder.containerIconLend.setVisibility(View.VISIBLE);

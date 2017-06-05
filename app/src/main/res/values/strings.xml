@@ -102,7 +102,7 @@
     <string name="point_bar_code">Point to a bar code. Pinch/Stretch to zoom</string>
     <string name="action_share">Share</string>
     <string name="checkbook">Check this book</string>
-    <string name="borrowed_book">Borrowed book</string>
+    <string name="borrowed_book">Lent book</string>
 
 
     <string name="lorem_ipsum_short">Lorem ipsum dolor sit amet</string>
@@ -134,5 +134,6 @@
     <string name="btn_search_hint">Search</string>
     <string name="search_empty">Nothing to show</string>
     <string name="search_empty_hint">Type a title, author or ISBN</string>
+    <string name="no_internet_search">You are not connected on the internet.</string>
 
 </resources>

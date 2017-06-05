@@ -430,10 +430,8 @@ public class MainActivity extends AppCompatActivity
             String query = intent.getStringExtra(SearchManager.QUERY);
 
             mSuggestions.saveRecentQuery(query, null);
-
-            mSearchResultFragment.executeSearch(query, null);
+//            mSearchResultFragment.executeSearch(query, null);
             mSearchView.clearFocus();
-
             mSearchView.setQuery(query, true);
         }
 
@@ -492,6 +490,10 @@ public class MainActivity extends AppCompatActivity
             MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem item) {
+
+                    if(!ConnectionUtils.isNetworkConnected(mContext)){
+                        Snackbar.make(mCoordinatorLayout,R.string.no_internet_search, Snackbar.LENGTH_LONG).show();
+                    }
 
                     mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
 
@@ -643,7 +645,7 @@ public class MainActivity extends AppCompatActivity
         bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
         bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, mFolderListComma);
 
-        if (folderId == FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER) {
+        if (folderId == null) {
             bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK, true);
         } else {
             bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK, false);
@@ -768,6 +770,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void doNothing(View view){
+
+    }
+
     public void searchHint(View view){
         mSearchItem.expandActionView();
     }
@@ -806,7 +812,7 @@ public class MainActivity extends AppCompatActivity
             DialogUtils.alertDialogUpgradePro(this);
         }
     }
-
+//3iNkAAAAcAAJ
     @Override
     public void onInsertFolder(boolean success) {
 

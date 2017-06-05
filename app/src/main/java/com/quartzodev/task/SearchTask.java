@@ -21,7 +21,6 @@ public class SearchTask extends AsyncTaskLoader<List<BookApi>> {
 
     private final String LOG = SearchTask.class.getSimpleName();
     private boolean mCanceled = false;
-    //    private ViewGroup mContainer;
     private String mQuery;
     private Integer mMaxResult;
     private List<BookApi> mData;

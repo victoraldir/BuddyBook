@@ -14,6 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
@@ -186,6 +187,34 @@ public class FirebaseDatabaseHelper {
         } else {
 
             mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child("books").child(bookId)
+                    .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+
+        }
+
+    }
+
+    public void findBookSearch(String userId, String folderId, String bookQuery, final OnDataSnapshotListener onDataSnapshotListener) {
+
+        if (folderId == null) {
+
+           mDatabaseReference.child(userId)
+                    .child(REF_FOLDERS)
+                    .child(REF_MY_BOOKS_FOLDER)
+                    .child(REF_BOOKS)
+                    .orderByChild("volumeInfo/title")
+                    .startAt(bookQuery)
+                    .limitToFirst(10)
+                    .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+
+        } else {
+
+            mDatabaseReference.child(userId)
+                    .child(REF_FOLDERS)
+                    .child(folderId)
+                    .child(REF_BOOKS)
+                    .orderByChild("volumeInfo/title")
+                    .startAt(bookQuery)
+                    .limitToFirst(10)
                     .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
         }
