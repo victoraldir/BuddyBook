@@ -9,6 +9,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,9 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     private AdView mAdView;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private String mUserId;
+    private boolean mFlagLoadingLocal;
+    private boolean mFlagLoadingRemote;
+    private String mQuery;
 
     //TODO Stop request when rotating
     public static SearchResultFragment newInstance(String userId, String folderId, String isbn) {
@@ -217,21 +221,25 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
             if (args != null && args.containsKey(ARG_QUERY)) {
 
+                mQuery = args.getString(ARG_QUERY);
+
+                mFlagLoadingLocal = true;
+                mFlagLoadingRemote = true;
                 setLoading(true);
 
                 //Local search
-                mFirebaseDatabaseHelper.findBookSearch(mUserId,mFolderId,args.getString(ARG_QUERY),this);
+                mFirebaseDatabaseHelper.findBookSearch(mUserId,mFolderId,mQuery,this);
 
                 if (args.containsKey(ARG_MAX_RESULT)) {
 
                     return new SearchTask(mContext,
-                            args.getString(ARG_QUERY),
+                            mQuery,
                             args.getInt(ARG_MAX_RESULT));
 
                 } else {
 
                     return new SearchTask(mContext,
-                            args.getString(ARG_QUERY),
+                            mQuery,
                             null);
                 }
 
@@ -244,7 +252,13 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onLoadFinished(Loader<List<BookApi>> loader, List<BookApi> data) {
         mAdapter.swap(data);
-        setLoading(false);
+
+        mFlagLoadingRemote = false;
+
+        if(!mFlagLoadingLocal) {
+            setLoading(false);
+        }
+
     }
 
     @Override
@@ -259,14 +273,22 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
         for (DataSnapshot child : dataSnapshot.getChildren()) {
             BookApi book = child.getValue(BookApi.class);
-            bookApis.add(book);
+
+            if(book.getVolumeInfo().getSearchField().contains(mQuery.toLowerCase())){
+                bookApis.add(book);
+            }
+
         }
 
         mAdapter.merge(bookApis);
-        setLoading(false);
+
+        mFlagLoadingLocal = false;
+
+        if(!mFlagLoadingRemote) {
+            setLoading(false);
+        }
 
         Log.d(TAG,dataSnapshot.toString());
 
     }
 }
-//3iNkAAAAcAAJ

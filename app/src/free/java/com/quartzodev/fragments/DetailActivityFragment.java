@@ -38,6 +38,8 @@ import com.quartzodev.utils.DialogUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -193,7 +195,19 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             }
 
             mTitle.setText(bookApi.getVolumeInfo().getTitle());
-            mAuthor.setText(bookApi.getVolumeInfo().getAuthors() != null ? bookApi.getVolumeInfo().getAuthors().get(0) : "");
+            if(bookApi.getVolumeInfo().getAuthors() != null && !bookApi.getVolumeInfo().getAuthors().isEmpty()){
+
+                List<String> authors = bookApi.getVolumeInfo().getAuthors();
+
+                String authorsString = "";
+
+                for (String author : authors) {
+                    authorsString = authorsString.concat(author + "\n");
+                }
+
+                mAuthor.setText(authorsString);
+            }
+
             mPublishedDate.setText(bookApi.getVolumeInfo().getPublishedDate());
 
             if(bookApi.getVolumeInfo().getDescription() != null && !bookApi.getVolumeInfo().getDescription().isEmpty()){

@@ -34,6 +34,24 @@ public class VolumeInfo {
     @SerializedName("imageLinks")
     public ImageLink imageLink;
 
+    @SerializedName("searchField")
+    public String searchField;
+
+
+    public String getSearchField(){
+
+        searchField = title;
+
+        if(authors != null && !authors.isEmpty()){
+            for (String author : authors) {
+                searchField = searchField.concat("_" + author);
+            }
+        }
+
+        searchField = searchField.concat("_" + publisher);
+
+        return searchField.toLowerCase();
+    }
 
     public String getTitle() {
         return title;

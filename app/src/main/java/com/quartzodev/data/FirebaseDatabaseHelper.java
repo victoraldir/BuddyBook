@@ -1,27 +1,19 @@
 package com.quartzodev.data;
 
-import android.app.Activity;
-import android.os.Debug;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.quartzodev.buddybook.BuildConfig;
-import com.quartzodev.buddybook.MainActivity;
-import com.quartzodev.buddybook.R;
-import com.quartzodev.task.FetchFolderTask;
 import com.quartzodev.utils.DateUtils;
 
 import java.util.Collections;
@@ -39,7 +31,7 @@ public class FirebaseDatabaseHelper {
 
     public static final String MAX_FOLDERS_KEY = "max_folders";
     public static final String MAX_BOOKS_KEY = "max_books";
-//    public static final int TOTAL_BOOKS_FOLDER_TIER = 25;
+    //    public static final int TOTAL_BOOKS_FOLDER_TIER = 25;
 //    public static final int TOTAL_FOLDER_TIER = 4;
     public static final String REF_POPULAR_FOLDER = "_popularBooks"; //See a better way to maintain popular folder
     public static final String REF_MY_BOOKS_FOLDER = "myBooksFolder";
@@ -53,6 +45,7 @@ public class FirebaseDatabaseHelper {
     private long mMaxFolders;
     private long mMaxBooks;
 
+
     private FirebaseDatabaseHelper() {
         FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseDatabase.setPersistenceEnabled(true);
@@ -63,7 +56,7 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    private void initRemoteConfig(){
+    private void initRemoteConfig() {
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
                 .setDeveloperModeEnabled(BuildConfig.DEBUG)
@@ -72,11 +65,11 @@ public class FirebaseDatabaseHelper {
         fetchRemoteConfig();
     }
 
-    public void fetchRemoteConfig(){
+    public void fetchRemoteConfig() {
 
         long cacheExpiration = 3600;
 
-        if(mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()){
+        if (mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
             cacheExpiration = 0;
         }
 
@@ -84,20 +77,20 @@ public class FirebaseDatabaseHelper {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG,"Config fetch success");
+                        Log.d(TAG, "Config fetch success");
                         mFirebaseRemoteConfig.activateFetched();
                         applyRetrievedConfig();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e(TAG,"Failure fetching config");
+                Log.e(TAG, "Failure fetching config");
                 applyRetrievedConfig();
             }
         });
     }
 
-    public void applyRetrievedConfig(){
+    public void applyRetrievedConfig() {
         mMaxFolders = mFirebaseRemoteConfig.getLong(MAX_FOLDERS_KEY);
         mMaxBooks = mFirebaseRemoteConfig.getLong(MAX_BOOKS_KEY);
     }
@@ -197,13 +190,14 @@ public class FirebaseDatabaseHelper {
 
         if (folderId == null) {
 
-           mDatabaseReference.child(userId)
+            mDatabaseReference.child(userId)
                     .child(REF_FOLDERS)
                     .child(REF_MY_BOOKS_FOLDER)
                     .child(REF_BOOKS)
-                    .orderByChild("volumeInfo/title")
-                    .startAt(bookQuery)
-                    .limitToFirst(10)
+                    .orderByChild("volumeInfo/searchField")
+//                    .startAt(bookQuery)
+//                    .endAt(bookQuery+"\uf8ff")
+//                    .limitToFirst(5)
                     .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
         } else {
@@ -212,9 +206,10 @@ public class FirebaseDatabaseHelper {
                     .child(REF_FOLDERS)
                     .child(folderId)
                     .child(REF_BOOKS)
-                    .orderByChild("volumeInfo/title")
-                    .startAt(bookQuery)
-                    .limitToFirst(10)
+                    .orderByChild("volumeInfo/searchField")
+//                    .startAt(bookQuery)
+//                    .endAt(bookQuery+"\uf8ff")
+//                    .limitToFirst(5)
                     .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
         }
@@ -249,11 +244,11 @@ public class FirebaseDatabaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if(dataSnapshot.getChildrenCount() >= mMaxFolders){
+                if (dataSnapshot.getChildrenCount() >= mMaxFolders) {
 
                     listener.onInsertFolder(false);
 
-                }else{
+                } else {
 
                     DatabaseReference df = mDatabaseReference.child(userId).child(REF_FOLDERS).push();
                     folder.setId(df.getKey());
@@ -283,7 +278,7 @@ public class FirebaseDatabaseHelper {
         myBooksFolder.setDescription(description);
         myBooksFolder.setCustom(false);
 
-        df.setValue(myBooksFolder,completionListener);
+        df.setValue(myBooksFolder, completionListener);
 
     }
 
@@ -311,11 +306,11 @@ public class FirebaseDatabaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Log.d(TAG,"Folder list is: " + dataSnapshot.getChildrenCount());
+                Log.d(TAG, "Folder list is: " + dataSnapshot.getChildrenCount());
 
-                if(dataSnapshot.getChildrenCount() >= mMaxBooks){
+                if (dataSnapshot.getChildrenCount() >= mMaxBooks) {
                     listener.onInsertBook(false);
-                }else{
+                } else {
                     ref.updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
                     listener.onInsertBook(true);
                 }
@@ -375,8 +370,9 @@ public class FirebaseDatabaseHelper {
         void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot);
     }
 
-    public interface OnPaidOperationListener{
+    public interface OnPaidOperationListener {
         void onInsertBook(boolean success); //Return true if insertion was valid
+
         void onInsertFolder(boolean success);
     }
 }
