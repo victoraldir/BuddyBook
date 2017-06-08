@@ -55,38 +55,38 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     private static final String MOVIE_SHARE_HASHTAG = "#BuddyBook ";
 
     @BindView(R.id.detail_imageview_thumb)
-    protected ImageView mPhoto;
+    ImageView mPhoto;
     @BindView(R.id.detail_textview_title)
-    protected TextView mTitle;
+    TextView mTitle;
     @BindView(R.id.detail_textview_author)
-    protected TextView mAuthor;
+    TextView mAuthor;
     @BindView(R.id.detail_textview_published_date)
-    protected TextView mPublishedDate;
+    TextView mPublishedDate;
     @BindView(R.id.detail_textview_description)
-    protected TextView mDescription;
+    TextView mDescription;
     @BindView(R.id.detail_imageView_bookmark)
-    protected ImageView mBtnBookMark;
+    ImageView mBtnBookMark;
     @BindView(R.id.detail_imageView_lend_book)
     @Nullable
-    protected ImageView mBtnLendBook;
+    ImageView mBtnLendBook;
     @BindView(R.id.detail_textview_receiver_name)
     @Nullable
-    protected TextView mTextReceiverName;
+    TextView mTextReceiverName;
     @BindView(R.id.detail_textview_receiver_email)
     @Nullable
-    protected TextView mTextReceiverEmail;
+    TextView mTextReceiverEmail;
     @BindView(R.id.detail_textview_receiver_date)
     @Nullable
-    protected TextView mTextLentDate;
+    TextView mTextLentDate;
     @BindView(R.id.card_book_borrowed)
     @Nullable
-    protected CardView mCardViewBookBorrowed;
+    CardView mCardViewBookBorrowed;
     @BindView(R.id.card_book_description)
     @Nullable
-    protected CardView mCardViewBookDescription;
+    CardView mCardViewBookDescription;
 
     @BindView(R.id.card_actions)
-    protected CardView mCardViewActions;
+    CardView mCardViewActions;
 
     private String mBookId;
     private String mBookJson;
@@ -212,6 +212,8 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
             if(bookApi.getVolumeInfo().getDescription() != null && !bookApi.getVolumeInfo().getDescription().isEmpty()){
                 mDescription.setText(bookApi.getVolumeInfo().getDescription());
+            }else{
+                mDescription.setText(getString(R.string.no_description));
             }
 
             if (getActivity() != null) {
