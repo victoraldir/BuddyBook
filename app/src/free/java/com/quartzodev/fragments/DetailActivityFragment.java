@@ -55,38 +55,38 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     private static final String MOVIE_SHARE_HASHTAG = "#BuddyBook ";
 
     @BindView(R.id.detail_imageview_thumb)
-    ImageView mPhoto;
+    public ImageView mPhoto;
     @BindView(R.id.detail_textview_title)
-    TextView mTitle;
+    public TextView mTitle;
     @BindView(R.id.detail_textview_author)
-    TextView mAuthor;
+    public TextView mAuthor;
     @BindView(R.id.detail_textview_published_date)
-    TextView mPublishedDate;
+    public TextView mPublishedDate;
     @BindView(R.id.detail_textview_description)
-    TextView mDescription;
+    public TextView mDescription;
     @BindView(R.id.detail_imageView_bookmark)
-    ImageView mBtnBookMark;
+    public ImageView mBtnBookMark;
     @BindView(R.id.detail_imageView_lend_book)
     @Nullable
-    ImageView mBtnLendBook;
+    public ImageView mBtnLendBook;
     @BindView(R.id.detail_textview_receiver_name)
     @Nullable
-    TextView mTextReceiverName;
+    public TextView mTextReceiverName;
     @BindView(R.id.detail_textview_receiver_email)
     @Nullable
-    TextView mTextReceiverEmail;
+    public TextView mTextReceiverEmail;
     @BindView(R.id.detail_textview_receiver_date)
     @Nullable
-    TextView mTextLentDate;
+    public TextView mTextLentDate;
     @BindView(R.id.card_book_borrowed)
     @Nullable
-    CardView mCardViewBookBorrowed;
+    public CardView mCardViewBookBorrowed;
     @BindView(R.id.card_book_description)
     @Nullable
-    CardView mCardViewBookDescription;
+    public CardView mCardViewBookDescription;
 
     @BindView(R.id.card_actions)
-    CardView mCardViewActions;
+    public CardView mCardViewActions;
 
     private String mBookId;
     private String mBookJson;

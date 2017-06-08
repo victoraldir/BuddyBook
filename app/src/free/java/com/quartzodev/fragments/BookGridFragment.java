@@ -58,8 +58,6 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
     private OnGridFragmentInteractionListener mListener;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
-    private AdView mAdView;
-
     public static BookGridFragment newInstanceCustomFolder(String userId, String folderId, String folderName, int flag) {
         Bundle arguments = new Bundle();
         arguments.putInt(ARG_POSITION_ID, flag);
@@ -146,7 +144,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
 
         updateToolbarTitle();
 
-        mAdView = (AdView) rootView.findViewById(R.id.adView);
+        AdView mAdView = (AdView) rootView.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 

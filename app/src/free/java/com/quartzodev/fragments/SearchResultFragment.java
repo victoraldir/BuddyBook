@@ -260,9 +260,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoaderReset(Loader<List<BookApi>> loader) {
-
-    }
+    public void onLoaderReset(Loader<List<BookApi>> loader) {}
 
     @Override
     public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
