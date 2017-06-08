@@ -3,8 +3,6 @@ package com.quartzodev.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 
-import java.net.InetAddress;
-
 /**
  * Created by victoraldir on 24/05/2017.
  */

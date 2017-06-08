@@ -26,7 +26,7 @@
     <LinearLayout
         android:id="@+id/fragment_grid_message"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:gravity="center_horizontal|center_vertical"
         android:visibility="gone"
         android:orientation="vertical"

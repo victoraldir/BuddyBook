@@ -15,15 +15,16 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -35,17 +36,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,8 +50,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.gson.Gson;
 import com.quartzodev.data.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
@@ -109,6 +103,8 @@ public class MainActivity extends AppCompatActivity
     FrameLayout mFrameLayoutContainer;
     @BindView(R.id.fab)
     FloatingActionButton fab;
+    @BindView(R.id.tabs)
+    TabLayout mTabLayout;
 
     private ViewPagerFragment mRetainedViewPagerFragment;
     private ImageView mImageViewProfile;
@@ -495,6 +491,12 @@ public class MainActivity extends AppCompatActivity
                         Snackbar.make(mCoordinatorLayout,R.string.no_internet_search, Snackbar.LENGTH_LONG).show();
                     }
 
+                    Fragment mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+
+                    if(mCurrentGridFragment instanceof ViewPagerFragment){
+                        hideTab();
+                    }
+
                     mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
 
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -512,6 +514,12 @@ public class MainActivity extends AppCompatActivity
                     FragmentTransaction transaction = fm.beginTransaction();
                     transaction.remove(mSearchResultFragment);
                     transaction.commitNow();
+
+                    Fragment mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+
+                    if(mCurrentGridFragment instanceof ViewPagerFragment){
+                        mTabLayout.setVisibility(View.VISIBLE);
+                    }
 
                     return true;
                 }
@@ -812,7 +820,7 @@ public class MainActivity extends AppCompatActivity
             DialogUtils.alertDialogUpgradePro(this);
         }
     }
-//3iNkAAAAcAAJ
+
     @Override
     public void onInsertFolder(boolean success) {
 
@@ -820,4 +828,20 @@ public class MainActivity extends AppCompatActivity
             DialogUtils.alertDialogUpgradePro(this);
         }
     }
+
+    public void setupViewPager(ViewPager viewPager){
+        mTabLayout.setupWithViewPager(viewPager);
+        mTabLayout.setVisibility(View.VISIBLE);
+        setupTabIcons();
+    }
+
+    public void hideTab(){
+        mTabLayout.setVisibility(View.GONE);
+    }
+
+    private void setupTabIcons() {
+        mTabLayout.getTabAt(0).setIcon(R.drawable.ic_favorite_border);
+        mTabLayout.getTabAt(1).setIcon(R.drawable.ic_library_books);
+    }
+
 }

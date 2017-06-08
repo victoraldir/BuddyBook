@@ -2,13 +2,11 @@ package com.quartzodev.api;
 
 import android.util.Log;
 
-import com.quartzodev.data.BookApi;
 import com.quartzodev.data.BookResponse;
 
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;

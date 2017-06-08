@@ -28,11 +28,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.quartzodev.data.BookApi;
-import com.quartzodev.data.VolumeInfo;
 import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
+import com.quartzodev.data.VolumeInfo;
 import com.quartzodev.utils.DialogUtils;
 
 import org.joda.time.DateTime;

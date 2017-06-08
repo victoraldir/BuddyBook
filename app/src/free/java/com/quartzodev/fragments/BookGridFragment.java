@@ -9,7 +9,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +20,13 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.quartzodev.adapters.BookGridAdapter;
-import com.quartzodev.data.BookApi;
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.task.FetchFolderTask;
 import com.quartzodev.views.DynamicImageView;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import butterknife.BindView;

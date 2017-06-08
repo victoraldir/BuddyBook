@@ -105,19 +105,17 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onInsertBook(boolean success) {
-        if(success){
-            Snackbar.make(mCoordinatorLayout,"Success!",Snackbar.LENGTH_SHORT).show();
+        if(!success){
+            DialogUtils.alertDialogUpgradePro(this);
         }else{
-            Snackbar.make(mCoordinatorLayout,"You have to upgrade!",Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(mCoordinatorLayout,getString(R.string.insert_success),Snackbar.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onInsertFolder(boolean success) {
-        if(success){
-            Snackbar.make(mCoordinatorLayout,"Success!",Snackbar.LENGTH_SHORT).show();
-        }else{
-            Snackbar.make(mCoordinatorLayout,"You have to upgrade!",Snackbar.LENGTH_SHORT).show();
+        if(!success){
+            DialogUtils.alertDialogUpgradePro(this);
         }
     }
 }

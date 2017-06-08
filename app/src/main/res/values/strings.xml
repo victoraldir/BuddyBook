@@ -135,5 +135,6 @@
     <string name="search_empty">Nothing to show</string>
     <string name="search_empty_hint">Type a title, author or ISBN</string>
     <string name="no_internet_search">You are not connected on the internet.</string>
+    <string name="insert_success">Book inserted successfully</string>
 
 </resources>

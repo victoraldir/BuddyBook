@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.quartzodev.adapters.ViewPagerAdapter;
+import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
 
 import butterknife.BindView;
@@ -23,6 +24,7 @@ public class ViewPagerFragment extends Fragment {
     private static final String ARG_USER_ID = "userId";
     @BindView(R.id.main_pager)
     ViewPager mViewPager;
+
     private String mUserId;
     private ViewPagerAdapter mViewPagerAdapter;
 
@@ -51,6 +53,33 @@ public class ViewPagerFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((MainActivity) getActivity()).setupViewPager(mViewPager);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        ((MainActivity) getActivity()).hideTab();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     private void loadBooksPageView() {

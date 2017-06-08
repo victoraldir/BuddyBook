@@ -50,7 +50,6 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-
 import com.quartzodev.buddybook.R;
 import com.quartzodev.ui.camera.CameraSource;
 import com.quartzodev.ui.camera.CameraSourcePreview;

@@ -9,7 +9,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,13 +17,12 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.database.DataSnapshot;
 import com.quartzodev.adapters.BookGridAdapter;
-import com.quartzodev.data.BookApi;
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.task.SearchTask;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
