@@ -81,11 +81,15 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     private CameraSourcePreview mPreview;
     private GraphicOverlay<BarcodeGraphic> mGraphicOverlay;
     // helper objects for detecting taps and pinches.
+
     private ScaleGestureDetector scaleGestureDetector;
+
     private GestureDetector gestureDetector;
 
     private InterstitialAd mInterstitialAd;
+
     private AdManager adManager;
+
     private Barcode mBarcode;
 
     /**

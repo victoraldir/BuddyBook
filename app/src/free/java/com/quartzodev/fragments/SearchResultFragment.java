@@ -41,27 +41,42 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     private static final int LOADER_ID_SEARCH = 3;
 
     private static final String ARG_FOLDER_ID = "mFolderId";
+
     private static final String ARG_USER_ID = "mUserId";
+
     private static final String ARG_ISBN = "mIsbn";
+
     private static final String ARG_QUERY = "query";
+
     private static final String ARG_MAX_RESULT = "maxResult";
 
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
+
     private BookGridAdapter mAdapter;
+
     private String mFolderId;
+
     private String mISBN;
+
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
+
     private LoaderManager mLoadManager;
+
     private Context mContext;
+
     private AdView mAdView;
+
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
+
     private String mUserId;
+
     private boolean mFlagLoadingLocal;
+
     private boolean mFlagLoadingRemote;
+
     private String mQuery;
 
-    //TODO Stop request when rotating
     public static SearchResultFragment newInstance(String userId, String folderId, String isbn) {
 
         Bundle arguments = new Bundle();

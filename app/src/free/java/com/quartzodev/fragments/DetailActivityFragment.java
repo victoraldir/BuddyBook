@@ -56,31 +56,42 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     @BindView(R.id.detail_imageview_thumb)
     ImageView mPhoto;
+
     @BindView(R.id.detail_textview_title)
     TextView mTitle;
+
     @BindView(R.id.detail_textview_author)
     TextView mAuthor;
+
     @BindView(R.id.detail_textview_published_date)
     TextView mPublishedDate;
+
     @BindView(R.id.detail_textview_description)
     TextView mDescription;
+
     @BindView(R.id.detail_imageView_bookmark)
     ImageView mBtnBookMark;
+
     @BindView(R.id.detail_imageView_lend_book)
     @Nullable
     ImageView mBtnLendBook;
+
     @BindView(R.id.detail_textview_receiver_name)
     @Nullable
     TextView mTextReceiverName;
+
     @BindView(R.id.detail_textview_receiver_email)
     @Nullable
     TextView mTextReceiverEmail;
+
     @BindView(R.id.detail_textview_receiver_date)
     @Nullable
     TextView mTextLentDate;
+
     @BindView(R.id.card_book_borrowed)
     @Nullable
     CardView mCardViewBookBorrowed;
+
     @BindView(R.id.card_book_description)
     @Nullable
     CardView mCardViewBookDescription;
@@ -89,16 +100,27 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     CardView mCardViewActions;
 
     private String mBookId;
+
     private String mBookJson;
+
     private String mFolderId;
+
     private String mUserId;
+
     private String mFolderListComma;
+
     private Context mContext;
+
     private BookApi mBookSelected;
+
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
+
     private MenuItem menushareItem;
+
     private ShareActionProvider mShareActionProvider;
+
     private Boolean mIsLentBook;
+
     private OnDetailInteractionListener mListener;
 
     private AdView mAdView;

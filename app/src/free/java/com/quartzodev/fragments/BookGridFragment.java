@@ -40,22 +40,38 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         ChildEventListener {
 
     public static final int FLAG_MY_BOOKS_FOLDER = 0;
+
     public static final int FLAG_TOP_BOOKS_FOLDER = 1;
+
     public static final int FLAG_CUSTOM_FOLDER = 2;
+
     public static final int FLAG_SEARCH = 3;
+
     private static final String TAG = BookGridFragment.class.getSimpleName();
+
     private static final String ARG_POSITION_ID = "mFlag";
+
     private static final String ARG_USER_ID = "mUserId";
+
     private static final String ARG_FOLDER_ID = "mFolderId";
+
     private static final String ARG_FOLDER_NAME = "mFolderName";
+
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
+
     private BookGridAdapter mAdapter;
+
     private String mUserId;
+
     private String mFolderId;
+
     private String mFolderName;
+
     private int mFlag;
+
     private OnGridFragmentInteractionListener mListener;
+
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
     public static BookGridFragment newInstanceCustomFolder(String userId, String folderId, String folderName, int flag) {

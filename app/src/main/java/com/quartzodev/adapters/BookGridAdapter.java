@@ -258,14 +258,19 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public final View view;
+
         @BindView(R.id.thumbnail)
         ImageView imageViewthumbnail;
+
         @BindView(R.id.book_toolbar)
         Toolbar toolbar;
+
         @BindView(R.id.book_title)
         TextView textViewBookTitle;
+
         @BindView(R.id.book_author)
         TextView textViewBookAuthor;
+
         @BindView(R.id.icon_book_lend)
         ImageView containerIconLend;
 
