@@ -25,11 +25,10 @@ android:
     - sys-img-armeabi-v7a-android-22
     - sys-img-armeabi-v7a-android-17
     
-    licenses:
+  licenses:
     - 'android-sdk-preview-license-52d11cd2'
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
     
 before_install:
 - chmod +x gradlew
-
