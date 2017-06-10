@@ -103,7 +103,6 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         if (mBookList != null) {
             mBookList.remove(bookApi);
             notifyDataSetChanged();
-            updateAdapterParent();
         }
     }
 
@@ -111,13 +110,6 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         if (mBookList != null && !mBookList.contains(bookApi)) {
             mBookList.add(bookApi);
             notifyDataSetChanged();
-            updateAdapterParent();
-        }
-    }
-
-    public void updateAdapterParent() {
-        if (mParent != null && mParent.getParentFragment() != null) {
-            ((ViewPagerFragment) mParent.getParentFragment()).forceNotify();
         }
     }
 
@@ -128,7 +120,6 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
 
     public void swap(List<BookApi> bookApiList) {
-        //mBookList.clear();
         if (bookApiList != null)
             mBookList.addAll(bookApiList);
         this.notifyDataSetChanged();

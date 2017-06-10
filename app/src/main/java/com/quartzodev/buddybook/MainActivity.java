@@ -652,7 +652,7 @@ public class MainActivity extends AppCompatActivity
         bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
         bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, mFolderListComma);
 
-        if (folderId == null) {
+        if (book.getLend() != null) {
             bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK, true);
         } else {
             bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK, false);
