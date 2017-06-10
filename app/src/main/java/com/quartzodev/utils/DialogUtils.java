@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.quartzodev.buddybook.DetailActivity;
-import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
@@ -130,9 +129,9 @@ public class DialogUtils {
                             Folder newFolder = new Folder(urlEditText.getText().toString());
 
                             if(activity instanceof DetailActivity){
-                                mFirebaseDatabaseHelper.insertFolder(userId, newFolder,(DetailActivity) activity);
+                                mFirebaseDatabaseHelper.insertFolder(userId, newFolder);
                             }else{
-                                mFirebaseDatabaseHelper.insertFolder(userId, newFolder,(MainActivity) activity);
+                                mFirebaseDatabaseHelper.insertFolder(userId, newFolder);
                             }
 
                             dialog.dismiss();

@@ -3,7 +3,6 @@ package com.quartzodev.buddybook;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -19,8 +18,7 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class DetailActivity extends AppCompatActivity implements
-        DetailActivityFragment.OnDetailInteractionListener,
-        FirebaseDatabaseHelper.OnPaidOperationListener{
+        DetailActivityFragment.OnDetailInteractionListener{
 
     public static final String ARG_BOOK_ID = "bookId";
     public static final String ARG_FOLDER_ID = "folderId";
@@ -101,21 +99,5 @@ public class DetailActivity extends AppCompatActivity implements
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-    @Override
-    public void onInsertBook(boolean success) {
-        if(!success){
-            DialogUtils.alertDialogUpgradePro(this);
-        }else{
-            Snackbar.make(mCoordinatorLayout,getString(R.string.insert_success),Snackbar.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onInsertFolder(boolean success) {
-        if(!success){
-            DialogUtils.alertDialogUpgradePro(this);
-        }
     }
 }

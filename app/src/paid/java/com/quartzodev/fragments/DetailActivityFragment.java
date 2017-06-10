@@ -26,15 +26,17 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.quartzodev.api.BookApi;
-import com.quartzodev.api.VolumeInfo;
 import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
+import com.quartzodev.data.VolumeInfo;
 import com.quartzodev.utils.DialogUtils;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,38 +47,49 @@ import butterknife.ButterKnife;
 public class DetailActivityFragment extends Fragment implements View.OnClickListener,
         DialogInterface.OnClickListener,
         FirebaseDatabaseHelper.OnDataSnapshotListener,
-        ValueEventListener {
+        ValueEventListener{
 
     private static final String TAG = DetailActivity.class.getSimpleName();
     private static final String MOVIE_SHARE_HASHTAG = "#BuddyBook ";
 
     @BindView(R.id.detail_imageview_thumb)
     ImageView mPhoto;
+
     @BindView(R.id.detail_textview_title)
     TextView mTitle;
+
     @BindView(R.id.detail_textview_author)
     TextView mAuthor;
+
     @BindView(R.id.detail_textview_published_date)
     TextView mPublishedDate;
+
     @BindView(R.id.detail_textview_description)
     TextView mDescription;
+
     @BindView(R.id.detail_imageView_bookmark)
     ImageView mBtnBookMark;
+
     @BindView(R.id.detail_imageView_lend_book)
     @Nullable
     ImageView mBtnLendBook;
+
     @BindView(R.id.detail_textview_receiver_name)
     @Nullable
     TextView mTextReceiverName;
+
     @BindView(R.id.detail_textview_receiver_email)
     @Nullable
     TextView mTextReceiverEmail;
+
     @BindView(R.id.detail_textview_receiver_date)
     @Nullable
     TextView mTextLentDate;
+
     @BindView(R.id.card_book_borrowed)
     @Nullable
     CardView mCardViewBookBorrowed;
+
     @BindView(R.id.card_book_description)
     @Nullable
     CardView mCardViewBookDescription;
@@ -140,6 +153,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         }
 
         ButterKnife.bind(this, view);
+
         return view;
     }
 
@@ -176,9 +190,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             if (volumeInfo != null && bookApi.getVolumeInfo().getImageLink() != null) {
                 Glide.with(mContext)
                         .load(volumeInfo.getImageLink().getThumbnail())
-                        .centerCrop()
-                        .placeholder(android.R.drawable.sym_def_app_icon)
-                        .error(android.R.drawable.ic_dialog_alert)
                         .into(mPhoto);
 
                 String str = String.format(getString(R.string.cover_book_cd),volumeInfo.getTitle());
@@ -187,11 +198,25 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             }
 
             mTitle.setText(bookApi.getVolumeInfo().getTitle());
-            mAuthor.setText(bookApi.getVolumeInfo().getAuthors() != null ? bookApi.getVolumeInfo().getAuthors().get(0) : "");
+            if(bookApi.getVolumeInfo().getAuthors() != null && !bookApi.getVolumeInfo().getAuthors().isEmpty()){
+
+                List<String> authors = bookApi.getVolumeInfo().getAuthors();
+
+                String authorsString = "";
+
+                for (String author : authors) {
+                    authorsString = authorsString.concat(author + "\n");
+                }
+
+                mAuthor.setText(authorsString);
+            }
+
             mPublishedDate.setText(bookApi.getVolumeInfo().getPublishedDate());
 
             if(bookApi.getVolumeInfo().getDescription() != null && !bookApi.getVolumeInfo().getDescription().isEmpty()){
                 mDescription.setText(bookApi.getVolumeInfo().getDescription());
+            }else{
+                mDescription.setText(getString(R.string.no_description));
             }
 
             if (getActivity() != null) {

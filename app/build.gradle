@@ -78,7 +78,7 @@ dependencies {
     compile 'com.github.victoraldir.FirebaseUI-Android:firebase-ui-auth:-SNAPSHOT'
 
     //Firebase remote config
-    compile 'com.google.firebase:firebase-config:10.2.0'
+    freeCompile 'com.google.firebase:firebase-config:10.2.0'
 
     //Google Vision
     compile 'com.google.android.gms:play-services-vision:10.2.0'

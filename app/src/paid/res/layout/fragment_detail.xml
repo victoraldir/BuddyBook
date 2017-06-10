@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:focusableInTouchMode="true"
     tools:context="com.quartzodev.fragments.DetailActivityFragment">
 
     <android.support.v7.widget.CardView
@@ -46,7 +47,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     tools:text="Lenivitz Papu"
-                    app:layout_constraintRight_toRightOf="parent" />
+                    />
 
                 <TextView
                     android:id="@+id/detail_textview_published_date"
@@ -61,8 +62,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -110,6 +112,5 @@
 
 
     </LinearLayout>
-
 
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,14 +18,14 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.quartzodev.adapters.BookGridAdapter;
-import com.quartzodev.api.BookApi;
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.task.FetchFolderTask;
 import com.quartzodev.views.DynamicImageView;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,22 +38,38 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         ChildEventListener {
 
     public static final int FLAG_MY_BOOKS_FOLDER = 0;
+
     public static final int FLAG_TOP_BOOKS_FOLDER = 1;
+
     public static final int FLAG_CUSTOM_FOLDER = 2;
+
     public static final int FLAG_SEARCH = 3;
+
     private static final String TAG = BookGridFragment.class.getSimpleName();
+
     private static final String ARG_POSITION_ID = "mFlag";
+
     private static final String ARG_USER_ID = "mUserId";
+
     private static final String ARG_FOLDER_ID = "mFolderId";
+
     private static final String ARG_FOLDER_NAME = "mFolderName";
+
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
+
     private BookGridAdapter mAdapter;
+
     private String mUserId;
+
     private String mFolderId;
+
     private String mFolderName;
+
     private int mFlag;
+
     private OnGridFragmentInteractionListener mListener;
+
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
     public static BookGridFragment newInstanceCustomFolder(String userId, String folderId, String folderName, int flag) {
@@ -122,7 +139,12 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         View rootView = inflater.inflate(R.layout.fragment_grid_book, container, false);
         ButterKnife.bind(this, rootView);
 
-        mAdapter = new BookGridAdapter(getActivity(), new ArrayList<BookApi>(), mFolderId, mListener, mFlag, this);
+        mAdapter = new BookGridAdapter(getActivity(),
+                new HashSet<BookApi>(),
+                mFolderId, mListener,
+                mFlag,
+                this);
+
         mRecyclerView.setAdapter(mAdapter);
 
         int columnCount = getResources().getInteger(R.integer.list_column_count);
@@ -253,6 +275,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         if (dataSnapshot.getValue() != null) {
             BookApi bookApi = dataSnapshot.getValue(BookApi.class);
             mAdapter.addItem(bookApi);
+            setLoading(false);
         }
     }
 
@@ -275,6 +298,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         if (dataSnapshot.getValue() != null) {
             BookApi bookApi = dataSnapshot.getValue(BookApi.class);
             mAdapter.removeItem(bookApi);
+            setLoading(false);
         }
 
     }

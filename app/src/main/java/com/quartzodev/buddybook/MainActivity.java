@@ -78,8 +78,7 @@ public class MainActivity extends AppCompatActivity
         FolderListFragment.OnListFragmentInteractionListener,
         FirebaseAuth.AuthStateListener,
         BookGridFragment.OnGridFragmentInteractionListener,
-        SearchView.OnQueryTextListener,
-        FirebaseDatabaseHelper.OnPaidOperationListener{
+        SearchView.OnQueryTextListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -683,7 +682,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), mFolderId, book, (MainActivity) mContext);
+                        mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), mFolderId, book);
 
                     }
                 }).show();
@@ -697,7 +696,7 @@ public class MainActivity extends AppCompatActivity
             Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.added_to_folder),
                     getString(R.string.tab_my_books)), Snackbar.LENGTH_SHORT).show();
 
-            mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book, this);
+            mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book);
             return;
         }
 
@@ -714,14 +713,14 @@ public class MainActivity extends AppCompatActivity
                             @Override
                             public void onClick(View v) {
                                 if (!id.equals(folderId)) {
-                                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book,(MainActivity) mContext);
+                                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book);
                                     mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), id, book);
                                 }
                             }
                         }).show();
 
                 if (!id.equals(folderId)) {
-                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book, (MainActivity) mContext);
+                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
                     mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), folderId, book);
                 }
 
@@ -745,7 +744,7 @@ public class MainActivity extends AppCompatActivity
                         .show();
 
                 if (!id.equals(folderId)) {
-                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book, (MainActivity) mContext);
+                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
                 }
 
             }
@@ -812,21 +811,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-    @Override
-    public void onInsertBook(boolean success) {
-        if(!success){
-            DialogUtils.alertDialogUpgradePro(this);
-        }
-    }
-
-    @Override
-    public void onInsertFolder(boolean success) {
-
-        if(!success){
-            DialogUtils.alertDialogUpgradePro(this);
-        }
     }
 
     public void setupViewPager(ViewPager viewPager){

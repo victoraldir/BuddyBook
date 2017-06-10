@@ -8,16 +8,20 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DataSnapshot;
 import com.quartzodev.adapters.BookGridAdapter;
-import com.quartzodev.api.BookApi;
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.BookApi;
+import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.task.SearchTask;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,30 +31,33 @@ import butterknife.ButterKnife;
  * Created by victoraldir on 24/03/2017.
  */
 
-public class SearchResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<BookApi>> {
+public class SearchResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<BookApi>>,
+        FirebaseDatabaseHelper.OnDataSnapshotListener {
+
+    private static final String TAG = SearchResultFragment.class.getSimpleName();
 
     private static final int LOADER_ID_SEARCH = 3;
-
     private static final String ARG_FOLDER_ID = "mFolderId";
     private static final String ARG_USER_ID = "mUserId";
     private static final String ARG_ISBN = "mIsbn";
-
     private static final String ARG_QUERY = "query";
     private static final String ARG_MAX_RESULT = "maxResult";
+
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
 
     private BookGridAdapter mAdapter;
     private String mFolderId;
     private String mISBN;
-
-    //    @BindView(R.id.grid_book_progress_bar)
-//    ProgressBar mProgressBar;
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
     private LoaderManager mLoadManager;
     private Context mContext;
+    private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
+    private String mUserId;
+    private boolean mFlagLoadingLocal;
+    private boolean mFlagLoadingRemote;
+    private String mQuery;
 
-    //TODO Stop request when rotating
     public static SearchResultFragment newInstance(String userId, String folderId, String isbn) {
 
         Bundle arguments = new Bundle();
@@ -63,17 +70,20 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     }
 
-
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_grid_book, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_search_grid_book, container, false);
 
         ButterKnife.bind(this, rootView);
 
-        mAdapter = new BookGridAdapter(getActivity(), new ArrayList<BookApi>(), mFolderId, mListener, BookGridFragment.FLAG_SEARCH, null);
+        mAdapter = new BookGridAdapter(getActivity(),
+                new HashSet<BookApi>(),
+                mFolderId,
+                mListener,
+                BookGridFragment.FLAG_SEARCH,
+                null);
 
         mRecyclerView.setAdapter(mAdapter);
 
@@ -86,7 +96,13 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
             mISBN = getArguments().getString(ARG_ISBN);
         }
 
+        if (getArguments().containsKey(ARG_USER_ID)) {
+            mUserId = getArguments().getString(ARG_USER_ID);
+        }
+
         mContext = getContext();
+
+        mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
 
         return rootView;
     }
@@ -96,8 +112,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         super.onViewCreated(view, savedInstanceState);
 
         mLoadManager = getLoaderManager();
-
-        //mLoadManager.initLoader(LOADER_ID_SEARCH,null,this);
 
         if (mISBN != null) {
             executeSearch(mISBN, 1);
@@ -114,17 +128,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     public void executeSearch(String query, Integer maxResult) {
 
-//        if( mSearchTask != null ) {
-//            mSearchTask.cancel();
-//        }
-//
-//        mSearchTask = new SearchTask();
-//
-//        if(maxResult == null){
-//            mSearchTask.execute(query,null);
-//        }else{
-//            mSearchTask.execute(query,maxResult.toString());
-//        }
+        mAdapter.clearList();
 
         Bundle bundle = new Bundle();
         bundle.putString(ARG_QUERY, query);
@@ -148,9 +152,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
             }
 
         }
-
-        //setLoading(true);
-
     }
 
     @Override
@@ -169,11 +170,17 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
         if (container != null) {
             if (flag) {
+                container.findViewById(R.id.fragment_grid_message).setVisibility(View.GONE);
                 container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.VISIBLE);
-                container.findViewById(R.id.recycler_view_books).setVisibility(View.INVISIBLE);
+                container.findViewById(R.id.recycler_view_books).setVisibility(View.GONE);
             } else {
                 container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.INVISIBLE);
                 container.findViewById(R.id.recycler_view_books).setVisibility(View.VISIBLE);
+                if (mAdapter.getItemCount() == 0) {
+                    container.findViewById(R.id.fragment_grid_message).setVisibility(View.VISIBLE);
+                } else {
+                    container.findViewById(R.id.fragment_grid_message).setVisibility(View.GONE);
+                }
             }
         }
     }
@@ -198,43 +205,75 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     @Override
     public Loader<List<BookApi>> onCreateLoader(int id, Bundle args) {
 
-        if(mContext != null) {
+        if (mContext != null && args != null && args.containsKey(ARG_QUERY)) {
 
+            mQuery = args.getString(ARG_QUERY);
+
+            mFlagLoadingLocal = true;
+            mFlagLoadingRemote = true;
             setLoading(true);
-            if (args != null && args.containsKey(ARG_QUERY)) {
 
-                if (args.containsKey(ARG_MAX_RESULT)) {
+            //Local search
+            mFirebaseDatabaseHelper.findBookSearch(mUserId, mFolderId, mQuery, this);
 
-                    return new SearchTask(mContext,
-                            args.getString(ARG_QUERY),
-                            args.getInt(ARG_MAX_RESULT));
+            if (args.containsKey(ARG_MAX_RESULT)) {
 
-                } else {
+                return new SearchTask(mContext,
+                        mQuery,
+                        args.getInt(ARG_MAX_RESULT));
 
+            } else {
 
-                    return new SearchTask(mContext,
-                            args.getString(ARG_QUERY),
-                            null);
-                }
+                return new SearchTask(mContext,
+                        mQuery,
+                        null);
             }
 
-            return new SearchTask(mContext,
-                    "",
-                    null);
         }
 
-        return null;
+        return new SearchTask(mContext);
     }
 
     @Override
     public void onLoadFinished(Loader<List<BookApi>> loader, List<BookApi> data) {
-        setLoading(false);
         mAdapter.swap(data);
+
+        mFlagLoadingRemote = false;
+
+        if (!mFlagLoadingLocal) {
+            setLoading(false);
+        }
+
     }
 
     @Override
     public void onLoaderReset(Loader<List<BookApi>> loader) {
-
+        return;
     }
 
+    @Override
+    public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
+
+        List<BookApi> bookApis = new ArrayList<>();
+
+        for (DataSnapshot child : dataSnapshot.getChildren()) {
+            BookApi book = child.getValue(BookApi.class);
+
+            if (book.getVolumeInfo().getSearchField().contains(mQuery.toLowerCase())) {
+                bookApis.add(book);
+            }
+
+        }
+
+        mAdapter.merge(bookApis);
+
+        mFlagLoadingLocal = false;
+
+        if (!mFlagLoadingRemote) {
+            setLoading(false);
+        }
+
+        Log.d(TAG, dataSnapshot.toString());
+
+    }
 }
