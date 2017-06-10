@@ -35,5 +35,4 @@ android:
     
 before_install:
 - chmod +x gradlew
-script:
-./gradlew clean assembleDebug check
+script: ./gradlew clean assembleDebug check
