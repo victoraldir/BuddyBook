@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity
     private SearchResultFragment mSearchResultFragment;
     private SearchView mSearchView;
     private MenuItem mSearchItem;
-    private FolderListFragment mRetainedFolderFragment;
     private String mCurrQuery;
     private List<Folder> mFolderList;
     private String mFolderListComma;
@@ -258,7 +257,7 @@ public class MainActivity extends AppCompatActivity
 
     private void updateFolderList() {
 
-        mRetainedFolderFragment = FolderListFragment.newInstance(mUser.getUid());
+        FolderListFragment mRetainedFolderFragment = FolderListFragment.newInstance(mUser.getUid());
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(mFolderListContainer.getId(), mRetainedFolderFragment);
         transaction.commit();

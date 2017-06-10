@@ -272,7 +272,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoaderReset(Loader<List<BookApi>> loader) {
-        return;
     }
 
     @Override

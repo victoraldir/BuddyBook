@@ -28,9 +28,6 @@ public class VolumeInfo {
     @SerializedName("searchField")
     public String searchField;
 
-    public VolumeInfo() {
-    }
-
     public String getSearchField() {
 
         searchField = title;

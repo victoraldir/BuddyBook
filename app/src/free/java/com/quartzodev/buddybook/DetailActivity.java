@@ -70,6 +70,8 @@ public class DetailActivity extends AppCompatActivity implements
             case android.R.id.home:
                 supportFinishAfterTransition();
                 return true;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

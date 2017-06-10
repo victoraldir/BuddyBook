@@ -115,15 +115,9 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
-    private MenuItem menushareItem;
-
-    private ShareActionProvider mShareActionProvider;
-
     private Boolean mIsLentBook;
 
     private OnDetailInteractionListener mListener;
-
-    private AdView mAdView;
 
     public DetailActivityFragment() {
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
@@ -169,7 +163,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
         ButterKnife.bind(this, view);
 
-        mAdView = (AdView) view.findViewById(R.id.adView);
+        AdView mAdView = (AdView) view.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
@@ -182,8 +176,8 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.menu_detail, menu);
-        menushareItem = menu.findItem(R.id.action_share);
-        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menushareItem);
+        MenuItem menushareItem = menu.findItem(R.id.action_share);
+        ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menushareItem);
         if (mBookSelected != null) {
             menushareItem.setVisible(true);
             mShareActionProvider.setShareIntent(createShareBookIntent(mBookSelected));

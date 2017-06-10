@@ -34,7 +34,7 @@ public class BarcodeGraphic extends GraphicOverlay.Graphic {
             Color.CYAN,
             Color.GREEN
     };
-    private static int mCurrentColorIndex = 0;
+
     private int mId;
     private Paint mRectPaint;
     private Paint mTextPaint;
@@ -43,6 +43,7 @@ public class BarcodeGraphic extends GraphicOverlay.Graphic {
     BarcodeGraphic(GraphicOverlay overlay) {
         super(overlay);
 
+        int mCurrentColorIndex = 0;
         mCurrentColorIndex = (mCurrentColorIndex + 1) % COLOR_CHOICES.length;
         final int selectedColor = COLOR_CHOICES[mCurrentColorIndex];
 

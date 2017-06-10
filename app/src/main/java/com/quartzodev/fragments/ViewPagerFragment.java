@@ -26,7 +26,6 @@ public class ViewPagerFragment extends Fragment {
     ViewPager mViewPager;
 
     private String mUserId;
-    private ViewPagerAdapter mViewPagerAdapter;
 
     public static ViewPagerFragment newInstance(String userId) {
         Bundle arguments = new Bundle();
@@ -79,7 +78,7 @@ public class ViewPagerFragment extends Fragment {
     }
 
     private void loadBooksPageView() {
-        mViewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), mUserId, getContext());
+        ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), mUserId, getContext());
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPagerAdapter.notifyDataSetChanged();
     }

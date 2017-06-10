@@ -42,7 +42,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
     private String mFolderId;
     private int mType;
-    private BookGridFragment mParent;
+
     /**
      * Here is the key method to apply the animation
      */
@@ -57,7 +57,6 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         this.mBookList = bookList;
         this.mFolderId = folderId;
         this.mListener = listener;
-        mParent = parent;
         mType = type;
     }
 

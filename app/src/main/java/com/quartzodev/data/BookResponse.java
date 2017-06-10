@@ -15,9 +15,7 @@ public class BookResponse {
     @SerializedName("totalItems")
     public int totalItems;
     @SerializedName("items")
-    List<BookApi> items;
-    public BookResponse() {
-    }
+    public List<BookApi> items;
 
     public String getKind() {
         return kind;
