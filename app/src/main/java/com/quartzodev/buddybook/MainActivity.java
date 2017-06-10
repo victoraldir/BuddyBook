@@ -743,9 +743,10 @@ public class MainActivity extends AppCompatActivity
                 Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.copied_to_folder), name), Snackbar.LENGTH_LONG)
                         .show();
 
-                if (!id.equals(folderId)) {
-                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
-                }
+//                if (!id.equals(folderId)) {
+//                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
+//                } //Don't know why I did this...
+                mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
 
             }
         });
