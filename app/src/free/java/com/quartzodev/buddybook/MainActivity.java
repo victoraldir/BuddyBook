@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.tabs)
     TabLayout mTabLayout;
 
-    private ViewPagerFragment mRetainedViewPagerFragment;
     private ImageView mImageViewProfile;
     private TextView mTextViewUsername;
     private TextView mTextViewTextEmail;
@@ -120,7 +119,6 @@ public class MainActivity extends AppCompatActivity
     private SearchResultFragment mSearchResultFragment;
     private SearchView mSearchView;
     private MenuItem mSearchItem;
-    private FolderListFragment mRetainedFolderFragment;
     private String mCurrQuery;
     private List<Folder> mFolderList;
     private String mFolderListComma;
@@ -259,7 +257,7 @@ public class MainActivity extends AppCompatActivity
 
     private void updateFolderList() {
 
-        mRetainedFolderFragment = FolderListFragment.newInstance(mUser.getUid());
+        FolderListFragment mRetainedFolderFragment = FolderListFragment.newInstance(mUser.getUid());
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(mFolderListContainer.getId(), mRetainedFolderFragment);
         transaction.commit();
@@ -269,7 +267,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadBooksPageView() {
 
-        mRetainedViewPagerFragment = ViewPagerFragment.newInstance(mUser.getUid());
+        ViewPagerFragment mRetainedViewPagerFragment = ViewPagerFragment.newInstance(mUser.getUid());
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_main_container, mRetainedViewPagerFragment);
@@ -341,23 +339,19 @@ public class MainActivity extends AppCompatActivity
             }
 
             if (resultCode == RESULT_CANCELED) finish();
-        } else if (requestCode == RC_BARCODE_CAPTURE) {
-            if (requestCode == RC_BARCODE_CAPTURE) {
-                if (resultCode == CommonStatusCodes.SUCCESS) {
-                    if (data != null) {
-                        Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
-                        Log.d(TAG, "Barcode read: " + barcode.displayValue);
+        } else if (requestCode == RC_BARCODE_CAPTURE && resultCode == CommonStatusCodes.SUCCESS) {
 
-                        Fragment searchFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, barcode.displayValue);
+            if (data != null) {
+                Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                Log.d(TAG, "Barcode read: " + barcode.displayValue);
 
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_main_container, searchFragment).commit();
+                Fragment searchFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, barcode.displayValue);
 
-                    } else {
-                        Log.d(TAG, "No barcode captured, intent data is null");
-                    }
-                }
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_main_container, searchFragment).commit();
 
+            } else {
+                Log.d(TAG, "No barcode captured, intent data is null");
             }
         }
     }
@@ -529,7 +523,6 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
 
             case R.id.action_sign_out:
-
                 mUser = null;
                 AuthUI.getInstance().signOut(this);
                 if (ConnectionUtils.isNetworkConnected(getApplication())) {
@@ -538,13 +531,15 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     relaunchActivity();
                 }
-
                 return true;
 
             case R.id.action_clear_search:
                 mSuggestions.clearHistory();
                 Snackbar.make(mCoordinatorLayout, getString(R.string.search_clear), Snackbar.LENGTH_LONG).show();
+                return true;
 
+            default:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
