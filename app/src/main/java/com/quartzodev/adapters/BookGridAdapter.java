@@ -18,7 +18,6 @@ import com.quartzodev.data.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.fragments.BookGridFragment;
-import com.quartzodev.fragments.ViewPagerFragment;
 import com.quartzodev.views.DynamicImageView;
 
 import java.util.ArrayList;
@@ -44,6 +43,10 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     private String mFolderId;
     private int mType;
     private BookGridFragment mParent;
+    /**
+     * Here is the key method to apply the animation
+     */
+    private int lastPosition = -1;
 
     public BookGridAdapter(Context mContext, Set<BookApi> bookList,
                            String folderId,
@@ -63,9 +66,9 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
         View view;
 
-        if(viewType == POS_BOOK_LENT){
+        if (viewType == POS_BOOK_LENT) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_lent, parent, false);
-        }else{
+        } else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
         }
 
@@ -118,7 +121,6 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         this.notifyDataSetChanged();
     }
 
-
     public void swap(List<BookApi> bookApiList) {
         if (bookApiList != null)
             mBookList.addAll(bookApiList);
@@ -131,21 +133,14 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         this.notifyDataSetChanged();
     }
 
-    /**
-     * Here is the key method to apply the animation
-     */
-    private int lastPosition = -1;
-    private void setAnimation(View viewToAnimate, int position)
-    {
+    private void setAnimation(View viewToAnimate, int position) {
         // If the bound view wasn't previously displayed on screen, it's animated
-        if (position > lastPosition)
-        {
+        if (position > lastPosition) {
             Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }
     }
-
 
 
     @Override
@@ -226,7 +221,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
                     .into(holder.imageViewthumbnail);
 
             holder.imageViewthumbnail.setContentDescription(
-                    String.format(mContext.getString(R.string.cover_book_cd),book.getVolumeInfo()
+                    String.format(mContext.getString(R.string.cover_book_cd), book.getVolumeInfo()
                             .getTitle()));
         }
 

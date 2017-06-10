@@ -20,7 +20,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class DetailActivity extends AppCompatActivity implements
         DetailActivityFragment.OnDetailInteractionListener,
-        FirebaseDatabaseHelper.OnPaidOperationListener{
+        FirebaseDatabaseHelper.OnPaidOperationListener {
 
     public static final String ARG_BOOK_ID = "bookId";
     public static final String ARG_FOLDER_ID = "folderId";
@@ -105,16 +105,16 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onInsertBook(boolean success) {
-        if(!success){
+        if (!success) {
             DialogUtils.alertDialogUpgradePro(this);
-        }else{
-            Snackbar.make(mCoordinatorLayout,getString(R.string.insert_success),Snackbar.LENGTH_SHORT).show();
+        } else {
+            Snackbar.make(mCoordinatorLayout, getString(R.string.insert_success), Snackbar.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onInsertFolder(boolean success) {
-        if(!success){
+        if (!success) {
             DialogUtils.alertDialogUpgradePro(this);
         }
     }

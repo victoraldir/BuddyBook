@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class DetailActivity extends AppCompatActivity implements
-        DetailActivityFragment.OnDetailInteractionListener{
+        DetailActivityFragment.OnDetailInteractionListener {
 
     public static final String ARG_BOOK_ID = "bookId";
     public static final String ARG_FOLDER_ID = "folderId";

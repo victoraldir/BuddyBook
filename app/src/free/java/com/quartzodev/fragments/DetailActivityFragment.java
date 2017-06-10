@@ -49,7 +49,7 @@ import butterknife.ButterKnife;
 public class DetailActivityFragment extends Fragment implements View.OnClickListener,
         DialogInterface.OnClickListener,
         FirebaseDatabaseHelper.OnDataSnapshotListener,
-        ValueEventListener{
+        ValueEventListener {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
     private static final String MOVIE_SHARE_HASHTAG = "#BuddyBook ";
@@ -166,7 +166,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         } else {
             view = inflater.inflate(R.layout.fragment_detail, container, false);
         }
-        
+
         ButterKnife.bind(this, view);
 
         mAdView = (AdView) view.findViewById(R.id.adView);
@@ -211,13 +211,13 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                         .load(volumeInfo.getImageLink().getThumbnail())
                         .into(mPhoto);
 
-                String str = String.format(getString(R.string.cover_book_cd),volumeInfo.getTitle());
+                String str = String.format(getString(R.string.cover_book_cd), volumeInfo.getTitle());
 
                 mPhoto.setContentDescription(str);
             }
 
             mTitle.setText(bookApi.getVolumeInfo().getTitle());
-            if(bookApi.getVolumeInfo().getAuthors() != null && !bookApi.getVolumeInfo().getAuthors().isEmpty()){
+            if (bookApi.getVolumeInfo().getAuthors() != null && !bookApi.getVolumeInfo().getAuthors().isEmpty()) {
 
                 List<String> authors = bookApi.getVolumeInfo().getAuthors();
 
@@ -232,9 +232,9 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
             mPublishedDate.setText(bookApi.getVolumeInfo().getPublishedDate());
 
-            if(bookApi.getVolumeInfo().getDescription() != null && !bookApi.getVolumeInfo().getDescription().isEmpty()){
+            if (bookApi.getVolumeInfo().getDescription() != null && !bookApi.getVolumeInfo().getDescription().isEmpty()) {
                 mDescription.setText(bookApi.getVolumeInfo().getDescription());
-            }else{
+            } else {
                 mDescription.setText(getString(R.string.no_description));
             }
 
@@ -245,10 +245,10 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                 actionBar.setSubtitle(bookApi.getVolumeInfo().getAuthors() != null ? bookApi.getVolumeInfo().getAuthors().get(0) : "");
             }
 
-            if(mFolderListComma != null) {
+            if (mFolderListComma != null) {
                 mBtnBookMark.setOnClickListener(this);
                 mBtnBookMark.setContentDescription(getString(R.string.move_to_folder_cd));
-            }else{
+            } else {
                 mCardViewActions.setVisibility(View.GONE);
             }
 
@@ -319,7 +319,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         String unFormatted = mFolderListComma.split(",")[which];
         String id = unFormatted.split("=")[1];
 
-        FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId, id, mBookSelected,(DetailActivity) getActivity());
+        FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId, id, mBookSelected, (DetailActivity) getActivity());
         dialog.dismiss();
     }
 

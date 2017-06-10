@@ -22,11 +22,11 @@
         android:id="@+id/fragment_grid_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-        tools:text="@string/folder_empty"
-        android:text="@string/folder_empty"
         android:gravity="center_horizontal|center_vertical"
-        android:visibility="gone"/>
+        android:text="@string/folder_empty"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+        android:visibility="gone"
+        tools:text="@string/folder_empty" />
 
     <ProgressBar
         android:id="@+id/grid_book_progress_bar"

@@ -10,15 +10,14 @@ import java.util.List;
 
 public class BookResponse {
 
-    public BookResponse() {
-    }
-
     @SerializedName("kind")
     public String kind;
     @SerializedName("totalItems")
     public int totalItems;
     @SerializedName("items")
     List<BookApi> items;
+    public BookResponse() {
+    }
 
     public String getKind() {
         return kind;

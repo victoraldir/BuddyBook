@@ -37,12 +37,11 @@ import butterknife.ButterKnife;
 public class BookGridFragment extends Fragment implements LoaderManager.LoaderCallbacks<Folder>,
         ChildEventListener {
 
-    private static final String TAG = BookGridFragment.class.getSimpleName();
-
     public static final int FLAG_MY_BOOKS_FOLDER = 0;
     public static final int FLAG_TOP_BOOKS_FOLDER = 1;
     public static final int FLAG_CUSTOM_FOLDER = 2;
     public static final int FLAG_SEARCH = 3;
+    private static final String TAG = BookGridFragment.class.getSimpleName();
     private static final String ARG_POSITION_ID = "mFlag";
     private static final String ARG_USER_ID = "mUserId";
     private static final String ARG_FOLDER_ID = "mFolderId";
@@ -193,9 +192,9 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
             } else {
                 container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.INVISIBLE);
                 container.findViewById(R.id.recycler_view_books).setVisibility(View.VISIBLE);
-                if(mAdapter.getItemCount() == 0){
+                if (mAdapter.getItemCount() == 0) {
                     container.findViewById(R.id.fragment_grid_message).setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     container.findViewById(R.id.fragment_grid_message).setVisibility(View.GONE);
                 }
             }

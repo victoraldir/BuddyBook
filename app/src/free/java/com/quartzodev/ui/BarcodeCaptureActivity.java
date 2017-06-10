@@ -137,29 +137,28 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
                 .show();
     }
 
-    private void sendResultMainActivity(){
+    private void sendResultMainActivity() {
         Intent data = new Intent();
         data.putExtra(BarcodeObject, mBarcode);
         setResult(CommonStatusCodes.SUCCESS, data);
         finish();
     }
 
-    private void loadAdRequest(){
-        if(!mInterstitialAd.isLoading()) {
+    private void loadAdRequest() {
+        if (!mInterstitialAd.isLoading()) {
             AdRequest request = new AdRequest.Builder().build();
             mInterstitialAd.loadAd(request);
         }
     }
 
-    private void showInterstitialAd(){
-        if(mInterstitialAd.isLoaded()){
+    private void showInterstitialAd() {
+        if (mInterstitialAd.isLoaded()) {
             mInterstitialAd.show();
             adManager.flagAdIsOpen = true;
-        }else {
+        } else {
             sendResultMainActivity();
         }
     }
-
 
 
     /**
@@ -435,7 +434,8 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         vibrateDetection();
 
         runOnUiThread(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 showInterstitialAd();
             }
         });
@@ -502,11 +502,11 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         }
     }
 
-    public class AdManager extends AdListener{
+    public class AdManager extends AdListener {
 
         public boolean flagAdIsOpen;
 
-        public AdManager(){
+        public AdManager() {
             flagAdIsOpen = false;
         }
 

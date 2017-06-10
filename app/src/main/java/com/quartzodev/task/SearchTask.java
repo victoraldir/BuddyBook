@@ -70,7 +70,7 @@ public class SearchTask extends AsyncTaskLoader<List<BookApi>> {
     @Override
     public List<BookApi> loadInBackground() {
 
-        if(mQuery == null) return null;
+        if (mQuery == null) return null;
 
         try {
 

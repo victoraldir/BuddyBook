@@ -11,13 +11,12 @@ import java.util.Map;
 @Keep
 public class Folder {
 
-    public Folder() {
-    }
-
     private String id;
     private String description;
     private boolean isCustom;
     private Map<String, BookApi> books;
+    public Folder() {
+    }
 
     public Folder(String description) {
         this.description = description;

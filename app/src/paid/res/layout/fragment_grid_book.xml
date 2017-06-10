@@ -1,59 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.quartzodev.buddybook.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="com.quartzodev.buddybook.MainActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view_books"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:visibility="visible"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    <android.support.v7.widget.RecyclerView android:id="@+id/recycler_view_books"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_marginEnd="8dp" android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" android:layout_marginStart="8dp"
+        android:visibility="visible" app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.quartzodev.buddybook.MainActivity" />
 
-    <LinearLayout
-        android:id="@+id/fragment_grid_message"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal|center_vertical"
-        android:visibility="gone"
-        android:orientation="vertical"
-        android:layout_weight="1">
-        <TextView
+    <LinearLayout android:id="@+id/fragment_grid_message" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:layout_weight="1"
+        android:gravity="center_horizontal|center_vertical" android:orientation="vertical" android:visibility="gone">
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:gravity="center_horizontal|center_vertical"
+            android:text="@string/folder_empty"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" tools:text="@string/folder_empty" />
+        <TextView android:layout_width="300dp" android:layout_height="wrap_content"
             android:gravity="center_horizontal|center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            tools:text="@string/folder_empty"
-            android:text="@string/folder_empty" />
-        <TextView
-            android:gravity="center_horizontal|center_vertical"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
-            tools:text="@string/folder_empty_hint"
-            android:text="@string/folder_empty_hint" />
+            android:text="@string/folder_empty_hint"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle" tools:text="@string/folder_empty_hint" />
 
-        <Button
-            android:onClick="searchHint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_search_hint"/>
+        <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:onClick="searchHint" android:text="@string/btn_search_hint" />
 
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/grid_book_progress_bar"
-        android:layout_width="wrap_content"
+    <ProgressBar android:id="@+id/grid_book_progress_bar" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
-        android:visibility="invisible" />
+        android:layout_gravity="center_horizontal|center_vertical" android:visibility="invisible" />
 
 </FrameLayout>

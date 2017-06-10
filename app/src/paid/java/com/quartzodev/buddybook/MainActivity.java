@@ -78,11 +78,10 @@ public class MainActivity extends AppCompatActivity
         FolderListFragment.OnListFragmentInteractionListener,
         FirebaseAuth.AuthStateListener,
         BookGridFragment.OnGridFragmentInteractionListener,
-        SearchView.OnQueryTextListener{
-
-    private static final String TAG = MainActivity.class.getSimpleName();
+        SearchView.OnQueryTextListener {
 
     public static final String EXTRA_USER_ID = "userId";
+    private static final String TAG = MainActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 1;
     private static final int RC_BARCODE_CAPTURE = 2;
     private static final String KEY_PARCELABLE_USER = "userKey";
@@ -151,7 +150,7 @@ public class MainActivity extends AppCompatActivity
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        if(ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
             fab.setVisibility(View.VISIBLE);
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -173,15 +172,13 @@ public class MainActivity extends AppCompatActivity
             toggle.syncState();
         }
 
-        if(mFirebaseAuth.getCurrentUser() != null){
+        if (mFirebaseAuth.getCurrentUser() != null) {
             onSignedIn(mFirebaseAuth.getCurrentUser());
-        }else{
+        } else {
             mFirebaseAuth.addAuthStateListener(this);
             launchLoginActivityResult();
         }
     }
-
-
 
 
     @Override
@@ -204,7 +201,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void updateUser(DataSnapshot dataSnapshot){
+    private void updateUser(DataSnapshot dataSnapshot) {
 
         if (dataSnapshot.getValue() != null) {
 
@@ -216,15 +213,15 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 
-                    if(databaseError == null){
+                    if (databaseError == null) {
                         mFirebaseDatabaseHelper.insertDefaulFolder(
                                 mUser.getUid(),
                                 mContext.getResources().getString(R.string.tab_my_books), new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                relaunchActivity();
-                            }
-                        });
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                        relaunchActivity();
+                                    }
+                                });
                     }
 
                 }
@@ -310,12 +307,12 @@ public class MainActivity extends AppCompatActivity
 
         if (requestCode == RC_SIGN_IN) {
 
-            if (resultCode == ErrorCodes.UNKNOWN_ERROR){
+            if (resultCode == ErrorCodes.UNKNOWN_ERROR) {
                 AuthUI.getInstance().signOut(this);
                 finish();
             }
 
-            if (resultCode == ErrorCodes.NO_NETWORK){
+            if (resultCode == ErrorCodes.NO_NETWORK) {
                 mTextViewMessage.setVisibility(View.VISIBLE);
                 mFrameLayoutContainer.setVisibility(View.GONE);
                 mTextViewMessage.setText(getString(R.string.no_internet));
@@ -337,7 +334,7 @@ public class MainActivity extends AppCompatActivity
                 });
 
 
-            }else{
+            } else {
                 mTextViewMessage.setVisibility(View.GONE);
                 mFrameLayoutContainer.setVisibility(View.VISIBLE);
             }
@@ -404,8 +401,6 @@ public class MainActivity extends AppCompatActivity
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_right);
 
 
-
-
     }
 
     @Override
@@ -450,7 +445,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if(ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if (ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
             getMenuInflater().inflate(R.menu.main, menu);
 
             // Retrieve the SearchView and plug it into SearchManager
@@ -486,13 +481,13 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public boolean onMenuItemActionExpand(MenuItem item) {
 
-                    if(!ConnectionUtils.isNetworkConnected(mContext)){
-                        Snackbar.make(mCoordinatorLayout,R.string.no_internet_search, Snackbar.LENGTH_LONG).show();
+                    if (!ConnectionUtils.isNetworkConnected(mContext)) {
+                        Snackbar.make(mCoordinatorLayout, R.string.no_internet_search, Snackbar.LENGTH_LONG).show();
                     }
 
                     Fragment mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
-                    if(mCurrentGridFragment instanceof ViewPagerFragment){
+                    if (mCurrentGridFragment instanceof ViewPagerFragment) {
                         hideTab();
                     }
 
@@ -516,7 +511,7 @@ public class MainActivity extends AppCompatActivity
 
                     Fragment mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
-                    if(mCurrentGridFragment instanceof ViewPagerFragment){
+                    if (mCurrentGridFragment instanceof ViewPagerFragment) {
                         mTabLayout.setVisibility(View.VISIBLE);
                     }
 
@@ -546,18 +541,18 @@ public class MainActivity extends AppCompatActivity
 
                 mUser = null;
                 AuthUI.getInstance().signOut(this);
-                if(ConnectionUtils.isNetworkConnected(getApplication())) {
+                if (ConnectionUtils.isNetworkConnected(getApplication())) {
                     mFirebaseAuth.addAuthStateListener(this);
                     launchLoginActivityResult();
-                }else{
+                } else {
                     relaunchActivity();
                 }
 
                 return true;
 
-            case  R.id.action_clear_search:
+            case R.id.action_clear_search:
                 mSuggestions.clearHistory();
-                Snackbar.make(mCoordinatorLayout,getString(R.string.search_clear),Snackbar.LENGTH_LONG).show();
+                Snackbar.make(mCoordinatorLayout, getString(R.string.search_clear), Snackbar.LENGTH_LONG).show();
 
         }
 
@@ -778,11 +773,11 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void doNothing(View view){
+    public void doNothing(View view) {
 
     }
 
-    public void searchHint(View view){
+    public void searchHint(View view) {
         mSearchItem.expandActionView();
     }
 
@@ -814,13 +809,13 @@ public class MainActivity extends AppCompatActivity
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    public void setupViewPager(ViewPager viewPager){
+    public void setupViewPager(ViewPager viewPager) {
         mTabLayout.setupWithViewPager(viewPager);
         mTabLayout.setVisibility(View.VISIBLE);
         setupTabIcons();
     }
 
-    public void hideTab(){
+    public void hideTab() {
         mTabLayout.setVisibility(View.GONE);
     }
 

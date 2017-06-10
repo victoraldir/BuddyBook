@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:focusableInTouchMode="true"
-    tools:context="com.quartzodev.fragments.DetailActivityFragment"
-    xmlns:ads="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical"
+    tools:context="com.quartzodev.fragments.DetailActivityFragment">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -39,16 +39,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="4"
-                    tools:text="@string/book_title"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title" />
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                    tools:text="@string/book_title" />
 
                 <TextView
                     android:id="@+id/detail_textview_author"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    tools:text="Lenivitz Papu"
-                     />
+                    tools:text="Lenivitz Papu" />
 
                 <TextView
                     android:id="@+id/detail_textview_published_date"
@@ -64,15 +63,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <android.support.v7.widget.CardView
+            android:id="@+id/card_actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:id="@+id/card_actions">
+            android:layout_marginRight="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -87,8 +86,8 @@
                     android:layout_marginEnd="40dp"
                     android:layout_marginRight="40dp"
                     android:layout_marginTop="8dp"
-                    app:srcCompat="@drawable/ic_folder_black_24dp"
-                    android:contentDescription="@string/move_to_folder_cd"/>
+                    android:contentDescription="@string/move_to_folder_cd"
+                    app:srcCompat="@drawable/ic_folder_black_24dp" />
 
             </LinearLayout>
 
@@ -120,6 +119,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/ad_bottom_details"/>
+        ads:adUnitId="@string/ad_bottom_details" />
 
 </LinearLayout>

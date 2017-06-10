@@ -27,8 +27,6 @@ import java.util.UUID;
 
 public class FirebaseDatabaseHelper {
 
-    private static final String TAG = FirebaseDatabaseHelper.class.getSimpleName();
-
     public static final String MAX_FOLDERS_KEY = "max_folders";
     public static final String MAX_BOOKS_KEY = "max_books";
     //    public static final int TOTAL_BOOKS_FOLDER_TIER = 25;
@@ -36,6 +34,7 @@ public class FirebaseDatabaseHelper {
     public static final String REF_POPULAR_FOLDER = "_popularBooks"; //See a better way to maintain popular folder
     public static final String REF_MY_BOOKS_FOLDER = "myBooksFolder";
     public static final String REF_SEARCH_HISTORY = "search_history"; //See a better way to maintain popular folder
+    private static final String TAG = FirebaseDatabaseHelper.class.getSimpleName();
     private static final String ROOT = "users";
     private static final String REF_FOLDERS = "folders";
     private static final String REF_BOOKS = "books";
@@ -54,6 +53,12 @@ public class FirebaseDatabaseHelper {
 
         initRemoteConfig();
 
+    }
+
+    public static FirebaseDatabaseHelper getInstance() {
+        if (mInstance == null) mInstance = new FirebaseDatabaseHelper();
+
+        return mInstance;
     }
 
     private void initRemoteConfig() {
@@ -93,12 +98,6 @@ public class FirebaseDatabaseHelper {
     public void applyRetrievedConfig() {
         mMaxFolders = mFirebaseRemoteConfig.getLong(MAX_FOLDERS_KEY);
         mMaxBooks = mFirebaseRemoteConfig.getLong(MAX_BOOKS_KEY);
-    }
-
-    public static FirebaseDatabaseHelper getInstance() {
-        if (mInstance == null) mInstance = new FirebaseDatabaseHelper();
-
-        return mInstance;
     }
 
     public void insertUser(User user, DatabaseReference.CompletionListener completionListener) {

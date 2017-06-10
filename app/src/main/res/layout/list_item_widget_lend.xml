@@ -19,10 +19,10 @@
 
         <TextView
             android:id="@+id/book_title"
-            android:maxLines="2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start|center_vertical"
+            android:maxLines="2"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             tools:text="Book title" />
 

@@ -35,8 +35,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/dialog_email_hint"
-            android:maxLines="1"
-            android:maxLength="35"/>
+            android:maxLength="35"
+            android:maxLines="1" />
     </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

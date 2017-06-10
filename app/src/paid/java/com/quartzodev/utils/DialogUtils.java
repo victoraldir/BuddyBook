@@ -71,7 +71,7 @@ public class DialogUtils {
 
         String[] newList = new String[0];
 
-        if(folderList != null) {
+        if (folderList != null) {
             String[] unFormatedList = folderList.split(",");
 
             newList = new String[unFormatedList.length];
@@ -81,7 +81,7 @@ public class DialogUtils {
             }
 
         }
-        
+
         return newList;
     }
 
@@ -128,9 +128,9 @@ public class DialogUtils {
 
                             Folder newFolder = new Folder(urlEditText.getText().toString());
 
-                            if(activity instanceof DetailActivity){
+                            if (activity instanceof DetailActivity) {
                                 mFirebaseDatabaseHelper.insertFolder(userId, newFolder);
-                            }else{
+                            } else {
                                 mFirebaseDatabaseHelper.insertFolder(userId, newFolder);
                             }
 
@@ -193,9 +193,9 @@ public class DialogUtils {
 
                             emailInputLayout.setError(activity.getString(R.string.lend_email_empty));
 
-                        }else if(!isValidEmail(emailEdtText.getText().toString())) {
+                        } else if (!isValidEmail(emailEdtText.getText().toString())) {
                             emailInputLayout.setError(activity.getString(R.string.lend_email_invalid));
-                        }else {
+                        } else {
 
                             Lend lend = new Lend(nameEdtText.getText().toString(),
                                     emailEdtText.getText().toString(),
@@ -266,7 +266,7 @@ public class DialogUtils {
 
     }
 
-    public static void alertDialogUpgradePro(final Activity activity){
+    public static void alertDialogUpgradePro(final Activity activity) {
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setTitle(R.string.dialog_upgrade)
@@ -285,7 +285,7 @@ public class DialogUtils {
                         dialog.dismiss();
                     }
                 })
-                .setNegativeButton(activity.getString(R.string.dialog_btn_cancel),null)
+                .setNegativeButton(activity.getString(R.string.dialog_btn_cancel), null)
                 .setCancelable(true)
                 .create();
 

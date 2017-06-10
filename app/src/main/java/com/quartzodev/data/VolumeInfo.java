@@ -13,36 +13,29 @@ import java.util.List;
 @Keep
 public class VolumeInfo {
 
-    public VolumeInfo() {
-    }
-
     @SerializedName("title")
     public String title;
-
     @SerializedName("authors")
     public List<String> authors;
-
     @SerializedName("publisher")
     public String publisher;
-
     @SerializedName("publishedDate")
     public String publishedDate;
-
     @SerializedName("description")
     public String description;
-
     @SerializedName("imageLinks")
     public ImageLink imageLink;
-
     @SerializedName("searchField")
     public String searchField;
 
+    public VolumeInfo() {
+    }
 
-    public String getSearchField(){
+    public String getSearchField() {
 
         searchField = title;
 
-        if(authors != null && !authors.isEmpty()){
+        if (authors != null && !authors.isEmpty()) {
             for (String author : authors) {
                 searchField = searchField.concat("_" + author);
             }

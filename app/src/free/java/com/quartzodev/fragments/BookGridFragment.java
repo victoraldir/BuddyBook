@@ -212,9 +212,9 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
             } else {
                 container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.INVISIBLE);
                 container.findViewById(R.id.recycler_view_books).setVisibility(View.VISIBLE);
-                if(mAdapter.getItemCount() == 0){
+                if (mAdapter.getItemCount() == 0) {
                     container.findViewById(R.id.fragment_grid_message).setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     container.findViewById(R.id.fragment_grid_message).setVisibility(View.GONE);
                 }
             }
