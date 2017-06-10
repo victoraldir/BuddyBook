@@ -1,29 +1,32 @@
 language: android
 jdk: oraclejdk8
 
+sudo: required
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
+
 android:
   components:
     # Uncomment the lines below if you want to
     # use the latest revision of Android SDK Tools
     - tools
+    - build-tools-26.0.0
     - platform-tools
-
-    # The BuildTools version used by your project
-    - build-tools-25.0.3
-
-    # The SDK version used to compile your project
-    - android-25
-
-    # Additional components
+    - android-26
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
-    - addon-google_apis-google-19
 
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
-    - sys-img-armeabi-v7a-android-22
-    - sys-img-armeabi-v7a-android-17
+    - sys-img-armeabi-v7a-android-26
+    - sys-img-armeabi-v7a-android-16
     
   licenses:
     - 'android-sdk-preview-license-52d11cd2'
@@ -32,3 +35,5 @@ android:
     
 before_install:
 - chmod +x gradlew
+script:
+./gradlew clean assembleDebug check

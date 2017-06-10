@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.quartzodev.data.BookResponse;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,6 +21,7 @@ public class APIServiceTest {
 
     private static final String TAG = APIServiceTest.class.getSimpleName();
 
+    @Ignore
     @Test
     public void shouldGetBooks() throws IOException, InterruptedException {
 
