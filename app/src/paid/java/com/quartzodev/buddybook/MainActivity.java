@@ -547,11 +547,17 @@ public class MainActivity extends AppCompatActivity
                     relaunchActivity();
                 }
 
-                return true;
-
             case R.id.action_clear_search:
                 mSuggestions.clearHistory();
                 Snackbar.make(mCoordinatorLayout, getString(R.string.search_clear), Snackbar.LENGTH_LONG).show();
+                return true;
+
+            case R.id.action_add_book:
+                DialogUtils.alertDialogAddBook(this);
+                return true;
+
+            default:
+                break;
 
         }
 

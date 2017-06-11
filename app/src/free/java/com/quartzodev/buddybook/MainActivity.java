@@ -538,6 +538,10 @@ public class MainActivity extends AppCompatActivity
                 Snackbar.make(mCoordinatorLayout, getString(R.string.search_clear), Snackbar.LENGTH_LONG).show();
                 return true;
 
+            case R.id.action_add_book:
+                DialogUtils.alertDialogAddBook(this);
+                break;
+
             default:
                 break;
         }

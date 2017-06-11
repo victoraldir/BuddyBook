@@ -120,14 +120,19 @@
     <string name="communicate">Communicate</string>
     <string name="share">Share</string>
     <string name="name">Name</string>
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="publisher">Publisher</string>
     <string name="book_title">Book Title</string>
     <string name="search">Search</string>
+    <string name="add_book">Add custom book</string>
     <string name="borrowed_book_icon_cd">Borrowed book icon</string>
     <string name="btn_return_book_cd">Return this book</string>
     <string name="btn_lend_book_cd">Lend this book</string>
     <string name="receiver_email_cd">Receiver email</string>
     <string name="search_clear">Search history is clear</string>
     <string name="dialog_upgrade">Upgrade to pro</string>
+    <string name="dialog_add_book">Add custom book</string>
     <string name="dialog_upgrade_message">You reached out the free tier of usage. Please, upgrade to pro version and get unlimited folders and books with no ads. Plus, you pay me a coffee =D</string>
     <string name="dialog_btn_updgate">Upgrade to PRO</string>
     <string name="folder_empty_hint">You can get started by searching for a book or scaning a bar code</string>
@@ -137,5 +142,8 @@
     <string name="no_internet_search">You are not connected on the internet.</string>
     <string name="insert_success">Book inserted successfully</string>
     <string name="no_description">No description available for this book</string>
+    <string name="title_empty">Title cannot be empty</string>
+    <string name="title_author">Author cannot be empty</string>
+    <string name="title_publisher">Publisher cannot be empty</string>
 
 </resources>

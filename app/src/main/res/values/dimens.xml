@@ -21,4 +21,5 @@
 
     <dimen name="activity_detail_horizontal_margin">6dp</dimen>
     <dimen name="activity_detail_vertical_margin">6dp</dimen>
+    <dimen name="navigation_view_header_height">170dp</dimen>
 </resources>

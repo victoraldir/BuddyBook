@@ -291,4 +291,57 @@ public class DialogUtils {
 
         dialog.show();
     }
+
+    public static void alertDialogAddBook(final Activity activity) {
+
+        LayoutInflater inflater = activity.getLayoutInflater();
+
+        View view = inflater.inflate(R.layout.dialog_add_book, null);
+
+        final EditText edtTitle = view.findViewById(R.id.add_book_title);
+        final EditText edtAuthor = view.findViewById(R.id.add_book_author);
+        final EditText edtPublisher = view.findViewById(R.id.add_book_publisher);
+        final TextInputLayout layoutTitle =  view.findViewById(R.id.layout_title);
+        final TextInputLayout layoutAuthor =  view.findViewById(R.id.layout_author);
+        final TextInputLayout layoutPublisher =  view.findViewById(R.id.layout_publisher);
+
+
+        final AlertDialog dialog = new AlertDialog.Builder(activity)
+                .setTitle(activity.getString(R.string.dialog_add_book))
+                .setPositiveButton(activity.getString(R.string.ok), null)
+                .setNegativeButton(activity.getString(R.string.dialog_btn_cancel), null)
+                .setView(view)
+                .create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+
+                Button okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+                okButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (edtTitle.getText().toString().isEmpty()) {
+                            layoutTitle.setError(activity.getString(R.string.title_empty));
+                            return;
+                        }else if (edtAuthor.getText().toString().isEmpty()) {
+                            layoutAuthor.setError(activity.getString(R.string.title_author));
+                            return;
+                        }else if (edtPublisher.getText().toString().isEmpty()) {
+                            layoutPublisher.setError(activity.getString(R.string.title_publisher));
+                            return;
+                        }
+
+                        dialog.dismiss();
+                    }
+                });
+
+
+
+            }
+        });
+
+        dialog.show();
+    }
 }
