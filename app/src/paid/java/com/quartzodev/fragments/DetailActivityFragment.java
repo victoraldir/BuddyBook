@@ -31,6 +31,7 @@ import com.quartzodev.buddybook.R;
 import com.quartzodev.data.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.VolumeInfo;
+import com.quartzodev.utils.DateUtils;
 import com.quartzodev.utils.DialogUtils;
 
 import org.joda.time.DateTime;
@@ -63,6 +64,9 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     @BindView(R.id.detail_textview_published_date)
     TextView mPublishedDate;
+
+    @BindView(R.id.detail_textview_publisher)
+    TextView mPublisher;
 
     @BindView(R.id.detail_textview_description)
     TextView mDescription;
@@ -193,6 +197,8 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                 String str = String.format(getString(R.string.cover_book_cd), volumeInfo.getTitle());
 
                 mPhoto.setContentDescription(str);
+            }else if(bookApi.isCustom()){
+                mPhoto.setImageResource(R.drawable.custom_book_cover);
             }
 
             mTitle.setText(bookApi.getVolumeInfo().getTitle());
@@ -209,7 +215,8 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                 mAuthor.setText(authorsString);
             }
 
-            mPublishedDate.setText(bookApi.getVolumeInfo().getPublishedDate());
+            mPublishedDate.setText(DateUtils.formatStringDate(bookApi.getVolumeInfo().getPublishedDate()));
+            mPublisher.setText(bookApi.getVolumeInfo().getPublisher());
 
             if (bookApi.getVolumeInfo().getDescription() != null && !bookApi.getVolumeInfo().getDescription().isEmpty()) {
                 mDescription.setText(bookApi.getVolumeInfo().getDescription());

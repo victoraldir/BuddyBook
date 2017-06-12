@@ -21,7 +21,9 @@ import com.quartzodev.data.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.data.Lend;
+import com.quartzodev.data.VolumeInfo;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -190,11 +192,11 @@ public class DialogUtils {
 
                             nameInputLayout.setError(activity.getString(R.string.lend_name_empty));
 
-                        } else if (emailEdtText.getText().toString().isEmpty()) {
+//                        } else if (emailEdtText.getText().toString().isEmpty()) {
+//
+//                            emailInputLayout.setError(activity.getString(R.string.lend_email_empty));
 
-                            emailInputLayout.setError(activity.getString(R.string.lend_email_empty));
-
-                        } else if (!isValidEmail(emailEdtText.getText().toString())) {
+                        } else if (!emailEdtText.getText().toString().isEmpty() && !isValidEmail(emailEdtText.getText().toString())) {
                             emailInputLayout.setError(activity.getString(R.string.lend_email_invalid));
                         } else {
 
@@ -293,7 +295,11 @@ public class DialogUtils {
         dialog.show();
     }
 
-    public static void alertDialogAddBook(final Activity activity) {
+    public static void alertDialogAddBook(final Activity activity,
+                                          final CoordinatorLayout coordinatorLayout,
+                                          final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
+                                          final String userId,
+                                          final String folderId) {
 
         LayoutInflater inflater = activity.getLayoutInflater();
 
@@ -326,13 +332,31 @@ public class DialogUtils {
                         if (edtTitle.getText().toString().isEmpty()) {
                             layoutTitle.setError(activity.getString(R.string.title_empty));
                             return;
-                        }else if (edtAuthor.getText().toString().isEmpty()) {
-                            layoutAuthor.setError(activity.getString(R.string.title_author));
-                            return;
-                        }else if (edtPublisher.getText().toString().isEmpty()) {
-                            layoutPublisher.setError(activity.getString(R.string.title_publisher));
-                            return;
                         }
+
+                        BookApi customBookApi = new BookApi();
+                        VolumeInfo volumeInfo = new VolumeInfo();
+
+                        volumeInfo.setTitle(edtTitle.getText().toString());
+                        volumeInfo.setAuthors(Collections.singletonList(edtAuthor.getText().toString()));
+                        volumeInfo.setPublisher(edtPublisher.getText().toString());
+
+                        customBookApi.setVolumeInfo(volumeInfo);
+                        customBookApi.setCustom(true);
+
+                        if(folderId == null){
+                            mFirebaseDatabaseHelper.insertBookFolder(userId,
+                                    FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,
+                                    customBookApi,
+                                    (MainActivity) activity);
+                        }else{
+                            mFirebaseDatabaseHelper.insertBookFolder(userId,
+                                    folderId,
+                                    customBookApi,
+                                    (MainActivity) activity);
+                        }
+
+                        Snackbar.make(coordinatorLayout, activity.getText(R.string.success_add_book), Snackbar.LENGTH_SHORT).show();
 
                         dialog.dismiss();
                     }

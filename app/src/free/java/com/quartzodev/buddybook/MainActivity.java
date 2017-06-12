@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity
     private static final int RC_BARCODE_CAPTURE = 2;
     private static final String KEY_PARCELABLE_USER = "userKey";
     private static final String KEY_CURRENT_QUERY = "queryKey";
+    private static final int TOTAL_SEARCH_RESULT = 40;
 
     @BindView(R.id.main_coordinator)
     CoordinatorLayout mCoordinatorLayout;
@@ -539,7 +540,7 @@ public class MainActivity extends AppCompatActivity
                 return true;
 
             case R.id.action_add_book:
-                DialogUtils.alertDialogAddBook(this);
+                DialogUtils.alertDialogAddBook(this,mCoordinatorLayout,mFirebaseDatabaseHelper,mUser.getUid(),mFolderId);
                 break;
 
             default:
@@ -743,7 +744,7 @@ public class MainActivity extends AppCompatActivity
 
             mSuggestions.saveRecentQuery(query, null);
 
-            mSearchResultFragment.executeSearch(query, null);
+            mSearchResultFragment.executeSearch(query, TOTAL_SEARCH_RESULT);
             mSearchView.clearFocus();
         }
 
@@ -763,7 +764,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onQueryTextChange(String newText) {
 
         if (newText != null && !newText.isEmpty()) {
-            mSearchResultFragment.executeSearch(newText, null);
+            mSearchResultFragment.executeSearch(newText, TOTAL_SEARCH_RESULT);
         }
 
         return false;

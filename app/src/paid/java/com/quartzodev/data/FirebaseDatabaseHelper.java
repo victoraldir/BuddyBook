@@ -245,7 +245,12 @@ public class FirebaseDatabaseHelper {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+                if(bookApi.getId() == null ){ //If it's custom
+                    bookApi.setId(ref.push().getKey());
+                }
+
                 ref.updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
+
             }
 
             @Override

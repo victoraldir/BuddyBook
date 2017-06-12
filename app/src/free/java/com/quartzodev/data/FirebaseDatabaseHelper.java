@@ -310,6 +310,11 @@ public class FirebaseDatabaseHelper {
                 if (dataSnapshot.getChildrenCount() >= mMaxBooks) {
                     listener.onInsertBook(false);
                 } else {
+
+                    if(bookApi.getId() == null ){ //If it's custom
+                        bookApi.setId(ref.push().getKey());
+                    }
+
                     ref.updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
                     listener.onInsertBook(true);
                 }

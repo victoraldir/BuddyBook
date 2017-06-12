@@ -22,7 +22,17 @@ public class BookApi {
 
     public Lend lend;
 
+    public boolean isCustom;
+
     public BookApi() {
+    }
+
+    public boolean isCustom() {
+        return isCustom;
+    }
+
+    public void setCustom(boolean custom) {
+        isCustom = custom;
     }
 
     public Lend getLend() {

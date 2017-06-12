@@ -553,7 +553,7 @@ public class MainActivity extends AppCompatActivity
                 return true;
 
             case R.id.action_add_book:
-                DialogUtils.alertDialogAddBook(this);
+                DialogUtils.alertDialogAddBook(this,mCoordinatorLayout,mFirebaseDatabaseHelper,mUser.getUid(),mFolderId);
                 return true;
 
             default:

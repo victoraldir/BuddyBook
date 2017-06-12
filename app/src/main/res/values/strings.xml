@@ -22,6 +22,7 @@
     <string name="success_sign_in">You\'re now signed in!</string>
 
     <string name="success_lend_book">Book\'s been lent successfully!</string>
+    <string name="success_add_book">Book inserted successfully!</string>
 
     <string name="widget_cd">Stock hawk widget</string>
 
@@ -64,7 +65,7 @@
     <string name="transition_image">transition_image</string>
 
     <string name="dialog_name_hint">Name</string>
-    <string name="dialog_email_hint">Email</string>
+    <string name="dialog_email_hint">Email (optional)</string>
 
     <string name="lent_to">Lent to: %1$s</string>
     <string name="lent_to_email">Email: %1$s</string>
@@ -121,15 +122,15 @@
     <string name="share">Share</string>
     <string name="name">Name</string>
     <string name="title">Title</string>
-    <string name="author">Author</string>
-    <string name="publisher">Publisher</string>
+    <string name="author">Author (optional)</string>
+    <string name="publisher">Publisher (optional)</string>
     <string name="book_title">Book Title</string>
     <string name="search">Search</string>
     <string name="add_book">Add custom book</string>
     <string name="borrowed_book_icon_cd">Borrowed book icon</string>
     <string name="btn_return_book_cd">Return this book</string>
     <string name="btn_lend_book_cd">Lend this book</string>
-    <string name="receiver_email_cd">Receiver email</string>
+    <string name="receiver_email_cd">Receiver email (optional)</string>
     <string name="search_clear">Search history is clear</string>
     <string name="dialog_upgrade">Upgrade to pro</string>
     <string name="dialog_add_book">Add custom book</string>

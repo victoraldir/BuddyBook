@@ -36,6 +36,8 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
     private final int POS_BOOK_LENT = 1;
     private final int POS_BOOK_AVAILABLE = 2;
+    private final int POS_BOOK_CUSTOM_LENT = 3;
+    private final int POS_BOOK_CUSTOM_AVAILABLE = 4;
 
     private Context mContext;
     private Set<BookApi> mBookList = new HashSet<>();
@@ -67,6 +69,10 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
         if (viewType == POS_BOOK_LENT) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_lent, parent, false);
+        } else if (viewType == POS_BOOK_CUSTOM_LENT) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_custom, parent, false);
+        } else if (viewType == POS_BOOK_CUSTOM_AVAILABLE) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_custom_available, parent, false);
         } else {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
         }
@@ -82,7 +88,13 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         final BookApi book = new ArrayList<>(mBookList).get(position);
 
         if (mType == BookGridFragment.FLAG_MY_BOOKS_FOLDER && book.getLend() != null) {
+            if(book.isCustom()){
+                return POS_BOOK_CUSTOM_LENT;
+            }
             return POS_BOOK_LENT;
+        }else if (book.isCustom()) {
+            return POS_BOOK_CUSTOM_AVAILABLE;
+
         }
 
         return POS_BOOK_AVAILABLE;
@@ -146,10 +158,6 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     public void onBindViewHolder(final BookGridAdapter.ViewHolder holder, int position) {
 
         final BookApi book = new ArrayList<>(mBookList).get(position);
-
-//        if (mType == BookGridFragment.FLAG_MY_BOOKS_FOLDER && book.getLend() != null) {
-//            holder.containerIconLend.setVisibility(View.VISIBLE);
-//        }
 
         holder.textViewBookTitle.setText(book.getVolumeInfo().getTitle());
         holder.textViewBookAuthor.setText(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
@@ -218,6 +226,12 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
             Glide.with(mContext)
                     .load(book.getVolumeInfo().getImageLink().getThumbnail())
                     .into(holder.imageViewthumbnail);
+
+            holder.imageViewthumbnail.setContentDescription(
+                    String.format(mContext.getString(R.string.cover_book_cd), book.getVolumeInfo()
+                            .getTitle()));
+
+        } else if (book.isCustom()) {
 
             holder.imageViewthumbnail.setContentDescription(
                     String.format(mContext.getString(R.string.cover_book_cd), book.getVolumeInfo()
