@@ -66,16 +66,16 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         return NUM_PAGES;
     }
 
-    @Override
-    public CharSequence getPageTitle(int position) {
-
-        if (position == 1) {
-            return mContext.getResources().getString(R.string.tab_top_books);
-        } else {
-            return mContext.getResources().getString(R.string.tab_my_books);
-        }
-
-    }
+//    @Override
+//    public CharSequence getPageTitle(int position) {
+//
+//        if (position == 1) {
+//            return mContext.getResources().getString(R.string.tab_top_books);
+//        } else {
+//            return mContext.getResources().getString(R.string.tab_my_books);
+//        }
+//
+//    }
 
 }
 

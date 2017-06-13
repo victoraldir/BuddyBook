@@ -14,4 +14,7 @@
 
     <color name="warn">#FEEFB3</color>
 
+    <color name="photo_placeholder">#ccc</color>
+
+    <color name="white">@android:color/white</color>
 </resources>

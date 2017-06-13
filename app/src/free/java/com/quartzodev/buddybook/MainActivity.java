@@ -29,6 +29,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -814,8 +815,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setupTabIcons() {
-        mTabLayout.getTabAt(0).setIcon(R.drawable.ic_favorite_border);
-        mTabLayout.getTabAt(1).setIcon(R.drawable.ic_library_books);
+
+        LinearLayout tabLinearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        ((ImageView) tabLinearLayout.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_favorite_border);
+        ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_top_books));
+
+        mTabLayout.getTabAt(0).setCustomView(tabLinearLayout);
+
+        tabLinearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        ((ImageView) tabLinearLayout.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_library_books);
+        ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_top_books));
+
+        mTabLayout.getTabAt(1).setCustomView(tabLinearLayout);
+
     }
 
 }
