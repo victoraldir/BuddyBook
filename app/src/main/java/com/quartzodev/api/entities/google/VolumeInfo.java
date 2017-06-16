@@ -1,10 +1,9 @@
-package com.quartzodev.data;
-
-/**
- * Created by victoraldir on 14/06/2017.
- */
+package com.quartzodev.api.entities.google;
 
 import android.support.annotation.Keep;
+
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -14,18 +13,19 @@ import java.util.List;
 @Keep
 public class VolumeInfo {
 
+    @SerializedName("title")
     public String title;
-
+    @SerializedName("authors")
     public List<String> authors;
-
+    @SerializedName("publisher")
     public String publisher;
-
+    @SerializedName("publishedDate")
     public String publishedDate;
-
+    @SerializedName("description")
     public String description;
-
+    @SerializedName("imageLinks")
     public ImageLink imageLink;
-
+    @SerializedName("searchField")
     public String searchField;
 
     public String getSearchField() {

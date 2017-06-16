@@ -1,0 +1,108 @@
+package com.quartzodev.api.strategies;
+
+import com.quartzodev.api.entities.goodreads.GoodreadsResponse;
+import com.quartzodev.api.entities.google.BookApi;
+import com.quartzodev.api.entities.google.BookResponse;
+import com.quartzodev.api.interfaces.IBaseAPI;
+import com.quartzodev.api.interfaces.IGoodreadsAPI;
+import com.quartzodev.api.interfaces.IGoogleBookAPI;
+import com.quartzodev.api.interfaces.IQuery;
+import com.quartzodev.buddybook.BuildConfig;
+import com.quartzodev.data.Book;
+import com.quartzodev.data.ImageLink;
+import com.quartzodev.data.VolumeInfo;
+import com.quartzodev.utils.Constants;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+ * Created by victoraldir on 15/06/2017.
+ */
+
+public class GoodreadsImpl implements IQuery {
+
+    private IGoodreadsAPI mGoodreadsAPI;
+    private String mKey;
+
+    public GoodreadsImpl(IGoodreadsAPI igoodreadsAPI) {
+
+        mGoodreadsAPI = igoodreadsAPI;
+        mKey = BuildConfig.GOODREADS_API_KEY;
+    }
+
+    @Override
+    public List<Book> getBooks(String query) {
+        return null;
+    }
+
+    @Override
+    public List<Book> getBooksMaxResult(String isbn, int maxResults) {
+
+        return null;
+    }
+
+    @Override
+    public Book getBookByISBN(String isbn) {
+
+        Book book = null;
+
+        try {
+            GoodreadsResponse goodreadsResponse = mGoodreadsAPI.findBookByISBN(isbn,mKey).execute().body();
+
+            com.quartzodev.api.entities.goodreads.Book bookApi = goodreadsResponse.getBook();
+
+            book = parseBookApiToBook(bookApi);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return book;
+    }
+
+    private Book parseBookApiToBook(com.quartzodev.api.entities.goodreads.Book bookApi){
+
+        Book book = new Book();
+
+        book.setIdProvider(bookApi.getId());
+        //book.setId(bookApi.getId()); //TODO remove this. It has to be the firebase hash
+
+        VolumeInfo volumeInfo = new VolumeInfo();
+
+        volumeInfo.setDescription(bookApi.getDescription());
+
+        if(bookApi.getPublishDate() != null)
+            volumeInfo.setPublishedDate(bookApi.getPublishDate());
+
+        volumeInfo.setPublisher(bookApi.getPublisher());
+
+        if(bookApi.getAuthors() != null && !bookApi.getAuthors().isEmpty()){
+            List<String> authors = new ArrayList<>();
+
+            for(int x=0; x<bookApi.getAuthors().size(); x++){
+                authors.add(bookApi.getAuthors().get(x).getName());
+            }
+
+            volumeInfo.setAuthors(authors);
+        }
+
+        volumeInfo.setTitle(bookApi.getTitle());
+
+        ImageLink imageLink = new ImageLink();
+
+        imageLink.setThumbnail(bookApi.getImageUrl());
+        imageLink.setSmallThumbnail(bookApi.getSmallImageUrl());
+
+        volumeInfo.setImageLink(imageLink);
+
+        book.setVolumeInfo(volumeInfo);
+
+        book.setTypeProvider(Constants.TYPE_PROVIDER_GOODREADS);
+
+        return book;
+
+    }
+}

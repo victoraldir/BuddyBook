@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.quartzodev.data.BookApi;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.fragments.DetailActivityFragment;
 import com.quartzodev.utils.DialogUtils;
@@ -87,12 +87,12 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLendBook(BookApi bookApi) {
+    public void onLendBook(Book bookApi) {
         DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUserId, bookApi);
     }
 
     @Override
-    public void onReturnBook(BookApi bookApi) {
+    public void onReturnBook(Book bookApi) {
         DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUserId, bookApi);
     }
 

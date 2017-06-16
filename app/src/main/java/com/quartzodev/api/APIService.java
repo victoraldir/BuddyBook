@@ -1,15 +1,18 @@
 package com.quartzodev.api;
 
-import com.quartzodev.buddybook.BuildConfig;
-import com.quartzodev.data.BookResponse;
+
+import com.quartzodev.api.interfaces.IGoodreadsAPI;
+import com.quartzodev.api.interfaces.IGoogleBookAPI;
+import com.quartzodev.api.interfaces.IQuery;
+import com.quartzodev.api.strategies.GoodreadsImpl;
+import com.quartzodev.api.strategies.GoogleImpl;
+
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 /**
  * Created by victoraldir on 24/03/2017.
@@ -17,25 +20,44 @@ import retrofit2.http.Query;
 
 public class APIService {
 
-    private static final String API_URL = "https://www.googleapis.com";
+    public static final int GOOGLE = 1;
+    public static final int GOODREADS = 2;
+
+    private static final String GOOGLE_API_URL = "https://www.googleapis.com";
+    private static final String GOODREADS_API_URL = "https://www.goodreads.com";
     private static APIService sMinstance;
-    private IGoogleBookAPI mService;
+    private IGoogleBookAPI mGoogleService;
+    private IGoodreadsAPI mGoodreadsService;
 
     private APIService() {
+        initService();
+    }
 
+    private void initService(){
         // Add the interceptor to OkHttpClient
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        //builder.addNetworkInterceptor(new StethoInterceptor());
-        OkHttpClient client = builder.build();
+        OkHttpClient client = builder
+                .readTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .build();
 
-        Retrofit retrofit = new Retrofit.Builder()
+        //Google service
+        Retrofit retrofitGoogle = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(API_URL)
+                .baseUrl(GOOGLE_API_URL)
                 .client(client)
                 .build();
 
-        mService = retrofit.create(IGoogleBookAPI.class);
+        mGoogleService = retrofitGoogle.create(IGoogleBookAPI.class);
 
+        //Goodreads service
+        Retrofit retrofitGoodReads = new Retrofit.Builder()
+                .addConverterFactory(SimpleXmlConverterFactory.create())
+                .baseUrl(GOODREADS_API_URL)
+                .client(client)
+                .build();
+
+        mGoodreadsService = retrofitGoodReads.create(IGoodreadsAPI.class);
     }
 
     public static APIService getInstance() {
@@ -45,25 +67,19 @@ public class APIService {
         return sMinstance;
     }
 
-    public void getBooks(String query, Callback<BookResponse> callback) {
 
-        mService.getBooks(query, BuildConfig.GOOGLE_BOOK_API_KEY).enqueue(callback);
+    public IQuery getService(int typeService){
+
+        switch (typeService){
+            case GOOGLE :
+                return new GoogleImpl(mGoogleService);
+            case GOODREADS :
+                return new GoodreadsImpl(mGoodreadsService);
+            default:
+                return null;
+
+        }
 
     }
 
-    public Call<BookResponse> getBooks(String query) {
-        return mService.getBooks(query, BuildConfig.GOOGLE_BOOK_API_KEY);
-    }
-
-    public Call<BookResponse> getBooksMaxResult(String query, int maxResults) {
-        return mService.getBooksMaxResult(query, maxResults, BuildConfig.GOOGLE_BOOK_API_KEY);
-    }
-
-    interface IGoogleBookAPI {
-        @GET("/books/v1/volumes")
-        Call<BookResponse> getBooks(@Query("q") String query, @Query("key") String apiKey);
-
-        @GET("/books/v1/volumes")
-        Call<BookResponse> getBooksMaxResult(@Query("q") String query, @Query("maxResults") int maxResults, @Query("key") String apiKey);
-    }
 }

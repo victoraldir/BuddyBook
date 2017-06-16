@@ -13,7 +13,8 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="?android:attr/selectableItemBackground">
 
         <!--suppress AndroidLintContentDescription -->
         <FrameLayout
@@ -28,14 +29,14 @@
                 android:scaleType="centerCrop"
                 android:transitionName="@string/transition_image"
                 tools:layout_width="200dp"
-                tools:src="@drawable/com_facebook_profile_picture_blank_portrait" />
+                 />
 
             <ImageView
                 android:id="@+id/icon_book_lend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
-                android:background="@color/tw__solid_white"
+                android:background="@color/white"
                 android:contentDescription="@string/borrowed_book_icon_cd"
                 android:padding="8dp"
                 android:src="@drawable/ic_swap_horiz"

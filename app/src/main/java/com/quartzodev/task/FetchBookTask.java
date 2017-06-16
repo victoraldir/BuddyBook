@@ -5,14 +5,14 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
-import com.quartzodev.data.BookApi;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 
 /**
  * Created by victoraldir on 12/04/2017.
  */
 
-public class FetchBookTask extends AsyncTaskLoader<BookApi> implements
+public class FetchBookTask extends AsyncTaskLoader<Book> implements
         FirebaseDatabaseHelper.OnDataSnapshotListener {
 
     private static final String TAG = FetchBookTask.class.getSimpleName();
@@ -23,7 +23,7 @@ public class FetchBookTask extends AsyncTaskLoader<BookApi> implements
     private String mFolderId;
     private String mBookId;
     private String mUserId;
-    private BookApi mBook;
+    private Book mBook;
 
     public FetchBookTask(Context context, String userId, String folderId, String bookId) {
         super(context);
@@ -36,7 +36,7 @@ public class FetchBookTask extends AsyncTaskLoader<BookApi> implements
     }
 
     @Override
-    public BookApi loadInBackground() {
+    public Book loadInBackground() {
 
         mFirebaseDatabaseHelper.findBook(mUserId, mFolderId, mBookId, this);
 
@@ -60,7 +60,7 @@ public class FetchBookTask extends AsyncTaskLoader<BookApi> implements
     @Override
     public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
         Log.d(TAG, "Data received: " + dataSnapshot.toString());
-        mBook = dataSnapshot.getValue(BookApi.class);
+        mBook = dataSnapshot.getValue(Book.class);
     }
 
 }

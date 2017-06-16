@@ -52,7 +52,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.quartzodev.data.BookApi;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.data.User;
@@ -619,13 +619,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onClickListenerBookGridInteraction(String folderId, BookApi book, DynamicImageView imageView) {
+    public void onClickListenerBookGridInteraction(String folderId, Book book, DynamicImageView imageView) {
 
         mFirebaseDatabaseHelper.insertBookSearchHistory(mUser.getUid(), book); //Insert book
 
         Intent it = new Intent(this, DetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString(DetailActivity.ARG_BOOK_ID, book.id);
+        bundle.putString(DetailActivity.ARG_BOOK_ID, book.getId());
         bundle.putString(DetailActivity.ARG_FOLDER_ID, folderId);
         bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
         bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, mFolderListComma);
@@ -652,7 +652,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDeleteBookClickListener(final String mFolderId, final BookApi book) {
+    public void onDeleteBookClickListener(final String mFolderId, final Book book) {
         mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), mFolderId, book);
 
         Snackbar.make(mCoordinatorLayout, getString(R.string.deleted_folder), Snackbar.LENGTH_LONG)
@@ -667,7 +667,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onAddBookToFolderClickListener(final String folderId, final BookApi book) {
+    public void onAddBookToFolderClickListener(final String folderId, final Book book) {
 
         if (folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //I have this operation
 
@@ -707,7 +707,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCopyBookToFolderClickListener(final String folderId, final BookApi book) {
+    public void onCopyBookToFolderClickListener(final String folderId, final Book book) {
 
 
         DialogUtils.alertDialogListFolder(mContext, mFolderListComma, new DialogInterface.OnClickListener() {
@@ -729,12 +729,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLendBookClickListener(BookApi book) {
+    public void onLendBookClickListener(Book book) {
         DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUser.getUid(), book);
     }
 
     @Override
-    public void onReturnBookClickListener(BookApi book) {
+    public void onReturnBookClickListener(Book book) {
         DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUser.getUid(), book);
     }
 

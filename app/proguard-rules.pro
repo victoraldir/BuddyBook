@@ -32,6 +32,7 @@
 #Retrofit
 -dontwarn okio.**
 -dontwarn javax.annotation.**
+-dontwarn retrofit2.Platform$Java8
 
 #glide
 -keep public class * implements com.bumptech.glide.module.GlideModule

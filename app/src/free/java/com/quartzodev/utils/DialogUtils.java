@@ -14,10 +14,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+
 import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
-import com.quartzodev.data.BookApi;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.data.Lend;
@@ -153,7 +154,7 @@ public class DialogUtils {
                                            final CoordinatorLayout coordinatorLayout,
                                            final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
                                            final String userId,
-                                           final BookApi book) {
+                                           final Book book) {
 
         LayoutInflater inflater = activity.getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_lend_book, null);
@@ -242,7 +243,7 @@ public class DialogUtils {
     public static void alertDialogReturnBook(final Activity activity,
                                              final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
                                              final String userId,
-                                             final BookApi book) {
+                                             final Book book) {
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setTitle(activity.getString(R.string.dialog_return_book_title))
@@ -251,7 +252,7 @@ public class DialogUtils {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        BookApi updatedBook = book;
+                        Book updatedBook = book;
                         updatedBook.setLend(null);
                         mFirebaseDatabaseHelper.updateBook(userId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, updatedBook);
 
@@ -334,7 +335,7 @@ public class DialogUtils {
                             return;
                         }
 
-                        BookApi customBookApi = new BookApi();
+                        Book customBookApi = new Book();
                         VolumeInfo volumeInfo = new VolumeInfo();
 
                         volumeInfo.setTitle(edtTitle.getText().toString());

@@ -14,7 +14,7 @@ public class Folder {
     private String id;
     private String description;
     private boolean isCustom;
-    private Map<String, BookApi> books;
+    private Map<String, Book> books;
     public Folder() {
     }
 
@@ -42,11 +42,11 @@ public class Folder {
         this.description = description;
     }
 
-    public Map<String, BookApi> getBooks() {
+    public Map<String, Book> getBooks() {
         return books;
     }
 
-    public void setBooks(Map<String, BookApi> books) {
+    public void setBooks(Map<String, Book> books) {
         this.books = books;
     }
 

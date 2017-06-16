@@ -30,7 +30,7 @@ import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
-import com.quartzodev.data.VolumeInfo;
+import com.quartzodev.api.entities.google.VolumeInfo;
 import com.quartzodev.utils.DateUtils;
 import com.quartzodev.utils.DialogUtils;
 

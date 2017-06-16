@@ -7,7 +7,7 @@ android {
         applicationId "com.quartzodev.buddybook"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 15
+        versionCode 17
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -52,6 +52,7 @@ android {
 
         buildTypes.each {
             it.buildConfigField 'String', 'GOOGLE_BOOK_API_KEY', GOOGLE_BOOK_API_KEY
+            it.buildConfigField 'String', 'GOODREADS_API_KEY', GOODREADS_API_KEY
         }
     }
 
@@ -69,26 +70,29 @@ dependencies {
 
     compile 'com.jakewharton:butterknife:8.6.0'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+
+    compile 'com.facebook.android:facebook-android-sdk:4.23.0'
 
     compile('com.github.bumptech.glide:glide:4.0.0-RC0') {
         compile 'com.android.support:support-v4:25.3.1'
     }
 
     //Firebase DB
-    compile 'com.google.firebase:firebase-database:10.2.0'
-    //compile 'com.firebaseui:firebase-ui-auth:1.2.0'
+    compile 'com.google.firebase:firebase-database:11.0.1'
     //Firebase Auth
-    compile 'com.github.victoraldir.FirebaseUI-Android:firebase-ui-auth:-SNAPSHOT'
+    //compile 'com.github.victoraldir.FirebaseUI-Android:firebase-ui-auth:-SNAPSHOT'
+    compile 'com.firebaseui:firebase-ui-auth:2.0.1'
 
     //Firebase remote config
-    freeCompile 'com.google.firebase:firebase-config:10.2.0'
+    freeCompile 'com.google.firebase:firebase-config:11.0.1'
 
     //Google Vision
-    compile 'com.google.android.gms:play-services-vision:10.2.0'
+    compile 'com.google.android.gms:play-services-vision:11.0.1'
     //Joda
     compile 'net.danlew:android.joda:2.9.9'
     //Admobi
-    freeCompile 'com.google.android.gms:play-services-ads:10.2.0'
+    freeCompile 'com.google.android.gms:play-services-ads:11.0.1'
     //Calligraphy
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 
@@ -97,6 +101,14 @@ dependencies {
 
     //OKhttp Glide integration
     compile "com.github.bumptech.glide:okhttp3-integration:4.0.0-RC0"
+
+    compile 'com.google.code.gson:gson:2.8.0'
+
+    compile ('com.squareup.retrofit2:converter-simplexml:2.3.0'){
+        exclude group: 'xpp3', module: 'xpp3'
+        exclude group: 'stax', module: 'stax-api'
+        exclude group: 'stax', module: 'stax'
+    }
 
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'

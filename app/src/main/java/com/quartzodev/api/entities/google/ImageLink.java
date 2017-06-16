@@ -1,15 +1,17 @@
-package com.quartzodev.data;
+package com.quartzodev.api.entities.google;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by victoraldir on 14/06/2017.
+ * Created by victoraldir on 12/04/2017.
  */
 
 public class ImageLink {
 
+    @SerializedName("smallThumbnail")
     public String smallThumbnail;
 
+    @SerializedName("thumbnail")
     public String thumbnail;
 
     public ImageLink() {

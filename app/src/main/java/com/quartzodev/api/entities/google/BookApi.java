@@ -1,8 +1,9 @@
-package com.quartzodev.data;
+package com.quartzodev.api.entities.google;
 
 import android.support.annotation.Keep;
 
 import com.google.gson.annotations.SerializedName;
+import com.quartzodev.data.Lend;
 
 /**
  * Created by victoraldir on 23/03/2017.
@@ -12,35 +13,15 @@ import com.google.gson.annotations.SerializedName;
 public class BookApi {
 
     @SerializedName("id")
-    public String id;
+    private String id;
 
     @SerializedName("kind")
-    public String kind;
+    private String kind;
 
     @SerializedName("volumeInfo")
-    public VolumeInfo volumeInfo;
-
-    public Lend lend;
-
-    public boolean isCustom;
+    private VolumeInfo volumeInfo;
 
     public BookApi() {
-    }
-
-    public boolean isCustom() {
-        return isCustom;
-    }
-
-    public void setCustom(boolean custom) {
-        isCustom = custom;
-    }
-
-    public Lend getLend() {
-        return lend;
-    }
-
-    public void setLend(Lend lend) {
-        this.lend = lend;
     }
 
     public String getId() {

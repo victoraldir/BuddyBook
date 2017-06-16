@@ -29,11 +29,9 @@ public class FirebaseDatabaseHelper {
 
     public static final String MAX_FOLDERS_KEY = "max_folders";
     public static final String MAX_BOOKS_KEY = "max_books";
-    //    public static final int TOTAL_BOOKS_FOLDER_TIER = 25;
-//    public static final int TOTAL_FOLDER_TIER = 4;
-    public static final String REF_POPULAR_FOLDER = "_popularBooks"; //See a better way to maintain popular folder
+    public static final String REF_POPULAR_FOLDER = "_popularBooks";
     public static final String REF_MY_BOOKS_FOLDER = "myBooksFolder";
-    public static final String REF_SEARCH_HISTORY = "search_history"; //See a better way to maintain popular folder
+    public static final String REF_SEARCH_HISTORY = "search_history";
     private static final String TAG = FirebaseDatabaseHelper.class.getSimpleName();
     private static final String ROOT = "users";
     private static final String REF_FOLDERS = "folders";
@@ -120,19 +118,11 @@ public class FirebaseDatabaseHelper {
                 .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
     }
 
-    public void insertPopularBooks(Map<String, BookApi> books) {
+    public void insertBookSearchHistory(String userId, Book book) {
 
-        Folder folder = new Folder("Popular Books Folder");
-
-        folder.setBooks(books);
-
-        mDatabaseReference.child(REF_POPULAR_FOLDER).setValue(folder);
-
-    }
-
-    public void insertBookSearchHistory(String userId, BookApi book) {
-
-        mDatabaseReference.child(userId).child(REF_SEARCH_HISTORY).updateChildren(Collections.singletonMap(book.getId(), (Object) book));
+        DatabaseReference reference = mDatabaseReference.child(userId).child(REF_SEARCH_HISTORY).push();
+        book.setId(reference.getKey());
+        reference.setValue(book);
 
     }
 
@@ -194,9 +184,6 @@ public class FirebaseDatabaseHelper {
                     .child(REF_MY_BOOKS_FOLDER)
                     .child(REF_BOOKS)
                     .orderByChild("volumeInfo/searchField")
-//                    .startAt(bookQuery)
-//                    .endAt(bookQuery+"\uf8ff")
-//                    .limitToFirst(5)
                     .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
         } else {
@@ -206,9 +193,6 @@ public class FirebaseDatabaseHelper {
                     .child(folderId)
                     .child(REF_BOOKS)
                     .orderByChild("volumeInfo/searchField")
-//                    .startAt(bookQuery)
-//                    .endAt(bookQuery+"\uf8ff")
-//                    .limitToFirst(5)
                     .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
         }
@@ -281,19 +265,19 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void updateBook(String userId, String folderId, BookApi bookApi) {
+    public void updateBook(String userId, String folderId, Book bookApi) {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
     }
 
-    public void attachUpdateBookChildListener(String userId, String folderId, BookApi bookApi, ValueEventListener listener) {
+    public void attachUpdateBookChildListener(String userId, String folderId, Book bookApi, ValueEventListener listener) {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).addValueEventListener(listener);
     }
 
-    public void detachUpdateBookChildListener(String userId, String folderId, BookApi bookApi, ValueEventListener listener) {
+    public void detachUpdateBookChildListener(String userId, String folderId, Book bookApi, ValueEventListener listener) {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).addValueEventListener(listener);
     }
 
-    public void insertBookFolder(String userId, String folderId, final BookApi bookApi, final OnPaidOperationListener listener) {
+    public void insertBookFolder(String userId, String folderId, final Book bookApi, final OnPaidOperationListener listener) {
 
         final DatabaseReference ref = mDatabaseReference
                 .child(userId)
@@ -329,7 +313,7 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void deleteBookFolder(String userId, String folderId, BookApi bookApi) {
+    public void deleteBookFolder(String userId, String folderId, Book bookApi) {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).removeValue();
     }
 

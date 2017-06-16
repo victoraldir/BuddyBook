@@ -30,8 +30,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.R;
-import com.quartzodev.data.BookApi;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
+
 import com.quartzodev.data.VolumeInfo;
 import com.quartzodev.utils.DateUtils;
 import com.quartzodev.utils.DialogUtils;
@@ -49,7 +50,6 @@ import butterknife.ButterKnife;
  */
 public class DetailActivityFragment extends Fragment implements View.OnClickListener,
         DialogInterface.OnClickListener,
-        FirebaseDatabaseHelper.OnDataSnapshotListener,
         ValueEventListener {
 
     private static final String TAG = DetailActivity.class.getSimpleName();
@@ -115,7 +115,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     private Context mContext;
 
-    private BookApi mBookSelected;
+    private Book mBookSelected;
 
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
@@ -195,10 +195,13 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     }
 
     public void loadBook() {
-        mFirebaseDatabaseHelper.findBook(mUserId, mFolderId, mBookId, this);
+        Gson gson = new Gson();
+        mBookSelected = gson.fromJson(mBookJson, Book.class);
+        loadBookDetails(mBookSelected);
+        //mFirebaseDatabaseHelper.findBook(mUserId, mFolderId, mBookId, this);
     }
 
-    private void loadBookDetails(final BookApi bookApi) {
+    private void loadBookDetails(final Book bookApi) {
 
         if (bookApi != null) {
 
@@ -324,7 +327,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         dialog.dismiss();
     }
 
-    private Intent createShareBookIntent(BookApi bookApi) {
+    private Intent createShareBookIntent(Book bookApi) {
 
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
@@ -333,21 +336,21 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         return shareIntent;
     }
 
-    @Override
-    public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
-        Log.d(TAG, "Data received: " + dataSnapshot.toString());
-        mBookSelected = dataSnapshot.getValue(BookApi.class);
-
-        //TODO maybe it's not needed. Leaving as it's for now.
-        if (mBookSelected == null) {
-            Gson gson = new Gson();
-            mBookSelected = gson.fromJson(mBookJson, BookApi.class);
-        }
-        if (isAdded()) {
-            loadBookDetails(mBookSelected);
-        }
-
-    }
+//    @Override
+//    public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
+//        Log.d(TAG, "Data received: " + dataSnapshot.toString());
+//        mBookSelected = dataSnapshot.getValue(Book.class);
+//
+//        //TODO maybe it's not needed. Leaving as it's for now.
+//        if (mBookSelected == null) {
+//            Gson gson = new Gson();
+//            mBookSelected = gson.fromJson(mBookJson, Book.class);
+//        }
+//        if (isAdded()) {
+//            loadBookDetails(mBookSelected);
+//        }
+//
+//    }
 
     @Override
     public void onAttach(Context context) {
@@ -379,9 +382,9 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     public interface OnDetailInteractionListener {
 
-        void onLendBook(BookApi bookApi);
+        void onLendBook(Book bookApi);
 
-        void onReturnBook(BookApi bookApi);
+        void onReturnBook(Book bookApi);
 
     }
 }

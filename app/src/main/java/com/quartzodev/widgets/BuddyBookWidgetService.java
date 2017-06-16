@@ -15,7 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.quartzodev.buddybook.R;
-import com.quartzodev.data.BookApi;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 
@@ -42,7 +42,7 @@ public class BuddyBookWidgetService extends RemoteViewsService {
             FirebaseAuth.AuthStateListener {
 
         private final String TAG = ListRemoteViewFactory.class.getSimpleName();
-        List<BookApi> mData = new ArrayList<>();
+        List<Book> mData = new ArrayList<>();
         FirebaseDatabaseHelper mFirebaseDatabaseHelper;
         FirebaseAuth mFirebaseAuth;
         private String mUserId;
@@ -101,7 +101,7 @@ public class BuddyBookWidgetService extends RemoteViewsService {
             RemoteViews remoteViews = new RemoteViews(getPackageName(),
                     R.layout.list_item_widget_lend);
 
-            BookApi bookApi = mData.get(position);
+            Book bookApi = mData.get(position);
 
             DateTime lendDate = new DateTime(bookApi.getLend().getLendDate());
 
@@ -141,11 +141,11 @@ public class BuddyBookWidgetService extends RemoteViewsService {
 
                 Folder folder = dataSnapshot.getValue(Folder.class);
 
-                List<BookApi> listLend = new ArrayList<>();
+                List<Book> listLend = new ArrayList<>();
 
                 if (folder.getBooks() != null) {
 
-                    for (BookApi bookApi : folder.getBooks().values()) {
+                    for (Book bookApi : folder.getBooks().values()) {
                         if (bookApi.getLend() != null) {
                             listLend.add(bookApi);
                         }

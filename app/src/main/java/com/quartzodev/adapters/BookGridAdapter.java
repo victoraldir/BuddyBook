@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.quartzodev.buddybook.R;
-import com.quartzodev.data.BookApi;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.fragments.BookGridFragment;
@@ -40,7 +40,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     private final int POS_BOOK_CUSTOM_AVAILABLE = 4;
 
     private Context mContext;
-    private Set<BookApi> mBookList = new HashSet<>();
+    private Set<Book> mBookList = new HashSet<>();
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
     private String mFolderId;
     private int mType;
@@ -50,7 +50,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
      */
     private int lastPosition = -1;
 
-    public BookGridAdapter(Context mContext, Set<BookApi> bookList,
+    public BookGridAdapter(Context mContext, Set<Book> bookList,
                            String folderId,
                            BookGridFragment.OnGridFragmentInteractionListener listener,
                            int type,
@@ -85,7 +85,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     @Override
     public int getItemViewType(int position) {
 
-        final BookApi book = new ArrayList<>(mBookList).get(position);
+        final Book book = new ArrayList<>(mBookList).get(position);
 
         if (mType == BookGridFragment.FLAG_MY_BOOKS_FOLDER && book.getLend() != null) {
             if(book.isCustom()){
@@ -113,14 +113,14 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    public void removeItem(BookApi bookApi) {
+    public void removeItem(Book bookApi) {
         if (mBookList != null) {
             mBookList.remove(bookApi);
             notifyDataSetChanged();
         }
     }
 
-    public void addItem(BookApi bookApi) {
+    public void addItem(Book bookApi) {
         if (mBookList != null && !mBookList.contains(bookApi)) {
             mBookList.add(bookApi);
             notifyDataSetChanged();
@@ -132,13 +132,13 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         this.notifyDataSetChanged();
     }
 
-    public void swap(List<BookApi> bookApiList) {
+    public void swap(List<Book> bookApiList) {
         if (bookApiList != null)
             mBookList.addAll(bookApiList);
         this.notifyDataSetChanged();
     }
 
-    public void merge(List<BookApi> bookApiList) {
+    public void merge(List<Book> bookApiList) {
         if (bookApiList != null)
             mBookList.addAll(bookApiList);
         this.notifyDataSetChanged();
@@ -157,7 +157,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     @Override
     public void onBindViewHolder(final BookGridAdapter.ViewHolder holder, int position) {
 
-        final BookApi book = new ArrayList<>(mBookList).get(position);
+        final Book book = new ArrayList<>(mBookList).get(position);
 
         holder.textViewBookTitle.setText(book.getVolumeInfo().getTitle());
         holder.textViewBookAuthor.setText(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));

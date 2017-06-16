@@ -5,25 +5,22 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import com.quartzodev.api.APIService;
-import com.quartzodev.data.BookApi;
-import com.quartzodev.data.BookResponse;
+import com.quartzodev.data.Book;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Response;
 
 /**
  * Created by victoraldir on 14/05/2017.
  */
 
-public class SearchTask extends AsyncTaskLoader<List<BookApi>> {
+public class SearchTask extends AsyncTaskLoader<List<Book>> {
 
     private final String LOG = SearchTask.class.getSimpleName();
     private boolean mCanceled = false;
     private String mQuery;
     private Integer mMaxResult;
-    private List<BookApi> mData;
+    private List<Book> mData;
 
     public SearchTask(Context context) {
         super(context);
@@ -48,7 +45,7 @@ public class SearchTask extends AsyncTaskLoader<List<BookApi>> {
     }
 
     @Override
-    public void deliverResult(List<BookApi> data) {
+    public void deliverResult(List<Book> data) {
         // We’ll save the data for later retrieval
         mData = data;
         // We can do any pre-processing we want here
@@ -68,45 +65,48 @@ public class SearchTask extends AsyncTaskLoader<List<BookApi>> {
     }
 
     @Override
-    public List<BookApi> loadInBackground() {
+    public List<Book> loadInBackground() {
 
         if (mQuery == null) return null;
 
+        List<Book> bookList = new ArrayList<>();
+
         try {
-
-            Response<BookResponse> bookResponseResponse;
-
-            try {
-                Thread.sleep(500); //Just to avoid unnecessary queries
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            if (isReset() || isLoadInBackgroundCanceled() || isAbandoned()) {
-                Log.d(LOG, "This operation should be cancelled");
-                Log.d(LOG, "isReset() : " + isReset());
-                Log.d(LOG, "isAbandoned() : " + isAbandoned());
-                Log.d(LOG, "isLoadInBackgroundCanceled() : " + isLoadInBackgroundCanceled());
-                return null;
-            }
-
-            Log.d(LOG, "Thread ID: " + getId() + ". Running search query for text: " + mQuery);
-            //Has max results limit
-            if (mMaxResult != null && mMaxResult != 0) {
-                bookResponseResponse = APIService.getInstance()
-                        .getBooksMaxResult(mQuery, mMaxResult)
-                        .execute();
-            } else {
-                bookResponseResponse = APIService.getInstance().getBooks(mQuery).execute(); //Blocks!
-            }
-
-
-            if (bookResponseResponse.body() != null && !mCanceled) {
-                return bookResponseResponse.body().getItems();
-            }
-
-        } catch (IOException e) {
+            Thread.sleep(500); //Just to avoid unnecessary queries
+        } catch (InterruptedException e) {
             e.printStackTrace();
+        }
+
+        if (isReset() || isLoadInBackgroundCanceled() || isAbandoned()) {
+            Log.d(LOG, "This operation should be cancelled");
+            Log.d(LOG, "isReset() : " + isReset());
+            Log.d(LOG, "isAbandoned() : " + isAbandoned());
+            Log.d(LOG, "isLoadInBackgroundCanceled() : " + isLoadInBackgroundCanceled());
+            return null;
+        }
+
+        //MaxResult == 1 is a ISBN query TODO make it nicer!
+        if (mMaxResult != null && mMaxResult == 1) {
+
+            Book book = APIService.getInstance().getService(APIService.GOOGLE).getBookByISBN(mQuery);
+
+            if(book == null){
+                book = APIService.getInstance().getService(APIService.GOODREADS).getBookByISBN(mQuery);
+            }
+
+            if(book != null){
+                bookList.add(book);
+            }
+        }
+
+        //Not checking GOODREADS for now
+        if (mMaxResult != null && mMaxResult > 1) {
+            bookList = APIService.getInstance().getService(APIService.GOOGLE)
+                    .getBooksMaxResult(mQuery, mMaxResult);
+        }
+
+        if (bookList != null && !mCanceled) {
+            return bookList;
         }
 
         return null;

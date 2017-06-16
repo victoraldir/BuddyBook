@@ -20,7 +20,7 @@ import com.quartzodev.data.BookApi;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.data.Lend;
-import com.quartzodev.data.VolumeInfo;
+import com.quartzodev.api.entities.google.VolumeInfo;
 
 import java.util.Collections;
 import java.util.Date;
