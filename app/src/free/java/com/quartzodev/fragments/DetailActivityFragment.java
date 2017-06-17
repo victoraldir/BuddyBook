@@ -33,7 +33,6 @@ import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 
-import com.quartzodev.data.VolumeInfo;
 import com.quartzodev.utils.DateUtils;
 import com.quartzodev.utils.DialogUtils;
 
@@ -103,11 +102,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @BindView(R.id.card_actions)
     CardView mCardViewActions;
 
-    private String mBookId;
-
     private String mBookJson;
-
-    private String mFolderId;
 
     private String mUserId;
 
@@ -119,7 +114,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
-    private Boolean mIsLentBook;
+    private Boolean mFlagLendOp;
 
     private OnDetailInteractionListener mListener;
 
@@ -128,7 +123,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         setHasOptionsMenu(true);
     }
 
-    public static DetailActivityFragment newInstance(String userId, String bookId, String folderId, String folderListId, String bookJson, boolean flagIsLent) {
+    public static DetailActivityFragment newInstance(String userId, String bookId, String folderId, String folderListId, String bookJson, boolean flagLendOp) {
         DetailActivityFragment fragment = new DetailActivityFragment();
         Bundle args = new Bundle();
         args.putString(DetailActivity.ARG_BOOK_ID, bookId);
@@ -136,7 +131,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         args.putString(DetailActivity.ARG_USER_ID, userId);
         args.putString(DetailActivity.ARG_FOLDER_LIST_ID, folderListId);
         args.putString(DetailActivity.ARG_BOOK_JSON, bookJson);
-        args.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK, flagIsLent);
+        args.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, flagLendOp);
         fragment.setArguments(args);
         return fragment;
     }
@@ -144,12 +139,12 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBookId = getArguments().getString(DetailActivity.ARG_BOOK_ID);
-        mFolderId = getArguments().getString(DetailActivity.ARG_FOLDER_ID);
+//        mBookId = getArguments().getString(DetailActivity.ARG_BOOK_ID);
+//        mFolderId = getArguments().getString(DetailActivity.ARG_FOLDER_ID);
         mUserId = getArguments().getString(DetailActivity.ARG_USER_ID);
         mFolderListComma = getArguments().getString(DetailActivity.ARG_FOLDER_LIST_ID);
         mBookJson = getArguments().getString(DetailActivity.ARG_BOOK_JSON);
-        mIsLentBook = getArguments().getBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK);
+        mFlagLendOp = getArguments().getBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION);
         mContext = getContext();
     }
 
@@ -159,8 +154,8 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
         View view;
 
-        if (mIsLentBook) {
-            view = inflater.inflate(R.layout.fragment_detail_lent_book, container, false);
+        if (mFlagLendOp) {
+            view = inflater.inflate(R.layout.fragment_detail_lend, container, false);
         } else {
             view = inflater.inflate(R.layout.fragment_detail, container, false);
         }
@@ -204,41 +199,17 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         }
 
         loadBookDetails(mBookSelected);
-        //mFirebaseDatabaseHelper.findBook(mUserId, mFolderId, mBookId, this);
     }
 
     private void loadBookDetails(final Book bookApi) {
 
         if (bookApi != null) {
 
-            VolumeInfo volumeInfo = bookApi.getVolumeInfo();
-
-            if (volumeInfo != null && bookApi.getVolumeInfo().getImageLink() != null) {
-                Glide.with(mContext)
-                        .load(volumeInfo.getImageLink().getThumbnail())
-                        .into(mPhoto);
-
-                String str = String.format(getString(R.string.cover_book_cd), volumeInfo.getTitle());
-
-                mPhoto.setContentDescription(str);
-            }else if(bookApi.isCustom()){
-                mPhoto.setImageResource(R.drawable.custom_book_cover);
-            }
+            loadImage(bookApi);
+            loadAuthors(bookApi);
+            loadToolbar(bookApi);
 
             mTitle.setText(bookApi.getVolumeInfo().getTitle());
-            if (bookApi.getVolumeInfo().getAuthors() != null && !bookApi.getVolumeInfo().getAuthors().isEmpty()) {
-
-                List<String> authors = bookApi.getVolumeInfo().getAuthors();
-
-                String authorsString = "";
-
-                for (String author : authors) {
-                    authorsString = authorsString.concat(author + "\n");
-                }
-
-                mAuthor.setText(authorsString);
-            }
-
             mPublishedDate.setText(DateUtils.formatStringDate(bookApi.getVolumeInfo().getPublishedDate()));
             mPublisher.setText(bookApi.getVolumeInfo().getPublisher());
 
@@ -248,13 +219,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                 mDescription.setText(getString(R.string.no_description));
             }
 
-            if (getActivity() != null) {
-                ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-
-                actionBar.setTitle(bookApi.getVolumeInfo().getTitle());
-                actionBar.setSubtitle(bookApi.getVolumeInfo().getAuthors() != null ? bookApi.getVolumeInfo().getAuthors().get(0) : "");
-            }
-
             if (mFolderListComma != null) {
                 mBtnBookMark.setOnClickListener(this);
                 mBtnBookMark.setContentDescription(getString(R.string.move_to_folder_cd));
@@ -262,50 +226,92 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                 mCardViewActions.setVisibility(View.GONE);
             }
 
-            if (mIsLentBook) {
-
-                if (bookApi.getLend() != null) {
-
-                    DateTime lendDate = new DateTime(bookApi.getLend().getLendDate());
-
-                    Days days = Days.daysBetween(lendDate, DateTime.now());
-
-                    mTextReceiverEmail.setText(String.format(getString(R.string.lent_to_email), bookApi.getLend().getReceiverEmail()));
-                    mTextReceiverName.setText(String.format(getString(R.string.lent_to), bookApi.getLend().getReceiverName()));
-                    mTextLentDate.setText(String.format(getString(R.string.lent_day_ago), days.getDays()));
-                    mBtnLendBook.setImageResource(R.drawable.ic_assignment_return_black_24dp);
-                    mBtnLendBook.setContentDescription(getString(R.string.btn_return_book_cd));
-                    mCardViewBookBorrowed.setVisibility(View.VISIBLE);
-
-                    mBtnLendBook.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            detachFirebaseListener();
-                            attachFirebaseListener();
-                            mListener.onReturnBook(bookApi);
-                        }
-                    });
-
-                } else {
-
-                    mBtnLendBook.setImageResource(R.drawable.ic_card_giftcard_black_24dp);
-                    mBtnLendBook.setContentDescription(getString(R.string.btn_lend_book_cd));
-                    mCardViewBookBorrowed.setVisibility(View.GONE);
-
-                    mBtnLendBook.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            detachFirebaseListener();
-                            attachFirebaseListener();
-                            mListener.onLendBook(bookApi);
-                        }
-                    });
-
-                }
+            if (mFlagLendOp) {
+                loadBookActions(bookApi);
             }
 
         }
 
+    }
+
+    private void loadToolbar(final Book book){
+        if (getActivity() != null) {
+            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            actionBar.setTitle(book.getVolumeInfo().getTitle());
+            actionBar.setSubtitle(book.getVolumeInfo().getAuthors() != null ? book.getVolumeInfo().getAuthors().get(0) : "");
+        }
+    }
+
+    private void loadImage(final Book book){
+        if (book.getVolumeInfo() != null && book.getVolumeInfo().getImageLink() != null) {
+            Glide.with(mContext)
+                    .load(book.getVolumeInfo().getImageLink().getThumbnail())
+                    .into(mPhoto);
+
+            String str = String.format(getString(R.string.cover_book_cd), book.getVolumeInfo().getTitle());
+
+            mPhoto.setContentDescription(str);
+        }else if(book.isCustom()){
+            mPhoto.setImageResource(R.drawable.custom_book_cover);
+        }
+    }
+
+    private void loadAuthors(final Book book){
+        if (book.getVolumeInfo() != null &&
+                book.getVolumeInfo().getAuthors() != null &&
+                !book.getVolumeInfo().getAuthors().isEmpty()) {
+
+            List<String> authors = book.getVolumeInfo().getAuthors();
+
+            String authorsString = "";
+
+            for (String author : authors) {
+                authorsString = authorsString.concat(author + "\n");
+            }
+
+            mAuthor.setText(authorsString);
+        }
+    }
+
+    private void loadBookActions(final Book book){
+        if (book.getLend() != null) {
+
+            DateTime lendDate = new DateTime(book.getLend().getLendDate());
+
+            Days days = Days.daysBetween(lendDate, DateTime.now());
+
+            mTextReceiverEmail.setText(String.format(getString(R.string.lent_to_email), book.getLend().getReceiverEmail()));
+            mTextReceiverName.setText(String.format(getString(R.string.lent_to), book.getLend().getReceiverName()));
+            mTextLentDate.setText(String.format(getString(R.string.lent_day_ago), days.getDays()));
+            mBtnLendBook.setImageResource(R.drawable.ic_assignment_return_black_24dp);
+            mBtnLendBook.setContentDescription(getString(R.string.btn_return_book_cd));
+            mCardViewBookBorrowed.setVisibility(View.VISIBLE);
+
+            mBtnLendBook.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    detachFirebaseListener();
+                    attachFirebaseListener();
+                    mListener.onReturnBook(book);
+                }
+            });
+
+        } else {
+
+            mBtnLendBook.setImageResource(R.drawable.ic_card_giftcard_black_24dp);
+            mBtnLendBook.setContentDescription(getString(R.string.btn_lend_book_cd));
+            mCardViewBookBorrowed.setVisibility(View.GONE);
+
+            mBtnLendBook.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    detachFirebaseListener();
+                    attachFirebaseListener();
+                    mListener.onLendBook(book);
+                }
+            });
+
+        }
     }
 
     public void attachFirebaseListener() {

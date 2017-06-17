@@ -16,7 +16,8 @@
         android:layout_marginStart="8dp"
         android:visibility="visible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.quartzodev.buddybook.MainActivity" />
+        tools:context="com.quartzodev.buddybook.MainActivity"
+        />
 
     <TextView
         android:id="@+id/fragment_grid_message"

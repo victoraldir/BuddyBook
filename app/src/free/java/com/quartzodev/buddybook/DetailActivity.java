@@ -27,7 +27,7 @@ public class DetailActivity extends AppCompatActivity implements
     public static final String ARG_USER_ID = "userId";
     public static final String ARG_FOLDER_LIST_ID = "folderListId";
     public static final String ARG_BOOK_JSON = "bookJson";
-    public static final String ARG_FLAG_IS_LENT_BOOK = "isLentBook";
+    public static final String ARG_FLAG_LEND_OPERATION = "flagLendOperation";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -53,9 +53,9 @@ public class DetailActivity extends AppCompatActivity implements
         mUserId = getIntent().getExtras().getString(ARG_USER_ID);
         String folderListId = getIntent().getExtras().getString(ARG_FOLDER_LIST_ID);
         String bookJson = getIntent().getExtras().getString(ARG_BOOK_JSON);
-        boolean isLent = getIntent().getExtras().getBoolean(ARG_FLAG_IS_LENT_BOOK);
+        boolean flagLendOp = getIntent().getExtras().getBoolean(ARG_FLAG_LEND_OPERATION);
 
-        DetailActivityFragment newFragment = DetailActivityFragment.newInstance(mUserId, bookId, folderId, folderListId, bookJson, isLent);
+        DetailActivityFragment newFragment = DetailActivityFragment.newInstance(mUserId, bookId, folderId, folderListId, bookJson, flagLendOp);
 
         getSupportFragmentManager().popBackStackImmediate();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

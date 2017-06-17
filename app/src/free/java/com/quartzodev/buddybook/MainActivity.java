@@ -633,10 +633,16 @@ public class MainActivity extends AppCompatActivity
         bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
         bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, mFolderListComma);
 
-        if (book.getLend() != null) {
-            bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK, true);
+        if (book.getId() != null
+                && folderId != null
+                && folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //For now we just show lend operations to 'My books' section
+
+            bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, true);
+
         } else {
-            bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK, false);
+
+            bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, false);
+
         }
 
         Gson gson = new Gson();
