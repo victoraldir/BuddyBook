@@ -18,7 +18,7 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# -keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
@@ -27,12 +27,32 @@
 -keep class android.support.v7.widget.ShareActionProvider { *; }
 -keep class android.support.v7.widget.SearchView { *; }
 -keep class com.quartzodev.data.**  { *; }
+-keep class com.quartzodev.api.entities.**  { *; }
+-keep interface com.quartzodev.api.interfaces.** {*;}
+-keep class com.quartzodev.api.strategies.**  { *; }
+-keep class com.quartzodev.api.**  { *; }
 -keep class com.firebase.**  { *; }
+
 
 #Retrofit
 -dontwarn okio.**
 -dontwarn javax.annotation.**
 -dontwarn retrofit2.Platform$Java8
+
+-dontwarn org.simpleframework.xml.stream.**
+# SimpleXMLParsing
+-keep public class org.simpleframework.** { *; }
+-keep class org.simpleframework.xml.** { *; }
+-keep class org.simpleframework.xml.core.** { *; }
+-keep class org.simpleframework.xml.util.** { *; }
+
+-keepclassmembers class * {
+    @org.simpleframework.xml.* *;
+}
+
+-keepclassmembers class * {
+    @org.simpleframework.xml.* *;
+}
 
 #glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
