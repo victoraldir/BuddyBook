@@ -1,6 +1,8 @@
 package com.quartzodev.api.interfaces;
 
 
+import android.support.annotation.Keep;
+
 import com.quartzodev.api.entities.google.BookResponse;
 
 import retrofit2.Call;
@@ -11,6 +13,7 @@ import retrofit2.http.Query;
  * Created by victoraldir on 14/06/2017.
  */
 
+@Keep
 public interface IGoogleBookAPI {
     
     @GET("/books/v1/volumes")

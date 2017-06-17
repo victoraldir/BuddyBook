@@ -1,5 +1,7 @@
 package com.quartzodev.api.interfaces;
 
+import android.support.annotation.Keep;
+
 import com.quartzodev.data.Book;
 import java.util.List;
 import retrofit2.Callback;
@@ -8,6 +10,7 @@ import retrofit2.Callback;
  * Created by victoraldir on 15/06/2017.
  */
 
+@Keep
 public interface IQuery {
 
     List<Book> getBooks(String query);

@@ -52,10 +52,10 @@ public class GoodreadsImpl implements IQuery {
         try {
             GoodreadsResponse goodreadsResponse = mGoodreadsAPI.findBookByISBN(isbn,mKey).execute().body();
 
-            com.quartzodev.api.entities.goodreads.Book bookApi = goodreadsResponse.getBook();
-
-            book = parseBookApiToBook(bookApi);
-
+            if(goodreadsResponse != null) {
+                com.quartzodev.api.entities.goodreads.Book bookApi = goodreadsResponse.getBook();
+                book = parseBookApiToBook(bookApi);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
