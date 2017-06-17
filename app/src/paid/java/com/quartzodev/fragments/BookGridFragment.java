@@ -19,7 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.quartzodev.adapters.BookGridAdapter;
 import com.quartzodev.buddybook.R;
-import com.quartzodev.data.BookApi;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.task.FetchFolderTask;
@@ -126,7 +126,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         ButterKnife.bind(this, rootView);
 
         mAdapter = new BookGridAdapter(getActivity(),
-                new HashSet<BookApi>(),
+                new HashSet<Book>(),
                 mFolderId, mListener,
                 mFlag,
                 this);
@@ -259,7 +259,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         Log.d(TAG, "onChildAdded FIRED " + dataSnapshot.toString());
 
         if (dataSnapshot.getValue() != null) {
-            BookApi bookApi = dataSnapshot.getValue(BookApi.class);
+            Book bookApi = dataSnapshot.getValue(Book.class);
             mAdapter.addItem(bookApi);
             setLoading(false);
         }
@@ -276,7 +276,7 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         Log.d(TAG, "onChildRemoved FIRED " + dataSnapshot.toString());
 
         if (dataSnapshot.getValue() != null) {
-            BookApi bookApi = dataSnapshot.getValue(BookApi.class);
+            Book bookApi = dataSnapshot.getValue(Book.class);
             mAdapter.removeItem(bookApi);
             setLoading(false);
         }
@@ -294,16 +294,16 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
 
     public interface OnGridFragmentInteractionListener {
 
-        void onClickListenerBookGridInteraction(String mFolderId, BookApi book, DynamicImageView imageView);
+        void onClickListenerBookGridInteraction(String mFolderId, Book book, DynamicImageView imageView);
 
-        void onDeleteBookClickListener(String mFolderId, BookApi book);
+        void onDeleteBookClickListener(String mFolderId, Book book);
 
-        void onAddBookToFolderClickListener(String mFolderId, BookApi book);
+        void onAddBookToFolderClickListener(String mFolderId, Book book);
 
-        void onCopyBookToFolderClickListener(String mFolderId, BookApi book);
+        void onCopyBookToFolderClickListener(String mFolderId, Book book);
 
-        void onLendBookClickListener(BookApi book);
+        void onLendBookClickListener(Book book);
 
-        void onReturnBookClickListener(BookApi book);
+        void onReturnBookClickListener(Book book);
     }
 }

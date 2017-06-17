@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import com.google.firebase.database.DataSnapshot;
 import com.quartzodev.adapters.BookGridAdapter;
 import com.quartzodev.buddybook.R;
-import com.quartzodev.data.BookApi;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.task.SearchTask;
 
@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
  * Created by victoraldir on 24/03/2017.
  */
 
-public class SearchResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<BookApi>>,
+public class SearchResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Book>>,
         FirebaseDatabaseHelper.OnDataSnapshotListener {
 
     private static final String TAG = SearchResultFragment.class.getSimpleName();
@@ -79,7 +79,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         ButterKnife.bind(this, rootView);
 
         mAdapter = new BookGridAdapter(getActivity(),
-                new HashSet<BookApi>(),
+                new HashSet<Book>(),
                 mFolderId,
                 mListener,
                 BookGridFragment.FLAG_SEARCH,
@@ -203,7 +203,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public Loader<List<BookApi>> onCreateLoader(int id, Bundle args) {
+    public Loader<List<Book>> onCreateLoader(int id, Bundle args) {
 
         if (mContext != null && args != null && args.containsKey(ARG_QUERY)) {
 
@@ -235,7 +235,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoadFinished(Loader<List<BookApi>> loader, List<BookApi> data) {
+    public void onLoadFinished(Loader<List<Book>> loader, List<Book> data) {
         mAdapter.swap(data);
 
         mFlagLoadingRemote = false;
@@ -247,17 +247,17 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     }
 
     @Override
-    public void onLoaderReset(Loader<List<BookApi>> loader) {
+    public void onLoaderReset(Loader<List<Book>> loader) {
         return;
     }
 
     @Override
     public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
 
-        List<BookApi> bookApis = new ArrayList<>();
+        List<Book> bookApis = new ArrayList<>();
 
         for (DataSnapshot child : dataSnapshot.getChildren()) {
-            BookApi book = child.getValue(BookApi.class);
+            Book book = child.getValue(Book.class);
 
             if (book.getVolumeInfo().getSearchField().contains(mQuery.toLowerCase())) {
                 bookApis.add(book);

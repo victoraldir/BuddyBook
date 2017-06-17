@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -16,11 +14,12 @@ import android.widget.EditText;
 
 import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.R;
-import com.quartzodev.data.BookApi;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.data.Lend;
-import com.quartzodev.api.entities.google.VolumeInfo;
+import com.quartzodev.data.VolumeInfo;
+
 
 import java.util.Collections;
 import java.util.Date;
@@ -152,7 +151,7 @@ public class DialogUtils {
                                            final CoordinatorLayout coordinatorLayout,
                                            final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
                                            final String userId,
-                                           final BookApi book) {
+                                           final Book book) {
 
         LayoutInflater inflater = activity.getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_lend_book, null);
@@ -190,10 +189,6 @@ public class DialogUtils {
                         if (nameEdtText.getText().toString().isEmpty()) {
 
                             nameInputLayout.setError(activity.getString(R.string.lend_name_empty));
-
-//                        } else if (emailEdtText.getText().toString().isEmpty()) {
-//
-//                            emailInputLayout.setError(activity.getString(R.string.lend_email_empty));
 
                         } else if (!emailEdtText.getText().toString().isEmpty() &&
                                 !isValidEmail(emailEdtText.getText().toString())) {
@@ -242,7 +237,7 @@ public class DialogUtils {
     public static void alertDialogReturnBook(final Activity activity,
                                              final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
                                              final String userId,
-                                             final BookApi book) {
+                                             final Book book) {
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setTitle(activity.getString(R.string.dialog_return_book_title))
@@ -251,7 +246,7 @@ public class DialogUtils {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        BookApi updatedBook = book;
+                        Book updatedBook = book;
                         updatedBook.setLend(null);
                         mFirebaseDatabaseHelper.updateBook(userId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, updatedBook);
 
@@ -267,32 +262,6 @@ public class DialogUtils {
 
         dialog.show();
 
-    }
-
-    public static void alertDialogUpgradePro(final Activity activity) {
-
-        final AlertDialog dialog = new AlertDialog.Builder(activity)
-                .setTitle(R.string.dialog_upgrade)
-                .setMessage(R.string.dialog_upgrade_message)
-                .setPositiveButton(R.string.dialog_btn_updgate, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        final String appPackageName = activity.getPackageName(); // getPackageName() from Context or Activity object
-                        try {
-                            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                        } catch (android.content.ActivityNotFoundException anfe) {
-                            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                        }
-
-                        dialog.dismiss();
-                    }
-                })
-                .setNegativeButton(activity.getString(R.string.dialog_btn_cancel), null)
-                .setCancelable(true)
-                .create();
-
-        dialog.show();
     }
 
     public static void alertDialogAddBook(final Activity activity,
@@ -334,7 +303,7 @@ public class DialogUtils {
                             return;
                         }
 
-                        BookApi customBookApi = new BookApi();
+                        Book customBookApi = new Book();
                         VolumeInfo volumeInfo = new VolumeInfo();
 
                         volumeInfo.setTitle(edtTitle.getText().toString());
