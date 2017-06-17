@@ -285,32 +285,52 @@ public class FirebaseDatabaseHelper {
                 .child(folderId)
                 .child("books");
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Log.d(TAG, "Folder list is: " + dataSnapshot.getChildrenCount());
+        if(bookApi.getId() == null && bookApi.getIdProvider() != null){ //If it's search book
 
-                if (dataSnapshot.getChildrenCount() >= mMaxBooks) {
-                    listener.onInsertBook(false);
-                } else {
+            ref.orderByChild("idProvider")
+                    .equalTo(bookApi.getIdProvider())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    if(bookApi.getId() == null ){ //If it's custom
-                        bookApi.setId(ref.push().getKey());
-                    }
+                            if(dataSnapshot.getValue() == null){
+                                insert(dataSnapshot,listener,bookApi,ref);
+                            }
+                        }
 
-                    ref.updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
-                    listener.onInsertBook(true);
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {}
+                    });
+        } else {
+
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    insert(dataSnapshot, listener, bookApi, ref);
                 }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+        }
+
+    }
+
+    private void insert(DataSnapshot dataSnapshot,OnPaidOperationListener listener, final Book bookApi, DatabaseReference ref){
+        Log.d(TAG, "Folder list is: " + dataSnapshot.getChildrenCount());
+
+        if (dataSnapshot.getChildrenCount() >= mMaxBooks) {
+            listener.onInsertBook(false);
+        } else {
+
+            if(bookApi.getId() == null ){ //Here we generate our id
+                bookApi.setId(ref.push().getKey());
             }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
+            ref.updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
+            listener.onInsertBook(true);
+        }
     }
 
     public void deleteBookFolder(String userId, String folderId, Book bookApi) {

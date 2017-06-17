@@ -96,8 +96,8 @@ public class DetailActivity extends AppCompatActivity implements
         DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUserId, bookApi);
     }
 
-    public void loadBook() {
-        ((DetailActivityFragment) getSupportFragmentManager().findFragmentById(R.id.detail_container)).loadBook();
+    public void loadBook(Book book) {
+        ((DetailActivityFragment) getSupportFragmentManager().findFragmentById(R.id.detail_container)).loadBook(book);
     }
 
     @Override

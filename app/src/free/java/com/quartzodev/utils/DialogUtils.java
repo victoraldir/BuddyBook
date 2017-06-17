@@ -213,7 +213,7 @@ public class DialogUtils {
                                 DetailActivity detailActivity = ((DetailActivity) activity);
 
                                 if (detailActivity != null) {
-                                    detailActivity.loadBook();
+                                    detailActivity.loadBook(book);
                                 }
                             } catch (Exception ex) {
                             }
@@ -257,7 +257,7 @@ public class DialogUtils {
                         mFirebaseDatabaseHelper.updateBook(userId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, updatedBook);
 
                         try {
-                            ((DetailActivity) activity).loadBook();
+                            ((DetailActivity) activity).loadBook(book);
                         } catch (Exception ex) {
                         }
                     }

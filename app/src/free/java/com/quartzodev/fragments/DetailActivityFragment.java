@@ -191,12 +191,18 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadBook();
+        loadBook(null);
     }
 
-    public void loadBook() {
-        Gson gson = new Gson();
-        mBookSelected = gson.fromJson(mBookJson, Book.class);
+    public void loadBook(Book book) {
+
+        if(book == null) {
+            Gson gson = new Gson();
+            mBookSelected = gson.fromJson(mBookJson, Book.class);
+        }else{
+            mBookSelected = book;
+        }
+
         loadBookDetails(mBookSelected);
         //mFirebaseDatabaseHelper.findBook(mUserId, mFolderId, mBookId, this);
     }
@@ -372,18 +378,17 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-//        Log.d(TAG, "onDataChange fired: " + dataSnapshot.toString());
+        Log.d(TAG, "onDataChange fired: " + dataSnapshot.toString());
     }
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
-//        Log.d(TAG, "onCancelled fired: " + databaseError.toString());
+        Log.d(TAG, "onCancelled fired: " + databaseError.toString());
     }
 
     public interface OnDetailInteractionListener {
 
         void onLendBook(Book bookApi);
-
         void onReturnBook(Book bookApi);
 
     }

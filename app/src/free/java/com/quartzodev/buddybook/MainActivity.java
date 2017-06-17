@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.fragment_main_container)
     FrameLayout mFrameLayoutContainer;
     @BindView(R.id.fab)
-    FloatingActionButton fab;
+    FloatingActionButton mFab;
     @BindView(R.id.tabs)
     TabLayout mTabLayout;
 
@@ -152,8 +152,8 @@ public class MainActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener(this);
 
         if (ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
-            fab.setVisibility(View.VISIBLE);
-            fab.setOnClickListener(new View.OnClickListener() {
+            mFab.setVisibility(View.VISIBLE);
+            mFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
@@ -181,6 +181,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public FloatingActionButton getFab(){
+        return mFab;
+    }
 
     @Override
     protected void onPostResume() {
@@ -621,7 +624,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClickListenerBookGridInteraction(String folderId, Book book, DynamicImageView imageView) {
 
-        mFirebaseDatabaseHelper.insertBookSearchHistory(mUser.getUid(), book); //Insert book
+        //mFirebaseDatabaseHelper.insertBookSearchHistory(mUser.getUid(), book); //Insert book
 
         Intent it = new Intent(this, DetailActivity.class);
         Bundle bundle = new Bundle();

@@ -3,6 +3,7 @@ package com.quartzodev.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -20,6 +21,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.quartzodev.adapters.BookGridAdapter;
+import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
@@ -167,6 +169,38 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
         return rootView;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        setupHideFloatButtonOnScroll();
+    }
+
+    private void setupHideFloatButtonOnScroll(){
+
+        if((getActivity()) != null) {
+
+            final FloatingActionButton fab = ((MainActivity) getActivity()).getFab();
+
+            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    if (dy > 0 || dy < 0 && fab.isShown())
+                        fab.hide();
+                }
+
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        fab.show();
+                    }
+                    super.onScrollStateChanged(recyclerView, newState);
+                }
+            });
+        }
+
+    }
+
     private void updateToolbarTitle() {
         if (getActivity() != null) {
             if (mFolderName != null) {
@@ -210,12 +244,13 @@ public class BookGridFragment extends Fragment implements LoaderManager.LoaderCa
                 container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.VISIBLE);
                 container.findViewById(R.id.recycler_view_books).setVisibility(View.INVISIBLE);
             } else {
-                container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.INVISIBLE);
-                container.findViewById(R.id.recycler_view_books).setVisibility(View.VISIBLE);
+                container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.GONE);
                 if (mAdapter.getItemCount() == 0) {
                     container.findViewById(R.id.fragment_grid_message).setVisibility(View.VISIBLE);
+                    container.findViewById(R.id.recycler_view_books).setVisibility(View.GONE);
                 } else {
                     container.findViewById(R.id.fragment_grid_message).setVisibility(View.GONE);
+                    container.findViewById(R.id.recycler_view_books).setVisibility(View.VISIBLE);
                 }
             }
         }

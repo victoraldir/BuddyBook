@@ -8,5 +8,6 @@ public class Constants {
 
     public static final String TYPE_PROVIDER_GOOGLE = "GOOGLE";
     public static final String TYPE_PROVIDER_GOODREADS = "GOODREADS";
+    public static final String TYPE_CUSTOM = "CUSTOM";
 
 }
