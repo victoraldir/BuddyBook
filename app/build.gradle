@@ -87,6 +87,9 @@ dependencies {
     //Firebase remote config
     freeCompile 'com.google.firebase:firebase-config:11.0.1'
 
+    //Crash report
+    releaseCompile 'com.google.firebase:firebase-crash:11.0.1'
+
     //Google Vision
     compile 'com.google.android.gms:play-services-vision:11.0.1'
     //Joda

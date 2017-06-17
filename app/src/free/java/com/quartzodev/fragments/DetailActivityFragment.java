@@ -32,7 +32,6 @@ import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
-
 import com.quartzodev.utils.DateUtils;
 import com.quartzodev.utils.DialogUtils;
 
@@ -56,66 +55,46 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     @BindView(R.id.detail_imageview_thumb)
     ImageView mPhoto;
-
     @BindView(R.id.detail_textview_title)
     TextView mTitle;
-
     @BindView(R.id.detail_textview_author)
     TextView mAuthor;
-
     @BindView(R.id.detail_textview_published_date)
     TextView mPublishedDate;
-
     @BindView(R.id.detail_textview_publisher)
     TextView mPublisher;
-
     @BindView(R.id.detail_textview_description)
     TextView mDescription;
-
     @BindView(R.id.detail_imageView_bookmark)
     ImageView mBtnBookMark;
-
     @BindView(R.id.detail_imageView_lend_book)
     @Nullable
     ImageView mBtnLendBook;
-
     @BindView(R.id.detail_textview_receiver_name)
     @Nullable
     TextView mTextReceiverName;
-
     @BindView(R.id.detail_textview_receiver_email)
     @Nullable
     TextView mTextReceiverEmail;
-
     @BindView(R.id.detail_textview_receiver_date)
     @Nullable
     TextView mTextLentDate;
-
     @BindView(R.id.card_book_borrowed)
     @Nullable
     CardView mCardViewBookBorrowed;
-
     @BindView(R.id.card_book_description)
     @Nullable
     CardView mCardViewBookDescription;
-
     @BindView(R.id.card_actions)
     CardView mCardViewActions;
 
     private String mBookJson;
-
     private String mUserId;
-
     private String mFolderListComma;
-
     private Context mContext;
-
     private Book mBookSelected;
-
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
-
     private Boolean mFlagLendOp;
-
     private OnDetailInteractionListener mListener;
 
     public DetailActivityFragment() {
@@ -139,8 +118,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mBookId = getArguments().getString(DetailActivity.ARG_BOOK_ID);
-//        mFolderId = getArguments().getString(DetailActivity.ARG_FOLDER_ID);
         mUserId = getArguments().getString(DetailActivity.ARG_USER_ID);
         mFolderListComma = getArguments().getString(DetailActivity.ARG_FOLDER_LIST_ID);
         mBookJson = getArguments().getString(DetailActivity.ARG_BOOK_JSON);
@@ -290,8 +267,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             mBtnLendBook.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    detachFirebaseListener();
-                    attachFirebaseListener();
                     mListener.onReturnBook(book);
                 }
             });
@@ -305,22 +280,10 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             mBtnLendBook.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    detachFirebaseListener();
-                    attachFirebaseListener();
                     mListener.onLendBook(book);
                 }
             });
 
-        }
-    }
-
-    public void attachFirebaseListener() {
-        mFirebaseDatabaseHelper.attachUpdateBookChildListener(mUserId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, mBookSelected, this);
-    }
-
-    public void detachFirebaseListener() {
-        if (mBookSelected != null) {
-            mFirebaseDatabaseHelper.detachUpdateBookChildListener(mUserId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, mBookSelected, this);
         }
     }
 
@@ -348,22 +311,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         return shareIntent;
     }
 
-//    @Override
-//    public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
-//        Log.d(TAG, "Data received: " + dataSnapshot.toString());
-//        mBookSelected = dataSnapshot.getValue(Book.class);
-//
-//        //TODO maybe it's not needed. Leaving as it's for now.
-//        if (mBookSelected == null) {
-//            Gson gson = new Gson();
-//            mBookSelected = gson.fromJson(mBookJson, Book.class);
-//        }
-//        if (isAdded()) {
-//            loadBookDetails(mBookSelected);
-//        }
-//
-//    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -379,7 +326,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @Override
     public void onDetach() {
         super.onDetach();
-        detachFirebaseListener();
     }
 
     @Override
