@@ -36,8 +36,6 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     // TODO: Customize parameter argument names
     private static final String ARG_USER_ID = "user-id";
     private final String KEY_USER_ID = "userId";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private FolderListAdapter myFolderRecyclerViewAdapter;
@@ -53,23 +51,12 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
     }
 
-//    public void updateFolderListByUserId(String userId){
-//        mUserId = userId;
-//        mFirebaseDatabaseHelper.fetchFolders(userId,this,this);
-//    }
-
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static FolderListFragment newInstance(String userId) {
         FolderListFragment fragment = new FolderListFragment();
         Bundle args = new Bundle();
         args.putString(ARG_USER_ID, userId);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    public void updateFolderListByUserId() {
-        mFirebaseDatabaseHelper.fetchFolders(mUserId, this);
     }
 
     @Override
@@ -85,7 +72,6 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
 
         if (savedInstanceState != null && savedInstanceState.containsKey(KEY_USER_ID)) {
             mUserId = savedInstanceState.getString(KEY_USER_ID);
-//            updateFolderListByUserId(mUserId);
         }
 
         if (mFirebaseDatabaseHelper == null)
@@ -114,6 +100,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
+            int mColumnCount = 1;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
@@ -122,10 +109,6 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
             recyclerView.setAdapter(myFolderRecyclerViewAdapter);
         }
         return view;
-    }
-
-    public List<Folder> getmFolderList() {
-        return mFolderList;
     }
 
     public String getmFolderListCommaSeparated() {

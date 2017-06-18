@@ -86,6 +86,22 @@
     <string name="ad_bottom_books_main">ca-app-pub-6526073251385305/7393902820</string>
     <string name="ad_unit_test">ca-app-pub-3940256099942544/1033173712</string>
 
+    <string name="aboutLibraries_description_showIcon">true</string>
+    <string name="aboutLibraries_description_showVersion">true</string>
+    <string name="aboutLibraries_description_text">
+
+         <![CDATA[
+         This is an open source project and you can find the source code on my <a href="https://github.com/victoraldir/BuddyBook" >GitHub</a>.
+          <br/>
+          Below you can find open source libraries used in this project.
+          <br/> If you find any <b>bug</b> or <b>suggestion</b>, please open an issue in here <a href="https://github.com/victoraldir/BuddyBook/issues" >Issues</a>
+          <br/>
+          <br/>
+          Developed with \u2764 by <a href="https://about.me/victoraldir">Victor Neves</a>
+]]>
+
+    </string>
+
     <!-- TODO barcode stuff. Review them! -->
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
@@ -146,5 +162,7 @@
     <string name="title_empty">Title cannot be empty</string>
     <string name="title_author">Author cannot be empty</string>
     <string name="title_publisher">Publisher cannot be empty</string>
+    <string name="action_about">About</string>
+    <string name="action_to_premium">Upgrade</string>
 
 </resources>

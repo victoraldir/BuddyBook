@@ -52,6 +52,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
@@ -547,6 +549,18 @@ public class MainActivity extends AppCompatActivity
                 DialogUtils.alertDialogAddBook(this,mCoordinatorLayout,mFirebaseDatabaseHelper,mUser.getUid(),mFolderId);
                 break;
 
+            case R.id.action_about:
+                new LibsBuilder()
+                        .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                        .withAboutIconShown(true)
+                        .withAboutVersionShown(true)
+                        .start(this);
+                break;
+            case R.id.action_to_premium:
+
+                DialogUtils.alertDialogUpgradePro(this);
+
+                break;
             default:
                 break;
         }

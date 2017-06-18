@@ -113,6 +113,10 @@ dependencies {
         exclude group: 'stax', module: 'stax'
     }
 
+    compile('com.mikepenz:aboutlibraries:5.9.6@aar') {
+        transitive = true
+    }
+
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC0'

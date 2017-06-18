@@ -50,8 +50,9 @@
     @org.simpleframework.xml.* *;
 }
 
--keepclassmembers class * {
-    @org.simpleframework.xml.* *;
+-keep class .R
+-keep class **.R$* {
+    <fields>;
 }
 
 #glide
