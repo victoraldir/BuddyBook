@@ -307,11 +307,14 @@ public class DialogUtils {
         View view = inflater.inflate(R.layout.dialog_add_book, null);
 
         final EditText edtTitle = view.findViewById(R.id.add_book_title);
+        edtTitle.setSingleLine(true);
         final EditText edtAuthor = view.findViewById(R.id.add_book_author);
+        edtAuthor.setSingleLine(true);
         final EditText edtPublisher = view.findViewById(R.id.add_book_publisher);
+        edtPublisher.setSingleLine(true);
         final TextInputLayout layoutTitle =  view.findViewById(R.id.layout_title);
-        final TextInputLayout layoutAuthor =  view.findViewById(R.id.layout_author);
-        final TextInputLayout layoutPublisher =  view.findViewById(R.id.layout_publisher);
+//        final TextInputLayout layoutAuthor =  view.findViewById(R.id.layout_author);
+//        final TextInputLayout layoutPublisher =  view.findViewById(R.id.layout_publisher);
 
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)

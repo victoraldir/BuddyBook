@@ -111,6 +111,7 @@ public class BuddyBookWidgetService extends RemoteViewsService {
             remoteViews.setTextViewText(R.id.receiver_name, String.format(getString(R.string.lent_to), bookApi.getLend().getReceiverName()));
             remoteViews.setTextViewText(R.id.lend_days, String.format(getString(R.string.day_ago), days.getDays()));
 
+
             return remoteViews;
         }
 
