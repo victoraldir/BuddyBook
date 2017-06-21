@@ -19,13 +19,11 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     public static final int NUM_PAGES = 2;
 
-    private Context mContext;
     private String mUserId;
 
-    public ViewPagerAdapter(FragmentManager fm, String userId, Context context) {
+    public ViewPagerAdapter(FragmentManager fm, String userId) {
         super(fm);
 
-        mContext = context;
         this.mUserId = userId;
     }
 

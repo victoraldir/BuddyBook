@@ -78,7 +78,7 @@ public class ViewPagerFragment extends Fragment {
     }
 
     private void loadBooksPageView() {
-        ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), mUserId, getContext());
+        ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), mUserId);
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPagerAdapter.notifyDataSetChanged();
     }

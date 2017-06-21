@@ -15,7 +15,6 @@ public interface IQuery {
 
     List<Book> getBooks(String query);
     List<Book> getBooksMaxResult(String query, int maxResults);
-
     Book getBookByISBN(String isbn);
 
 }

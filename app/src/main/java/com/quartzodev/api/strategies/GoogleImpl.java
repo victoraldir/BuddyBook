@@ -101,30 +101,38 @@ public class GoogleImpl implements IQuery{
 
     private Book parseBookApiToBook(BookApi bookApi){
 
-        Book book = new Book();
+        Book book = null;
 
-        //book.setId(bookApi.getId()); //TODO remove and use Firebase hash!
-        book.setIdProvider(bookApi.getId());
-        book.setTypeProvider(Constants.TYPE_PROVIDER_GOOGLE);
-        book.setCustom(false);
-        book.setKind(bookApi.getKind());
+        try {
 
-        VolumeInfo volumeInfo = new VolumeInfo();
+            book = new Book();
 
-        volumeInfo.setAuthors(bookApi.getVolumeInfo().getAuthors());
-        volumeInfo.setTitle(bookApi.getVolumeInfo().getTitle());
-        volumeInfo.setPublisher(bookApi.getVolumeInfo().getPublisher());
-        volumeInfo.setPublishedDate(bookApi.getVolumeInfo().getPublishedDate());
-        volumeInfo.setDescription(bookApi.getVolumeInfo().getDescription());
+            //book.setId(bookApi.getId()); //TODO remove and use Firebase hash!
+            book.setIdProvider(bookApi.getId());
+            book.setTypeProvider(Constants.TYPE_PROVIDER_GOOGLE);
+            book.setCustom(false);
+            book.setKind(bookApi.getKind());
 
-        if(bookApi.getVolumeInfo() != null && bookApi.getVolumeInfo().getImageLink() != null) {
-            ImageLink imageLink = new ImageLink();
-            imageLink.setSmallThumbnail(bookApi.getVolumeInfo().getImageLink().getSmallThumbnail());
-            imageLink.setThumbnail(bookApi.getVolumeInfo().getImageLink().getThumbnail());
-            volumeInfo.setImageLink(imageLink);
+            VolumeInfo volumeInfo = new VolumeInfo();
+
+            volumeInfo.setAuthors(bookApi.getVolumeInfo().getAuthors());
+            volumeInfo.setTitle(bookApi.getVolumeInfo().getTitle());
+            volumeInfo.setPublisher(bookApi.getVolumeInfo().getPublisher());
+            volumeInfo.setPublishedDate(bookApi.getVolumeInfo().getPublishedDate());
+            volumeInfo.setDescription(bookApi.getVolumeInfo().getDescription());
+
+            if (bookApi.getVolumeInfo() != null && bookApi.getVolumeInfo().getImageLink() != null) {
+                ImageLink imageLink = new ImageLink();
+                imageLink.setSmallThumbnail(bookApi.getVolumeInfo().getImageLink().getSmallThumbnail());
+                imageLink.setThumbnail(bookApi.getVolumeInfo().getImageLink().getThumbnail());
+                volumeInfo.setImageLink(imageLink);
+            }
+
+            book.setVolumeInfo(volumeInfo);
+
+        }catch (Exception ex){
+
         }
-
-        book.setVolumeInfo(volumeInfo);
 
         return book;
     }

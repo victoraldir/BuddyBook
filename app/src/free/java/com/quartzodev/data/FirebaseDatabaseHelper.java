@@ -118,14 +118,6 @@ public class FirebaseDatabaseHelper {
                 .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
     }
 
-    public void insertBookSearchHistory(String userId, Book book) {
-
-        DatabaseReference reference = mDatabaseReference.child(userId).child(REF_SEARCH_HISTORY).push();
-        book.setId(reference.getKey());
-        reference.setValue(book);
-
-    }
-
     public void fetchMyBooksFolder(String userId, final OnDataSnapshotListener onDataSnapshotListener) {
 
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(REF_MY_BOOKS_FOLDER)
@@ -269,14 +261,6 @@ public class FirebaseDatabaseHelper {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
     }
 
-    public void attachUpdateBookChildListener(String userId, String folderId, Book bookApi, ValueEventListener listener) {
-        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).addValueEventListener(listener);
-    }
-
-    public void detachUpdateBookChildListener(String userId, String folderId, Book bookApi, ValueEventListener listener) {
-        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).addValueEventListener(listener);
-    }
-
     public void insertBookFolder(String userId, String folderId, final Book bookApi, final OnPaidOperationListener listener) {
 
         final DatabaseReference ref = mDatabaseReference
@@ -314,6 +298,16 @@ public class FirebaseDatabaseHelper {
                 public void onCancelled(DatabaseError databaseError) {}
             });
         }
+
+    }
+
+    public void insertBookPopularFolder(final Book book) {
+
+        DatabaseReference ref = mDatabaseReference.child(REF_POPULAR_FOLDER).push();
+
+        book.setId(ref.getKey());
+
+        ref.setValue(book);
 
     }
 

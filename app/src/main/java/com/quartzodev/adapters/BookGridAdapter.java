@@ -105,14 +105,6 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         mFolderId = folderId;
     }
 
-    public void swap(Folder folder) {
-        clearList();
-        if (folder != null && folder.getBooks() != null) {
-            this.mBookList = new HashSet<>(folder.getBooks().values());
-        }
-        notifyDataSetChanged();
-    }
-
     public void removeItem(Book bookApi) {
         if (mBookList != null) {
             mBookList.remove(bookApi);
@@ -133,9 +125,13 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     }
 
     public void swap(List<Book> bookApiList) {
-        if (bookApiList != null)
+        if (bookApiList != null) {
+
+            clearList();
             mBookList.addAll(bookApiList);
-        this.notifyDataSetChanged();
+            this.notifyDataSetChanged();
+
+        }
     }
 
     public void merge(List<Book> bookApiList) {

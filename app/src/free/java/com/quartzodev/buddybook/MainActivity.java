@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -54,6 +55,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
+import com.quartzodev.api.APIService;
+import com.quartzodev.api.interfaces.IQuery;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
@@ -69,6 +72,8 @@ import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.views.DynamicImageView;
 import com.quartzodev.widgets.BuddyBookWidgetProvider;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -841,7 +846,7 @@ public class MainActivity extends AppCompatActivity
 
         LinearLayout tabLinearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         ((ImageView) tabLinearLayout.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_favorite_border);
-        ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_top_books));
+        ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_my_books));
 
         mTabLayout.getTabAt(0).setCustomView(tabLinearLayout);
 
