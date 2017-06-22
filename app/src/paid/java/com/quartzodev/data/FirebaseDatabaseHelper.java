@@ -1,13 +1,17 @@
 package com.quartzodev.data;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.quartzodev.buddybook.BuildConfig;
 import com.quartzodev.utils.DateUtils;
 
 import java.util.Collections;
@@ -23,11 +27,9 @@ public class FirebaseDatabaseHelper {
 
     public static final String MAX_FOLDERS_KEY = "max_folders";
     public static final String MAX_BOOKS_KEY = "max_books";
-    //    public static final int TOTAL_BOOKS_FOLDER_TIER = 25;
-//    public static final int TOTAL_FOLDER_TIER = 4;
-    public static final String REF_POPULAR_FOLDER = "_popularBooks"; //See a better way to maintain popular folder
+    public static final String REF_POPULAR_FOLDER = "_popularBooks";
     public static final String REF_MY_BOOKS_FOLDER = "myBooksFolder";
-    public static final String REF_SEARCH_HISTORY = "search_history"; //See a better way to maintain popular folder
+    public static final String REF_SEARCH_HISTORY = "search_history";
     private static final String TAG = FirebaseDatabaseHelper.class.getSimpleName();
     private static final String ROOT = "users";
     private static final String REF_FOLDERS = "folders";
@@ -68,22 +70,6 @@ public class FirebaseDatabaseHelper {
 
         mDatabaseReference.child(REF_POPULAR_FOLDER)
                 .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
-    }
-
-    public void insertPopularBooks(Map<String, Book> books) {
-
-        Folder folder = new Folder("Popular Books Folder");
-
-        folder.setBooks(books);
-
-        mDatabaseReference.child(REF_POPULAR_FOLDER).setValue(folder);
-
-    }
-
-    public void insertBookSearchHistory(String userId, Book book) {
-
-        mDatabaseReference.child(userId).child(REF_SEARCH_HISTORY).updateChildren(Collections.singletonMap(book.getId(), (Object) book));
-
     }
 
     public void fetchMyBooksFolder(String userId, final OnDataSnapshotListener onDataSnapshotListener) {
@@ -144,9 +130,6 @@ public class FirebaseDatabaseHelper {
                     .child(REF_MY_BOOKS_FOLDER)
                     .child(REF_BOOKS)
                     .orderByChild("volumeInfo/searchField")
-//                    .startAt(bookQuery)
-//                    .endAt(bookQuery+"\uf8ff")
-//                    .limitToFirst(5)
                     .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
         } else {
@@ -156,9 +139,6 @@ public class FirebaseDatabaseHelper {
                     .child(folderId)
                     .child(REF_BOOKS)
                     .orderByChild("volumeInfo/searchField")
-//                    .startAt(bookQuery)
-//                    .endAt(bookQuery+"\uf8ff")
-//                    .limitToFirst(5)
                     .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
         }
@@ -187,7 +167,7 @@ public class FirebaseDatabaseHelper {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).removeValue();
     }
 
-    public void insertFolder(final String userId, final Folder folder) {
+    public void insertFolder(final String userId, final Folder folder, final OnPaidOperationListener listener) {
 
         mDatabaseReference.child(userId).child(REF_FOLDERS).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -197,6 +177,8 @@ public class FirebaseDatabaseHelper {
                 folder.setId(df.getKey());
                 folder.setCustom(true);
                 df.setValue(folder);
+
+                listener.onInsertFolder(true);
 
             }
 
@@ -221,19 +203,11 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void updateBook(String userId, String folderId, Book Book) {
-        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).updateChildren(Collections.singletonMap(Book.getId(), (Object) Book));
+    public void updateBook(String userId, String folderId, Book bookApi) {
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
     }
 
-    public void attachUpdateBookChildListener(String userId, String folderId, Book Book, ValueEventListener listener) {
-        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(Book.getId()).addValueEventListener(listener);
-    }
-
-    public void detachUpdateBookChildListener(String userId, String folderId, Book Book, ValueEventListener listener) {
-        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(Book.getId()).addValueEventListener(listener);
-    }
-
-    public void insertBookFolder(String userId, String folderId, final Book book) {
+    public void insertBookFolder(String userId, String folderId, final Book bookApi, final OnPaidOperationListener listener) {
 
         final DatabaseReference ref = mDatabaseReference
                 .child(userId)
@@ -241,29 +215,61 @@ public class FirebaseDatabaseHelper {
                 .child(folderId)
                 .child("books");
 
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if(book.getId() == null ){ //If it's custom
-                    book.setId(ref.push().getKey());
+        if(bookApi.getId() == null && bookApi.getIdProvider() != null){ //If it's search book
+
+            ref.orderByChild("idProvider")
+                    .equalTo(bookApi.getIdProvider())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            if(dataSnapshot.getValue() == null){
+                                insert(dataSnapshot,listener,bookApi,ref);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {}
+                    });
+        } else {
+
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    insert(dataSnapshot, listener, bookApi, ref);
                 }
 
-                ref.updateChildren(Collections.singletonMap(book.getId(), (Object) book));
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
+                @Override
+                public void onCancelled(DatabaseError databaseError) {}
+            });
+        }
 
     }
 
-    public void deleteBookFolder(String userId, String folderId, Book book) {
-        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(book.getId()).removeValue();
+    public void insertBookPopularFolder(final Book book) {
+
+        DatabaseReference ref = mDatabaseReference.child(REF_POPULAR_FOLDER).push();
+
+        book.setId(ref.getKey());
+
+        ref.setValue(book);
+
+    }
+
+    private void insert(DataSnapshot dataSnapshot,OnPaidOperationListener listener, final Book bookApi, DatabaseReference ref){
+        Log.d(TAG, "Folder list is: " + dataSnapshot.getChildrenCount());
+
+        if(bookApi.getId() == null ){ //Here we generate our id
+            bookApi.setId(ref.push().getKey());
+        }
+
+        ref.updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
+        listener.onInsertBook(true);
+    }
+
+    public void deleteBookFolder(String userId, String folderId, Book bookApi) {
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).removeValue();
     }
 
     public void fetchUserById(String userId, final OnDataSnapshotListener onDataSnapshotListener) {
@@ -307,4 +313,9 @@ public class FirebaseDatabaseHelper {
         void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot);
     }
 
+    public interface OnPaidOperationListener {
+        void onInsertBook(boolean success); //Return true if insertion was valid
+
+        void onInsertFolder(boolean success);
+    }
 }

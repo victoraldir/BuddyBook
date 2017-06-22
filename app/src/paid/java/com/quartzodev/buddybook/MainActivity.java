@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -52,6 +53,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.LibsBuilder;
+import com.quartzodev.api.APIService;
+import com.quartzodev.api.interfaces.IQuery;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
@@ -67,6 +72,8 @@ import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.views.DynamicImageView;
 import com.quartzodev.widgets.BuddyBookWidgetProvider;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -79,7 +86,8 @@ public class MainActivity extends AppCompatActivity
         FolderListFragment.OnListFragmentInteractionListener,
         FirebaseAuth.AuthStateListener,
         BookGridFragment.OnGridFragmentInteractionListener,
-        SearchView.OnQueryTextListener {
+        SearchView.OnQueryTextListener,
+        FirebaseDatabaseHelper.OnPaidOperationListener {
 
     public static final String EXTRA_USER_ID = "userId";
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -87,6 +95,7 @@ public class MainActivity extends AppCompatActivity
     private static final int RC_BARCODE_CAPTURE = 2;
     private static final String KEY_PARCELABLE_USER = "userKey";
     private static final String KEY_CURRENT_QUERY = "queryKey";
+    private static final int TOTAL_SEARCH_RESULT = 40;
 
     @BindView(R.id.main_coordinator)
     CoordinatorLayout mCoordinatorLayout;
@@ -101,11 +110,10 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.fragment_main_container)
     FrameLayout mFrameLayoutContainer;
     @BindView(R.id.fab)
-    FloatingActionButton fab;
+    FloatingActionButton mFab;
     @BindView(R.id.tabs)
     TabLayout mTabLayout;
 
-    private ViewPagerFragment mRetainedViewPagerFragment;
     private ImageView mImageViewProfile;
     private TextView mTextViewUsername;
     private TextView mTextViewTextEmail;
@@ -151,8 +159,8 @@ public class MainActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener(this);
 
         if (ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
-            fab.setVisibility(View.VISIBLE);
-            fab.setOnClickListener(new View.OnClickListener() {
+            mFab.setVisibility(View.VISIBLE);
+            mFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
@@ -180,6 +188,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public FloatingActionButton getFab(){
+        return mFab;
+    }
 
     @Override
     protected void onPostResume() {
@@ -268,7 +279,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadBooksPageView() {
 
-        mRetainedViewPagerFragment = ViewPagerFragment.newInstance(mUser.getUid());
+        ViewPagerFragment mRetainedViewPagerFragment = ViewPagerFragment.newInstance(mUser.getUid());
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_main_container, mRetainedViewPagerFragment);
@@ -340,23 +351,19 @@ public class MainActivity extends AppCompatActivity
             }
 
             if (resultCode == RESULT_CANCELED) finish();
-        } else if (requestCode == RC_BARCODE_CAPTURE) {
-            if (requestCode == RC_BARCODE_CAPTURE) {
-                if (resultCode == CommonStatusCodes.SUCCESS) {
-                    if (data != null) {
-                        Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
-                        Log.d(TAG, "Barcode read: " + barcode.displayValue);
+        } else if (requestCode == RC_BARCODE_CAPTURE && resultCode == CommonStatusCodes.SUCCESS) {
 
-                        Fragment searchFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, barcode.displayValue);
+            if (data != null) {
+                Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+                Log.d(TAG, "Barcode read: " + barcode.displayValue);
 
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_main_container, searchFragment).commit();
+                Fragment searchFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, barcode.displayValue);
 
-                    } else {
-                        Log.d(TAG, "No barcode captured, intent data is null");
-                    }
-                }
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_main_container, searchFragment).commit();
 
+            } else {
+                Log.d(TAG, "No barcode captured, intent data is null");
             }
         }
     }
@@ -420,21 +427,11 @@ public class MainActivity extends AppCompatActivity
             String query = intent.getStringExtra(SearchManager.QUERY);
 
             mSuggestions.saveRecentQuery(query, null);
-//            mSearchResultFragment.executeSearch(query, null);
             mSearchView.clearFocus();
             mSearchView.setQuery(query, true);
         }
 
     }
-
-//    @Override
-//    public void startActivityForResult(Intent intent, int requestCode) {
-//        if (intent == null) {
-//            intent = new Intent();
-//        }
-//
-//        super.startActivityForResult(intent, requestCode);
-//    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -538,7 +535,6 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
 
             case R.id.action_sign_out:
-
                 mUser = null;
                 AuthUI.getInstance().signOut(this);
                 if (ConnectionUtils.isNetworkConnected(getApplication())) {
@@ -547,6 +543,7 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     relaunchActivity();
                 }
+                return true;
 
             case R.id.action_clear_search:
                 mSuggestions.clearHistory();
@@ -555,11 +552,18 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.action_add_book:
                 DialogUtils.alertDialogAddBook(this,mCoordinatorLayout,mFirebaseDatabaseHelper,mUser.getUid(),mFolderId);
-                return true;
+                break;
+
+            case R.id.action_about:
+                new LibsBuilder()
+                        .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                        .withAboutIconShown(true)
+                        .withAboutVersionShown(true)
+                        .start(this);
+                break;
 
             default:
                 break;
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -568,15 +572,6 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_my_books) {
-
-        } else if (id == R.id.nav_share) {
-
-        }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -644,7 +639,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClickListenerBookGridInteraction(String folderId, Book book, DynamicImageView imageView) {
 
-        mFirebaseDatabaseHelper.insertBookSearchHistory(mUser.getUid(), book); //Insert book
+        //mFirebaseDatabaseHelper.insertBookSearchHistory(mUser.getUid(), book); //Insert book
 
         Intent it = new Intent(this, DetailActivity.class);
         Bundle bundle = new Bundle();
@@ -653,10 +648,16 @@ public class MainActivity extends AppCompatActivity
         bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
         bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, mFolderListComma);
 
-        if (book.getLend() != null) {
-            bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK, true);
+        if (book.getId() != null
+                && folderId != null
+                && folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //For now we just show lend operations to 'My books' section
+
+            bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, true);
+
         } else {
-            bundle.putBoolean(DetailActivity.ARG_FLAG_IS_LENT_BOOK, false);
+
+            bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, false);
+
         }
 
         Gson gson = new Gson();
@@ -683,7 +684,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onClick(View v) {
 
-                        mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), mFolderId, book);
+                        mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), mFolderId, book, (MainActivity) mContext);
 
                     }
                 }).show();
@@ -697,7 +698,7 @@ public class MainActivity extends AppCompatActivity
             Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.added_to_folder),
                     getString(R.string.tab_my_books)), Snackbar.LENGTH_SHORT).show();
 
-            mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book);
+            mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book, this);
             return;
         }
 
@@ -714,14 +715,14 @@ public class MainActivity extends AppCompatActivity
                             @Override
                             public void onClick(View v) {
                                 if (!id.equals(folderId)) {
-                                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book);
+                                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book, (MainActivity) mContext);
                                     mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), id, book);
                                 }
                             }
                         }).show();
 
                 if (!id.equals(folderId)) {
-                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
+                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book, (MainActivity) mContext);
                     mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), folderId, book);
                 }
 
@@ -744,10 +745,7 @@ public class MainActivity extends AppCompatActivity
                 Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.copied_to_folder), name), Snackbar.LENGTH_LONG)
                         .show();
 
-//                if (!id.equals(folderId)) {
-//                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
-//                } //Don't know why I did this...
-                mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book);
+                mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book, (MainActivity) mContext);
 
             }
         });
@@ -771,7 +769,7 @@ public class MainActivity extends AppCompatActivity
 
             mSuggestions.saveRecentQuery(query, null);
 
-            mSearchResultFragment.executeSearch(query, null);
+            mSearchResultFragment.executeSearch(query, TOTAL_SEARCH_RESULT);
             mSearchView.clearFocus();
         }
 
@@ -791,7 +789,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onQueryTextChange(String newText) {
 
         if (newText != null && !newText.isEmpty()) {
-            mSearchResultFragment.executeSearch(newText, null);
+            mSearchResultFragment.executeSearch(newText, TOTAL_SEARCH_RESULT);
         }
 
         return false;
@@ -815,6 +813,21 @@ public class MainActivity extends AppCompatActivity
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
+    @Override
+    public void onInsertBook(boolean success) {
+        if (!success) {
+            DialogUtils.alertDialogUpgradePro(this);
+        }
+    }
+
+    @Override
+    public void onInsertFolder(boolean success) {
+
+        if (!success) {
+            DialogUtils.alertDialogUpgradePro(this);
+        }
+    }
+
     public void setupViewPager(ViewPager viewPager) {
         mTabLayout.setupWithViewPager(viewPager);
         mTabLayout.setVisibility(View.VISIBLE);
@@ -829,7 +842,7 @@ public class MainActivity extends AppCompatActivity
 
         LinearLayout tabLinearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         ((ImageView) tabLinearLayout.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_favorite_border);
-        ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_top_books));
+        ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_my_books));
 
         mTabLayout.getTabAt(0).setCustomView(tabLinearLayout);
 

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -12,14 +14,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+
 import com.quartzodev.buddybook.DetailActivity;
+import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.data.Lend;
 import com.quartzodev.data.VolumeInfo;
-
 
 import java.util.Collections;
 import java.util.Date;
@@ -130,9 +133,9 @@ public class DialogUtils {
                             Folder newFolder = new Folder(urlEditText.getText().toString());
 
                             if (activity instanceof DetailActivity) {
-                                mFirebaseDatabaseHelper.insertFolder(userId, newFolder);
+                                mFirebaseDatabaseHelper.insertFolder(userId, newFolder, (DetailActivity) activity);
                             } else {
-                                mFirebaseDatabaseHelper.insertFolder(userId, newFolder);
+                                mFirebaseDatabaseHelper.insertFolder(userId, newFolder, (MainActivity) activity);
                             }
 
                             dialog.dismiss();
@@ -163,17 +166,17 @@ public class DialogUtils {
                 .setView(view)
                 .create();
 
-        final EditText nameEdtText = (EditText) view.findViewById(R.id.edittext_receiver_name);
+        final EditText nameEdtText = view.findViewById(R.id.edittext_receiver_name);
         nameEdtText.setSingleLine(true);
         nameEdtText.setContentDescription(activity.getString(R.string.receiver_name_cd));
 
-        final TextInputLayout nameInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_input_layout_name);
+        final TextInputLayout nameInputLayout = view.findViewById(R.id.dialog_input_layout_name);
 
         final EditText emailEdtText = view.findViewById(R.id.edittext_receiver_email);
         emailEdtText.setSingleLine(true);
         emailEdtText.setContentDescription(activity.getString(R.string.receiver_email_cd));
 
-        final TextInputLayout emailInputLayout = (TextInputLayout) view.findViewById(R.id.dialog_input_layout_email);
+        final TextInputLayout emailInputLayout = view.findViewById(R.id.dialog_input_layout_email);
 
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
 
@@ -190,8 +193,11 @@ public class DialogUtils {
 
                             nameInputLayout.setError(activity.getString(R.string.lend_name_empty));
 
-                        } else if (!emailEdtText.getText().toString().isEmpty() &&
-                                !isValidEmail(emailEdtText.getText().toString())) {
+//                        } else if (emailEdtText.getText().toString().isEmpty()) {
+//
+//                            emailInputLayout.setError(activity.getString(R.string.lend_email_empty));
+
+                        } else if (!emailEdtText.getText().toString().isEmpty() && !isValidEmail(emailEdtText.getText().toString())) {
                             emailInputLayout.setError(activity.getString(R.string.lend_email_invalid));
                         } else {
 
@@ -207,7 +213,7 @@ public class DialogUtils {
                                 DetailActivity detailActivity = ((DetailActivity) activity);
 
                                 if (detailActivity != null) {
-                                    detailActivity.loadBook();
+                                    detailActivity.loadBook(book);
                                 }
                             } catch (Exception ex) {
                             }
@@ -251,7 +257,7 @@ public class DialogUtils {
                         mFirebaseDatabaseHelper.updateBook(userId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, updatedBook);
 
                         try {
-                            ((DetailActivity) activity).loadBook();
+                            ((DetailActivity) activity).loadBook(book);
                         } catch (Exception ex) {
                         }
                     }
@@ -262,6 +268,32 @@ public class DialogUtils {
 
         dialog.show();
 
+    }
+
+    public static void alertDialogUpgradePro(final Activity activity) {
+
+        final AlertDialog dialog = new AlertDialog.Builder(activity)
+                .setTitle(R.string.dialog_upgrade)
+                .setMessage(R.string.dialog_upgrade_message)
+                .setPositiveButton(R.string.dialog_btn_updgate, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        final String appPackageName = activity.getPackageName(); // getPackageName() from Context or Activity object
+                        try {
+                            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                        } catch (android.content.ActivityNotFoundException anfe) {
+                            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                        }
+
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(activity.getString(R.string.dialog_btn_cancel), null)
+                .setCancelable(true)
+                .create();
+
+        dialog.show();
     }
 
     public static void alertDialogAddBook(final Activity activity,
@@ -275,11 +307,14 @@ public class DialogUtils {
         View view = inflater.inflate(R.layout.dialog_add_book, null);
 
         final EditText edtTitle = view.findViewById(R.id.add_book_title);
+        edtTitle.setSingleLine(true);
         final EditText edtAuthor = view.findViewById(R.id.add_book_author);
+        edtAuthor.setSingleLine(true);
         final EditText edtPublisher = view.findViewById(R.id.add_book_publisher);
+        edtPublisher.setSingleLine(true);
         final TextInputLayout layoutTitle =  view.findViewById(R.id.layout_title);
-        final TextInputLayout layoutAuthor =  view.findViewById(R.id.layout_author);
-        final TextInputLayout layoutPublisher =  view.findViewById(R.id.layout_publisher);
+//        final TextInputLayout layoutAuthor =  view.findViewById(R.id.layout_author);
+//        final TextInputLayout layoutPublisher =  view.findViewById(R.id.layout_publisher);
 
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
@@ -316,11 +351,13 @@ public class DialogUtils {
                         if(folderId == null){
                             mFirebaseDatabaseHelper.insertBookFolder(userId,
                                     FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,
-                                    customBookApi);
+                                    customBookApi,
+                                    (MainActivity) activity);
                         }else{
                             mFirebaseDatabaseHelper.insertBookFolder(userId,
                                     folderId,
-                                    customBookApi);
+                                    customBookApi,
+                                    (MainActivity) activity);
                         }
 
                         Snackbar.make(coordinatorLayout, activity.getText(R.string.success_add_book), Snackbar.LENGTH_SHORT).show();

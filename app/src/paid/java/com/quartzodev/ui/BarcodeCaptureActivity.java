@@ -78,8 +78,12 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     private CameraSourcePreview mPreview;
     private GraphicOverlay<BarcodeGraphic> mGraphicOverlay;
     // helper objects for detecting taps and pinches.
+
     private ScaleGestureDetector scaleGestureDetector;
+
     private GestureDetector gestureDetector;
+
+    private Barcode mBarcode;
 
     /**
      * Initializes the UI and creates the detector pipeline.
@@ -117,6 +121,13 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         Snackbar.make(mGraphicOverlay, getString(R.string.point_bar_code),
                 Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    private void sendResultMainActivity() {
+        Intent data = new Intent();
+        data.putExtra(BarcodeObject, mBarcode);
+        setResult(CommonStatusCodes.SUCCESS, data);
+        finish();
     }
 
     /**
@@ -387,12 +398,9 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     @Override
     public void onBarcodeCreated(Barcode barcode) {
 
+        mBarcode = barcode;
         vibrateDetection();
 
-        Intent data = new Intent();
-        data.putExtra(BarcodeObject, barcode);
-        setResult(CommonStatusCodes.SUCCESS, data);
-        finish();
     }
 
     private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -455,4 +463,5 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
             mCameraSource.doZoom(detector.getScaleFactor());
         }
     }
+
 }

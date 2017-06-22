@@ -37,25 +37,40 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     private static final String TAG = SearchResultFragment.class.getSimpleName();
 
     private static final int LOADER_ID_SEARCH = 3;
+
     private static final String ARG_FOLDER_ID = "mFolderId";
+
     private static final String ARG_USER_ID = "mUserId";
+
     private static final String ARG_ISBN = "mIsbn";
+
     private static final String ARG_QUERY = "query";
+
     private static final String ARG_MAX_RESULT = "maxResult";
 
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
 
     private BookGridAdapter mAdapter;
+
     private String mFolderId;
+
     private String mISBN;
+
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
+
     private LoaderManager mLoadManager;
+
     private Context mContext;
+
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
+
     private String mUserId;
+
     private boolean mFlagLoadingLocal;
+
     private boolean mFlagLoadingRemote;
+
     private String mQuery;
 
     public static SearchResultFragment newInstance(String userId, String folderId, String isbn) {
@@ -248,7 +263,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoaderReset(Loader<List<Book>> loader) {
-        return;
     }
 
     @Override
