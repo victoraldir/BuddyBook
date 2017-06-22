@@ -1,0 +1,7 @@
+<resources>
+
+    <dimen name="margin_details">128dp</dimen>
+
+    <integer name="list_column_count">8</integer>
+
+</resources>

@@ -1,4 +1,5 @@
 <resources>
     <integer name="list_column_count">5</integer>
     <dimen name="expanded_toolbar_height">48dp</dimen>
+    <dimen name="margin_details">18dp</dimen>
 </resources>
