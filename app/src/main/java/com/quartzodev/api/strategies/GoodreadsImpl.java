@@ -68,7 +68,6 @@ public class GoodreadsImpl implements IQuery {
         Book book = new Book();
 
         book.setIdProvider(bookApi.getId());
-        //book.setId(bookApi.getId()); //TODO remove this. It has to be the firebase hash
 
         VolumeInfo volumeInfo = new VolumeInfo();
 
@@ -87,6 +86,13 @@ public class GoodreadsImpl implements IQuery {
             }
 
             volumeInfo.setAuthors(authors);
+        }
+
+        if(bookApi.getIsbn() != null){
+            volumeInfo.setIsbn10(bookApi.getIsbn());
+        }
+        if(bookApi.getIsbn13() != null){
+            volumeInfo.setIsbn13(bookApi.getIsbn13());
         }
 
         volumeInfo.setTitle(bookApi.getTitle());

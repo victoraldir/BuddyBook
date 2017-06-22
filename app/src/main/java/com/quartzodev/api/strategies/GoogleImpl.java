@@ -2,6 +2,7 @@ package com.quartzodev.api.strategies;
 
 import com.quartzodev.api.entities.google.BookApi;
 import com.quartzodev.api.entities.google.BookResponse;
+import com.quartzodev.api.entities.google.IndustryIdentifier;
 import com.quartzodev.api.interfaces.IGoogleBookAPI;
 import com.quartzodev.api.interfaces.IQuery;
 import com.quartzodev.buddybook.BuildConfig;
@@ -126,6 +127,16 @@ public class GoogleImpl implements IQuery{
                 imageLink.setSmallThumbnail(bookApi.getVolumeInfo().getImageLink().getSmallThumbnail());
                 imageLink.setThumbnail(bookApi.getVolumeInfo().getImageLink().getThumbnail());
                 volumeInfo.setImageLink(imageLink);
+            }
+
+            if(bookApi.getVolumeInfo().getIndustryIdentifiers() != null){
+                for(IndustryIdentifier i: bookApi.getVolumeInfo().getIndustryIdentifiers()){
+                    if(i.getType().equals("ISBN_10")){
+                        volumeInfo.setIsbn10(i.getIdentifier());
+                    }else{
+                        volumeInfo.setIsbn13(i.getIdentifier());
+                    }
+                }
             }
 
             book.setVolumeInfo(volumeInfo);

@@ -27,6 +27,8 @@ public class VolumeInfo {
     public ImageLink imageLink;
     @SerializedName("searchField")
     public String searchField;
+    @SerializedName("industryIdentifiers")
+    public List<IndustryIdentifier> industryIdentifiers;
 
     public String getSearchField() {
 
@@ -89,5 +91,17 @@ public class VolumeInfo {
 
     public void setImageLink(ImageLink imageLink) {
         this.imageLink = imageLink;
+    }
+
+    public void setSearchField(String searchField) {
+        this.searchField = searchField;
+    }
+
+    public List<IndustryIdentifier> getIndustryIdentifiers() {
+        return industryIdentifiers;
+    }
+
+    public void setIndustryIdentifiers(List<IndustryIdentifier> industryIdentifiers) {
+        this.industryIdentifiers = industryIdentifiers;
     }
 }

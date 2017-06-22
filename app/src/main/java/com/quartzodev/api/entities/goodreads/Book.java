@@ -25,6 +25,12 @@ public class Book {
     @Element(name ="small_image_url")
     private String smallImageUrl;
 
+    @Element(name ="isbn", required = false)
+    private String isbn;
+
+    @Element(name ="isbn13", required = false)
+    private String isbn13;
+
     @Element(name ="description", required = false)
     private String description;
 
@@ -109,6 +115,22 @@ public class Book {
 
     public Integer getMonth() {
         return month;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public String getIsbn13() {
+        return isbn13;
+    }
+
+    public void setIsbn13(String isbn13) {
+        this.isbn13 = isbn13;
     }
 
     public void setMonth(Integer month) {
