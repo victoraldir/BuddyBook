@@ -195,6 +195,8 @@ public class BookGridFragment extends Fragment implements
                     Folder folder = dataSnapshot.getValue(Folder.class);
                     if(folder.getBooks() != null && folder.getBooks().values() != null) {
                         mAdapter.swap(new ArrayList<>(folder.getBooks().values()));
+                    }else{
+                        mAdapter.swap(new ArrayList<Book>());
                     }
 
                     setLoading(false);
@@ -208,6 +210,8 @@ public class BookGridFragment extends Fragment implements
                     Folder folder = dataSnapshot.getValue(Folder.class);
                     if(folder.getBooks() != null && folder.getBooks().values() != null) {
                         mAdapter.swap(new ArrayList<>(folder.getBooks().values()));
+                    }else{
+                        mAdapter.swap(new ArrayList<Book>());
                     }
 
                     setLoading(false);
