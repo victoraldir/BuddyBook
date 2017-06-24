@@ -11,6 +11,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.ShareActionProvider;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -80,23 +82,17 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @BindView(R.id.card_book_borrowed)
     @Nullable
     CardView mCardViewBookBorrowed;
-    @BindView(R.id.card_book_description)
-    @Nullable
-    CardView mCardViewBookDescription;
     @BindView(R.id.card_actions)
     CardView mCardViewActions;
-
     private String mBookJson;
     private String mUserId;
     private String mFolderListComma;
     private Context mContext;
     private Book mBookSelected;
-    private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private Boolean mFlagLendOp;
     private OnDetailInteractionListener mListener;
 
     public DetailActivityFragment() {
-        mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
         setHasOptionsMenu(true);
     }
 
@@ -129,11 +125,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
         View view;
 
-        if (mFlagLendOp) {
-            view = inflater.inflate(R.layout.fragment_detail_lend, container, false);
-        } else {
-            view = inflater.inflate(R.layout.fragment_detail, container, false);
-        }
+        view = inflater.inflate(R.layout.fragment_detail, container, false);
 
         ButterKnife.bind(this, view);
 
@@ -185,7 +177,8 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             mPublisher.setText(bookApi.getVolumeInfo().getPublisher());
 
             if (bookApi.getVolumeInfo().getDescription() != null && !bookApi.getVolumeInfo().getDescription().isEmpty()) {
-                mDescription.setText(bookApi.getVolumeInfo().getDescription());
+                Spanned bodyContent = fromHtml(bookApi.getVolumeInfo().getDescription());
+                mDescription.setText(bodyContent);
             } else {
                 mDescription.setText(getString(R.string.no_description));
             }
@@ -203,6 +196,17 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
         }
 
+    }
+
+    @SuppressWarnings("deprecation")
+    public static Spanned fromHtml(String html){
+        Spanned result;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            result = Html.fromHtml(html,Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            result = Html.fromHtml(html);
+        }
+        return result;
     }
 
     private void loadToolbar(final Book book){
@@ -256,6 +260,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             mTextLentDate.setText(String.format(getString(R.string.lent_day_ago), days.getDays()));
             mBtnLendBook.setImageResource(R.drawable.ic_assignment_return_black_24dp);
             mBtnLendBook.setContentDescription(getString(R.string.btn_return_book_cd));
+            mBtnLendBook.setVisibility(View.VISIBLE);
             mCardViewBookBorrowed.setVisibility(View.VISIBLE);
 
             mBtnLendBook.setOnClickListener(new View.OnClickListener() {
@@ -269,6 +274,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
             mBtnLendBook.setImageResource(R.drawable.ic_card_giftcard_black_24dp);
             mBtnLendBook.setContentDescription(getString(R.string.btn_lend_book_cd));
+            mBtnLendBook.setVisibility(View.VISIBLE);
             mCardViewBookBorrowed.setVisibility(View.GONE);
 
             mBtnLendBook.setOnClickListener(new View.OnClickListener() {

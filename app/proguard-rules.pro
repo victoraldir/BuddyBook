@@ -50,11 +50,6 @@
     @org.simpleframework.xml.* *;
 }
 
--keep class .R
--keep class **.R$* {
-    <fields>;
-}
-
 #glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {

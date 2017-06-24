@@ -2,4 +2,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_margin_bottom">16dp</dimen>
+    <dimen name="content_padding_bottom_adview">0dp</dimen>
 </resources>

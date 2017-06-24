@@ -43,6 +43,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.firebase.auth.FirebaseAuth;
@@ -148,15 +150,17 @@ public class MainActivity extends AppCompatActivity
         mContext = this;
 
         LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
-        mImageViewProfile = (ImageView) linearLayout.findViewById(R.id.main_imageview_user_photo);
-        mTextViewUsername = (TextView) linearLayout.findViewById(R.id.main_textview_username);
-        mTextViewTextEmail = (TextView) linearLayout.findViewById(R.id.main_textview_user_email);
-        mFolderListContainer = (FrameLayout) linearLayout.findViewById(R.id.container_nav_header);
+        mImageViewProfile = linearLayout.findViewById(R.id.main_imageview_user_photo);
+        mTextViewUsername = linearLayout.findViewById(R.id.main_textview_username);
+        mTextViewTextEmail = linearLayout.findViewById(R.id.main_textview_user_email);
+        mFolderListContainer = linearLayout.findViewById(R.id.container_nav_header);
 
         //Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
         mNavigationView.setNavigationItemSelectedListener(this);
+
+        initAdView();
 
         if (ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
             mFab.setVisibility(View.VISIBLE);
@@ -190,6 +194,13 @@ public class MainActivity extends AppCompatActivity
 
     public FloatingActionButton getFab(){
         return mFab;
+    }
+
+    private void initAdView(){
+        //Ad main
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override

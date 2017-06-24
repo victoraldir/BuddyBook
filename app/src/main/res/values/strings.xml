@@ -80,14 +80,22 @@
 
     <string name="receiver_name_cd">Receiver name</string>
 
-    <string name="ad_app_id">ca-app-pub-6526073251385305~4440436428</string>
+    <string name="ad_app_id" translatable="false">ca-app-pub-6526073251385305~4440436428</string>
     <string name="ad_inter_scanner_activity">ca-app-pub-6526073251385305/5917169627</string>
-    <string name="ad_bottom_details">ca-app-pub-6526073251385305/7915280029</string>
-    <string name="ad_bottom_books_main">ca-app-pub-6526073251385305/7393902820</string>
-    <string name="ad_unit_test">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="ad_bottom_details" translatable="false">ca-app-pub-6526073251385305/7915280029</string>
+    <string name="ad_bottom_books_main" translatable="false" >ca-app-pub-6526073251385305/7393902820</string>
 
-    <string name="aboutLibraries_description_showIcon">true</string>
-    <string name="aboutLibraries_description_showVersion">true</string>
+    <!-- For debug
+    <string name="ad_app_id" translatable="false">@string/ad_unit_test</string>
+    <string name="ad_inter_scanner_activity">@string/ad_unit_test</string>
+    <string name="ad_bottom_details" translatable="false">@string/ad_unit_test</string>
+    <string name="ad_bottom_books_main" translatable="false" >@string/ad_unit_test</string>
+    -->
+
+    <string name="ad_unit_test" translatable="false" >ca-app-pub-3940256099942544/1033173712</string>
+
+    <string name="aboutLibraries_description_showIcon" translatable="false" >true</string>
+    <string name="aboutLibraries_description_showVersion" translatable="false">true</string>
     <string name="aboutLibraries_description_text">
 
          <![CDATA[
@@ -155,7 +163,7 @@
     <string name="folder_empty_hint">You can get started by searching for a book or scaning a bar code</string>
     <string name="btn_search_hint">Search</string>
     <string name="search_empty">Nothing to show</string>
-    <string name="search_empty_hint">Type a title, author or ISBN</string>
+    <string name="search_empty_hint">Type a title, author, or use the ISBN searcher (barcode)</string>
     <string name="no_internet_search">You are not connected on the internet.</string>
     <string name="insert_success">Book inserted successfully</string>
     <string name="no_description">No description available for this book</string>

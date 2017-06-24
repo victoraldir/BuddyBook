@@ -65,8 +65,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     private Context mContext;
 
-    private AdView mAdView;
-
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
     private String mUserId;
@@ -93,7 +91,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_search_grid_book, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_grid_book, container, false);
 
         ButterKnife.bind(this, rootView);
 
@@ -122,11 +120,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         mContext = getContext();
 
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
-
-        mAdView = (AdView) rootView.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-
 
         return rootView;
     }

@@ -9,9 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.fragments.DetailActivityFragment;
+import com.quartzodev.utils.Constants;
 import com.quartzodev.utils.DialogUtils;
 
 import butterknife.BindView;
@@ -43,6 +46,9 @@ public class DetailActivity extends AppCompatActivity implements
 
         ButterKnife.bind(this);
 
+        if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE))
+            initAdView();
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -61,7 +67,13 @@ public class DetailActivity extends AppCompatActivity implements
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.detail_container, newFragment).commit();
 
+    }
 
+    private void initAdView(){
+        //Ad main
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override

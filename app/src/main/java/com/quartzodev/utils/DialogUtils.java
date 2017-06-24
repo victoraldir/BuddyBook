@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-
 import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
@@ -279,7 +278,7 @@ public class DialogUtils {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        final String appPackageName = activity.getPackageName(); // getPackageName() from Context or Activity object
+                        final String appPackageName = "com.quartzodev.buddybook.paid"; // getPackageName() from Context or Activity object
                         try {
                             activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
                         } catch (android.content.ActivityNotFoundException anfe) {

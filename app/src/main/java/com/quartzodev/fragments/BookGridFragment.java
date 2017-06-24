@@ -13,8 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -152,10 +150,6 @@ public class BookGridFragment extends Fragment implements
 
         updateToolbarTitle();
 
-        AdView mAdView = (AdView) rootView.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-
         return rootView;
     }
 
@@ -265,7 +259,7 @@ public class BookGridFragment extends Fragment implements
             if (flag) {
                 container.findViewById(R.id.fragment_grid_message).setVisibility(View.GONE);
                 container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.VISIBLE);
-                container.findViewById(R.id.recycler_view_books).setVisibility(View.INVISIBLE);
+                container.findViewById(R.id.recycler_view_books).setVisibility(View.GONE);
             } else {
                 container.findViewById(R.id.grid_book_progress_bar).setVisibility(View.GONE);
                 if (mAdapter.getItemCount() == 0) {

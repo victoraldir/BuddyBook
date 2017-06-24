@@ -7,7 +7,7 @@ android {
         applicationId "com.quartzodev.buddybook"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 22
+        versionCode 23
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -95,7 +95,7 @@ dependencies {
     //Joda
     compile 'net.danlew:android.joda:2.9.9'
     //Admobi
-    freeCompile 'com.google.android.gms:play-services-ads:11.0.1'
+    compile 'com.google.android.gms:play-services-ads:11.0.1'
     //Calligraphy
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 
