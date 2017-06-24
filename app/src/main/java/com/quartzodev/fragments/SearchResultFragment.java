@@ -95,11 +95,10 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
         mAdapter = new BookGridAdapter(getActivity(),
                 new HashSet<Book>(),
-                mFolderId,
                 mListener,
-                BookGridFragment.FLAG_SEARCH,
-                null);
+                BookGridFragment.FLAG_SEARCH);
 
+        mAdapter.setFolderId(mFolderId);
         mRecyclerView.setAdapter(mAdapter);
 
         int columnCount = getResources().getInteger(R.integer.list_column_count);

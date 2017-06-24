@@ -49,14 +49,12 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
      */
     private int lastPosition = -1;
 
-    public BookGridAdapter(Context mContext, Set<Book> bookList,
-                           String folderId,
+    public BookGridAdapter(Context mContext,
+                           Set<Book> bookList,
                            BookGridFragment.OnGridFragmentInteractionListener listener,
-                           int type,
-                           BookGridFragment parent) {
+                           int type) {
         this.mContext = mContext;
         this.mBookList = bookList;
-        this.mFolderId = folderId;
         this.mListener = listener;
         mType = type;
     }
