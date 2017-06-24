@@ -178,7 +178,8 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:layout_margin="8dp"
+            >
 
             <TextView android:id="@+id/detail_textview_description"
                 style="?android:attr/textAppearanceMedium"
@@ -190,8 +191,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_horizontal_margin"
-                android:paddingBottom="@dimen/activity_horizontal_margin"/>
-
+                android:paddingBottom="@dimen/content_details_padding_bottom_adview"/>
 
         </android.support.v7.widget.CardView>
 

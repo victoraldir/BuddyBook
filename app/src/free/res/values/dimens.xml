@@ -3,4 +3,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_margin_bottom">54dp</dimen>
     <dimen name="content_padding_bottom_adview">64dp</dimen>
+    <dimen name="content_details_padding_bottom_adview">64dp</dimen>
 </resources>
