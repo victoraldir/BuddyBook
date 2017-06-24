@@ -5,6 +5,7 @@ package com.quartzodev.data;
  */
 
 import android.support.annotation.Keep;
+
 import java.util.List;
 
 /**

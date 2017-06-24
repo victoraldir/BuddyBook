@@ -1,11 +1,7 @@
 package com.quartzodev.api.strategies;
 
 import com.quartzodev.api.entities.goodreads.GoodreadsResponse;
-import com.quartzodev.api.entities.google.BookApi;
-import com.quartzodev.api.entities.google.BookResponse;
-import com.quartzodev.api.interfaces.IBaseAPI;
 import com.quartzodev.api.interfaces.IGoodreadsAPI;
-import com.quartzodev.api.interfaces.IGoogleBookAPI;
 import com.quartzodev.api.interfaces.IQuery;
 import com.quartzodev.buddybook.BuildConfig;
 import com.quartzodev.data.Book;

@@ -16,7 +16,6 @@ import com.bumptech.glide.Glide;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
-import com.quartzodev.data.Folder;
 import com.quartzodev.fragments.BookGridFragment;
 import com.quartzodev.views.DynamicImageView;
 

@@ -3,8 +3,6 @@ package com.quartzodev.api.interfaces;
 import android.support.annotation.Keep;
 
 import com.quartzodev.api.entities.goodreads.GoodreadsResponse;
-import com.quartzodev.api.entities.google.BookResponse;
-
 
 import retrofit2.Call;
 import retrofit2.http.GET;

@@ -1,7 +1,5 @@
 package com.quartzodev.data;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by victoraldir on 14/06/2017.
  */

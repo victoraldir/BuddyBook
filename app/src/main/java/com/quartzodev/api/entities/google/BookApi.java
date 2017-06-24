@@ -3,7 +3,6 @@ package com.quartzodev.api.entities.google;
 import android.support.annotation.Keep;
 
 import com.google.gson.annotations.SerializedName;
-import com.quartzodev.data.Lend;
 
 /**
  * Created by victoraldir on 23/03/2017.

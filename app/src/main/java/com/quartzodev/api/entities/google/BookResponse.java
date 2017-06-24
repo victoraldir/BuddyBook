@@ -1,7 +1,6 @@
 package com.quartzodev.api.entities.google;
 
 import com.google.gson.annotations.SerializedName;
-import com.quartzodev.data.Book;
 
 import java.util.List;
 
