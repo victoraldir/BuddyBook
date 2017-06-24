@@ -401,6 +401,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         mBarcode = barcode;
         vibrateDetection();
 
+        sendResultMainActivity();
     }
 
     private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -463,5 +464,4 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
             mCameraSource.doZoom(detector.getScaleFactor());
         }
     }
-
 }
