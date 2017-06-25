@@ -1,7 +1,4 @@
 <resources>
-
-    <dimen name="margin_details">128dp</dimen>
-
-    <integer name="list_column_count">8</integer>
-
+    <dimen name="margin_details">112dp</dimen>
+    <integer name="list_column_count">4</integer>
 </resources>
