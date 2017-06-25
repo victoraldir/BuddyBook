@@ -78,6 +78,7 @@ public class BookGridFragment extends Fragment implements
 
         mUserId = userId;
         mFolderId = folderId;
+        mAdapter.setFolderId(mFolderId);
         mFlag = flag;
         mFolderName = folderName;
 
@@ -131,9 +132,8 @@ public class BookGridFragment extends Fragment implements
 
         mAdapter = new BookGridAdapter(getActivity(),
                 new HashSet<Book>(),
-                mFolderId, mListener,
-                mFlag,
-                this);
+                mListener,
+                mFlag);
 
         mRecyclerView.setAdapter(mAdapter);
 

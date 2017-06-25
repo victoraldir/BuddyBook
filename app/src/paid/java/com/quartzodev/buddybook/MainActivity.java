@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawer;
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar mToolbar;
     @BindView(R.id.main_message)
     TextView mTextViewMessage;
     @BindView(R.id.fragment_main_container)
@@ -135,7 +136,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
+        setSupportActionBar(mToolbar);
 
         mSuggestions = new SearchRecentSuggestions(this,
                 SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
@@ -170,7 +171,7 @@ public class MainActivity extends AppCompatActivity
             });
 
             ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, mDrawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                    this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
             mDrawer.setDrawerListener(toggle);
             toggle.syncState();
         }
@@ -667,12 +668,19 @@ public class MainActivity extends AppCompatActivity
             startActivity(it);
         }
 
+    }
 
+    private void showToolbar(){
+        if (mToolbar.getParent() instanceof AppBarLayout){
+            ((AppBarLayout)mToolbar.getParent()).setExpanded(true,true);
+        }
     }
 
     @Override
     public void onDeleteBookClickListener(final String mFolderId, final Book book) {
         mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), mFolderId, book);
+
+        showToolbar();
 
         Snackbar.make(mCoordinatorLayout, getString(R.string.deleted_folder), Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.redo), new View.OnClickListener() {
