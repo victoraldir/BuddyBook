@@ -1,6 +1,6 @@
 package com.quartzodev.app;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
 import com.quartzodev.buddybook.R;
 
@@ -12,7 +12,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
  * Created by victoraldir on 21/05/2017.
  */
 
-public class App extends Application {
+public class App extends MultiDexApplication {
 
     @Override
     public void onCreate() {
