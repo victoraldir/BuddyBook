@@ -6,8 +6,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.ViewGroup;
 
-import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.fragments.BookGridFragment;
+
+import java.util.List;
 
 /**
  * Created by victoraldir on 24/03/2017.
@@ -15,14 +16,11 @@ import com.quartzodev.fragments.BookGridFragment;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    public static final int NUM_PAGES = 2;
+    private List<BookGridFragment> mBookGridFragments;
 
-    private String mUserId;
-
-    public ViewPagerAdapter(FragmentManager fm, String userId) {
+    public ViewPagerAdapter(FragmentManager fm, List<BookGridFragment> bookGridFragments) {
         super(fm);
-
-        this.mUserId = userId;
+        this.mBookGridFragments = bookGridFragments;
     }
 
     @Override
@@ -46,32 +44,19 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public int getItemPosition(Object object) {
-        return POSITION_NONE;
+        return mBookGridFragments.indexOf(object);
     }
 
     @Override
     public Fragment getItem(int position) {
-
-        String folderId = position == 1 ? FirebaseDatabaseHelper.REF_POPULAR_FOLDER : FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER;
-
-        return BookGridFragment.newInstanceCustomFolder(mUserId, folderId, null, position);
+        return mBookGridFragments.get(position);
     }
 
     @Override
     public int getCount() {
-        return NUM_PAGES;
+        return mBookGridFragments.size();
     }
 
-//    @Override
-//    public CharSequence getPageTitle(int position) {
-//
-//        if (position == 1) {
-//            return mContext.getResources().getString(R.string.tab_top_books);
-//        } else {
-//            return mContext.getResources().getString(R.string.tab_my_books);
-//        }
-//
-//    }
 
 }
 

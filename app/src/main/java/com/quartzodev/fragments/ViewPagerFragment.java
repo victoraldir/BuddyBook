@@ -11,6 +11,10 @@ import android.view.ViewGroup;
 import com.quartzodev.adapters.ViewPagerAdapter;
 import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.FirebaseDatabaseHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,28 +25,42 @@ import butterknife.ButterKnife;
 
 public class ViewPagerFragment extends Fragment {
 
-    private static final String ARG_USER_ID = "userId";
+    private static final String TAG = ViewPagerFragment.class.getSimpleName();
+
     @BindView(R.id.main_pager)
     ViewPager mViewPager;
 
-    private String mUserId;
-
-    public static ViewPagerFragment newInstance(String userId) {
-        Bundle arguments = new Bundle();
-        arguments.putString(ARG_USER_ID, userId);
-        ViewPagerFragment fragment = new ViewPagerFragment();
-        fragment.setArguments(arguments);
-        return fragment;
+    public ViewPagerFragment(){
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
-        if (getArguments().containsKey(ARG_USER_ID)) {
-            mUserId = getArguments().getString(ARG_USER_ID);
-        }
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        View rootView = inflater.inflate(R.layout.fragment_view_pager, container, false);
+
+        ButterKnife.bind(this, rootView);
+
+        ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getListFragments());
+        mViewPager.setAdapter(mViewPagerAdapter);
+
+        return rootView;
+    }
+
+
+    private List<BookGridFragment> getListFragments(){
+
+        List<BookGridFragment> list = new ArrayList<>();
+        list.add(BookGridFragment.newInstance(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,
+                R.menu.menu_my_books));
+        list.add(BookGridFragment.newInstance(FirebaseDatabaseHelper.REF_POPULAR_FOLDER,
+                R.menu.menu_search_result));
+
+        return list;
     }
 
     @Override
@@ -69,28 +87,11 @@ public class ViewPagerFragment extends Fragment {
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-    }
-
-    private void loadBooksPageView() {
-        ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), mUserId);
-        mViewPager.setAdapter(mViewPagerAdapter);
-        mViewPagerAdapter.notifyDataSetChanged();
-    }
-
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_view_pager, container, false);
-
-        ButterKnife.bind(this, rootView);
-
-        loadBooksPageView();
-
-        return rootView;
     }
 
 }

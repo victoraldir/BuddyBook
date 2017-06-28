@@ -10,6 +10,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -153,7 +154,8 @@ public class DialogUtils {
                                            final CoordinatorLayout coordinatorLayout,
                                            final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
                                            final String userId,
-                                           final Book book) {
+                                           final Book book,
+                                           final MenuItem menuItem) {
 
         LayoutInflater inflater = activity.getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_lend_book, null);
@@ -192,10 +194,6 @@ public class DialogUtils {
 
                             nameInputLayout.setError(activity.getString(R.string.lend_name_empty));
 
-//                        } else if (emailEdtText.getText().toString().isEmpty()) {
-//
-//                            emailInputLayout.setError(activity.getString(R.string.lend_email_empty));
-
                         } else if (!emailEdtText.getText().toString().isEmpty() && !isValidEmail(emailEdtText.getText().toString())) {
                             emailInputLayout.setError(activity.getString(R.string.lend_email_invalid));
                         } else {
@@ -205,6 +203,10 @@ public class DialogUtils {
                                     new Date());
 
                             book.setLend(lend);
+
+                            if(menuItem != null){
+                                menuItem.setTitle(activity.getString(R.string.action_return_lend));
+                            }
 
                             mFirebaseDatabaseHelper.updateBook(userId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, book);
 
@@ -220,6 +222,7 @@ public class DialogUtils {
                             dialog.dismiss();
 
                             Snackbar.make(coordinatorLayout, activity.getText(R.string.success_lend_book), Snackbar.LENGTH_SHORT).show();
+
 
                         }
                     }
