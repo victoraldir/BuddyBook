@@ -62,6 +62,7 @@ import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.data.User;
 import com.quartzodev.fragments.BookGridFragment;
+import com.quartzodev.fragments.DetailActivityFragment;
 import com.quartzodev.fragments.FolderListFragment;
 import com.quartzodev.fragments.SearchResultFragment;
 import com.quartzodev.fragments.ViewPagerFragment;
@@ -85,7 +86,8 @@ public class MainActivity extends AppCompatActivity
         FirebaseAuth.AuthStateListener,
         BookGridFragment.OnGridFragmentInteractionListener,
         SearchView.OnQueryTextListener,
-        FirebaseDatabaseHelper.OnPaidOperationListener {
+        FirebaseDatabaseHelper.OnPaidOperationListener,
+        DetailActivityFragment.OnDetailInteractionListener{
 
     public static final String EXTRA_USER_ID = "userId";
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -132,6 +134,7 @@ public class MainActivity extends AppCompatActivity
     private SearchRecentSuggestions mSuggestions;
     private Fragment retainedFragment;
     private boolean flagCreateFragment = true;
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,9 +142,19 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        if(savedInstanceState != null){
+        if(findViewById(R.id.detail_container) != null) {
+            mTwoPane = true;
+        }
+
+        if(savedInstanceState == null){
+            init();
+        }else{
             flagCreateFragment = false;
         }
+
+    }
+
+    private void init(){
 
         setSupportActionBar(mToolbar);
 
@@ -625,38 +638,59 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClickListenerBookGridInteraction(String folderId, Book book, DynamicImageView imageView) {
 
-        Intent it = new Intent(this, DetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(DetailActivity.ARG_BOOK_ID, book.getId());
-        bundle.putString(DetailActivity.ARG_FOLDER_ID, folderId);
-        bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
-        bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, mFolderListComma);
+        if (mTwoPane) {
 
-        if (book.getId() != null
-                && folderId != null
-                && folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //For now we just show lend operations to 'My books' section
+            boolean flagLendOp = false;
 
-            bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, true);
+            if (book.getId() != null
+                    && folderId != null
+                    && folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //For now we just show lend operations to 'My books' section
 
-        } else {
+                flagLendOp = true;
 
-            bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, false);
+            }
+
+            Gson gson = new Gson();
+            DetailActivityFragment newFragment = DetailActivityFragment.newInstance(mUser.getUid(), book.getId(), folderId, mFolderListComma, gson.toJson(book), flagLendOp);
+
+            getSupportFragmentManager().popBackStackImmediate();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.detail_container, newFragment).commit();
+
+        }else {
+
+            Intent it = new Intent(this, DetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(DetailActivity.ARG_BOOK_ID, book.getId());
+            bundle.putString(DetailActivity.ARG_FOLDER_ID, folderId);
+            bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
+            bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, mFolderListComma);
+
+            if (book.getId() != null
+                    && folderId != null
+                    && folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //For now we just show lend operations to 'My books' section
+
+                bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, true);
+
+            } else {
+
+                bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, false);
+
+            }
+
+            Gson gson = new Gson();
+            bundle.putString(DetailActivity.ARG_BOOK_JSON, gson.toJson(book));
+
+            it.putExtras(bundle);
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(it, ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this, imageView, imageView.getTransitionName()).toBundle());
+            } else {
+                startActivity(it);
+            }
 
         }
-
-        Gson gson = new Gson();
-        bundle.putString(DetailActivity.ARG_BOOK_JSON, gson.toJson(book));
-
-        it.putExtras(bundle);
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            startActivity(it, ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this, imageView, imageView.getTransitionName()).toBundle());
-        } else {
-            startActivity(it);
-        }
-
-
     }
 
     private void showToolbar(){
@@ -852,4 +886,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onLendBook(Book bookApi) {
+        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUser.getUid(), bookApi,null);
+    }
+
+    @Override
+    public void onReturnBook(Book bookApi) {
+        DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUser.getUid(), bookApi);
+    }
 }

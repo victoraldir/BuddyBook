@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.quartzodev.buddybook.DetailActivity;
+import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
@@ -211,9 +212,11 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     private void loadToolbar(final Book book){
         if (getActivity() != null) {
-            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-            actionBar.setTitle(book.getVolumeInfo().getTitle());
-            actionBar.setSubtitle(book.getVolumeInfo().getAuthors() != null ? book.getVolumeInfo().getAuthors().get(0) : "");
+            ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+            if(actionBar != null) {
+                actionBar.setTitle(book.getVolumeInfo().getTitle());
+                actionBar.setSubtitle(book.getVolumeInfo().getAuthors() != null ? book.getVolumeInfo().getAuthors().get(0) : "");
+            }
         }
     }
 
