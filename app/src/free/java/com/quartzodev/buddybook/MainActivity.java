@@ -19,7 +19,6 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -578,7 +577,11 @@ public class MainActivity extends AppCompatActivity
 
         mDrawer.closeDrawer(GravityCompat.START);
         mFolderId = folder != null ? folder.getId() : null;
-        loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_folders));
+        if(mFolderId == null){
+            loadFragment(new ViewPagerFragment());
+        }else{
+            loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_folders));
+        }
     }
 
     @Override
