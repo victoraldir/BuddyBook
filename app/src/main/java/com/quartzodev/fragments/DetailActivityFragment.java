@@ -212,7 +212,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     private void loadToolbar(final Book book){
         if (getActivity() != null) {
-            ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+            ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
             if(actionBar != null) {
                 actionBar.setTitle(book.getVolumeInfo().getTitle());
                 actionBar.setSubtitle(book.getVolumeInfo().getAuthors() != null ? book.getVolumeInfo().getAuthors().get(0) : "");
