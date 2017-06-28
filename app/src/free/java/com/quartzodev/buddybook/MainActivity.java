@@ -578,7 +578,11 @@ public class MainActivity extends AppCompatActivity
 
         mDrawer.closeDrawer(GravityCompat.START);
         mFolderId = folder != null ? folder.getId() : null;
-        loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_folders));
+        if(mFolderId == null){
+            loadFragment(new ViewPagerFragment());
+        }else{
+            loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_folders));
+        }
     }
 
     @Override
