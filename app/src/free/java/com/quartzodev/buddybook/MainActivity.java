@@ -29,6 +29,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -123,20 +124,25 @@ public class MainActivity extends AppCompatActivity
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
     private String mFolderId;
-    private SearchResultFragment mSearchResultFragment;
+    //private SearchResultFragment mSearchResultFragment;
     private SearchView mSearchView;
     private MenuItem mSearchItem;
     private String mCurrQuery;
     private List<Folder> mFolderList;
     private String mFolderListComma;
-    private FrameLayout mFolderListContainer;
     private SearchRecentSuggestions mSuggestions;
+    private Fragment retainedFragment;
+    private boolean flagCreateFragment = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        if(savedInstanceState != null){
+            flagCreateFragment = false;
+        }
 
         setSupportActionBar(mToolbar);
 
@@ -149,7 +155,6 @@ public class MainActivity extends AppCompatActivity
         mImageViewProfile = linearLayout.findViewById(R.id.main_imageview_user_photo);
         mTextViewUsername = linearLayout.findViewById(R.id.main_textview_username);
         mTextViewTextEmail = linearLayout.findViewById(R.id.main_textview_user_email);
-        mFolderListContainer = linearLayout.findViewById(R.id.container_nav_header);
 
         //Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -274,48 +279,15 @@ public class MainActivity extends AppCompatActivity
                 .into(mImageViewProfile);
     }
 
-    private void updateFolderList() {
 
-        FolderListFragment mRetainedFolderFragment = FolderListFragment.newInstance(mUser.getUid());
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(mFolderListContainer.getId(), mRetainedFolderFragment);
-        transaction.commit();
-
-    }
-
-
-    private void loadBooksPageView() {
-
-        ViewPagerFragment mRetainedViewPagerFragment = ViewPagerFragment.newInstance(mUser.getUid());
-
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_main_container, mRetainedViewPagerFragment);
-        transaction.commitAllowingStateLoss();
-
-    }
-
-    private void loadCustomFolder(Folder folder) {
-
-        if (folder == null) { //Load My Books folder
-            loadBooksPageView();
-            return;
-        }
-
-        Fragment mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
-
-        if (mCurrentGridFragment instanceof BookGridFragment) {
-
-            ((BookGridFragment) mCurrentGridFragment).updateContent(mUser.getUid(), folder.getId(), folder.getDescription(), BookGridFragment.FLAG_CUSTOM_FOLDER);
-
-        } else {
-
-            Fragment newFragment = BookGridFragment.newInstanceCustomFolder(mUser.getUid(), folder.getId(), folder.getDescription(), BookGridFragment.FLAG_CUSTOM_FOLDER);
-
+    private void loadFragment(Fragment fragment){
+        if(flagCreateFragment) {
+            retainedFragment = fragment;
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_main_container, newFragment);
-            transaction.addToBackStack(folder.getId());
+            transaction.replace(R.id.fragment_main_container, retainedFragment);
             transaction.commit();
-
+        }else{
+            flagCreateFragment = true;
         }
     }
 
@@ -347,8 +319,7 @@ public class MainActivity extends AppCompatActivity
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError error) {
-                    }
+                    public void onCancelled(DatabaseError error) {}
                 });
 
 
@@ -471,15 +442,17 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-            if (mCurrQuery != null) {
-                //TODO open searchView programaticaly
-                mSearchView.requestFocus();
+            if (!TextUtils.isEmpty(mCurrQuery)) {
+                mSearchItem.expandActionView();
                 mSearchView.setQuery(mCurrQuery, true);
+                mSearchView.clearFocus();
             }
 
             SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
 
             mSearchView.setOnQueryTextListener(this);
+
+            final String search_tag = "SEARCH_TAG";
 
             MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
                 @Override
@@ -495,10 +468,12 @@ public class MainActivity extends AppCompatActivity
                         hideTab();
                     }
 
-                    mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
+                   // mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
+
+                    SearchResultFragment fragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
 
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.add(R.id.fragment_main_container, mSearchResultFragment);
+                    transaction.add(R.id.fragment_main_container, fragment, search_tag);
                     transaction.commitNow();
 
                     return true;
@@ -507,15 +482,13 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public boolean onMenuItemActionCollapse(MenuItem item) {
 
-                    FragmentManager fm = getSupportFragmentManager();
+                    Fragment fragment = getSupportFragmentManager().findFragmentByTag(search_tag);
 
-                    FragmentTransaction transaction = fm.beginTransaction();
-                    transaction.remove(mSearchResultFragment);
-                    transaction.commitNow();
+                    if(fragment !=null){
+                        getSupportFragmentManager().beginTransaction().remove(fragment).commitNow();
+                    }
 
-                    Fragment mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
-
-                    if (mCurrentGridFragment instanceof ViewPagerFragment) {
+                    if (getSupportFragmentManager().findFragmentById(R.id.fragment_main_container) instanceof ViewPagerFragment) {
                         mTabLayout.setVisibility(View.VISIBLE);
                     }
 
@@ -605,7 +578,7 @@ public class MainActivity extends AppCompatActivity
 
         mDrawer.closeDrawer(GravityCompat.START);
         mFolderId = folder != null ? folder.getId() : null;
-        loadCustomFolder(folder);
+        loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_folders));
     }
 
     @Override
@@ -620,7 +593,7 @@ public class MainActivity extends AppCompatActivity
     public void onFolderListIsAvailable(List<Folder> folderList, String folderListComma) {
         mFolderList = folderList;
         mFolderListComma = folderListComma;
-        loadBooksPageView();
+        loadFragment(new ViewPagerFragment());
     }
 
     @Override
@@ -636,7 +609,6 @@ public class MainActivity extends AppCompatActivity
 
     private void loadApplication() {
         loadProfileOnDrawer();
-        updateFolderList();
         updateWidget();
     }
 
@@ -649,8 +621,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClickListenerBookGridInteraction(String folderId, Book book, DynamicImageView imageView) {
-
-        //mFirebaseDatabaseHelper.insertBookSearchHistory(mUser.getUid(), book); //Insert book
 
         Intent it = new Intent(this, DetailActivity.class);
         Bundle bundle = new Bundle();
@@ -772,8 +742,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onLendBookClickListener(Book book) {
-        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUser.getUid(), book);
+    public void onLendBookClickListener(Book book, MenuItem menuItem) {
+        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUser.getUid(), book, menuItem);
     }
 
     @Override
@@ -788,7 +758,13 @@ public class MainActivity extends AppCompatActivity
 
             mSuggestions.saveRecentQuery(query, null);
 
-            mSearchResultFragment.executeSearch(query, TOTAL_SEARCH_RESULT);
+            Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+
+            if(frag instanceof SearchResultFragment){
+                ((SearchResultFragment) frag).executeSearch(query, TOTAL_SEARCH_RESULT);
+            }
+
+
             mSearchView.clearFocus();
         }
 
@@ -800,15 +776,15 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void searchHint(View view) {
-        mSearchItem.expandActionView();
-    }
-
     @Override
     public boolean onQueryTextChange(String newText) {
 
         if (newText != null && !newText.isEmpty()) {
-            mSearchResultFragment.executeSearch(newText, TOTAL_SEARCH_RESULT);
+            Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+            if(frag instanceof SearchResultFragment){
+                ((SearchResultFragment) frag).executeSearch(newText, TOTAL_SEARCH_RESULT);
+            }
+
         }
 
         return false;

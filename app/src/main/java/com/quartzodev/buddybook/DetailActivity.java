@@ -100,7 +100,7 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onLendBook(Book bookApi) {
-        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUserId, bookApi);
+        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUserId, bookApi,null);
     }
 
     @Override

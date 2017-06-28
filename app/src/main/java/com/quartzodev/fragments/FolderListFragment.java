@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -38,6 +39,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     private final String KEY_USER_ID = "userId";
     private OnListFragmentInteractionListener mListener;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
+    private FirebaseAuth mFirebaseAuth;
     private FolderListAdapter myFolderRecyclerViewAdapter;
     private List<Folder> mFolderList;
     private String mUserId;
@@ -49,14 +51,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     public FolderListFragment() {
         mFolderList = new ArrayList<>();
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
-    }
-
-    public static FolderListFragment newInstance(String userId) {
-        FolderListFragment fragment = new FolderListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_USER_ID, userId);
-        fragment.setArguments(args);
-        return fragment;
+        mFirebaseAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -68,25 +63,33 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_USER_ID)) {
-            mUserId = savedInstanceState.getString(KEY_USER_ID);
-        }
+        if(mFirebaseAuth.getCurrentUser() != null) {
 
-        if (mFirebaseDatabaseHelper == null)
-            mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
+            if (savedInstanceState != null && savedInstanceState.containsKey(KEY_USER_ID)) {
+                mUserId = savedInstanceState.getString(KEY_USER_ID);
+            } else {
+                mUserId = mFirebaseAuth.getCurrentUser().getUid();
+            }
 
-        if (getArguments() != null) {
-            mUserId = getArguments().getString(ARG_USER_ID);
+            if (mFirebaseDatabaseHelper == null)
+                mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
+
+            if (getArguments() != null) {
+                mUserId = getArguments().getString(ARG_USER_ID);
+            }
         }
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mFirebaseDatabaseHelper.fetchFolders(mUserId, this);
-        mFirebaseDatabaseHelper.attachFetchFolders(mUserId, this);
+        if(mFirebaseAuth.getCurrentUser() != null) {
+            mFirebaseDatabaseHelper.fetchFolders(mUserId, this);
+            mFirebaseDatabaseHelper.attachFetchFolders(mUserId, this);
+        }
     }
 
     @Override
@@ -141,8 +144,10 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
-        mFirebaseDatabaseHelper.detachFetchFolders(mUserId, this);
+        if(mFirebaseAuth.getCurrentUser() != null) {
+            mListener = null;
+            mFirebaseDatabaseHelper.detachFetchFolders(mFirebaseAuth.getCurrentUser().getUid(), this);
+        }
     }
 
     @Override

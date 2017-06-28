@@ -42,7 +42,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     private Set<Book> mBookList = new HashSet<>();
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
     private String mFolderId;
-    private int mType;
+    private int mMenuId;
 
     /**
      * Here is the key method to apply the animation
@@ -52,11 +52,11 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     public BookGridAdapter(Context mContext,
                            Set<Book> bookList,
                            BookGridFragment.OnGridFragmentInteractionListener listener,
-                           int type) {
+                           int menuId) {
         this.mContext = mContext;
         this.mBookList = bookList;
         this.mListener = listener;
-        mType = type;
+        this.mMenuId = menuId;
     }
 
     @Override
@@ -84,14 +84,17 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
         final Book book = new ArrayList<>(mBookList).get(position);
 
-        if (mType == BookGridFragment.FLAG_MY_BOOKS_FOLDER && book.getLend() != null) {
+        if(mFolderId == null){
+            return 0;
+        }
+
+        if(mFolderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER) && book.getLend() != null){
             if(book.isCustom()){
                 return POS_BOOK_CUSTOM_LENT;
             }
             return POS_BOOK_LENT;
         }else if (book.isCustom()) {
             return POS_BOOK_CUSTOM_AVAILABLE;
-
         }
 
         return POS_BOOK_AVAILABLE;
@@ -162,25 +165,13 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         });
 
         if (!holder.toolbar.getMenu().hasVisibleItems()) {
-            switch (mType) {
-                case BookGridFragment.FLAG_CUSTOM_FOLDER:
-                    holder.toolbar.inflateMenu(R.menu.menu_folders);
-                    break;
-                case BookGridFragment.FLAG_MY_BOOKS_FOLDER:
-                    if (book.getLend() == null) {
-                        holder.toolbar.inflateMenu(R.menu.menu_my_books);
-                    } else {
-                        holder.toolbar.inflateMenu(R.menu.menu_my_books_return_book);
-                    }
-
-                    break;
-                case BookGridFragment.FLAG_TOP_BOOKS_FOLDER:
-                    break;
-                case BookGridFragment.FLAG_SEARCH:
-                    holder.toolbar.inflateMenu(R.menu.menu_search_result);
-                    break;
+            holder.toolbar.inflateMenu(mMenuId);
+            if(book.getLend() != null && holder.toolbar.getMenu().findItem(R.id.action_lend) != null) {
+                holder.toolbar.getMenu().findItem(R.id.action_lend)
+                        .setTitle(mContext.getString(R.string.action_return_lend));
             }
         }
+
 
         holder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -202,10 +193,11 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
                         mListener.onCopyBookToFolderClickListener(mFolderId, book);
                         break;
                     case R.id.action_lend:
-                        mListener.onLendBookClickListener(book);
-                        break;
-                    case R.id.action_return_lend:
-                        mListener.onReturnBookClickListener(book);
+                        if(item.getTitle().equals(mContext.getString(R.string.action_return_lend))){
+                            mListener.onReturnBookClickListener(book);
+                        }else{
+                            mListener.onLendBookClickListener(book,item);
+                        }
                         break;
                 }
 
