@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +28,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -60,6 +62,7 @@ import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 import com.quartzodev.data.User;
 import com.quartzodev.fragments.BookGridFragment;
+import com.quartzodev.fragments.DetailActivityFragment;
 import com.quartzodev.fragments.FolderListFragment;
 import com.quartzodev.fragments.SearchResultFragment;
 import com.quartzodev.fragments.ViewPagerFragment;
@@ -83,7 +86,8 @@ public class MainActivity extends AppCompatActivity
         FirebaseAuth.AuthStateListener,
         BookGridFragment.OnGridFragmentInteractionListener,
         SearchView.OnQueryTextListener,
-        FirebaseDatabaseHelper.OnPaidOperationListener {
+        FirebaseDatabaseHelper.OnPaidOperationListener,
+        DetailActivityFragment.OnDetailInteractionListener{
 
     public static final String EXTRA_USER_ID = "userId";
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -101,6 +105,9 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout mDrawer;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+    @BindView(R.id.toolbar2)
+    @Nullable
+    Toolbar mToolbar2;
     @BindView(R.id.main_message)
     TextView mTextViewMessage;
     @BindView(R.id.fragment_main_container)
@@ -110,9 +117,6 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.tabs)
     TabLayout mTabLayout;
 
-    private ImageView mImageViewProfile;
-    private TextView mTextViewUsername;
-    private TextView mTextViewTextEmail;
     private User mUser;
     private Context mContext;
 
@@ -128,8 +132,8 @@ public class MainActivity extends AppCompatActivity
     private List<Folder> mFolderList;
     private String mFolderListComma;
     private SearchRecentSuggestions mSuggestions;
-    private Fragment retainedFragment;
     private boolean flagCreateFragment = true;
+    private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,21 +141,25 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        if(savedInstanceState != null){
+        mContext = this;
+
+        if(findViewById(R.id.detail_container) != null) {
+            mTwoPane = true;
+        }
+
+        if(savedInstanceState == null){
+            init();
+        }else{
             flagCreateFragment = false;
         }
 
-        setSupportActionBar(mToolbar);
+        setupToolbar();
+    }
 
-        mSuggestions = new SearchRecentSuggestions(this,
-                SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
 
-        mContext = this;
+    private void init(){
 
-        LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
-        mImageViewProfile = linearLayout.findViewById(R.id.main_imageview_user_photo);
-        mTextViewUsername = linearLayout.findViewById(R.id.main_textview_username);
-        mTextViewTextEmail = linearLayout.findViewById(R.id.main_textview_user_email);
+        setupToolbar();
 
         //Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -186,6 +194,12 @@ public class MainActivity extends AppCompatActivity
             mFirebaseAuth.addAuthStateListener(this);
             launchLoginActivityResult();
         }
+    }
+
+    private void setupToolbar(){
+        setSupportActionBar(mToolbar);
+        mSuggestions = new SearchRecentSuggestions(this,
+                SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
     }
 
     public FloatingActionButton getFab(){
@@ -258,6 +272,11 @@ public class MainActivity extends AppCompatActivity
 
     private void loadProfileOnDrawer() {
 
+        LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
+        ImageView mImageViewProfile = linearLayout.findViewById(R.id.main_imageview_user_photo);
+        TextView mTextViewUsername = linearLayout.findViewById(R.id.main_textview_username);
+        TextView mTextViewTextEmail = linearLayout.findViewById(R.id.main_textview_user_email);
+
         mTextViewTextEmail.setText(mUser.getEmail());
         mTextViewUsername.setText(mUser.getUsername());
 
@@ -270,7 +289,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadFragment(Fragment fragment){
         if(flagCreateFragment) {
-            retainedFragment = fragment;
+            Fragment retainedFragment = fragment;
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_main_container, retainedFragment);
             transaction.commit();
@@ -405,11 +424,32 @@ public class MainActivity extends AppCompatActivity
         handleIntent(intent);
     }
 
+    public void setIntentShareMenu(Intent intent){
+
+        if(mToolbar2 != null) {
+            MenuItem menushareItem = mToolbar2.getMenu().findItem(R.id.action_share);
+            ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menushareItem);
+            menushareItem.setVisible(true);
+            mShareActionProvider.setShareIntent(intent);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         if (ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
-            getMenuInflater().inflate(R.menu.main, menu);
+            if(mToolbar2 == null){
+
+                getMenuInflater().inflate(R.menu.main, menu);
+
+            }else{
+                if(!mToolbar.getMenu().hasVisibleItems())
+                    mToolbar.inflateMenu(R.menu.main_toolbar1);
+
+                if(!mToolbar2.getMenu().hasVisibleItems())
+                    mToolbar2.inflateMenu(R.menu.main_toolbar2);
+            }
+
 
             // Retrieve the SearchView and plug it into SearchManager
             //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
@@ -456,7 +496,7 @@ public class MainActivity extends AppCompatActivity
                         hideTab();
                     }
 
-                    // mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
+                   // mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
 
                     SearchResultFragment fragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
 
@@ -528,6 +568,11 @@ public class MainActivity extends AppCompatActivity
                         .withAboutIconShown(true)
                         .withAboutVersionShown(true)
                         .start(this);
+                break;
+            case R.id.action_to_premium:
+
+                DialogUtils.alertDialogUpgradePro(this);
+
                 break;
             default:
                 break;
@@ -606,41 +651,64 @@ public class MainActivity extends AppCompatActivity
         finish();
     }
 
+
+
     @Override
     public void onClickListenerBookGridInteraction(String folderId, Book book, DynamicImageView imageView) {
 
-        Intent it = new Intent(this, DetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString(DetailActivity.ARG_BOOK_ID, book.getId());
-        bundle.putString(DetailActivity.ARG_FOLDER_ID, folderId);
-        bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
-        bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, mFolderListComma);
+        if (mTwoPane) {
 
-        if (book.getId() != null
-                && folderId != null
-                && folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //For now we just show lend operations to 'My books' section
+            boolean flagLendOp = false;
 
-            bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, true);
+            if (book.getId() != null
+                    && folderId != null
+                    && folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //For now we just show lend operations to 'My books' section
 
-        } else {
+                flagLendOp = true;
 
-            bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, false);
+            }
+
+            Gson gson = new Gson();
+            DetailActivityFragment newFragment = DetailActivityFragment.newInstance(mUser.getUid(), book.getId(), folderId, mFolderListComma, gson.toJson(book), flagLendOp);
+
+            getSupportFragmentManager().popBackStackImmediate();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.detail_container, newFragment).commit();
+
+        }else {
+
+            Intent it = new Intent(this, DetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putString(DetailActivity.ARG_BOOK_ID, book.getId());
+            bundle.putString(DetailActivity.ARG_FOLDER_ID, folderId);
+            bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
+            bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, mFolderListComma);
+
+            if (book.getId() != null
+                    && folderId != null
+                    && folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //For now we just show lend operations to 'My books' section
+
+                bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, true);
+
+            } else {
+
+                bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, false);
+
+            }
+
+            Gson gson = new Gson();
+            bundle.putString(DetailActivity.ARG_BOOK_JSON, gson.toJson(book));
+
+            it.putExtras(bundle);
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                startActivity(it, ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this, imageView, imageView.getTransitionName()).toBundle());
+            } else {
+                startActivity(it);
+            }
 
         }
-
-        Gson gson = new Gson();
-        bundle.putString(DetailActivity.ARG_BOOK_JSON, gson.toJson(book));
-
-        it.putExtras(bundle);
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            startActivity(it, ActivityOptionsCompat.makeSceneTransitionAnimation(MainActivity.this, imageView, imageView.getTransitionName()).toBundle());
-        } else {
-            startActivity(it);
-        }
-
-
     }
 
     private void showToolbar(){
@@ -836,4 +904,13 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public void onLendBook(Book bookApi) {
+        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUser.getUid(), bookApi,null);
+    }
+
+    @Override
+    public void onReturnBook(Book bookApi) {
+        DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUser.getUid(), bookApi);
+    }
 }

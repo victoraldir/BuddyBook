@@ -10,12 +10,18 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_search"
-        android:icon="@drawable/ic_search_white_24dp"
-        android:orderInCategory="200"
-        android:title="@string/search"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="always|collapseActionView" />
+        android:orderInCategory="100"
+        android:id="@+id/action_share"
+        android:title="@string/action_share"
+        android:visible="false"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_to_premium"
+        android:orderInCategory="300"
+        android:title="@string/action_to_premium"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_clear_search"

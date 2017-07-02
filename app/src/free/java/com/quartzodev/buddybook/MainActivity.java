@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +28,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -105,6 +107,9 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout mDrawer;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+    @BindView(R.id.toolbar2)
+    @Nullable
+    Toolbar mToolbar2;
     @BindView(R.id.main_message)
     TextView mTextViewMessage;
     @BindView(R.id.fragment_main_container)
@@ -114,9 +119,6 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.tabs)
     TabLayout mTabLayout;
 
-    private ImageView mImageViewProfile;
-    private TextView mTextViewUsername;
-    private TextView mTextViewTextEmail;
     private User mUser;
     private Context mContext;
 
@@ -132,7 +134,6 @@ public class MainActivity extends AppCompatActivity
     private List<Folder> mFolderList;
     private String mFolderListComma;
     private SearchRecentSuggestions mSuggestions;
-    private Fragment retainedFragment;
     private boolean flagCreateFragment = true;
     private boolean mTwoPane;
 
@@ -141,6 +142,8 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        mContext = this;
 
         if(findViewById(R.id.detail_container) != null) {
             mTwoPane = true;
@@ -152,21 +155,13 @@ public class MainActivity extends AppCompatActivity
             flagCreateFragment = false;
         }
 
+        setupToolbar();
     }
+
 
     private void init(){
 
-        setSupportActionBar(mToolbar);
-
-        mSuggestions = new SearchRecentSuggestions(this,
-                SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
-
-        mContext = this;
-
-        LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
-        mImageViewProfile = linearLayout.findViewById(R.id.main_imageview_user_photo);
-        mTextViewUsername = linearLayout.findViewById(R.id.main_textview_username);
-        mTextViewTextEmail = linearLayout.findViewById(R.id.main_textview_user_email);
+        setupToolbar();
 
         //Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -203,6 +198,12 @@ public class MainActivity extends AppCompatActivity
             mFirebaseAuth.addAuthStateListener(this);
             launchLoginActivityResult();
         }
+    }
+
+    private void setupToolbar(){
+        setSupportActionBar(mToolbar);
+        mSuggestions = new SearchRecentSuggestions(this,
+                SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
     }
 
     public FloatingActionButton getFab(){
@@ -282,6 +283,11 @@ public class MainActivity extends AppCompatActivity
 
     private void loadProfileOnDrawer() {
 
+        LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
+        ImageView mImageViewProfile = linearLayout.findViewById(R.id.main_imageview_user_photo);
+        TextView mTextViewUsername = linearLayout.findViewById(R.id.main_textview_username);
+        TextView mTextViewTextEmail = linearLayout.findViewById(R.id.main_textview_user_email);
+
         mTextViewTextEmail.setText(mUser.getEmail());
         mTextViewUsername.setText(mUser.getUsername());
 
@@ -294,7 +300,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadFragment(Fragment fragment){
         if(flagCreateFragment) {
-            retainedFragment = fragment;
+            Fragment retainedFragment = fragment;
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.fragment_main_container, retainedFragment);
             transaction.commit();
@@ -429,11 +435,32 @@ public class MainActivity extends AppCompatActivity
         handleIntent(intent);
     }
 
+    public void setIntentShareMenu(Intent intent){
+
+        if(mToolbar2 != null) {
+            MenuItem menushareItem = mToolbar2.getMenu().findItem(R.id.action_share);
+            ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menushareItem);
+            menushareItem.setVisible(true);
+            mShareActionProvider.setShareIntent(intent);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         if (ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
-            getMenuInflater().inflate(R.menu.main, menu);
+            if(mToolbar2 == null){
+
+                getMenuInflater().inflate(R.menu.main, menu);
+
+            }else{
+                if(!mToolbar.getMenu().hasVisibleItems())
+                    mToolbar.inflateMenu(R.menu.main_toolbar1);
+
+                if(!mToolbar2.getMenu().hasVisibleItems())
+                    mToolbar2.inflateMenu(R.menu.main_toolbar2);
+            }
+
 
             // Retrieve the SearchView and plug it into SearchManager
             //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
@@ -634,6 +661,8 @@ public class MainActivity extends AppCompatActivity
         startActivity(it);
         finish();
     }
+
+
 
     @Override
     public void onClickListenerBookGridInteraction(String folderId, Book book, DynamicImageView imageView) {

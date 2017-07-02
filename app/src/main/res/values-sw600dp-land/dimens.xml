@@ -1,4 +1,4 @@
 <resources>
     <dimen name="margin_details">32dp</dimen>
-    <integer name="list_column_count">3</integer>
+    <integer name="list_column_count">4</integer>
 </resources>

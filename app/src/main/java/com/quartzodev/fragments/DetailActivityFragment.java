@@ -137,13 +137,19 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         super.onCreateOptionsMenu(menu, inflater);
+        if(getActivity() instanceof MainActivity){
 
-        inflater.inflate(R.menu.menu_detail, menu);
-        MenuItem menushareItem = menu.findItem(R.id.action_share);
-        ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menushareItem);
-        if (mBookSelected != null) {
-            menushareItem.setVisible(true);
-            mShareActionProvider.setShareIntent(createShareBookIntent(mBookSelected));
+            ((MainActivity) getActivity()).setIntentShareMenu(createShareBookIntent(mBookSelected));
+
+        }else {
+
+            inflater.inflate(R.menu.menu_detail, menu);
+            MenuItem menushareItem = menu.findItem(R.id.action_share);
+            ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menushareItem);
+            if (mBookSelected != null) {
+                menushareItem.setVisible(true);
+                mShareActionProvider.setShareIntent(createShareBookIntent(mBookSelected));
+            }
         }
     }
 
