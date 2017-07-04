@@ -137,13 +137,19 @@ public class MainActivity extends AppCompatActivity
     private boolean flagCreateFragment = true;
     private boolean mTwoPane;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
         mContext = this;
+        setSupportActionBar(mToolbar);
+
+        ActionBarDrawerToggle mActionBarDrawerToggle = new ActionBarDrawerToggle(
+                this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.addDrawerListener(mActionBarDrawerToggle);
+        mActionBarDrawerToggle.syncState();
 
         if(findViewById(R.id.detail_container) != null) {
             mTwoPane = true;
@@ -153,6 +159,8 @@ public class MainActivity extends AppCompatActivity
             init();
         }else{
             flagCreateFragment = false;
+            mUser = (User) savedInstanceState.get(KEY_PARCELABLE_USER);
+            loadProfileOnDrawer();
         }
 
         setupToolbar();
@@ -186,10 +194,7 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                    this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-            mDrawer.setDrawerListener(toggle);
-            toggle.syncState();
+
         }
 
         if (mFirebaseAuth.getCurrentUser() != null) {
@@ -201,7 +206,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void setupToolbar(){
-        setSupportActionBar(mToolbar);
+
         mSuggestions = new SearchRecentSuggestions(this,
                 SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
     }
