@@ -23,16 +23,4 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
         android:visibility="gone" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginBottom="@dimen/fab_margin_bottom"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
-        android:contentDescription="@string/btn_scan_book_cd"
-        app:srcCompat="@mipmap/ic_barcode_scan_white"
-        />
-
 </LinearLayout>

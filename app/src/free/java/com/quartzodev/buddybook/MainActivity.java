@@ -155,9 +155,9 @@ public class MainActivity extends AppCompatActivity
             mTwoPane = true;
         }
 
-        if(savedInstanceState == null){
-            init();
-        }else{
+        init();
+
+        if(savedInstanceState != null){
             flagCreateFragment = false;
             mUser = (User) savedInstanceState.get(KEY_PARCELABLE_USER);
             loadProfileOnDrawer();
