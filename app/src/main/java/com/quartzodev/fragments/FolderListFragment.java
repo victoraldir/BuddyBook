@@ -163,9 +163,9 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
                 /**
                  * Just to don't list My Books on the RecycleView
                  */
-                if (folder.getId() != null && folder.getDescription() != null &&
-                        !folder.getDescription().equals(getString(R.string.tab_my_books))) {
-
+//                if (folder.getId() != null && folder.getDescription() != null &&
+//                        !folder.getDescription().equals(getString(R.string.tab_my_books))) {
+                if(postSnapshot.getKey() != null && !postSnapshot.getKey().equals("myBooksFolder")){
                     folderList.add(folder);
                 }
 
@@ -187,7 +187,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
             if (mFolderList != null && dataSnapshot.getValue() != null) {
                 Folder folder = dataSnapshot.getValue(Folder.class);
 
-                if (!mFolderList.contains(folder) && !folder.getDescription().equals(getString(R.string.tab_my_books))) {
+                if (!mFolderList.contains(folder) && !dataSnapshot.getKey().equals("myBooksFolder")) {
                     mFolderList.add(folder);
                     myFolderRecyclerViewAdapter.swap(mFolderList);
 
