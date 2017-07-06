@@ -12,7 +12,7 @@
     <string name="action_lend">Emprestar esse livro</string>
     <string name="action_return_lend">Devolver este livro</string>
     <string name="action_have_this">Eu tenho esse</string>
-    <string name="action_move_to" translatable="false">Mover para o folder…</string>
+    <string name="action_move_to">Mover para o folder…</string>
 
     <string name="added_to_folder">Livro adicionado para a pasta %1$s</string>
     <string name="copied_to_folder">Livro copiado para a pasta %1$s</string>
@@ -28,11 +28,6 @@
 
     <string name="dialog_return_book_title">Devolvendo um livro?</string>
     <string name="dialog_return_book_body">%1$s está devolvendo este livro?</string>
-
-
-    <string name="facebook_application_id" translatable="false">1512425405485278</string>
-    <!-- Facebook Application ID, prefixed by 'fb'.  Enables Chrome Custom tabs. -->
-    <string name="facebook_login_protocol_scheme" translatable="false">fb1512425405485278</string>
 
     <string name="tab_top_books">Explorar</string>
     <string name="tab_my_books">Meus livros</string>
@@ -62,8 +57,6 @@
     <string name="error_adding_card">Error carregado fragmentos</string>
     <string name="simple_scanner_activity">Código de barras</string>
 
-    <string name="transition_image">transition_image</string>
-
     <string name="dialog_name_hint">Nome</string>
     <string name="dialog_email_hint">Email (opicional)</string>
 
@@ -81,24 +74,9 @@
     <string name="receiver_name_cd">Nome do recebedor</string>
 
 
-    <string name="ad_app_id" translatable="false">ca-app-pub-6526073251385305~4440436428</string>
-    <string name="ad_inter_scanner_activity">ca-app-pub-6526073251385305/5917169627</string>
-    <string name="ad_bottom_details" translatable="false">ca-app-pub-6526073251385305/7915280029</string>
-    <string name="ad_bottom_books_main" translatable="false" >ca-app-pub-6526073251385305/7393902820</string>
 
 
 
-    <!--
-        <string name="ad_app_id" translatable="false">@string/ad_unit_test</string>
-        <string name="ad_inter_scanner_activity">@string/ad_unit_test</string>
-        <string name="ad_bottom_details" translatable="false">@string/ad_unit_test</string>
-        <string name="ad_bottom_books_main" translatable="false" >@string/ad_unit_test</string>
-         For debug-->
-
-    <string name="ad_unit_test" translatable="false" >ca-app-pub-3940256099942544/1033173712</string>
-
-    <string name="aboutLibraries_description_showIcon" translatable="false" >true</string>
-    <string name="aboutLibraries_description_showVersion" translatable="false">true</string>
     <string name="aboutLibraries_description_text">
 
          <![CDATA[
@@ -117,9 +95,9 @@
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Acesso a câmera é necessária para detecção</string>
     <string name="no_camera_permission">Essa funcionalidade não pôde ser ativada pois a permissão de acesso a câmera é necessária.  Fechando tela.</string>
-    <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
-    <string name="title_activity_main">Barcode Reader Sample</string>
-    <string name="barcode_header">Click &quot;Read Barcode&quot; to read a barcode</string>
+
+
+
     <string name="read_barcode">Ler código de barras</string>
     <string name="auto_focus">Foco automático</string>
     <string name="use_flash">Use o flash</string>
@@ -133,9 +111,9 @@
     <string name="borrowed_book">Livro emprestado</string>
 
 
-    <string name="lorem_ipsum_short">Lorem ipsum dolor sit amet</string>
-    <string name="lorem_ipsum_medium">Lorem ipsum dolor sit amet,consectetur adipiscing elit</string>
-    <string name="lorem_ipsum_large">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+
+
+
     <string name="empty_list">Sem dados</string>
     <string name="move_to_folder_cd">Mover para pasta</string>
     <string name="lent_book_cd">Ação emprestar livro</string>

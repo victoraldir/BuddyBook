@@ -124,14 +124,14 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         this.notifyDataSetChanged();
     }
 
-    public void swap(List<Book> bookApiList) {
-        clearList();
-        if (bookApiList != null) {
-            mBookList.addAll(bookApiList);
-            this.notifyDataSetChanged();
-
-        }
-    }
+//    public void swap(List<Book> bookApiList) {
+//        //clearList();
+//        if (bookApiList != null) {
+//            mBookList.addAll(bookApiList);
+//            this.notifyDataSetChanged();
+//
+//        }
+//    }
 
     public void merge(List<Book> bookApiList) {
         if (bookApiList != null)

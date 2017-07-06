@@ -176,4 +176,7 @@
     <string name="action_about">About</string>
     <string name="action_to_premium">Upgrade</string>
 
+    <string name="sign_in_with_facebook">Login with Facebook</string>
+    <string name="sign_in_with_google">Login with Google</string>
+    <string name="sign_in_with_email">Login with email</string>
 </resources>

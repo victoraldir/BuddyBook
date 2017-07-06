@@ -71,6 +71,7 @@ import com.quartzodev.fragments.ViewPagerFragment;
 import com.quartzodev.provider.SuggestionProvider;
 import com.quartzodev.ui.BarcodeCaptureActivity;
 import com.quartzodev.utils.ConnectionUtils;
+import com.quartzodev.utils.Constants;
 import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.views.DynamicImageView;
 import com.quartzodev.widgets.BuddyBookWidgetProvider;
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
         mNavigationView.setNavigationItemSelectedListener(this);
 
-        initAdView();
+        if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) initAdView();
 
         if (ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
             mFab.setVisibility(View.VISIBLE);
@@ -456,14 +457,23 @@ public class MainActivity extends AppCompatActivity
         if (ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
             if(mToolbar2 == null){
 
-                getMenuInflater().inflate(R.menu.main, menu);
+                if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) {
+                    getMenuInflater().inflate(R.menu.main, menu);
+                }else{
+                    getMenuInflater().inflate(R.menu.main_paid, menu);
+                }
 
             }else{
                 if(!mToolbar.getMenu().hasVisibleItems())
                     mToolbar.inflateMenu(R.menu.main_toolbar1);
 
-                if(!mToolbar2.getMenu().hasVisibleItems())
-                    mToolbar2.inflateMenu(R.menu.main_toolbar2);
+                if(!mToolbar2.getMenu().hasVisibleItems()) {
+                    if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) {
+                        mToolbar2.inflateMenu(R.menu.main_toolbar2);
+                    }else{
+                        mToolbar2.inflateMenu(R.menu.main_toolbar2_paid);
+                    }
+                }
             }
 
 

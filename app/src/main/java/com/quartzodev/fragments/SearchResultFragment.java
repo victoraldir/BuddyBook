@@ -13,12 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.quartzodev.adapters.BookGridAdapter;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.task.SearchTask;
+import com.quartzodev.utils.ConnectionUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -135,20 +137,32 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
             bundle.putInt(ARG_MAX_RESULT, maxResult);
         }
 
-        if (mLoadManager.hasRunningLoaders()) {
+        if (ConnectionUtils.isNetworkConnected(mContext) || FirebaseAuth.getInstance().getCurrentUser() != null) {
 
-            if (mLoadManager.getLoader(LOADER_ID_SEARCH) != null)
-                mLoadManager.getLoader(LOADER_ID_SEARCH).cancelLoad();
+            if (mLoadManager.hasRunningLoaders()) {
 
-            mLoadManager.restartLoader(LOADER_ID_SEARCH, bundle, this);
+                if (mLoadManager.getLoader(LOADER_ID_SEARCH) != null)
+                    mLoadManager.getLoader(LOADER_ID_SEARCH).cancelLoad();
 
-        } else {
-            Loader l = mLoadManager.getLoader(LOADER_ID_SEARCH);
-            if (l == null) {
-                mLoadManager.initLoader(LOADER_ID_SEARCH, bundle, this);
-            } else {
                 mLoadManager.restartLoader(LOADER_ID_SEARCH, bundle, this);
+
+            } else {
+                Loader l = mLoadManager.getLoader(LOADER_ID_SEARCH);
+                if (l == null) {
+                    mLoadManager.initLoader(LOADER_ID_SEARCH, bundle, this);
+                } else {
+                    mLoadManager.restartLoader(LOADER_ID_SEARCH, bundle, this);
+                }
+
             }
+        }else{ // TODO Just offline search. Make it better!
+
+            mFlagLoadingLocal = true;
+            mFlagLoadingRemote = false;
+            setLoading(true);
+
+            //Local search
+            mFirebaseDatabaseHelper.findBookSearch(mUserId, mFolderId, mQuery, this);
 
         }
     }
@@ -235,7 +249,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<List<Book>> loader, List<Book> data) {
-        mAdapter.swap(data);
+        mAdapter.merge(data);
 
         mFlagLoadingRemote = false;
 

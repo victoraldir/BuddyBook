@@ -146,6 +146,7 @@ public class BookGridFragment extends Fragment implements
     private void loadBooks(){
 
         setLoading(true);
+        mAdapter.clearList();
 
         if (mFolderId != null && mFolderId.equals(FirebaseDatabaseHelper.REF_POPULAR_FOLDER)) {
 
@@ -159,7 +160,7 @@ public class BookGridFragment extends Fragment implements
                         bookList.add(book);
                     }
 
-                    mAdapter.swap(bookList);
+                    mAdapter.merge(bookList);
                     setLoading(false);
                 }
             });
@@ -172,9 +173,9 @@ public class BookGridFragment extends Fragment implements
                     Folder folder = dataSnapshot.getValue(Folder.class);
                     assert folder != null;
                     if(folder.getBooks() != null) {
-                        mAdapter.swap(new ArrayList<>(folder.getBooks().values()));
+                        mAdapter.merge(new ArrayList<>(folder.getBooks().values()));
                     }else{
-                        mAdapter.swap(new ArrayList<Book>());
+                        mAdapter.merge(new ArrayList<Book>());
                     }
 
                     setLoading(false);
