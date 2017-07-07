@@ -15,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "90064478549-9bvonhushjroekajpn81cvv8b03vtuqn.apps.googleusercontent.com",
+          "client_id": "90064478549-978c848upcf3qci1hkgli40dg9800ggh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.quartzodev.buddybook.free",
@@ -23,13 +23,13 @@
           }
         },
         {
-          "client_id": "90064478549-936aj7imtieq5b61bl620sm3cfknu074.apps.googleusercontent.com",
+          "client_id": "90064478549-dovn0idl34fndnfplg3jgvrpj9f28qu7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCgvhgV2wgyaep-HUO1ASJ_ac43jS-YZfU"
+          "current_key": "AIzaSyDllft6kyms9tnioDU51OueUwtrM5m8qcw"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "90064478549-936aj7imtieq5b61bl620sm3cfknu074.apps.googleusercontent.com",
+              "client_id": "90064478549-dovn0idl34fndnfplg3jgvrpj9f28qu7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -59,7 +59,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "90064478549-s4l134keqr830svh5jkkbt999cuu2nlc.apps.googleusercontent.com",
+          "client_id": "90064478549-n8h1rk7nlatcmmet5rbla78qqnpnsd55.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.quartzodev.buddybook.paid",
@@ -67,13 +67,21 @@
           }
         },
         {
-          "client_id": "90064478549-936aj7imtieq5b61bl620sm3cfknu074.apps.googleusercontent.com",
+          "client_id": "90064478549-back9qr9f5p1af7isrki72g6igd3nmnt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quartzodev.buddybook.paid",
+            "certificate_hash": "4a49984e2786df6c2751a786580a7b8c5e6d986b"
+          }
+        },
+        {
+          "client_id": "90064478549-dovn0idl34fndnfplg3jgvrpj9f28qu7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCgvhgV2wgyaep-HUO1ASJ_ac43jS-YZfU"
+          "current_key": "AIzaSyDllft6kyms9tnioDU51OueUwtrM5m8qcw"
         }
       ],
       "services": {
@@ -84,7 +92,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "90064478549-936aj7imtieq5b61bl620sm3cfknu074.apps.googleusercontent.com",
+              "client_id": "90064478549-dovn0idl34fndnfplg3jgvrpj9f28qu7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

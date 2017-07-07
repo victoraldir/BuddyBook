@@ -15,7 +15,23 @@
       },
       "oauth_client": [
         {
-          "client_id": "90064478549-9bvonhushjroekajpn81cvv8b03vtuqn.apps.googleusercontent.com",
+          "client_id": "90064478549-immghabtekbpebjbu9vkncgj3mkeb6mn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quartzodev.buddybook.free",
+            "certificate_hash": "73f860cbe67949ef0240175890e1df069b6726ef"
+          }
+        },
+        {
+          "client_id": "90064478549-2vv54an3uh9ksh5kaapdeuaj05h4k2j8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quartzodev.buddybook.free",
+            "certificate_hash": "07cdd8ec65d515d58353338173ba94f3e30a7584"
+          }
+        },
+        {
+          "client_id": "90064478549-978c848upcf3qci1hkgli40dg9800ggh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.quartzodev.buddybook.free",
@@ -23,13 +39,13 @@
           }
         },
         {
-          "client_id": "90064478549-936aj7imtieq5b61bl620sm3cfknu074.apps.googleusercontent.com",
+          "client_id": "90064478549-dovn0idl34fndnfplg3jgvrpj9f28qu7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCgvhgV2wgyaep-HUO1ASJ_ac43jS-YZfU"
+          "current_key": "AIzaSyDllft6kyms9tnioDU51OueUwtrM5m8qcw"
         }
       ],
       "services": {
@@ -40,7 +56,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "90064478549-936aj7imtieq5b61bl620sm3cfknu074.apps.googleusercontent.com",
+              "client_id": "90064478549-dovn0idl34fndnfplg3jgvrpj9f28qu7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -59,7 +75,23 @@
       },
       "oauth_client": [
         {
-          "client_id": "90064478549-s4l134keqr830svh5jkkbt999cuu2nlc.apps.googleusercontent.com",
+          "client_id": "90064478549-66pmovabvq3muaq805o3thukphmi1187.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quartzodev.buddybook.paid",
+            "certificate_hash": "4a49984e2786df6c2751a786580a7b8c5e6d986b"
+          }
+        },
+        {
+          "client_id": "90064478549-id3l66rq7ukh3iungq3g4p8iuff76ir1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.quartzodev.buddybook.paid",
+            "certificate_hash": "07cdd8ec65d515d58353338173ba94f3e30a7584"
+          }
+        },
+        {
+          "client_id": "90064478549-76fus4v2ei4k73mhgh75prl8rg9o9p15.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.quartzodev.buddybook.paid",
@@ -67,13 +99,13 @@
           }
         },
         {
-          "client_id": "90064478549-936aj7imtieq5b61bl620sm3cfknu074.apps.googleusercontent.com",
+          "client_id": "90064478549-dovn0idl34fndnfplg3jgvrpj9f28qu7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCgvhgV2wgyaep-HUO1ASJ_ac43jS-YZfU"
+          "current_key": "AIzaSyDllft6kyms9tnioDU51OueUwtrM5m8qcw"
         }
       ],
       "services": {
@@ -84,7 +116,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "90064478549-936aj7imtieq5b61bl620sm3cfknu074.apps.googleusercontent.com",
+              "client_id": "90064478549-dovn0idl34fndnfplg3jgvrpj9f28qu7.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

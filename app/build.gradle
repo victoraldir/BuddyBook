@@ -7,7 +7,7 @@ android {
         applicationId "com.quartzodev.buddybook"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 32
+        versionCode 34
         versionName "1.1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -78,24 +78,29 @@ dependencies {
         compile 'com.android.support:support-v4:25.3.1'
     }
 
+
     //Firebase DB
-    compile 'com.google.firebase:firebase-database:11.0.1'
+    compile 'com.google.firebase:firebase-database:11.0.2'
     //Firebase Auth
     //compile 'com.github.victoraldir.FirebaseUI-Android:firebase-ui-auth:-SNAPSHOT'
+
     compile 'com.firebaseui:firebase-ui-auth:2.0.1'
 
+    compile "com.google.firebase:firebase-auth:11.0.2"
+    compile "com.google.android.gms:play-services-auth:11.0.2"
+
     //Firebase remote config
-    freeCompile 'com.google.firebase:firebase-config:11.0.1'
+    freeCompile 'com.google.firebase:firebase-config:11.0.2'
 
     //Crash report
-    releaseCompile 'com.google.firebase:firebase-crash:11.0.1'
+    releaseCompile 'com.google.firebase:firebase-crash:11.0.2'
 
     //Google Vision
-    compile 'com.google.android.gms:play-services-vision:11.0.1'
+    compile 'com.google.android.gms:play-services-vision:11.0.2'
     //Joda
     compile 'net.danlew:android.joda:2.9.9'
     //Admobi
-    compile 'com.google.android.gms:play-services-ads:11.0.1'
+    compile 'com.google.android.gms:play-services-ads:11.0.2'
     //Calligraphy
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 
