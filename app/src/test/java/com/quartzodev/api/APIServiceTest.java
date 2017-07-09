@@ -5,12 +5,13 @@ import com.quartzodev.data.Book;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Created by victoraldir on 24/03/2017.
  */
-
+@Ignore
 public class APIServiceTest {
 
 
