@@ -32,9 +32,20 @@ android:
     - 'android-sdk-preview-license-52d11cd2'
     - 'android-sdk-license-.+'
     - 'google-gdk-license-.+'
-    
+
+env:
+  global:
+  # install timeout in minutes (2 minutes by default)
+    - ADB_INSTALL_TIMEOUT=8
+
 before_install:
     - chmod +x gradlew
     - mkdir "$ANDROID_HOME/licenses"
     - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-script: ./gradlew clean assembleDebug check connectedAndroidTest
+    - echo no | android create avd --force -n test -t android-26 --abi armeabi-v7a
+    - emulator -avd test -no-skin -no-audio -no-window &
+    - android-wait-for-emulator
+    - adb shell input keyevent 82 &
+script:
+  - android list target
+  ./gradlew clean assembleDebug check connectedAndroidTest
