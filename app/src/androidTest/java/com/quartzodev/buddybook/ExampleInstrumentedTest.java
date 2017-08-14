@@ -10,6 +10,7 @@ import com.quartzodev.api.interfaces.IQuery;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,6 +31,7 @@ public class ExampleInstrumentedTest {
     private static final String TAG = ExampleInstrumentedTest.class.getSimpleName();
 
     @Test
+    @Ignore
     public void useAppContext() throws Exception {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
@@ -42,6 +44,7 @@ public class ExampleInstrumentedTest {
 
 
     @Test
+    @Ignore
     public void shouldGetBookByISBNGoodreads() throws IOException, InterruptedException {
 
 

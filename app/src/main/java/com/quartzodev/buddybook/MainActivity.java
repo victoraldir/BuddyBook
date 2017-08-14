@@ -12,12 +12,14 @@ import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -59,6 +61,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
+import com.quartzodev.IdlingResource.SimpleIdlingResource;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
@@ -139,12 +142,21 @@ public class MainActivity extends AppCompatActivity
     private boolean mTwoPane;
 
 
+    // The Idling Resource which will be null in production.
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mContext = this;
+
+        // Get the IdlingResource instance
+        getIdlingResource();
+
         setSupportActionBar(mToolbar);
 
         ActionBarDrawerToggle mActionBarDrawerToggle = new ActionBarDrawerToggle(
@@ -165,6 +177,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         setupToolbar();
+
     }
 
 
@@ -261,7 +274,7 @@ public class MainActivity extends AppCompatActivity
                                 mContext.getResources().getString(R.string.tab_my_books), new DatabaseReference.CompletionListener() {
                                     @Override
                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                        relaunchActivity();
+                                        //relaunchActivity();
                                     }
                                 });
                     }
@@ -395,6 +408,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void launchLoginActivityResult() {
+
         ((Activity) mContext).startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
@@ -407,7 +421,7 @@ public class MainActivity extends AppCompatActivity
                         .build(),
                 RC_SIGN_IN);
 
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_in_right);
+        overridePendingTransition(R.anim.fui_slide_in_right, R.anim.fui_slide_in_right);
 
 
     }
@@ -937,5 +951,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onReturnBook(Book bookApi) {
         DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUser.getUid(), bookApi);
+    }
+
+    /**
+     * Only called from test, creates and returns a new {@link SimpleIdlingResource}.
+     */
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
     }
 }
