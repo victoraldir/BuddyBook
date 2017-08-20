@@ -84,7 +84,7 @@ public class LoginWithEmailTest extends AbstractTest {
 
         onView(allOf(withId(R.id.email), isDisplayed()))
                 .perform(click())
-                .perform(replaceText("integration-test@buddybooktest.com"), closeSoftKeyboard());
+                .perform(replaceText(TestConstants.USERNAME), closeSoftKeyboard());
 
         onView(allOf(withId(R.id.button_next), withText("Next"), isDisplayed())).perform(click());
 
@@ -92,7 +92,7 @@ public class LoginWithEmailTest extends AbstractTest {
 
         onView(withId(R.id.password)).check(matches(isDisplayed()));
 
-        onView(allOf(withId(R.id.password))).perform(replaceText("integrationpassword1"), closeSoftKeyboard());
+        onView(allOf(withId(R.id.password))).perform(replaceText(TestConstants.PASSWORD), closeSoftKeyboard());
 
         onView(allOf(withId(R.id.button_done), withText("Sign in"))).perform(scrollTo(), click());
 

@@ -16,11 +16,15 @@ import java.util.List;
 
 public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    private List<BookGridFragment> mBookGridFragments;
+    private List<Fragment> mBookGridFragments;
 
-    public ViewPagerAdapter(FragmentManager fm, List<BookGridFragment> bookGridFragments) {
+    public ViewPagerAdapter(FragmentManager fm, List<Fragment> bookGridFragments) {
         super(fm);
         this.mBookGridFragments = bookGridFragments;
+    }
+
+    public List<Fragment> getFragmentsList(){
+        return mBookGridFragments;
     }
 
     @Override

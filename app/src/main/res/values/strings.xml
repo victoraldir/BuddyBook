@@ -167,7 +167,7 @@
     <string name="btn_search_hint">Search</string>
     <string name="search_empty">Nothing to show</string>
     <string name="search_empty_hint">Type a title, author, or use the ISBN searcher (barcode)</string>
-    <string name="no_internet_search">You are not connected on the internet.</string>
+    <string name="no_internet_search">Not connected. Showing local books</string>
     <string name="insert_success">Book inserted successfully</string>
     <string name="no_description">No description available for this book</string>
     <string name="title_empty">Title cannot be empty</string>
@@ -179,4 +179,5 @@
     <string name="sign_in_with_facebook">Login with Facebook</string>
     <string name="sign_in_with_google">Login with Google</string>
     <string name="sign_in_with_email">Login with email</string>
+    <string name="tab_search_online">Web</string>
 </resources>

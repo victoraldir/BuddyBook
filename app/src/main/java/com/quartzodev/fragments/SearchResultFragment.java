@@ -40,7 +40,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     private static final int LOADER_ID_SEARCH = 3;
     private static final String ARG_FOLDER_ID = "mFolderId";
-    private static final String ARG_USER_ID = "mUserId";
     private static final String ARG_ISBN = "mIsbn";
     private static final String ARG_QUERY = "query";
     private static final String ARG_MAX_RESULT = "maxResult";
@@ -56,14 +55,18 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     private Context mContext;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private String mUserId;
-    private boolean mFlagLoadingLocal;
-    private boolean mFlagLoadingRemote;
+//    private boolean mFlagLoadingLocal;
+//    private boolean mFlagLoadingRemote;
     private String mQuery;
+    private FirebaseAuth mFirebaseAuth;
 
-    public static SearchResultFragment newInstance(String userId, String folderId, String isbn) {
+    public SearchResultFragment(){
+        mFirebaseAuth = FirebaseAuth.getInstance();
+    }
+
+    public static SearchResultFragment newInstance(String folderId, String isbn) {
 
         Bundle arguments = new Bundle();
-        arguments.putString(ARG_USER_ID, userId);
         arguments.putString(ARG_FOLDER_ID, folderId);
         arguments.putString(ARG_ISBN, isbn);
         SearchResultFragment fragment = new SearchResultFragment();
@@ -97,10 +100,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
             mISBN = getArguments().getString(ARG_ISBN);
         }
 
-        if (getArguments().containsKey(ARG_USER_ID)) {
-            mUserId = getArguments().getString(ARG_USER_ID);
-        }
-
         mContext = getContext();
 
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
@@ -115,7 +114,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         mLoadManager = getLoaderManager();
 
         if (mISBN != null) {
-            executeSearch(mISBN, 1);
+            executeSearchSearchFragment(mISBN, 1);
         } else {
             mLoadManager.initLoader(LOADER_ID_SEARCH, null, this);
         }
@@ -127,7 +126,10 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         mLoadManager = getLoaderManager();
     }
 
-    public void executeSearch(String query, Integer maxResult) {
+
+    public void executeSearchSearchFragment(String query, Integer maxResult) {
+
+        mQuery = query;
 
         mAdapter.clearList();
 
@@ -137,7 +139,8 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
             bundle.putInt(ARG_MAX_RESULT, maxResult);
         }
 
-        if (ConnectionUtils.isNetworkConnected(mContext) || FirebaseAuth.getInstance().getCurrentUser() != null) {
+        if(mFolderId == null && ConnectionUtils.isNetworkConnected(mContext)
+                && FirebaseAuth.getInstance().getCurrentUser() != null){
 
             if (mLoadManager.hasRunningLoaders()) {
 
@@ -155,15 +158,12 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
                 }
 
             }
-        }else{ // TODO Just offline search. Make it better!
 
-            mFlagLoadingLocal = true;
-            mFlagLoadingRemote = false;
+        }else{
+
             setLoading(true);
 
-            //Local search
-            mFirebaseDatabaseHelper.findBookSearch(mUserId, mFolderId, mQuery, this);
-
+            mFirebaseDatabaseHelper.findBookSearch(mUserId, mFolderId, this);
         }
     }
 
@@ -175,6 +175,8 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         if (getArguments().containsKey(ARG_FOLDER_ID)) {
             mFolderId = getArguments().getString(ARG_FOLDER_ID);
         }
+
+        mUserId = mFirebaseAuth.getCurrentUser().getUid();
     }
 
 
@@ -222,12 +224,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
             mQuery = args.getString(ARG_QUERY);
 
-            mFlagLoadingLocal = true;
-            mFlagLoadingRemote = true;
             setLoading(true);
-
-            //Local search
-            mFirebaseDatabaseHelper.findBookSearch(mUserId, mFolderId, mQuery, this);
 
             if (args.containsKey(ARG_MAX_RESULT)) {
 
@@ -251,11 +248,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     public void onLoadFinished(Loader<List<Book>> loader, List<Book> data) {
         mAdapter.merge(data);
 
-        mFlagLoadingRemote = false;
-
-        if (!mFlagLoadingLocal) {
-            setLoading(false);
-        }
+        setLoading(false);
 
     }
 
@@ -279,11 +272,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
         mAdapter.merge(bookApis);
 
-        mFlagLoadingLocal = false;
-
-        if (!mFlagLoadingRemote) {
-            setLoading(false);
-        }
+        setLoading(false);
 
         Log.d(TAG, dataSnapshot.toString());
 

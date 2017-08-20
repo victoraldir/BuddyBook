@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
     private String mFolderId;
+    private String mFolderName;
     //private SearchResultFragment mSearchResultFragment;
     private SearchView mSearchView;
     private MenuItem mSearchItem;
@@ -140,6 +141,8 @@ public class MainActivity extends AppCompatActivity
     private SearchRecentSuggestions mSuggestions;
     private boolean flagCreateFragment = true;
     private boolean mTwoPane;
+    private ViewPager mViewPagerMain;
+    private Snackbar mSnackbarNoInternet;
 
 
     // The Idling Resource which will be null in production.
@@ -314,6 +317,10 @@ public class MainActivity extends AppCompatActivity
                 .load(mUser.getPhotoUrl())
                 .apply(RequestOptions.circleCropTransform())
                 .into(mImageViewProfile);
+
+        //Test
+        if(mIdlingResource != null)
+            mIdlingResource.setIdleState(true);
     }
 
 
@@ -372,7 +379,7 @@ public class MainActivity extends AppCompatActivity
                 Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                 Log.d(TAG, "Barcode read: " + barcode.displayValue);
 
-                Fragment searchFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, barcode.displayValue);
+                Fragment searchFragment = SearchResultFragment.newInstance(mFolderId, barcode.displayValue);
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_main_container, searchFragment).commit();
@@ -408,6 +415,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void launchLoginActivityResult() {
+
+        //Test
+        if(mIdlingResource != null)
+            mIdlingResource.setIdleState(false);
 
         ((Activity) mContext).startActivityForResult(
                 AuthUI.getInstance()
@@ -527,7 +538,8 @@ public class MainActivity extends AppCompatActivity
                 public boolean onMenuItemActionExpand(MenuItem item) {
 
                     if (!ConnectionUtils.isNetworkConnected(mContext)) {
-                        Snackbar.make(mCoordinatorLayout, R.string.no_internet_search, Snackbar.LENGTH_LONG).show();
+                        mSnackbarNoInternet = Snackbar.make(mCoordinatorLayout, R.string.no_internet_search, Snackbar.LENGTH_INDEFINITE);
+                        mSnackbarNoInternet.show();
                     }
 
                     Fragment mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
@@ -536,9 +548,7 @@ public class MainActivity extends AppCompatActivity
                         hideTab();
                     }
 
-                   // mSearchResultFragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
-
-                    SearchResultFragment fragment = SearchResultFragment.newInstance(mUser.getUid(), mFolderId, null);
+                    ViewPagerFragment fragment = ViewPagerFragment.newInstance(ViewPagerFragment.SEARCH_VIEW_PAGER,mFolderId,null,null);
 
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                     transaction.add(R.id.fragment_main_container, fragment, search_tag);
@@ -558,6 +568,10 @@ public class MainActivity extends AppCompatActivity
 
                     if (getSupportFragmentManager().findFragmentById(R.id.fragment_main_container) instanceof ViewPagerFragment) {
                         mTabLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    if(mSnackbarNoInternet != null && mSnackbarNoInternet.isShown()){
+                        mSnackbarNoInternet.dismiss();
                     }
 
                     return true;
@@ -647,8 +661,10 @@ public class MainActivity extends AppCompatActivity
         mDrawer.closeDrawer(GravityCompat.START);
         mFolderId = folder != null ? folder.getId() : null;
         if(mFolderId == null){
-            loadFragment(new ViewPagerFragment());
+            mFolderName = getString(R.string.tab_my_books);
+            loadFragment(ViewPagerFragment.newInstance(ViewPagerFragment.MAIN_VIEW_PAGER,mFolderId,null,null));
         }else{
+            mFolderName = folder.getDescription();
             loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_folders));
         }
     }
@@ -665,7 +681,7 @@ public class MainActivity extends AppCompatActivity
     public void onFolderListIsAvailable(List<Folder> folderList, String folderListComma) {
         mFolderList = folderList;
         mFolderListComma = folderListComma;
-        loadFragment(new ViewPagerFragment());
+        loadFragment(ViewPagerFragment.newInstance(ViewPagerFragment.MAIN_VIEW_PAGER,mFolderId,null,null));
     }
 
     @Override
@@ -854,8 +870,8 @@ public class MainActivity extends AppCompatActivity
 
             Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
-            if(frag instanceof SearchResultFragment){
-                ((SearchResultFragment) frag).executeSearch(query, TOTAL_SEARCH_RESULT);
+            if(frag instanceof ViewPagerFragment){
+                ((ViewPagerFragment) frag).executeSearch(query, TOTAL_SEARCH_RESULT);
             }
 
 
@@ -875,8 +891,8 @@ public class MainActivity extends AppCompatActivity
 
         if (newText != null && !newText.isEmpty()) {
             Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
-            if(frag instanceof SearchResultFragment){
-                ((SearchResultFragment) frag).executeSearch(newText, TOTAL_SEARCH_RESULT);
+            if(frag instanceof ViewPagerFragment){
+                ((ViewPagerFragment) frag).executeSearch(newText, TOTAL_SEARCH_RESULT);
             }
 
         }
@@ -917,27 +933,52 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void setupViewPager(ViewPager viewPager) {
-        mTabLayout.setupWithViewPager(viewPager);
+    public void setupViewPager(ViewPager viewPager, String viewPagerType) {
+        if(viewPagerType.equals(ViewPagerFragment.MAIN_VIEW_PAGER)) {
+            if(mViewPagerMain == null) {
+                mViewPagerMain = viewPager;
+            }
+
+            mTabLayout.setupWithViewPager(mViewPagerMain);
+        }else {
+            mTabLayout.setupWithViewPager(viewPager);
+        }
         mTabLayout.setVisibility(View.VISIBLE);
-        setupTabIcons();
+        setupTabIcons(viewPagerType);
     }
 
     public void hideTab() {
         mTabLayout.setVisibility(View.GONE);
     }
 
-    private void setupTabIcons() {
+    private void setupTabIcons(String typeFragment) {
 
         LinearLayout tabLinearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        ((ImageView) tabLinearLayout.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_favorite_border);
-        ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_my_books));
+
+
+        if(typeFragment.equals(ViewPagerFragment.MAIN_VIEW_PAGER)) {
+            ((ImageView) tabLinearLayout.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_favorite_border);
+            ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_my_books));
+        }else{
+            ((ImageView) tabLinearLayout.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_action_globe);
+            ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_search_online));
+        }
 
         mTabLayout.getTabAt(0).setCustomView(tabLinearLayout);
 
         tabLinearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
-        ((ImageView) tabLinearLayout.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_library_books);
-        ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_top_books));
+
+        if(typeFragment.equals(ViewPagerFragment.MAIN_VIEW_PAGER)) {
+            ((ImageView) tabLinearLayout.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_library_books);
+            ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_top_books));
+        }else{
+            ((ImageView) tabLinearLayout.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_action_folder_closed);
+            if(mFolderName != null) {
+                ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(mFolderName);
+            }else{
+                ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_my_books));
+            }
+        }
 
         mTabLayout.getTabAt(1).setCustomView(tabLinearLayout);
 

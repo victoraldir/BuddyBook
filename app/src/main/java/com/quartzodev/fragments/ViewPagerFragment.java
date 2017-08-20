@@ -26,9 +26,36 @@ import butterknife.ButterKnife;
 public class ViewPagerFragment extends Fragment {
 
     private static final String TAG = ViewPagerFragment.class.getSimpleName();
+    public static final String SEARCH_VIEW_PAGER = "searchViewPager";
+    public static final String MAIN_VIEW_PAGER = "mainViewPager";
+    public static final String ARG_FOLDER_ID = "argSearchFolderId";
+    public static final String ARG_QUERY = "argSearchQuery";
+    public static final String ARG_ISBN = "argSearchIsbn";
+    public static final String ARG_TYPE_FRAGMENT = "argSearchTypeFragment";
+
+    private String mTypeFragment;
+    private String mIsbn;
+    private String mQuery;
+    private String mFolderId;
+
+    private ViewPagerAdapter mViewPagerAdapter;
 
     @BindView(R.id.main_pager)
     ViewPager mViewPager;
+
+    public static ViewPagerFragment newInstance(String type, String folderId, String query, String isbn){
+
+        ViewPagerFragment viewPagerFragment = new ViewPagerFragment();
+        Bundle arguments = new Bundle();
+
+        arguments.putString(ARG_FOLDER_ID, folderId);
+        arguments.putString(ARG_QUERY, query);
+        arguments.putString(ARG_ISBN, isbn);
+        arguments.putString(ARG_TYPE_FRAGMENT,type);
+        viewPagerFragment.setArguments(arguments);
+
+        return viewPagerFragment;
+    }
 
     public ViewPagerFragment(){
     }
@@ -37,6 +64,25 @@ public class ViewPagerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
+        if(getArguments() != null) {
+
+            if (getArguments().containsKey(ARG_FOLDER_ID)) {
+                mFolderId = getArguments().getString(ARG_FOLDER_ID);
+            }
+
+            if (getArguments().containsKey(ARG_QUERY)) {
+                mQuery = getArguments().getString(ARG_QUERY);
+            }
+
+            if (getArguments().containsKey(ARG_ISBN)) {
+                mIsbn = getArguments().getString(ARG_ISBN);
+            }
+
+            if (getArguments().containsKey(ARG_TYPE_FRAGMENT)) {
+                mTypeFragment = getArguments().getString(ARG_TYPE_FRAGMENT);
+            }
+        }
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,20 +91,32 @@ public class ViewPagerFragment extends Fragment {
 
         ButterKnife.bind(this, rootView);
 
-        ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getListFragments());
+        mViewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), getListFragments());
         mViewPager.setAdapter(mViewPagerAdapter);
 
         return rootView;
     }
 
 
-    private List<BookGridFragment> getListFragments(){
+    private List<Fragment> getListFragments(){
 
-        List<BookGridFragment> list = new ArrayList<>();
-        list.add(BookGridFragment.newInstance(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,
-                R.menu.menu_my_books));
-        list.add(BookGridFragment.newInstance(FirebaseDatabaseHelper.REF_POPULAR_FOLDER,
-                R.menu.menu_search_result));
+        List<Fragment> list = new ArrayList<>();
+
+        if(mTypeFragment.equals(MAIN_VIEW_PAGER)) {
+            list.add(BookGridFragment.newInstance(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,
+                    R.menu.menu_my_books));
+            list.add(BookGridFragment.newInstance(FirebaseDatabaseHelper.REF_POPULAR_FOLDER,
+                    R.menu.menu_search_result));
+        }else{
+
+            list.add(SearchResultFragment.newInstance(null,mIsbn)); //Web search
+            if(mFolderId == null){
+                list.add(SearchResultFragment.newInstance(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,mIsbn));
+            }else{
+                list.add(SearchResultFragment.newInstance(mFolderId,mIsbn));
+            }
+
+        }
 
         return list;
     }
@@ -71,12 +129,18 @@ public class ViewPagerFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        //When user exits search we show tab with My Book and Explore names
+        if(mTypeFragment.equals(SEARCH_VIEW_PAGER) && mFolderId == null){ //mFolderId == null means My Books section
+            ((MainActivity) getActivity()).setupViewPager(mViewPager,MAIN_VIEW_PAGER);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity) getActivity()).setupViewPager(mViewPager);
+
+        ((MainActivity) getActivity()).setupViewPager(mViewPager,mTypeFragment);
+
     }
 
     @Override
@@ -94,4 +158,15 @@ public class ViewPagerFragment extends Fragment {
         super.onStop();
     }
 
+    public void executeSearch(String query, Integer maxResult) {
+        List<Fragment> fragmentList =  mViewPagerAdapter.getFragmentsList();
+
+        for (int x=0; x<fragmentList.size(); x++){
+            Fragment fragment = fragmentList.get(x);
+
+            if(fragment instanceof SearchResultFragment){
+                ((SearchResultFragment) fragment).executeSearchSearchFragment(query,maxResult);
+            }
+        }
+    }
 }
