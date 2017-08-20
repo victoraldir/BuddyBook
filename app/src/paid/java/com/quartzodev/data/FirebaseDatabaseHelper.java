@@ -117,7 +117,7 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void findBookSearch(String userId, String folderId, String bookQuery, final OnDataSnapshotListener onDataSnapshotListener) {
+    public void findBookSearch(String userId, String folderId, final OnDataSnapshotListener onDataSnapshotListener) {
 
         if (folderId == null) {
 
