@@ -44,6 +44,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -313,9 +314,10 @@ public class MainActivity extends AppCompatActivity
         mTextViewTextEmail.setText(mUser.getEmail());
         mTextViewUsername.setText(mUser.getUsername());
 
-        Glide.with(this)
+        GlideApp.with(this)
                 .load(mUser.getPhotoUrl())
-                .apply(RequestOptions.circleCropTransform())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .fitCenter()
                 .into(mImageViewProfile);
 
         //Test

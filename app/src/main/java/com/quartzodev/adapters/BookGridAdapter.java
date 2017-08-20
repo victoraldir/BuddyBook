@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.quartzodev.buddybook.GlideApp;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
@@ -207,8 +209,9 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
         if (book.getVolumeInfo().getImageLink() != null) {
 
-            Glide.with(mContext)
+            GlideApp.with(mContext)
                     .load(book.getVolumeInfo().getImageLink().getThumbnail())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.imageViewthumbnail);
 
             holder.imageViewthumbnail.setContentDescription(

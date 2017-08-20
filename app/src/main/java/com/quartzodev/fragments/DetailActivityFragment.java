@@ -24,11 +24,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.quartzodev.buddybook.DetailActivity;
+import com.quartzodev.buddybook.GlideApp;
 import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
@@ -228,8 +230,10 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     private void loadImage(final Book book){
         if (book.getVolumeInfo() != null && book.getVolumeInfo().getImageLink() != null) {
-            Glide.with(mContext)
+
+            GlideApp.with(mContext)
                     .load(book.getVolumeInfo().getImageLink().getThumbnail())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mPhoto);
 
             String str = String.format(getString(R.string.cover_book_cd), book.getVolumeInfo().getTitle());
