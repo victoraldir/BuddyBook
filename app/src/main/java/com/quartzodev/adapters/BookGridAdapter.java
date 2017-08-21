@@ -12,9 +12,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.quartzodev.buddybook.GlideApp;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
