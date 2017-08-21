@@ -24,6 +24,7 @@ import com.quartzodev.data.Folder;
 import com.quartzodev.data.Lend;
 import com.quartzodev.data.VolumeInfo;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -64,6 +65,31 @@ public class DialogUtils {
         builder.setTitle(R.string.pick_folder)
                 .setNegativeButton(context.getString(R.string.dialog_btn_cancel), null)
                 .setItems(formatFolderList(foldersCommaSep), onClickListener);
+
+        AlertDialog alertDialog = builder.create();
+
+        alertDialog.show();
+
+    }
+
+    public static void alertDialogSortList(final Context context, final CoordinatorLayout coordinatorLayout) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        int checkedItem = PrefUtils.getSortMode(context);
+
+        builder.setTitle(R.string.sort_options)
+                .setNegativeButton(context.getString(R.string.dialog_btn_cancel), null)
+                .setSingleChoiceItems(R.array.default_sorts, checkedItem, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        PrefUtils.setSortMode(context,i);
+
+                        dialogInterface.dismiss();
+
+                    }
+                });
 
         AlertDialog alertDialog = builder.create();
 

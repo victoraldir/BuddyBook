@@ -7,8 +7,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,6 +30,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.ShareActionProvider;
@@ -45,6 +48,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
@@ -78,6 +82,7 @@ import com.quartzodev.utils.ConnectionUtils;
 import com.quartzodev.utils.Constants;
 import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.views.DynamicImageView;
+import com.quartzodev.views.SquareImageView;
 import com.quartzodev.widgets.BuddyBookWidgetProvider;
 
 import java.util.Arrays;
@@ -144,6 +149,7 @@ public class MainActivity extends AppCompatActivity
     private boolean mTwoPane;
     private ViewPager mViewPagerMain;
     private Snackbar mSnackbarNoInternet;
+    private SharedPreferences mPrefs;
 
 
     // The Idling Resource which will be null in production.
@@ -157,6 +163,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mContext = this;
+
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Get the IdlingResource instance
         getIdlingResource();
@@ -307,7 +315,7 @@ public class MainActivity extends AppCompatActivity
     private void loadProfileOnDrawer() {
 
         LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
-        ImageView mImageViewProfile = linearLayout.findViewById(R.id.main_imageview_user_photo);
+        SquareImageView mImageViewProfile = linearLayout.findViewById(R.id.main_imageview_user_photo);
         TextView mTextViewUsername = linearLayout.findViewById(R.id.main_textview_username);
         TextView mTextViewTextEmail = linearLayout.findViewById(R.id.main_textview_user_email);
 
@@ -316,8 +324,8 @@ public class MainActivity extends AppCompatActivity
 
         GlideApp.with(this)
                 .load(mUser.getPhotoUrl())
+                .apply(RequestOptions.circleCropTransform())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .fitCenter()
                 .into(mImageViewProfile);
 
         //Test
@@ -632,7 +640,9 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.action_sort:
 
-                Snackbar.make(mCoordinatorLayout,"We should sort listing!",Snackbar.LENGTH_LONG).show();
+                DialogUtils.alertDialogSortList(mContext,mCoordinatorLayout);
+
+                //Snackbar.make(mCoordinatorLayout,"We should sort listing!",Snackbar.LENGTH_LONG).show();
 
                 break;
             default:
@@ -910,6 +920,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        mPrefs.registerOnSharedPreferenceChangeListener(listener);
     }
 
     /**
@@ -918,7 +929,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
+        mPrefs.unregisterOnSharedPreferenceChangeListener(listener);
     }
+
+    SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+            Snackbar.make(mCoordinatorLayout,"onSharedPreferenceChanged fired",Snackbar.LENGTH_LONG).show();
+        }
+    };
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -1012,4 +1030,5 @@ public class MainActivity extends AppCompatActivity
         }
         return mIdlingResource;
     }
+
 }
