@@ -132,6 +132,7 @@
     <string name="book_title">Título</string>
     <string name="search">Pesquisar</string>
     <string name="add_book">Adicionar livro customizado</string>
+    <string name="add_sort">Ordenar</string>
     <string name="borrowed_book_icon_cd">Ícone livro emprestado</string>
     <string name="btn_return_book_cd">Devolver este livro</string>
     <string name="btn_lend_book_cd">Emprestar este livro</string>

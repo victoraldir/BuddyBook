@@ -630,6 +630,11 @@ public class MainActivity extends AppCompatActivity
                 DialogUtils.alertDialogUpgradePro(this);
 
                 break;
+            case R.id.action_sort:
+
+                Snackbar.make(mCoordinatorLayout,"We should sort listing!",Snackbar.LENGTH_LONG).show();
+
+                break;
             default:
                 break;
         }

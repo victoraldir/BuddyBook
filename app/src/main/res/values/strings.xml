@@ -154,6 +154,7 @@
     <string name="book_title">Book Title</string>
     <string name="search">Search</string>
     <string name="add_book">Add custom book</string>
+    <string name="add_sort">Sort</string>
     <string name="borrowed_book_icon_cd">Borrowed book icon</string>
     <string name="btn_return_book_cd">Return this book</string>
     <string name="btn_lend_book_cd">Lend this book</string>
@@ -180,4 +181,17 @@
     <string name="sign_in_with_google">Login with Google</string>
     <string name="sign_in_with_email">Login with email</string>
     <string name="tab_search_online">Web</string>
+    <string name="pref_sort_key" translatable="false">sort</string>
+    <string name="pref_sort_initialized_key" translatable="false">initialized</string>
+
+    <string name="default_sorts_title">Title</string>
+    <string name="default_sorts_author">Author</string>
+    <string name="default_sorts_publisher">Publisher</string>
+    <string name="default_sorts_release">Release</string>
+
+    <string name="pref_display_mode_key" translatable="false">displayMode</string>
+    <string name="pref_display_mode_default" translatable="false">@string/pref_display_mode_title_key</string>
+
+    <string name="pref_display_mode_title_key" translatable="false">title</string>
+
 </resources>
