@@ -23,6 +23,7 @@ import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
+import com.quartzodev.utils.PrefUtils;
 import com.quartzodev.views.DynamicImageView;
 
 import java.util.ArrayList;
@@ -120,7 +121,7 @@ public class BookGridFragment extends Fragment implements
         }
 
         mAdapter = new BookGridAdapter(getActivity(),
-                new HashSet<Book>(),
+                new ArrayList<Book>(),
                 mListener,
                 mMenuId);
 
@@ -143,6 +144,10 @@ public class BookGridFragment extends Fragment implements
         loadBooks();
     }
 
+    public void refresh(){
+        loadBooks();
+    }
+
     private void loadBooks(){
 
         setLoading(true);
@@ -160,23 +165,27 @@ public class BookGridFragment extends Fragment implements
                         bookList.add(book);
                     }
 
-                    mAdapter.merge(bookList);
+                    mAdapter.swap(bookList);
                     setLoading(false);
                 }
             });
 
         }else{ //Custom or my books
 
-            mFirebaseDatabaseHelper.fetchBooksFromFolder(mUserId, mFolderId, new FirebaseDatabaseHelper.OnDataSnapshotListener() {
+            String sort = getResources().getStringArray(R.array.default_sorts_codes)[PrefUtils.getSortMode(getContext())];
+
+            mFirebaseDatabaseHelper.fetchBooksFromFolder(mUserId, mFolderId, sort, new FirebaseDatabaseHelper.OnDataSnapshotListener() {
                 @Override
                 public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
-                    Folder folder = dataSnapshot.getValue(Folder.class);
-                    assert folder != null;
-                    if(folder.getBooks() != null) {
-                        mAdapter.merge(new ArrayList<>(folder.getBooks().values()));
-                    }else{
-                        mAdapter.merge(new ArrayList<Book>());
+                    List<Book> bookApis = new ArrayList<>();
+
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        Book book = child.getValue(Book.class);
+
+                        bookApis.add(book);
                     }
+
+                    mAdapter.swap(bookApis);
 
                     setLoading(false);
                 }

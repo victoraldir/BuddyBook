@@ -84,7 +84,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         ButterKnife.bind(this, rootView);
 
         mAdapter = new BookGridAdapter(getActivity(),
-                new HashSet<Book>(),
+                new ArrayList<Book>(),
                 mListener,
                 R.menu.menu_search_result);
 
@@ -118,6 +118,10 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         } else {
             mLoadManager.initLoader(LOADER_ID_SEARCH, null, this);
         }
+    }
+
+    public void refresh(){
+        mLoadManager.initLoader(LOADER_ID_SEARCH, null, this);
     }
 
     @Override
@@ -246,7 +250,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<List<Book>> loader, List<Book> data) {
-        mAdapter.merge(data);
+        mAdapter.swap(data);
 
         setLoading(false);
 
@@ -270,7 +274,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
         }
 
-        mAdapter.merge(bookApis);
+        mAdapter.swap(bookApis);
 
         setLoading(false);
 

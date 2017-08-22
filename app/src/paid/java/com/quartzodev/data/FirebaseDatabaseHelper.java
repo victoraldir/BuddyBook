@@ -21,11 +21,8 @@ import java.util.UUID;
 
 public class FirebaseDatabaseHelper {
 
-    public static final String MAX_FOLDERS_KEY = "max_folders";
-    public static final String MAX_BOOKS_KEY = "max_books";
     public static final String REF_POPULAR_FOLDER = "_popularBooks";
     public static final String REF_MY_BOOKS_FOLDER = "myBooksFolder";
-    public static final String REF_SEARCH_HISTORY = "search_history";
     private static final String TAG = FirebaseDatabaseHelper.class.getSimpleName();
     private static final String ROOT = "users";
     private static final String REF_FOLDERS = "folders";
@@ -68,13 +65,6 @@ public class FirebaseDatabaseHelper {
                 .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
     }
 
-    public void fetchMyBooksFolder(String userId, final OnDataSnapshotListener onDataSnapshotListener) {
-
-        mDatabaseReference.child(userId).child(REF_FOLDERS).child(REF_MY_BOOKS_FOLDER)
-                .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
-
-    }
-
     public ChildEventListener attachBookFolderChildEventListener(String userId, String folderId, ChildEventListener listener) {
         return mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).addChildEventListener(listener);
     }
@@ -83,9 +73,14 @@ public class FirebaseDatabaseHelper {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).removeEventListener(listener);
     }
 
-    public void fetchBooksFromFolder(String userId, String folderId, final OnDataSnapshotListener onDataSnapshotListener) {
+    public void fetchBooksFromFolder(String userId, String folderId, String sort, final OnDataSnapshotListener onDataSnapshotListener) {
 
-        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId)
+        mDatabaseReference
+                .child(userId)
+                .child(REF_FOLDERS)
+                .child(folderId)
+                .child(REF_BOOKS)
+                .orderByChild("volumeInfo/"+sort)
                 .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
 
     }
@@ -94,26 +89,6 @@ public class FirebaseDatabaseHelper {
 
         return mDatabaseReference.child(userId).child(REF_FOLDERS).child(REF_MY_BOOKS_FOLDER)
                 .addValueEventListener(valueEventListener);
-
-    }
-
-    public void findBook(String userId, String folderId, String bookId, final OnDataSnapshotListener onDataSnapshotListener) {
-
-        if (folderId == null) {
-
-            mDatabaseReference.child(userId).child(REF_SEARCH_HISTORY).child(bookId).addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
-
-        } else if (folderId.equals(REF_POPULAR_FOLDER)) {
-
-            mDatabaseReference.child(REF_POPULAR_FOLDER).child("books").child(bookId)
-                    .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
-
-        } else {
-
-            mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child("books").child(bookId)
-                    .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
-
-        }
 
     }
 

@@ -40,7 +40,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     private final int POS_BOOK_CUSTOM_AVAILABLE = 4;
 
     private Context mContext;
-    private Set<Book> mBookList = new HashSet<>();
+    private List<Book> mBookList = new ArrayList<>();
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
     private String mFolderId;
     private int mMenuId;
@@ -51,7 +51,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     private int lastPosition = -1;
 
     public BookGridAdapter(Context mContext,
-                           Set<Book> bookList,
+                           List<Book> bookList,
                            BookGridFragment.OnGridFragmentInteractionListener listener,
                            int menuId) {
         this.mContext = mContext;
@@ -121,8 +121,10 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     }
 
     public void clearList() {
-        this.mBookList.clear();
-        this.notifyDataSetChanged();
+        if(mBookList != null) {
+            this.mBookList.clear();
+            this.notifyDataSetChanged();
+        }
     }
 
 //    public void swap(List<Book> bookApiList) {
@@ -134,9 +136,10 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 //        }
 //    }
 
-    public void merge(List<Book> bookApiList) {
+    public void swap(List<Book> bookApiList) {
         if (bookApiList != null)
-            mBookList.addAll(bookApiList);
+            clearList();
+            mBookList = bookApiList;
         this.notifyDataSetChanged();
     }
 
@@ -210,6 +213,9 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
             GlideApp.with(mContext)
                     .load(book.getVolumeInfo().getImageLink().getThumbnail())
+                    .placeholder(R.drawable.no_photo)
+                    .error(R.drawable.no_photo)
+                    .fallback(R.drawable.no_photo)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.imageViewthumbnail);
 
@@ -222,6 +228,11 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
             holder.imageViewthumbnail.setContentDescription(
                     String.format(mContext.getString(R.string.cover_book_cd), book.getVolumeInfo()
                             .getTitle()));
+        }else{
+
+            holder.imageViewthumbnail.setImageResource(R.drawable.no_photo);
+            holder.imageViewthumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            
         }
 
         holder.view.setOnClickListener(new View.OnClickListener() {

@@ -36,6 +36,7 @@ public class ViewPagerFragment extends Fragment {
     private String mTypeFragment;
     private String mIsbn;
     private String mQuery;
+    private Integer mMaxResult;
     private String mFolderId;
 
     private ViewPagerAdapter mViewPagerAdapter;
@@ -159,6 +160,8 @@ public class ViewPagerFragment extends Fragment {
     }
 
     public void executeSearch(String query, Integer maxResult) {
+        mQuery = query;
+        mMaxResult = maxResult;
         List<Fragment> fragmentList =  mViewPagerAdapter.getFragmentsList();
 
         for (int x=0; x<fragmentList.size(); x++){
@@ -168,5 +171,9 @@ public class ViewPagerFragment extends Fragment {
                 ((SearchResultFragment) fragment).executeSearchSearchFragment(query,maxResult);
             }
         }
+    }
+
+    public void refresh(){
+        executeSearch(mQuery,mMaxResult);
     }
 }

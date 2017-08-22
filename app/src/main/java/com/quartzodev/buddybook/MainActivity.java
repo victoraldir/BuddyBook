@@ -79,7 +79,6 @@ import com.quartzodev.utils.ConnectionUtils;
 import com.quartzodev.utils.Constants;
 import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.views.DynamicImageView;
-import com.quartzodev.views.SquareImageView;
 import com.quartzodev.widgets.BuddyBookWidgetProvider;
 
 import java.util.Arrays;
@@ -312,7 +311,7 @@ public class MainActivity extends AppCompatActivity
     private void loadProfileOnDrawer() {
 
         LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
-        SquareImageView mImageViewProfile = linearLayout.findViewById(R.id.main_imageview_user_photo);
+        ImageView mImageViewProfile = linearLayout.findViewById(R.id.main_imageview_user_photo);
         TextView mTextViewUsername = linearLayout.findViewById(R.id.main_textview_username);
         TextView mTextViewTextEmail = linearLayout.findViewById(R.id.main_textview_user_email);
 
@@ -896,8 +895,15 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    public void doNothing(View view) {
 
+    public void refreshCurrentFragment(){
+        Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+
+        if(frag instanceof BookGridFragment){
+            ((BookGridFragment) frag).refresh();
+        }else if(frag instanceof ViewPagerFragment){
+            ((ViewPagerFragment) frag).refresh();
+        }
     }
 
     @Override
@@ -931,7 +937,12 @@ public class MainActivity extends AppCompatActivity
 
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-            Snackbar.make(mCoordinatorLayout,"onSharedPreferenceChanged fired",Snackbar.LENGTH_LONG).show();
+            if(key != null && !key.equals("com.facebook.appevents.SessionInfo.sessionEndTime")){
+
+                refreshCurrentFragment();
+
+            }
+
         }
     };
 
