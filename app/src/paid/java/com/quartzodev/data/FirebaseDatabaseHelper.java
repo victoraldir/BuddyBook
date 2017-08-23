@@ -227,7 +227,6 @@ public class FirebaseDatabaseHelper {
     }
 
     private void insert(DataSnapshot dataSnapshot,OnPaidOperationListener listener, final Book bookApi, DatabaseReference ref){
-        Log.d(TAG, "Folder list is: " + dataSnapshot.getChildrenCount());
 
         if(bookApi.getId() == null ){ //Here we generate our id
             bookApi.setId(ref.push().getKey());
@@ -256,14 +255,11 @@ public class FirebaseDatabaseHelper {
                     onDataSnapshotListener.onDataSnapshotListenerAvailable(dataSnapshot);
                     notifyCaller(onDataSnapshotListener);
                 } catch (Exception ex) {
-                    Log.e(TAG, ex.getMessage());
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //TODO create method on OnDataSnapshotListener to deal with this
-                Log.e(TAG, databaseError.getDetails());
             }
         };
     }
