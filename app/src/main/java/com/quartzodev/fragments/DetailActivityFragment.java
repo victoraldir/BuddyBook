@@ -13,7 +13,6 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -342,12 +341,10 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-        Log.d(TAG, "onDataChange fired: " + dataSnapshot.toString());
     }
 
     @Override
     public void onCancelled(DatabaseError databaseError) {
-        Log.d(TAG, "onCancelled fired: " + databaseError.toString());
     }
 
     public interface OnDetailInteractionListener {

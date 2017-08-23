@@ -1,7 +1,6 @@
 package com.quartzodev.data;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -79,14 +78,12 @@ public class FirebaseDatabaseHelper {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Config fetch success");
                         mFirebaseRemoteConfig.activateFetched();
                         applyRetrievedConfig();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "Failure fetching config");
                 applyRetrievedConfig();
             }
         });
@@ -289,7 +286,6 @@ public class FirebaseDatabaseHelper {
     }
 
     private void insert(DataSnapshot dataSnapshot,OnPaidOperationListener listener, final Book bookApi, DatabaseReference ref){
-        Log.d(TAG, "Folder list is: " + dataSnapshot.getChildrenCount());
 
         if (dataSnapshot.getChildrenCount() >= mMaxBooks) {
             listener.onInsertBook(false);
@@ -323,14 +319,11 @@ public class FirebaseDatabaseHelper {
                     onDataSnapshotListener.onDataSnapshotListenerAvailable(dataSnapshot);
                     notifyCaller(onDataSnapshotListener);
                 } catch (Exception ex) {
-                    Log.e(TAG, ex.getMessage());
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //TODO create method on OnDataSnapshotListener to deal with this
-                Log.e(TAG, databaseError.getDetails());
             }
         };
     }

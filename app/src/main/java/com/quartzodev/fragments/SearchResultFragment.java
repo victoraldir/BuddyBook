@@ -8,7 +8,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,6 @@ import com.quartzodev.task.SearchTask;
 import com.quartzodev.utils.ConnectionUtils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -277,8 +275,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         mAdapter.swap(bookApis);
 
         setLoading(false);
-
-        Log.d(TAG, dataSnapshot.toString());
 
     }
 }

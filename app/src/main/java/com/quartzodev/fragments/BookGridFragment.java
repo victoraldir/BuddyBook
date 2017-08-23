@@ -7,7 +7,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,12 +21,10 @@ import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
-import com.quartzodev.data.Folder;
 import com.quartzodev.utils.PrefUtils;
 import com.quartzodev.views.DynamicImageView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -279,8 +276,6 @@ public class BookGridFragment extends Fragment implements
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        Log.d(TAG, "onChildAdded FIRED " + dataSnapshot.toString());
-
         if (dataSnapshot.getValue() != null) {
             Book bookApi = dataSnapshot.getValue(Book.class);
             mAdapter.addItem(bookApi);
@@ -295,8 +290,6 @@ public class BookGridFragment extends Fragment implements
 
     @Override
     public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-        Log.d(TAG, "onChildRemoved FIRED " + dataSnapshot.toString());
 
         if (dataSnapshot.getValue() != null) {
             Book bookApi = dataSnapshot.getValue(Book.class);

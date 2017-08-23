@@ -35,7 +35,6 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -268,7 +267,6 @@ public class MainActivity extends AppCompatActivity
 
         if (dataSnapshot.getValue() != null) {
 
-            Log.d(TAG, "User is already in database");
             mFirebaseDatabaseHelper.updateUserLastActivity(mUser.getUid());
             loadApplication();
         } else {
@@ -383,15 +381,12 @@ public class MainActivity extends AppCompatActivity
 
             if (data != null) {
                 Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
-                Log.d(TAG, "Barcode read: " + barcode.displayValue);
 
                 Fragment searchFragment = SearchResultFragment.newInstance(mFolderId, barcode.displayValue);
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_main_container, searchFragment).commit();
 
-            } else {
-                Log.d(TAG, "No barcode captured, intent data is null");
             }
         }
     }

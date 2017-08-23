@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.quartzodev.adapters.ViewPagerAdapter;
 import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
-import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ import butterknife.ButterKnife;
 
 public class ViewPagerFragment extends Fragment {
 
-    private static final String TAG = ViewPagerFragment.class.getSimpleName();
     public static final String SEARCH_VIEW_PAGER = "searchViewPager";
     public static final String MAIN_VIEW_PAGER = "mainViewPager";
     public static final String ARG_FOLDER_ID = "argSearchFolderId";

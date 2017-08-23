@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,7 +151,6 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
 
     @Override
     public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
-        Log.d(TAG, "DataSnapshot of folders Query: " + dataSnapshot != null ? dataSnapshot.toString() : "EMPTY");
 
         List<Folder> folderList = new ArrayList<>();
 
@@ -163,8 +161,6 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
                 /**
                  * Just to don't list My Books on the RecycleView
                  */
-//                if (folder.getId() != null && folder.getDescription() != null &&
-//                        !folder.getDescription().equals(getString(R.string.tab_my_books))) {
                 if(postSnapshot.getKey() != null && !postSnapshot.getKey().equals("myBooksFolder")){
                     folderList.add(folder);
                 }
