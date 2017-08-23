@@ -18,26 +18,33 @@
         app:showAsAction="always|collapseActionView" />
 
     <item
-        android:id="@+id/action_to_premium"
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_sort"
         android:orderInCategory="300"
+        android:title="@string/add_sort"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_to_premium"
+        android:orderInCategory="400"
         android:title="@string/action_to_premium"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_clear_search"
-        android:orderInCategory="400"
+        android:orderInCategory="500"
         android:title="@string/action_clear_search"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_about"
-        android:orderInCategory="500"
+        android:orderInCategory="600"
         android:title="@string/action_about"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_sign_out"
-        android:orderInCategory="600"
+        android:orderInCategory="700"
         android:title="@string/action_sign_out"
         app:showAsAction="never" />
 

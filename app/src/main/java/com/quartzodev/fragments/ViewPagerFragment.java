@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.quartzodev.adapters.ViewPagerAdapter;
 import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 
 import java.util.ArrayList;
@@ -167,8 +168,8 @@ public class ViewPagerFragment extends Fragment {
         for (int x=0; x<fragmentList.size(); x++){
             Fragment fragment = fragmentList.get(x);
 
-            if(fragment instanceof SearchResultFragment){
-                ((SearchResultFragment) fragment).executeSearchSearchFragment(query,maxResult);
+            if(fragment instanceof BookGridFragment){
+                ((BookGridFragment) fragment).refresh();
             }
         }
     }

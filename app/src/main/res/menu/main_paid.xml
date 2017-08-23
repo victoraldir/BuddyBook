@@ -10,20 +10,19 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_sort"
-        android:icon="@drawable/ic_sort"
-        android:orderInCategory="200"
-        android:title="@string/add_sort"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search_white_24dp"
-        android:orderInCategory="300"
+        android:orderInCategory="200"
         android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always|collapseActionView" />
 
+    <item
+        android:id="@+id/action_sort"
+        android:icon="@drawable/ic_sort"
+        android:orderInCategory="300"
+        android:title="@string/add_sort"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_clear_search"
