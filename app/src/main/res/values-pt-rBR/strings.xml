@@ -159,4 +159,10 @@
     <string name="sign_in_with_google">Login com Google</string>
     <string name="sign_in_with_email">Login com email</string>
     <string name="tab_search_online">Web</string>
+
+    <string name="sort_options">Ordernar por</string>
+    <string name="default_sorts_title">Título</string>
+    <string name="default_sorts_author">Autor</string>
+    <string name="default_sorts_release">Data lançamento</string>
+
 </resources>

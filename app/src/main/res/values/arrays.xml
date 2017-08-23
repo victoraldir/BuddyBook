@@ -7,8 +7,8 @@
     </string-array>
 
     <string-array name="default_sorts_codes">
-        <item>publishedDate</item>
-        <item>title</item>
-        <item>authors</item>
+        <item>@string/release_value</item>
+        <item>@string/title_value</item>
+        <item>@string/author_value</item>
     </string-array>
 </resources>
