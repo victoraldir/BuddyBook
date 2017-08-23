@@ -306,6 +306,10 @@ public class MainActivity extends AppCompatActivity
         sendBroadcast(intent);
     }
 
+    public void doNothing(View view) {
+
+    }
+
     private void loadProfileOnDrawer() {
 
         LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index

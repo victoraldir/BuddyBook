@@ -18,7 +18,8 @@ import java.util.List;
  */
 public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.ViewHolder> {
 
-    private static final int ADDITIONAL_VIEWS = 2;
+    //Add folder is the additional view here
+    private static final int ADDITIONAL_VIEWS = 1;
 
     private static final int VIEW_TYPE_MY_BOOKS = 0;
     private static final int VIEW_TYPE_FOLDER = 1;
@@ -40,6 +41,7 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
         } else if (position == ((mFolderList.size() - 1) + ADDITIONAL_VIEWS)) {
             return VIEW_TYPE_ADD_FOLDER;
         }
+
         return VIEW_TYPE_FOLDER;
     }
 
@@ -70,11 +72,9 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
             notifyDataSetChanged();
         }
     }
-
+    //TODO make this flow better. Too confusing!
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-
-        int realPosition = position - 1;
 
         //Skip binding the FIRST and LAST item (they are customized
         if (position == 0) {
@@ -86,9 +86,16 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
                 }
             });
 
+            int totalBooks = 0;
+            // Grab the last item which is myBooks section
+            if(!mFolderList.isEmpty() && mFolderList.get(mFolderList.size() - 1).getBooks() != null){
+                totalBooks = mFolderList.get(mFolderList.size() - 1).getBooks().size();
+            }
+
+            holder.mTotalBooks.setText(" (" + totalBooks + ")");
+
             return;
         } else if (position == ((mFolderList.size() - 1) + ADDITIONAL_VIEWS)) {
-
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -100,30 +107,43 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
             return; //No view for the last one
         }
 
-        holder.mItem = mFolderList.get(realPosition);
+        if(!mFolderList.isEmpty() && position < (mFolderList.size() + ADDITIONAL_VIEWS) - 1) {
 
-        holder.mContentView.setText(mFolderList.get(realPosition).getDescription());
+            int realPosition = position - 1;
 
-        holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
+            holder.mItem = mFolderList.get(realPosition);
 
-                if (null != mListener) {
-                    mListener.onLongClickListenerFolderListInteraction(holder.mItem);
-                }
+            holder.mContentView.setText(mFolderList.get(realPosition).getDescription());
 
-                return false;
+            int totalBooks = 0;
+
+            if (mFolderList.get(realPosition).getBooks() != null) {
+                totalBooks = mFolderList.get(realPosition).getBooks().size();
             }
-        });
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    mListener.onClickListenerFolderListInteraction(holder.mItem);
+            holder.mTotalBooks.setText(" (" + totalBooks + ")");
+
+            holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    if (null != mListener) {
+                        mListener.onLongClickListenerFolderListInteraction(holder.mItem);
+                    }
+
+                    return false;
                 }
-            }
-        });
+            });
+
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != mListener) {
+                        mListener.onClickListenerFolderListInteraction(holder.mItem);
+                    }
+                }
+            });
+        }
 
     }
 
@@ -135,12 +155,14 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mContentView;
+        public final TextView mTotalBooks;
         public Folder mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mContentView = view.findViewById(R.id.content);
+            mTotalBooks = view.findViewById(R.id.totalBooks);
         }
 
         @Override

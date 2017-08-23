@@ -161,7 +161,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
                 /**
                  * Just to don't list My Books on the RecycleView
                  */
-                if(postSnapshot.getKey() != null && !postSnapshot.getKey().equals("myBooksFolder")){
+                if(postSnapshot.getKey() != null){
                     folderList.add(folder);
                 }
 
