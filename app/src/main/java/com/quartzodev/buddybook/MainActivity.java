@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity
 
     public static final String EXTRA_USER_ID = "userId";
     private static final String TAG = MainActivity.class.getSimpleName();
-    private static final int RC_SIGN_IN = 1;
+    private static final int RC_SIGN_IN = 5;
     private static final int RC_BARCODE_CAPTURE = 2;
     private static final String KEY_PARCELABLE_USER = "userKey";
     private static final String KEY_CURRENT_QUERY = "queryKey";
@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity
                                 mContext.getResources().getString(R.string.tab_my_books), new DatabaseReference.CompletionListener() {
                                     @Override
                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                        //relaunchActivity();
+                                        loadApplication();
                                     }
                                 });
                     }
@@ -289,7 +289,6 @@ public class MainActivity extends AppCompatActivity
             });
         }
 
-        Snackbar.make(mCoordinatorLayout, getText(R.string.success_sign_in), Snackbar.LENGTH_SHORT).show();
     }
 
     public void updateWidget() {
@@ -351,7 +350,7 @@ public class MainActivity extends AppCompatActivity
 
             if (resultCode == ErrorCodes.UNKNOWN_ERROR) {
                 AuthUI.getInstance().signOut(this);
-                finish();
+                //finish();
             }
 
             if (resultCode == ErrorCodes.NO_NETWORK) {
@@ -380,7 +379,7 @@ public class MainActivity extends AppCompatActivity
                 mFrameLayoutContainer.setVisibility(View.VISIBLE);
             }
 
-            if (resultCode == RESULT_CANCELED) finish();
+            //if (resultCode == RESULT_CANCELED) finish();
         } else if (requestCode == RC_BARCODE_CAPTURE && resultCode == CommonStatusCodes.SUCCESS) {
 
             if (data != null) {
@@ -425,15 +424,16 @@ public class MainActivity extends AppCompatActivity
         if(mIdlingResource != null)
             mIdlingResource.setIdleState(false);
 
-        ((Activity) mContext).startActivityForResult(
+        ((Activity) this).startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setIsSmartLockEnabled(false)
                         .setTheme(R.style.LoginTheme)
                         .setIsSmartLockEnabled(!BuildConfig.DEBUG)
-                        .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
-                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
+                        .setAvailableProviders(
+                                Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
                         .build(),
                 RC_SIGN_IN);
 
@@ -710,6 +710,7 @@ public class MainActivity extends AppCompatActivity
     private void loadApplication() {
         loadProfileOnDrawer();
         updateWidget();
+        Snackbar.make(mCoordinatorLayout, getText(R.string.success_sign_in), Snackbar.LENGTH_SHORT).show();
     }
 
     public void relaunchActivity() {

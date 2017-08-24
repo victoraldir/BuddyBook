@@ -74,16 +74,16 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     //Firebase DB
-    compile 'com.google.firebase:firebase-database:11.2.0'
+    compile 'com.google.firebase:firebase-database:11.0.4'
 
     // FirebaseUI Auth only
     compile 'com.firebaseui:firebase-ui-auth:2.3.0'
 
     //Firebase Auth
-    compile 'com.google.firebase:firebase-auth:11.2.0'
+    //compile 'com.google.firebase:firebase-auth:11.0.4'
 
     //Play Services Auth
-    compile 'com.google.android.gms:play-services-auth:11.2.0'
+    //compile 'com.google.android.gms:play-services-auth:11.0.4'
 
     // Required for Facebook login support
     compile('com.facebook.android:facebook-android-sdk:4.22.1')
@@ -92,17 +92,17 @@ dependencies {
     compile("com.twitter.sdk.android:twitter-core:3.0.0@aar") { transitive = true }
 
     //Firebase remote config
-    freeCompile 'com.google.firebase:firebase-config:11.2.0'
+    freeCompile 'com.google.firebase:firebase-config:11.0.4'
 
     //Crash report
-    releaseCompile 'com.google.firebase:firebase-crash:11.2.0'
+    releaseCompile 'com.google.firebase:firebase-crash:11.0.4'
 
     //Google Vision
-    compile 'com.google.android.gms:play-services-vision:11.2.0'
+    compile 'com.google.android.gms:play-services-vision:11.0.4'
     //Joda
     compile 'net.danlew:android.joda:2.9.9'
     //Admobi
-    compile 'com.google.android.gms:play-services-ads:11.2.0'
+    compile 'com.google.android.gms:play-services-ads:11.0.4'
     //Calligraphy
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 
