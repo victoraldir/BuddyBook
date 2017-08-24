@@ -91,6 +91,32 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
         }
     }
 
+    public void refresh(){
+        mFirebaseDatabaseHelper.fetchFolders(mUserId, new FirebaseDatabaseHelper.OnDataSnapshotListener() {
+            @Override
+            public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
+                List<Folder> folderList = new ArrayList<>();
+
+                if (dataSnapshot.getValue() != null) {
+
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        Folder folder = postSnapshot.getValue(Folder.class);
+                        /**
+                         * Just to don't list My Books on the RecycleView
+                         */
+                        if (postSnapshot.getKey() != null) {
+                            folderList.add(folder);
+                        }
+
+                    }
+
+                    mFolderList = folderList;
+                    myFolderRecyclerViewAdapter.swap(mFolderList);
+                }
+            }
+        });
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

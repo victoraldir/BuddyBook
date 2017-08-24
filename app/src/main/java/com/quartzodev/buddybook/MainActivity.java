@@ -358,6 +358,14 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void updateFolderList(){
+        Fragment mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.container_nav_header);
+
+        if(mCurrentGridFragment instanceof FolderListFragment){
+            ((FolderListFragment) mCurrentGridFragment).refresh();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -807,6 +815,8 @@ public class MainActivity extends AppCompatActivity
 
         showToolbar();
 
+        updateFolderList();
+
         Snackbar.make(mCoordinatorLayout, getString(R.string.deleted_folder), Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.redo), new View.OnClickListener() {
                     @Override
@@ -971,6 +981,8 @@ public class MainActivity extends AppCompatActivity
     public void onInsertBook(boolean success) {
         if (!success) {
             DialogUtils.alertDialogUpgradePro(this);
+        }else{
+            updateFolderList();
         }
     }
 
