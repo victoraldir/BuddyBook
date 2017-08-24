@@ -142,7 +142,6 @@ public class MainActivity extends AppCompatActivity
     private SearchRecentSuggestions mSuggestions;
     private boolean flagCreateFragment = true;
     private boolean mTwoPane;
-    private ViewPager mViewPagerMain;
     private Snackbar mSnackbarNoInternet;
     private SharedPreferences mPrefs;
 
@@ -595,8 +594,20 @@ public class MainActivity extends AppCompatActivity
                         getSupportFragmentManager().beginTransaction().remove(fragment).commitNow();
                     }
 
-                    if (getSupportFragmentManager().findFragmentById(R.id.fragment_main_container) instanceof ViewPagerFragment) {
+                    fragment =  getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+
+
+                    if (fragment instanceof ViewPagerFragment) {
+
+                        ViewPager viewPager = ((ViewPagerFragment) fragment).getViewPager();
+
                         mTabLayout.setVisibility(View.VISIBLE);
+
+                        mTabLayout.setupWithViewPager(viewPager);
+
+                        showTab();
+
+                        setupTabIcons(ViewPagerFragment.MAIN_VIEW_PAGER);
                     }
 
                     if(mSnackbarNoInternet != null && mSnackbarNoInternet.isShown()){
@@ -694,14 +705,23 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClickListenerFolderListInteraction(Folder folder) {
 
+        mToolbar.setSubtitle("");
+
         mDrawer.closeDrawer(GravityCompat.START);
         mFolderId = folder != null ? folder.getId() : null;
         if(mFolderId == null){
+
+            mToolbar.findViewById(R.id.toolbar_container).setVisibility(View.VISIBLE);
+
             mFolderName = getString(R.string.tab_my_books);
             loadFragment(ViewPagerFragment.newInstance(ViewPagerFragment.MAIN_VIEW_PAGER,mFolderId,null,null));
         }else{
+
+            mToolbar.findViewById(R.id.toolbar_container).setVisibility(View.GONE);
             mFolderName = folder.getDescription();
+            mToolbar.setTitle(mFolderName);
             loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_folders));
+            setupToolbar();
         }
     }
 
@@ -994,25 +1014,33 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void setupViewPager(ViewPager viewPager, String viewPagerType) {
-        if(viewPagerType.equals(ViewPagerFragment.MAIN_VIEW_PAGER)) {
-            if(mViewPagerMain == null) {
-                mViewPagerMain = viewPager;
-            }
+//    public void setupViewPager(ViewPager viewPager, String viewPagerType) {
+//        if(viewPagerType.equals(ViewPagerFragment.MAIN_VIEW_PAGER)) {
+////            if(mViewPagerMain == null) {
+////                mViewPagerMain = viewPager;
+////            }
+//
+//            mTabLayout.setupWithViewPager(viewPager);
+//        }else {
+//            mTabLayout.setupWithViewPager(viewPager);
+//        }
+//        mTabLayout.setVisibility(View.VISIBLE);
+//        setupTabIcons(viewPagerType);
+//    }
 
-            mTabLayout.setupWithViewPager(mViewPagerMain);
-        }else {
-            mTabLayout.setupWithViewPager(viewPager);
-        }
-        mTabLayout.setVisibility(View.VISIBLE);
-        setupTabIcons(viewPagerType);
+    public TabLayout getTabLayout(){
+        return mTabLayout;
     }
 
     public void hideTab() {
         mTabLayout.setVisibility(View.GONE);
     }
 
-    private void setupTabIcons(String typeFragment) {
+    public void showTab() {
+        mTabLayout.setVisibility(View.VISIBLE);
+    }
+
+    public void setupTabIcons(String typeFragment) {
 
         LinearLayout tabLinearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
 

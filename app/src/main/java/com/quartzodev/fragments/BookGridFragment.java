@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -185,11 +186,19 @@ public class BookGridFragment extends Fragment implements
                     mAdapter.swap(bookApis);
 
                     setLoading(false);
+
+                    updateSubtitle();
+
                 }
             });
 
         }
 
+    }
+
+    public void updateSubtitle(){
+        ((AppCompatActivity) getActivity()).getSupportActionBar()
+                .setSubtitle(String.format(getString(R.string.number_of_books),mAdapter.getItemCount()));
     }
 
     private void setupHideFloatButtonOnScroll(){
@@ -280,6 +289,8 @@ public class BookGridFragment extends Fragment implements
             Book bookApi = dataSnapshot.getValue(Book.class);
             mAdapter.addItem(bookApi);
             setLoading(false);
+
+            updateSubtitle();
         }
     }
 
@@ -295,6 +306,8 @@ public class BookGridFragment extends Fragment implements
             Book bookApi = dataSnapshot.getValue(Book.class);
             mAdapter.removeItem(bookApi);
             setLoading(false);
+
+            updateSubtitle();
         }
 
     }

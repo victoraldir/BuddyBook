@@ -1,5 +1,6 @@
 package com.quartzodev.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -124,23 +125,31 @@ public class ViewPagerFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+    }
+
+    public ViewPager getViewPager(){
+        return mViewPager;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        //When user exits search we show tab with My Book and Explore names
-        if(mTypeFragment.equals(SEARCH_VIEW_PAGER) && mFolderId == null){ //mFolderId == null means My Books section
-            ((MainActivity) getActivity()).setupViewPager(mViewPager,MAIN_VIEW_PAGER);
-        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        MainActivity activity = ((MainActivity) getActivity());
 
-        ((MainActivity) getActivity()).setupViewPager(mViewPager,mTypeFragment);
-
+        activity.showTab();
+        activity.getTabLayout().setupWithViewPager(mViewPager);
+        activity.setupTabIcons(mTypeFragment);
     }
 
     @Override
