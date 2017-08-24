@@ -211,7 +211,7 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
                 Folder folder = dataSnapshot.getValue(Folder.class);
 
                 if (!mFolderList.contains(folder) && !dataSnapshot.getKey().equals("myBooksFolder")) {
-                    mFolderList.add(folder);
+                    mFolderList.add(mFolderList.size() - 1,folder);
                     myFolderRecyclerViewAdapter.swap(mFolderList);
 
                     mListener.onFolderListIsAvailable(mFolderList, getmFolderListCommaSeparated());
