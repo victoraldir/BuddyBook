@@ -172,8 +172,9 @@ public class FolderListFragment extends Fragment implements FirebaseDatabaseHelp
 
         }
 
-        if (mListener != null)
+        if (mListener != null) {
             mListener.onFolderListIsAvailable(folderList, getmFolderListCommaSeparated());
+        }
     }
 
     @Override

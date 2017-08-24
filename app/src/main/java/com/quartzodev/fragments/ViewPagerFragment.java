@@ -168,6 +168,8 @@ public class ViewPagerFragment extends Fragment {
 
             if(fragment instanceof BookGridFragment){
                 ((BookGridFragment) fragment).refresh();
+            }else if(fragment instanceof SearchResultFragment){
+                ((SearchResultFragment) fragment).executeSearchSearchFragment(query,maxResult);
             }
         }
     }

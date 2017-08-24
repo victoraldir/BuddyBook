@@ -311,6 +311,8 @@ public class MainActivity extends AppCompatActivity
 
     private void loadProfileOnDrawer() {
 
+        loadFragment(new FolderListFragment());
+
         LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
         ImageView mImageViewProfile = linearLayout.findViewById(R.id.main_imageview_user_photo);
         TextView mTextViewUsername = linearLayout.findViewById(R.id.main_textview_username);
@@ -332,14 +334,28 @@ public class MainActivity extends AppCompatActivity
 
 
     private void loadFragment(Fragment fragment){
+
+        Fragment retainedFragment = fragment;
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
         if(flagCreateFragment) {
-            Fragment retainedFragment = fragment;
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_main_container, retainedFragment);
-            transaction.commit();
+
+            if (fragment instanceof FolderListFragment) {
+
+                transaction.replace(R.id.container_nav_header, retainedFragment);
+                transaction.commit();
+
+            } else if (flagCreateFragment) {
+
+                transaction.replace(R.id.fragment_main_container, retainedFragment);
+                transaction.commit();
+
+            }
+
         }else{
             flagCreateFragment = true;
         }
+
     }
 
     @Override
