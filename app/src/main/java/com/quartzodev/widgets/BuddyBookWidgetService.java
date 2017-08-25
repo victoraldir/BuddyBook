@@ -40,7 +40,6 @@ public class BuddyBookWidgetService extends RemoteViewsService {
             ValueEventListener,
             FirebaseAuth.AuthStateListener {
 
-        private final String TAG = ListRemoteViewFactory.class.getSimpleName();
         List<Book> mData = new ArrayList<>();
         FirebaseDatabaseHelper mFirebaseDatabaseHelper;
         FirebaseAuth mFirebaseAuth;

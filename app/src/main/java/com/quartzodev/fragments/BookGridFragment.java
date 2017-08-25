@@ -40,8 +40,6 @@ import butterknife.ButterKnife;
 public class BookGridFragment extends Fragment implements
         ChildEventListener {
 
-    private static final String TAG = BookGridFragment.class.getSimpleName();
-
     private final String KEY_USER_ID = "userId";
     private final String KEY_FOLDER_ID = "mFolderId";
     private final String KEY_MENU_ID = "mMenuId";
@@ -79,8 +77,6 @@ public class BookGridFragment extends Fragment implements
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Log.d(TAG,"onCreate fired");
 
         if (savedInstanceState != null) {
 

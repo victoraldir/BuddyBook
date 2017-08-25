@@ -30,7 +30,6 @@ public class FirebaseDatabaseHelper {
     public static final String MAX_BOOKS_KEY = "max_books";
     public static final String REF_POPULAR_FOLDER = "_popularBooks";
     public static final String REF_MY_BOOKS_FOLDER = "myBooksFolder";
-    private static final String TAG = FirebaseDatabaseHelper.class.getSimpleName();
     private static final String ROOT = "users";
     private static final String REF_FOLDERS = "folders";
     private static final String REF_BOOKS = "books";

@@ -69,7 +69,6 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     public static final String AutoFocus = "AutoFocus";
     public static final String UseFlash = "UseFlash";
     public static final String BarcodeObject = "Barcode";
-    private static final String TAG = "Barcode-reader";
     // intent request code to handle updating play services if needed.
     private static final int RC_HANDLE_GMS = 9001;
     // permission request codes need to be < 256

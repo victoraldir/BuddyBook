@@ -31,7 +31,6 @@ import com.google.android.gms.common.images.Size;
 import java.io.IOException;
 
 public class CameraSourcePreview extends ViewGroup {
-    private static final String TAG = "CameraSourcePreview";
 
     private Context mContext;
     private SurfaceView mSurfaceView;

@@ -89,14 +89,12 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         FolderListFragment.OnListFragmentInteractionListener,
-        //FirebaseAuth.AuthStateListener,
         BookGridFragment.OnGridFragmentInteractionListener,
         SearchView.OnQueryTextListener,
         FirebaseDatabaseHelper.OnPaidOperationListener,
         DetailActivityFragment.OnDetailInteractionListener{
 
     public static final String EXTRA_USER_ID = "userId";
-    private static final String TAG = MainActivity.class.getSimpleName();
     private static final int RC_SIGN_IN = 5;
     private static final int RC_BARCODE_CAPTURE = 2;
     private static final String KEY_PARCELABLE_USER = "userKey";

@@ -35,8 +35,6 @@ import butterknife.ButterKnife;
 
 public class SearchResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Book>> {
 
-    private static final String TAG = SearchResultFragment.class.getSimpleName();
-
     private static final int LOADER_ID_SEARCH = 3;
     private static final String ARG_FOLDER_ID = "mFolderId";
     private static final String ARG_ISBN = "mIsbn";

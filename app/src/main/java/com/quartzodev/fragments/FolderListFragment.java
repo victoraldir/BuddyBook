@@ -32,7 +32,6 @@ import java.util.List;
 public class FolderListFragment extends Fragment implements
         ChildEventListener {
 
-    private static final String TAG = FolderListFragment.class.getSimpleName();
     // TODO: Customize parameter argument names
     private static final String ARG_USER_ID = "user-id";
     private final String KEY_USER_ID = "userId";

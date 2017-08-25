@@ -28,8 +28,6 @@ public class ExampleInstrumentedTest {
 
     String[] isbnList = {"1250069793"};
 
-    private static final String TAG = ExampleInstrumentedTest.class.getSimpleName();
-
     @Test
     @Ignore
     public void useAppContext() throws Exception {

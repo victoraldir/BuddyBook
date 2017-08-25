@@ -51,7 +51,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         DialogInterface.OnClickListener,
         ValueEventListener {
 
-    private static final String TAG = DetailActivity.class.getSimpleName();
     private static final String MOVIE_SHARE_HASHTAG = "#BuddyBook ";
 
     @BindView(R.id.detail_imageview_thumb)
