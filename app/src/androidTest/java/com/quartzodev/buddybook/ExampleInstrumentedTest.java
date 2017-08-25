@@ -44,11 +44,7 @@ public class ExampleInstrumentedTest {
     @Test
     @Ignore
     public void shouldGetBookByISBNGoodreads() throws IOException, InterruptedException {
-
-
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
-
+        
         IQuery query = APIService.getInstance().getService(APIService.GOODREADS);
 
         FirebaseDatabaseHelper db = FirebaseDatabaseHelper.getInstance();
