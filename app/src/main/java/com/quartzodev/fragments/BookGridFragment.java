@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.quartzodev.adapters.BookGridAdapter;
 import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
@@ -78,6 +80,8 @@ public class BookGridFragment extends Fragment implements
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d(TAG,"onCreate fired");
+
         if (savedInstanceState != null) {
 
             mUserId = savedInstanceState.getString(KEY_USER_ID);
@@ -112,25 +116,28 @@ public class BookGridFragment extends Fragment implements
         View rootView = inflater.inflate(R.layout.fragment_grid_book, container, false);
         ButterKnife.bind(this, rootView);
 
-        if (savedInstanceState != null && savedInstanceState.containsKey(KEY_USER_ID)) {
-            mUserId = savedInstanceState.getString(KEY_USER_ID);
-        }else{
-            mUserId = mFirebaseAuth.getCurrentUser().getUid();
+        if(mFirebaseAuth.getCurrentUser() != null) {
+
+            if (savedInstanceState != null && savedInstanceState.containsKey(KEY_USER_ID)) {
+                mUserId = savedInstanceState.getString(KEY_USER_ID);
+            } else {
+                mUserId = mFirebaseAuth.getCurrentUser().getUid();
+            }
+
+            mAdapter = new BookGridAdapter(getActivity(),
+                    new ArrayList<Book>(),
+                    mListener,
+                    mMenuId);
+
+            mRecyclerView.setAdapter(mAdapter);
+
+            mAdapter.setFolderId(mFolderId);
+
+            int columnCount = getResources().getInteger(R.integer.list_column_count);
+            GridLayoutManager gridLayoutManager =
+                    new GridLayoutManager(getContext(), columnCount);
+            mRecyclerView.setLayoutManager(gridLayoutManager);
         }
-
-        mAdapter = new BookGridAdapter(getActivity(),
-                new ArrayList<Book>(),
-                mListener,
-                mMenuId);
-
-        mRecyclerView.setAdapter(mAdapter);
-
-        mAdapter.setFolderId(mFolderId);
-
-        int columnCount = getResources().getInteger(R.integer.list_column_count);
-        GridLayoutManager gridLayoutManager =
-                new GridLayoutManager(getContext(), columnCount);
-        mRecyclerView.setLayoutManager(gridLayoutManager);
 
         return rootView;
     }
@@ -148,52 +155,58 @@ public class BookGridFragment extends Fragment implements
 
     private void loadBooks(){
 
-        setLoading(true);
-        mAdapter.clearList();
+        if(mAdapter != null) {
 
-        if (mFolderId != null && mFolderId.equals(FirebaseDatabaseHelper.REF_POPULAR_FOLDER)) {
+            setLoading(true);
+            mAdapter.clearList();
 
-            mFirebaseDatabaseHelper.fetchPopularBooks(new FirebaseDatabaseHelper.OnDataSnapshotListener() {
-                @Override
-                public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
+            if (mFolderId != null && mFolderId.equals(FirebaseDatabaseHelper.REF_POPULAR_FOLDER)) {
 
-                    List<Book> bookList = new ArrayList<>();
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        Book book = child.getValue(Book.class);
-                        bookList.add(book);
+                mFirebaseDatabaseHelper.fetchPopularBooks(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        List<Book> bookList = new ArrayList<>();
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            Book book = child.getValue(Book.class);
+                            bookList.add(book);
+                        }
+
+                        mAdapter.swap(bookList);
+                        setLoading(false);
                     }
 
-                    mAdapter.swap(bookList);
-                    setLoading(false);
-                }
-            });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-        }else{ //Custom or my books
+                    }
+                });
 
-            String sort = getResources().getStringArray(R.array.default_sorts_codes)[PrefUtils.getSortMode(getContext())];
+            } else { //Custom or my books
 
-            mFirebaseDatabaseHelper.fetchBooksFromFolder(mUserId, mFolderId, sort, new FirebaseDatabaseHelper.OnDataSnapshotListener() {
-                @Override
-                public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
-                    List<Book> bookApis = new ArrayList<>();
+                String sort = getResources().getStringArray(R.array.default_sorts_codes)[PrefUtils.getSortMode(getContext())];
 
-                    for (DataSnapshot child : dataSnapshot.getChildren()) {
-                        Book book = child.getValue(Book.class);
+                mFirebaseDatabaseHelper.fetchBooksFromFolder(mUserId, mFolderId, sort, new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        List<Book> bookApis = new ArrayList<>();
 
-                        bookApis.add(book);
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            Book book = child.getValue(Book.class);
+                            bookApis.add(book);
+                        }
+                        mAdapter.swap(bookApis);
+                        setLoading(false);
+                        updateSubtitle();
                     }
 
-                    mAdapter.swap(bookApis);
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-                    setLoading(false);
+                    }
+                });
 
-                    updateSubtitle();
-
-                }
-            });
-
+            }
         }
-
     }
 
     public void updateSubtitle(){

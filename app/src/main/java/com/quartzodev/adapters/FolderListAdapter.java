@@ -10,6 +10,7 @@ import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Folder;
 import com.quartzodev.fragments.FolderListFragment.OnListFragmentInteractionListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,10 +27,9 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
     private static final int VIEW_TYPE_ADD_FOLDER = 3;
     private final OnListFragmentInteractionListener mListener;
     //private final List<DummyItem> mValues;
-    private List<Folder> mFolderList;
+    private List<Folder> mFolderList = new ArrayList<>();
 
-    public FolderListAdapter(List<Folder> folderList, OnListFragmentInteractionListener listener) {
-        mFolderList = folderList;
+    public FolderListAdapter(OnListFragmentInteractionListener listener) {
         mListener = listener;
     }
 
@@ -68,8 +68,9 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
 
     public void swap(List<Folder> folderList) {
         if (folderList != null) {
-            mFolderList = folderList;
-            notifyDataSetChanged();
+            mFolderList.clear();
+            mFolderList.addAll(folderList);
+            this.notifyDataSetChanged();
         }
     }
     //TODO make this flow better. Too confusing!

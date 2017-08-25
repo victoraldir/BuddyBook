@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import butterknife.ButterKnife;
  */
 
 public class ViewPagerFragment extends Fragment {
+
+    private static final String TAG = ViewPagerFragment.class.getSimpleName();
 
     public static final String SEARCH_VIEW_PAGER = "searchViewPager";
     public static final String MAIN_VIEW_PAGER = "mainViewPager";
@@ -65,6 +68,7 @@ public class ViewPagerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        Log.d(TAG,"onCreate fired");
 
         if(getArguments() != null) {
 

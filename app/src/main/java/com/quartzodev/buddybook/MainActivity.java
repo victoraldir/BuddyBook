@@ -1,6 +1,5 @@
 package com.quartzodev.buddybook;
 
-import android.app.Activity;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -90,7 +89,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         FolderListFragment.OnListFragmentInteractionListener,
-        FirebaseAuth.AuthStateListener,
+        //FirebaseAuth.AuthStateListener,
         BookGridFragment.OnGridFragmentInteractionListener,
         SearchView.OnQueryTextListener,
         FirebaseDatabaseHelper.OnPaidOperationListener,
@@ -133,18 +132,16 @@ public class MainActivity extends AppCompatActivity
 
     private String mFolderId;
     private String mFolderName;
-    //private SearchResultFragment mSearchResultFragment;
     private SearchView mSearchView;
     private MenuItem mSearchItem;
     private String mCurrQuery;
     private List<Folder> mFolderList;
     private String mFolderListComma;
     private SearchRecentSuggestions mSuggestions;
-    private boolean flagCreateFragment = true;
+//    private boolean flagCreateFragment = true;
     private boolean mTwoPane;
     private Snackbar mSnackbarNoInternet;
     private SharedPreferences mPrefs;
-
 
     // The Idling Resource which will be null in production.
     @Nullable
@@ -154,50 +151,56 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mContext = this;
-
-        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-
-        // Get the IdlingResource instance
-        getIdlingResource();
-
         setSupportActionBar(mToolbar);
-
-        ActionBarDrawerToggle mActionBarDrawerToggle = new ActionBarDrawerToggle(
-                this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawer.addDrawerListener(mActionBarDrawerToggle);
-        mActionBarDrawerToggle.syncState();
 
         if(findViewById(R.id.detail_container) != null) {
             mTwoPane = true;
         }
 
-        init();
+        // Get the IdlingResource instance
+        getIdlingResource();
 
-        if(savedInstanceState != null){
-            flagCreateFragment = false;
-            mUser = (User) savedInstanceState.get(KEY_PARCELABLE_USER);
-            loadProfileOnDrawer();
-        }
-
-        setupToolbar();
-
-    }
-
-
-    private void init(){
-
-        setupToolbar();
+        mContext = this;
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         //Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
         mNavigationView.setNavigationItemSelectedListener(this);
 
+        ActionBarDrawerToggle mActionBarDrawerToggle = new ActionBarDrawerToggle(
+                this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawer.addDrawerListener(mActionBarDrawerToggle);
+        mActionBarDrawerToggle.syncState();
+
+        mSuggestions = new SearchRecentSuggestions(this,
+                SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
+
+        if(savedInstanceState != null){
+            mUser = (User) savedInstanceState.get(KEY_PARCELABLE_USER);
+        }
+
+        setupFab();
+
         if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) initAdView();
 
+        checkUserIsLoged();
+    }
+
+    private void checkUserIsLoged(){
+
+        if (mFirebaseAuth.getCurrentUser() != null) {
+            onSignedIn(mFirebaseAuth.getCurrentUser());
+        } else {
+//            mFirebaseAuth.addAuthStateListener(this);
+            launchLoginActivityResult();
+        }
+    }
+
+    public void setupFab(){
         if (ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
             mFab.setVisibility(View.VISIBLE);
             mFab.setOnClickListener(new View.OnClickListener() {
@@ -214,21 +217,7 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
-
         }
-
-        if (mFirebaseAuth.getCurrentUser() != null) {
-            onSignedIn(mFirebaseAuth.getCurrentUser());
-        } else {
-            mFirebaseAuth.addAuthStateListener(this);
-            launchLoginActivityResult();
-        }
-    }
-
-    private void setupToolbar(){
-
-        mSuggestions = new SearchRecentSuggestions(this,
-                SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
     }
 
     public FloatingActionButton getFab(){
@@ -237,26 +226,26 @@ public class MainActivity extends AppCompatActivity
 
     private void initAdView(){
         //Ad main
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-    }
-
     public void onSignedIn(final FirebaseUser firebaseUser) {
 
-        if (mUser == null ||
-                mUser.getUid().equals(firebaseUser.getUid())) {
+        if (mUser == null || mUser.getUid().equals(firebaseUser.getUid())) {
+
             mUser = User.setupUserFirstTime(firebaseUser, mContext);
 
-            mFirebaseDatabaseHelper.fetchUserById(mUser.getUid(), new FirebaseDatabaseHelper.OnDataSnapshotListener() {
+            mFirebaseDatabaseHelper.fetchUserById(mUser.getUid(), new ValueEventListener() {
                 @Override
-                public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
+                public void onDataChange(DataSnapshot dataSnapshot) {
                     updateUser(dataSnapshot);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
                 }
             });
         }
@@ -267,8 +256,11 @@ public class MainActivity extends AppCompatActivity
         if (dataSnapshot.getValue() != null) {
 
             mFirebaseDatabaseHelper.updateUserLastActivity(mUser.getUid());
-            loadApplication();
+            //Triggers other fragments in cascade
+            loadFolderListFragment();
+
         } else {
+
             mFirebaseDatabaseHelper.insertUser(mUser, new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -279,13 +271,15 @@ public class MainActivity extends AppCompatActivity
                                 mContext.getResources().getString(R.string.tab_my_books), new DatabaseReference.CompletionListener() {
                                     @Override
                                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                        loadApplication();
+                                        //Triggers other fragments in cascade
+                                        loadFolderListFragment();
                                     }
                                 });
                     }
 
                 }
             });
+
         }
 
     }
@@ -310,58 +304,33 @@ public class MainActivity extends AppCompatActivity
 
     private void loadProfileOnDrawer() {
 
-        loadFragment(new FolderListFragment());
+        if(mUser != null) {
 
-        LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
-        ImageView mImageViewProfile = linearLayout.findViewById(R.id.main_imageview_user_photo);
-        TextView mTextViewUsername = linearLayout.findViewById(R.id.main_textview_username);
-        TextView mTextViewTextEmail = linearLayout.findViewById(R.id.main_textview_user_email);
+            LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
+            ImageView mImageViewProfile = linearLayout.findViewById(R.id.main_imageview_user_photo);
+            TextView mTextViewUsername = linearLayout.findViewById(R.id.main_textview_username);
+            TextView mTextViewTextEmail = linearLayout.findViewById(R.id.main_textview_user_email);
 
-        mTextViewTextEmail.setText(mUser.getEmail());
-        mTextViewUsername.setText(mUser.getUsername());
+            mTextViewTextEmail.setText(mUser.getEmail());
+            mTextViewUsername.setText(mUser.getUsername());
 
-        GlideApp.with(this)
-                .load(mUser.getPhotoUrl())
-                .apply(RequestOptions.circleCropTransform())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(mImageViewProfile);
+            GlideApp.with(this)
+                    .load(mUser.getPhotoUrl())
+                    .apply(RequestOptions.circleCropTransform())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(mImageViewProfile);
 
-        //Test
-        if(mIdlingResource != null)
-            mIdlingResource.setIdleState(true);
-    }
-
-
-    private void loadFragment(Fragment fragment){
-
-        Fragment retainedFragment = fragment;
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        if(flagCreateFragment) {
-
-            if (fragment instanceof FolderListFragment) {
-
-                transaction.replace(R.id.container_nav_header, retainedFragment);
-                transaction.commit();
-
-            } else if (flagCreateFragment) {
-
-                transaction.replace(R.id.fragment_main_container, retainedFragment);
-                transaction.commit();
-
-            }
-
-        }else{
-            flagCreateFragment = true;
+            //Test
+            if (mIdlingResource != null)
+                mIdlingResource.setIdleState(true);
         }
-
     }
 
     public void updateFolderList(){
         Fragment mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.container_nav_header);
 
         if(mCurrentGridFragment instanceof FolderListFragment){
-            ((FolderListFragment) mCurrentGridFragment).refresh();
+            ((FolderListFragment) mCurrentGridFragment).loadFoldersList();
         }
     }
 
@@ -373,7 +342,6 @@ public class MainActivity extends AppCompatActivity
 
             if (resultCode == ErrorCodes.UNKNOWN_ERROR) {
                 AuthUI.getInstance().signOut(this);
-                //finish();
             }
 
             if (resultCode == ErrorCodes.NO_NETWORK) {
@@ -388,7 +356,7 @@ public class MainActivity extends AppCompatActivity
                         boolean connected = snapshot.getValue(Boolean.class);
                         if (connected) {
                             connectedRef.removeEventListener(this);
-                            relaunchActivity();
+                            loadFolderListFragment();
                         }
                     }
 
@@ -400,9 +368,9 @@ public class MainActivity extends AppCompatActivity
             } else {
                 mTextViewMessage.setVisibility(View.GONE);
                 mFrameLayoutContainer.setVisibility(View.VISIBLE);
+                loadFolderListFragment();
             }
 
-            //if (resultCode == RESULT_CANCELED) finish();
         } else if (requestCode == RC_BARCODE_CAPTURE && resultCode == CommonStatusCodes.SUCCESS) {
 
             if (data != null) {
@@ -447,12 +415,14 @@ public class MainActivity extends AppCompatActivity
         if(mIdlingResource != null)
             mIdlingResource.setIdleState(false);
 
-        ((Activity) this).startActivityForResult(
+        startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
-                        .setIsSmartLockEnabled(false)
                         .setTheme(R.style.LoginTheme)
                         .setIsSmartLockEnabled(!BuildConfig.DEBUG)
+                        .setIsSmartLockEnabled(true)
+                        .setLogo(R.mipmap.ic_launcher)
+                        .setPrivacyPolicyUrl("http://www.google.com")
                         .setAvailableProviders(
                                 Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                         new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
@@ -467,9 +437,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
@@ -639,12 +608,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_sign_out:
                 mUser = null;
                 AuthUI.getInstance().signOut(this);
-                if (ConnectionUtils.isNetworkConnected(getApplication())) {
-                    mFirebaseAuth.addAuthStateListener(this);
-                    launchLoginActivityResult();
-                } else {
-                    relaunchActivity();
-                }
+
+//                mFirebaseAuth.addAuthStateListener(this);
+                launchLoginActivityResult();
+
                 return true;
 
             case R.id.action_clear_search:
@@ -671,8 +638,6 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_sort:
 
                 DialogUtils.alertDialogSortList(mContext,mCoordinatorLayout);
-
-                //Snackbar.make(mCoordinatorLayout,"We should sort listing!",Snackbar.LENGTH_LONG).show();
 
                 break;
             default:
@@ -712,16 +677,17 @@ public class MainActivity extends AppCompatActivity
         if(mFolderId == null){
 
             mToolbar.findViewById(R.id.toolbar_container).setVisibility(View.VISIBLE);
-
             mFolderName = getString(R.string.tab_my_books);
-            loadFragment(ViewPagerFragment.newInstance(ViewPagerFragment.MAIN_VIEW_PAGER,mFolderId,null,null));
+            loadMainViewPagerFragment();
+            loadFragment(ViewPagerFragment.newInstance(ViewPagerFragment.MAIN_VIEW_PAGER,
+                    mFolderId,null,null));
+
         }else{
 
             mToolbar.findViewById(R.id.toolbar_container).setVisibility(View.GONE);
             mFolderName = folder.getDescription();
             mToolbar.setTitle(mFolderName);
             loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_folders));
-            setupToolbar();
         }
     }
 
@@ -733,37 +699,62 @@ public class MainActivity extends AppCompatActivity
                 mUser.getUid());
     }
 
+//    @Override
+//    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//
+//        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+//
+//        if (firebaseUser != null) {
+////            mFirebaseAuth.removeAuthStateListener(this);
+//            loadFolderListFragment();
+//        }
+//    }
+
+    //Comes first
+    private void loadFolderListFragment(){
+
+        //Fragment frag = getSupportFragmentManager().findFragmentById(R.id.container_nav_header);
+
+        //if(frag == null){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container_nav_header, new FolderListFragment());
+        transaction.commit();
+        //}
+    }
+
+    //Second step
+    private void loadApplication() {
+        loadProfileOnDrawer();
+        updateWidget();
+        loadMainViewPagerFragment();
+        Snackbar.make(mCoordinatorLayout, getText(R.string.success_sign_in), Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void loadMainViewPagerFragment(){
+        Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+
+        if (frag == null) {
+            loadFragment(ViewPagerFragment.newInstance(ViewPagerFragment.MAIN_VIEW_PAGER,
+                    mFolderId,null,null));
+        }
+    }
+
+    private void loadFragment(Fragment fragment){
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_main_container, fragment);
+        transaction.commit();
+
+    }
+
+    //Gets fired when FolderListFragment is done
     @Override
     public void onFolderListIsAvailable(List<Folder> folderList, String folderListComma) {
         mFolderList = folderList;
         mFolderListComma = folderListComma;
-        loadFragment(ViewPagerFragment.newInstance(ViewPagerFragment.MAIN_VIEW_PAGER,mFolderId,null,null));
+
+        loadApplication();
     }
-
-    @Override
-    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-
-        if (firebaseUser != null) {
-            mFirebaseAuth.removeAuthStateListener(this);
-            relaunchActivity();
-        }
-    }
-
-    private void loadApplication() {
-        loadProfileOnDrawer();
-        updateWidget();
-        Snackbar.make(mCoordinatorLayout, getText(R.string.success_sign_in), Snackbar.LENGTH_SHORT).show();
-    }
-
-    public void relaunchActivity() {
-        Intent it = new Intent(mContext, MainActivity.class);
-        it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(it);
-    }
-
-
 
     @Override
     public void onClickListenerBookGridInteraction(String folderId, Book book, DynamicImageView imageView) {
@@ -1013,20 +1004,6 @@ public class MainActivity extends AppCompatActivity
             DialogUtils.alertDialogUpgradePro(this);
         }
     }
-
-//    public void setupViewPager(ViewPager viewPager, String viewPagerType) {
-//        if(viewPagerType.equals(ViewPagerFragment.MAIN_VIEW_PAGER)) {
-////            if(mViewPagerMain == null) {
-////                mViewPagerMain = viewPager;
-////            }
-//
-//            mTabLayout.setupWithViewPager(viewPager);
-//        }else {
-//            mTabLayout.setupWithViewPager(viewPager);
-//        }
-//        mTabLayout.setVisibility(View.VISIBLE);
-//        setupTabIcons(viewPagerType);
-//    }
 
     public TabLayout getTabLayout(){
         return mTabLayout;

@@ -21,7 +21,6 @@ public class FirebaseDatabaseHelper {
 
     public static final String REF_POPULAR_FOLDER = "_popularBooks";
     public static final String REF_MY_BOOKS_FOLDER = "myBooksFolder";
-    private static final String TAG = FirebaseDatabaseHelper.class.getSimpleName();
     private static final String ROOT = "users";
     private static final String REF_FOLDERS = "folders";
     private static final String REF_BOOKS = "books";
@@ -57,10 +56,10 @@ public class FirebaseDatabaseHelper {
         mDatabaseReference.child(userId).updateChildren(fields);
     }
 
-    public void fetchPopularBooks(final OnDataSnapshotListener onDataSnapshotListener) {
+    public void fetchPopularBooks(final ValueEventListener valueEventListener) {
 
         mDatabaseReference.child(REF_POPULAR_FOLDER)
-                .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+                .addListenerForSingleValueEvent(valueEventListener);
     }
 
     public ChildEventListener attachBookFolderChildEventListener(String userId, String folderId, ChildEventListener listener) {
@@ -71,7 +70,7 @@ public class FirebaseDatabaseHelper {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).removeEventListener(listener);
     }
 
-    public void fetchBooksFromFolder(String userId, String folderId, String sort, final OnDataSnapshotListener onDataSnapshotListener) {
+    public void fetchBooksFromFolder(String userId, String folderId, String sort, final ValueEventListener valueEventListener) {
 
         mDatabaseReference
                 .child(userId)
@@ -79,7 +78,7 @@ public class FirebaseDatabaseHelper {
                 .child(folderId)
                 .child(REF_BOOKS)
                 .orderByChild("volumeInfo/"+sort)
-                .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+                .addListenerForSingleValueEvent(valueEventListener);
 
     }
 
@@ -90,7 +89,7 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void findBookSearch(String userId, String folderId, final OnDataSnapshotListener onDataSnapshotListener) {
+    public void findBookSearch(String userId, String folderId, final ValueEventListener valueEventListener) {
 
         if (folderId == null) {
 
@@ -99,7 +98,7 @@ public class FirebaseDatabaseHelper {
                     .child(REF_MY_BOOKS_FOLDER)
                     .child(REF_BOOKS)
                     .orderByChild("volumeInfo/searchField")
-                    .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+                    .addListenerForSingleValueEvent(valueEventListener);
 
         } else {
 
@@ -108,16 +107,16 @@ public class FirebaseDatabaseHelper {
                     .child(folderId)
                     .child(REF_BOOKS)
                     .orderByChild("volumeInfo/searchField")
-                    .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+                    .addListenerForSingleValueEvent(valueEventListener);
 
         }
 
     }
 
-    public void fetchFolders(String userId, final OnDataSnapshotListener onDataSnapshotListener) {
+    public void fetchFolders(String userId, final ValueEventListener valueEventListener) {
 
         DatabaseReference ref = mDatabaseReference.child(userId).child(REF_FOLDERS);
-        ref.addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+        ref.addListenerForSingleValueEvent(valueEventListener);
 
     }
 
@@ -240,42 +239,11 @@ public class FirebaseDatabaseHelper {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).removeValue();
     }
 
-    public void fetchUserById(String userId, final OnDataSnapshotListener onDataSnapshotListener) {
+    public void fetchUserById(String userId, final ValueEventListener valueEventListener) {
 
         mDatabaseReference.child(userId)
-                .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+                .addListenerForSingleValueEvent(valueEventListener);
 
-    }
-
-    private ValueEventListener buildValueEventListener(final OnDataSnapshotListener onDataSnapshotListener) {
-        return new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                try {
-                    onDataSnapshotListener.onDataSnapshotListenerAvailable(dataSnapshot);
-                    notifyCaller(onDataSnapshotListener);
-                } catch (Exception ex) {
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        };
-    }
-
-    private void notifyCaller(final OnDataSnapshotListener onDataSnapshotListener) {
-        synchronized (onDataSnapshotListener) {
-            onDataSnapshotListener.notify(); //Release Task
-        }
-    }
-
-    /**
-     * This interface must be implemented by classes that want
-     * to load DataSnapshot from this util
-     */
-    public interface OnDataSnapshotListener {
-        void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot);
     }
 
     public interface OnPaidOperationListener {

@@ -28,7 +28,6 @@ import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresPermission;
 import android.support.annotation.StringDef;
-import android.support.annotation.StringDef;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;

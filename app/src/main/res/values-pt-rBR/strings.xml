@@ -165,4 +165,6 @@
     <string name="default_sorts_author">Autor</string>
     <string name="default_sorts_release">Data lançamento</string>
 
+    <string name="number_of_books">%01d livro(s)</string>
+
 </resources>
