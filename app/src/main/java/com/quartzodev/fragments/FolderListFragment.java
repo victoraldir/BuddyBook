@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,8 @@ import java.util.List;
  */
 public class FolderListFragment extends Fragment implements
         ChildEventListener {
+
+    private static final String TAG = FolderListFragment.class.getSimpleName();
 
     // TODO: Customize parameter argument names
     private static final String ARG_USER_ID = "user-id";
@@ -90,20 +93,23 @@ public class FolderListFragment extends Fragment implements
         mFirebaseDatabaseHelper.fetchFolders(mUserId, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                List<Folder> folderList = new ArrayList<>();
+                if(isAdded()) {
+                    List<Folder> folderList = new ArrayList<>();
 
-                if (dataSnapshot.getValue() != null) {
-                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                        Folder folder = postSnapshot.getValue(Folder.class);
-                        if (postSnapshot.getKey() != null) {
-                            folderList.add(folder);
+                    if (dataSnapshot.getValue() != null) {
+                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                            Folder folder = postSnapshot.getValue(Folder.class);
+                            if (postSnapshot.getKey() != null) {
+                                folderList.add(folder);
+                            }
                         }
-                    }
 
-                    mFolderList = folderList;
-                    mAdapter.swap(mFolderList);
-                    mAdapter.notifyDataSetChanged();
-                    mListener.onFolderListIsAvailable(mFolderList,getmFolderListCommaSeparated());
+                        mFolderList = folderList;
+                        mAdapter.swap(mFolderList);
+                        mAdapter.notifyDataSetChanged();
+                        mListener.onFolderListIsAvailable(mFolderList, getmFolderListCommaSeparated());
+
+                    }
                 }
             }
 
@@ -139,11 +145,14 @@ public class FolderListFragment extends Fragment implements
         List<String> stringList = new ArrayList<>();
 
         for (Folder folder : mFolderList) {
-
-            if(folder.getDescription().equals(getString(R.string.tab_my_books))){
-                stringList.add(getString(R.string.tab_my_books) + "=" + "myBooksFolder");
+            if(folder.getDescription() != null) {
+                if (folder.getDescription().equals(getString(R.string.tab_my_books))) {
+                    stringList.add(getString(R.string.tab_my_books) + "=" + "myBooksFolder");
+                } else {
+                    stringList.add(folder.getDescription() + "=" + folder.getId());
+                }
             }else{
-                stringList.add(folder.getDescription() + "=" + folder.getId());
+                Log.wtf(TAG,"What's that??" + folder);
             }
 
         }
@@ -181,7 +190,7 @@ public class FolderListFragment extends Fragment implements
                 Folder folder = dataSnapshot.getValue(Folder.class);
 
                 if (!mFolderList.contains(folder) && !dataSnapshot.getKey().equals("myBooksFolder")) {
-                    mFolderList.add(mFolderList.size() - 1,folder);
+                    mFolderList.add(mFolderList.size() == 0 ? 0 : mFolderList.size() - 1,folder);
                     mAdapter.swap(mFolderList);
                     mAdapter.notifyDataSetChanged();
 

@@ -23,6 +23,7 @@ import android.support.design.widget.TabLayout;
 import android.support.test.espresso.IdlingResource;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -136,7 +137,6 @@ public class MainActivity extends AppCompatActivity
     private List<Folder> mFolderList;
     private String mFolderListComma;
     private SearchRecentSuggestions mSuggestions;
-//    private boolean flagCreateFragment = true;
     private boolean mTwoPane;
     private Snackbar mSnackbarNoInternet;
     private SharedPreferences mPrefs;
@@ -193,8 +193,11 @@ public class MainActivity extends AppCompatActivity
         if (mFirebaseAuth.getCurrentUser() != null) {
             onSignedIn(mFirebaseAuth.getCurrentUser());
         } else {
-//            mFirebaseAuth.addAuthStateListener(this);
-            launchLoginActivityResult();
+            if (ConnectionUtils.isNetworkConnected(getApplication())) {
+                launchLoginActivityResult();
+            }else{
+                showStatus(NO_INTERNET);
+            }
         }
     }
 
@@ -214,7 +217,6 @@ public class MainActivity extends AppCompatActivity
 
                 }
             });
-
         }
     }
 
@@ -251,35 +253,37 @@ public class MainActivity extends AppCompatActivity
 
     private void updateUser(DataSnapshot dataSnapshot) {
 
-        if (dataSnapshot.getValue() != null) {
+        if(mUser != null) {
 
-            mFirebaseDatabaseHelper.updateUserLastActivity(mUser.getUid());
-            //Triggers other fragments in cascade
-            loadFolderListFragment();
+            if (dataSnapshot.getValue() != null) {
 
-        } else {
+                mFirebaseDatabaseHelper.updateUserLastActivity(mUser.getUid());
+                loadFolderListFragment();
+                Snackbar.make(mCoordinatorLayout, getText(R.string.success_sign_in), Snackbar.LENGTH_SHORT).show();
 
-            mFirebaseDatabaseHelper.insertUser(mUser, new DatabaseReference.CompletionListener() {
-                @Override
-                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+            } else {
 
-                    if (databaseError == null) {
-                        mFirebaseDatabaseHelper.insertDefaulFolder(
-                                mUser.getUid(),
-                                mContext.getResources().getString(R.string.tab_my_books), new DatabaseReference.CompletionListener() {
-                                    @Override
-                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                        //Triggers other fragments in cascade
-                                        loadFolderListFragment();
-                                    }
-                                });
+                mFirebaseDatabaseHelper.insertUser(mUser, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+                        if (databaseError == null) {
+                            mFirebaseDatabaseHelper.insertDefaulFolder(
+                                    mUser.getUid(),
+                                    mContext.getResources().getString(R.string.tab_my_books), new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                            Snackbar.make(mCoordinatorLayout, getText(R.string.success_sign_in), Snackbar.LENGTH_SHORT).show();
+                                            loadFolderListFragment();
+                                        }
+                                    });
+                        }
+
                     }
+                });
 
-                }
-            });
-
+            }
         }
-
     }
 
     public void updateWidget() {
@@ -343,30 +347,11 @@ public class MainActivity extends AppCompatActivity
             }
 
             if (resultCode == ErrorCodes.NO_NETWORK) {
-                mTextViewMessage.setVisibility(View.VISIBLE);
-                mFrameLayoutContainer.setVisibility(View.GONE);
-                mTextViewMessage.setText(getString(R.string.no_internet));
 
-                final DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
-                connectedRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        boolean connected = snapshot.getValue(Boolean.class);
-                        if (connected) {
-                            connectedRef.removeEventListener(this);
-                            loadFolderListFragment();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError error) {}
-                });
-
+                showStatus(NO_INTERNET);
 
             } else {
-                mTextViewMessage.setVisibility(View.GONE);
-                mFrameLayoutContainer.setVisibility(View.VISIBLE);
-                loadFolderListFragment();
+                checkUserIsLoged();
             }
 
         } else if (requestCode == RC_BARCODE_CAPTURE && resultCode == CommonStatusCodes.SUCCESS) {
@@ -377,10 +362,66 @@ public class MainActivity extends AppCompatActivity
                 Fragment searchFragment = SearchResultFragment.newInstance(mFolderId, barcode.displayValue);
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_main_container, searchFragment).commit();
+                transaction.replace(R.id.fragment_main_container, searchFragment).commitAllowingStateLoss();
 
             }
         }
+    }
+
+    final int NO_INTERNET = 1;
+    final int LOADING = 2;
+    final int READY = 3;
+
+    public void showStatus(int statusCode){
+
+        switch (statusCode){
+            case NO_INTERNET:
+
+                mTextViewMessage.setVisibility(View.VISIBLE);
+                mFrameLayoutContainer.setVisibility(View.GONE);
+                mTextViewMessage.setText(getString(R.string.no_internet));
+
+                mFab.setVisibility(View.GONE);
+                mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                mToolbar.setVisibility(View.GONE);
+                mTabLayout.setVisibility(View.GONE);
+
+                final DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+                connectedRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        boolean connected = snapshot.getValue(Boolean.class);
+                        if (connected) {
+                            connectedRef.removeEventListener(this);
+                            checkUserIsLoged();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {}
+                });
+
+                break;
+            case LOADING:
+
+                mTextViewMessage.setVisibility(View.VISIBLE);
+                mFrameLayoutContainer.setVisibility(View.GONE);
+                mTextViewMessage.setText("LOADING----");
+
+                break;
+            case READY:
+
+                mTextViewMessage.setVisibility(View.GONE);
+                mFrameLayoutContainer.setVisibility(View.VISIBLE);
+
+                mFab.setVisibility(View.VISIBLE);
+                mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+                mToolbar.setVisibility(View.VISIBLE);
+                mTabLayout.setVisibility(View.VISIBLE);
+
+                break;
+        }
+
     }
 
     @Override
@@ -419,8 +460,6 @@ public class MainActivity extends AppCompatActivity
                         .setTheme(R.style.LoginTheme)
                         .setIsSmartLockEnabled(!BuildConfig.DEBUG)
                         .setIsSmartLockEnabled(true)
-                        .setLogo(R.mipmap.ic_launcher)
-                        .setPrivacyPolicyUrl("http://www.google.com")
                         .setAvailableProviders(
                                 Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                         new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
@@ -474,122 +513,119 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if (ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
-            if(mToolbar2 == null){
+        if (mToolbar2 == null) {
 
-                if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) {
-                    getMenuInflater().inflate(R.menu.main, menu);
-                }else{
-                    getMenuInflater().inflate(R.menu.main_paid, menu);
-                }
-
-            }else{
-                if(!mToolbar.getMenu().hasVisibleItems())
-                    mToolbar.inflateMenu(R.menu.main_toolbar1);
-
-                if(!mToolbar2.getMenu().hasVisibleItems()) {
-                    if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) {
-                        mToolbar2.inflateMenu(R.menu.main_toolbar2);
-                    }else{
-                        mToolbar2.inflateMenu(R.menu.main_toolbar2_paid);
-                    }
-                }
+            if (BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) {
+                getMenuInflater().inflate(R.menu.main, menu);
+            } else {
+                getMenuInflater().inflate(R.menu.main_paid, menu);
             }
 
+        } else {
+            if (!mToolbar.getMenu().hasVisibleItems())
+                mToolbar.inflateMenu(R.menu.main_toolbar1);
 
-            // Retrieve the SearchView and plug it into SearchManager
-            //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-            mSearchItem = menu.findItem(R.id.action_search);
-            mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
-
-            mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-                @Override
-                public boolean onSuggestionSelect(int position) {
-
-                    return false;
+            if (!mToolbar2.getMenu().hasVisibleItems()) {
+                if (BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) {
+                    mToolbar2.inflateMenu(R.menu.main_toolbar2);
+                } else {
+                    mToolbar2.inflateMenu(R.menu.main_toolbar2_paid);
                 }
-
-                @Override
-                public boolean onSuggestionClick(int position) {
-
-                    return false;
-                }
-            });
-
-            if (!TextUtils.isEmpty(mCurrQuery)) {
-                mSearchItem.expandActionView();
-                mSearchView.setQuery(mCurrQuery, true);
-                mSearchView.clearFocus();
             }
-
-            SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-
-            mSearchView.setOnQueryTextListener(this);
-
-            final String search_tag = "SEARCH_TAG";
-
-            MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
-                @Override
-                public boolean onMenuItemActionExpand(MenuItem item) {
-
-                    if (!ConnectionUtils.isNetworkConnected(mContext)) {
-                        mSnackbarNoInternet = Snackbar.make(mCoordinatorLayout, R.string.no_internet_search, Snackbar.LENGTH_INDEFINITE);
-                        mSnackbarNoInternet.show();
-                    }
-
-                    Fragment mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
-
-                    if (mCurrentGridFragment instanceof ViewPagerFragment) {
-                        hideTab();
-                    }
-
-                    ViewPagerFragment fragment = ViewPagerFragment.newInstance(ViewPagerFragment.SEARCH_VIEW_PAGER,mFolderId,null,null);
-
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.add(R.id.fragment_main_container, fragment, search_tag);
-                    transaction.commitNow();
-
-                    return true;
-                }
-
-                @Override
-                public boolean onMenuItemActionCollapse(MenuItem item) {
-
-                    Fragment fragment = getSupportFragmentManager().findFragmentByTag(search_tag);
-
-                    if(fragment !=null){
-                        getSupportFragmentManager().beginTransaction().remove(fragment).commitNow();
-                    }
-
-                    fragment =  getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
-
-
-                    if (fragment instanceof ViewPagerFragment) {
-
-                        ViewPager viewPager = ((ViewPagerFragment) fragment).getViewPager();
-
-                        mTabLayout.setVisibility(View.VISIBLE);
-
-                        mTabLayout.setupWithViewPager(viewPager);
-
-                        showTab();
-
-                        setupTabIcons(ViewPagerFragment.MAIN_VIEW_PAGER);
-                    }
-
-                    if(mSnackbarNoInternet != null && mSnackbarNoInternet.isShown()){
-                        mSnackbarNoInternet.dismiss();
-                    }
-
-                    return true;
-                }
-            });
-
-            ComponentName componentName = new ComponentName(mContext, MainActivity.class);
-
-            mSearchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
-
         }
+
+
+        // Retrieve the SearchView and plug it into SearchManager
+        //final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        mSearchItem = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(mSearchItem);
+
+        mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+
+                return false;
+            }
+        });
+
+        if (!TextUtils.isEmpty(mCurrQuery)) {
+            mSearchItem.expandActionView();
+            mSearchView.setQuery(mCurrQuery, true);
+            mSearchView.clearFocus();
+        }
+
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+
+        mSearchView.setOnQueryTextListener(this);
+
+        final String search_tag = "SEARCH_TAG";
+
+        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+
+                if (!ConnectionUtils.isNetworkConnected(mContext)) {
+                    mSnackbarNoInternet = Snackbar.make(mCoordinatorLayout, R.string.no_internet_search, Snackbar.LENGTH_INDEFINITE);
+                    mSnackbarNoInternet.show();
+                }
+
+                Fragment mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+
+                if (mCurrentGridFragment instanceof ViewPagerFragment) {
+                    hideTab();
+                }
+
+                ViewPagerFragment fragment = ViewPagerFragment.newInstance(ViewPagerFragment.SEARCH_VIEW_PAGER, mFolderId, null, null);
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.add(R.id.fragment_main_container, fragment, search_tag);
+                transaction.commitNow();
+
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag(search_tag);
+
+                if (fragment != null) {
+                    getSupportFragmentManager().beginTransaction().remove(fragment).commitNow();
+                }
+
+                fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+
+
+                if (fragment instanceof ViewPagerFragment) {
+
+                    ViewPager viewPager = ((ViewPagerFragment) fragment).getViewPager();
+
+                    mTabLayout.setVisibility(View.VISIBLE);
+                    mTabLayout.setupWithViewPager(viewPager);
+
+                    showTab();
+
+                    setupTabIcons(ViewPagerFragment.MAIN_VIEW_PAGER);
+                }
+
+                if (mSnackbarNoInternet != null && mSnackbarNoInternet.isShown()) {
+                    mSnackbarNoInternet.dismiss();
+                }
+
+                return true;
+            }
+        });
+
+        ComponentName componentName = new ComponentName(mContext, MainActivity.class);
+
+        mSearchView.setSearchableInfo(searchManager.getSearchableInfo(componentName));
+
         return true;
 
     }
@@ -606,8 +642,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.action_sign_out:
                 mUser = null;
                 AuthUI.getInstance().signOut(this);
-
-//                mFirebaseAuth.addAuthStateListener(this);
+                clearFragmentBackStack();
                 launchLoginActivityResult();
 
                 return true;
@@ -697,27 +732,18 @@ public class MainActivity extends AppCompatActivity
                 mUser.getUid());
     }
 
-//    @Override
-//    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-//
-//        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-//
-//        if (firebaseUser != null) {
-////            mFirebaseAuth.removeAuthStateListener(this);
-//            loadFolderListFragment();
-//        }
-//    }
+    private void clearFragmentBackStack(){
+        FragmentManager fm = getSupportFragmentManager();
+        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+            fm.popBackStack();
+        }
+    }
 
     //Comes first
     private void loadFolderListFragment(){
-
-        //Fragment frag = getSupportFragmentManager().findFragmentById(R.id.container_nav_header);
-
-        //if(frag == null){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container_nav_header, new FolderListFragment());
-        transaction.commit();
-        //}
+        transaction.commitAllowingStateLoss();
     }
 
     //Second step
@@ -725,7 +751,7 @@ public class MainActivity extends AppCompatActivity
         loadProfileOnDrawer();
         updateWidget();
         loadMainViewPagerFragment();
-        Snackbar.make(mCoordinatorLayout, getText(R.string.success_sign_in), Snackbar.LENGTH_SHORT).show();
+        showStatus(READY);
     }
 
     private void loadMainViewPagerFragment(){
@@ -741,7 +767,7 @@ public class MainActivity extends AppCompatActivity
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_main_container, fragment);
-        transaction.commit();
+        transaction.commitAllowingStateLoss();
 
     }
 
@@ -774,7 +800,7 @@ public class MainActivity extends AppCompatActivity
 
             getSupportFragmentManager().popBackStackImmediate();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.detail_container, newFragment).commit();
+            transaction.replace(R.id.detail_container, newFragment).commitAllowingStateLoss();
 
         }else {
 
