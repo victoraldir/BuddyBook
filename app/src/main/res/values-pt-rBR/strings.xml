@@ -1,0 +1,170 @@
+<resources>
+    <string name="app_name">BuddyBook</string>
+
+    <string name="navigation_drawer_open">Abrir gaveta</string>
+    <string name="navigation_drawer_close">Fechar gaveta</string>
+
+    <string name="action_settings">Configurações</string>
+    <string name="action_clear_search">Apagar histórico de busca</string>
+    <string name="action_sign_out">Sair</string>
+    <string name="action_remove">Remover</string>
+    <string name="action_copy">Copiar para pasta…</string>
+    <string name="action_lend">Emprestar esse livro</string>
+    <string name="action_return_lend">Devolver este livro</string>
+    <string name="action_have_this">Eu tenho esse</string>
+    <string name="action_move_to">Mover para o folder…</string>
+
+    <string name="added_to_folder">Livro adicionado para a pasta %1$s</string>
+    <string name="copied_to_folder">Livro copiado para a pasta %1$s</string>
+    <string name="deleted_folder">Livro deletado</string>
+    <string name="redo">Desfazer</string>
+
+    <string name="success_sign_in">Você foi logado!</string>
+
+    <string name="success_lend_book">Livro emprestado com sucesso!</string>
+    <string name="success_add_book">Livro inserido com sucesso!</string>
+
+    <string name="widget_cd">Buddybook widget</string>
+
+    <string name="dialog_return_book_title">Devolvendo um livro?</string>
+    <string name="dialog_return_book_body">%1$s está devolvendo este livro?</string>
+
+    <string name="tab_top_books">Explorar</string>
+    <string name="tab_my_books">Meus livros</string>
+    <string name="item_add_folder">Adicionar pasta</string>
+    <string name="app_label">BuddyBook - Catálogo de livros</string>
+    <string name="search_hint">Título do livro, autor…</string>
+    <string name="dialog_message">Esta ação também removerá todos os livros desta pasta</string>
+    <string name="dialog_title">Deletar %1$s?</string>
+
+    <string name="dialog_title_lend">Emprestar livro</string>
+
+    <string name="pick_folder">Mover para pasta…</string>
+
+    <string name="folder_already_exits">Pasta já existe</string>
+    <string name="folder_desc_empty">Descriçāo da pasta não pode estar vazia</string>
+
+    <string name="lend_name_empty">Nome não pode estar vazio</string>
+    <string name="lend_email_empty">Email não pode estar vazio</string>
+    <string name="lend_email_invalid">Email inválido</string>
+
+    <string name="no_internet">Sem internet</string>
+
+    <string name="dialog_btn_positive">Sim</string>
+    <string name="dialog_btn_ok">OK</string>
+    <string name="dialog_btn_cancel">Cancelar</string>
+    <string name="title_activity_detail">Detalhes do livro</string>
+    <string name="error_adding_card">Error carregado fragmentos</string>
+    <string name="simple_scanner_activity">Código de barras</string>
+
+    <string name="dialog_name_hint">Nome</string>
+    <string name="dialog_email_hint">Email (opicional)</string>
+
+    <string name="lent_to">Emprestado para: %1$s</string>
+    <string name="lent_to_email">Email: %1$s</string>
+    <string name="lent_day_ago">Data:%3d dias atrás</string>
+    <string name="day_ago">%3d days \n ago</string>
+
+    <string name="folder_empty">Pasta vazia</string>
+
+    <string name="btn_scan_book_cd">Escanear livro por ISBN</string>
+
+    <string name="cover_book_cd">Capa do livro: %1$s</string>
+
+    <string name="receiver_name_cd">Nome do recebedor</string>
+
+
+
+
+
+    <string name="aboutLibraries_description_text">
+
+         <![CDATA[
+         Buddybook é um projeto de código aberto. O seu código fonte pode ser encontrado no meu <a href="https://github.com/victoraldir/BuddyBook" >GitHub</a>.
+          <br/>
+          Logo abaixo você pode encontrar bibliotecas de código aberto usadas neste projeto.
+          <br/> Se você encontrar algum <b>problema</b> ou se tem alguma <b>sugestão</b>, por gentileza, abra uma issue aqui <a href="https://github.com/victoraldir/BuddyBook/issues" >Issues</a>
+          <br/>
+          <br/>
+          Desenvolvido com \u2764 por <a href="https://about.me/victoraldir">Victor Neves</a>
+]]>
+
+    </string>
+
+    <!-- TODO barcode stuff. Review them! -->
+    <string name="ok">OK</string>
+    <string name="permission_camera_rationale">Acesso a câmera é necessária para detecção</string>
+    <string name="no_camera_permission">Essa funcionalidade não pôde ser ativada pois a permissão de acesso a câmera é necessária.  Fechando tela.</string>
+
+
+
+    <string name="read_barcode">Ler código de barras</string>
+    <string name="auto_focus">Foco automático</string>
+    <string name="use_flash">Use o flash</string>
+    <string name="barcode_success">Código de barras lido com sucesso</string>
+    <string name="barcode_failure">Código de barras não capturado</string>
+    <string name="barcode_error">\"Erro lendo código de barras: %1$s\"</string>
+    <string name="activity_title">Ler código de barras</string>
+    <string name="point_bar_code">Aponte para o código de barras. Pince/Expanda para dar zoom</string>
+    <string name="action_share">Compartilhar</string>
+    <string name="checkbook">Olhe esse livro</string>
+    <string name="borrowed_book">Livro emprestado</string>
+
+
+
+
+
+    <string name="empty_list">Sem dados</string>
+    <string name="move_to_folder_cd">Mover para pasta</string>
+    <string name="lent_book_cd">Ação emprestar livro</string>
+    <string name="folder_icon_cd">Icone da pasta</string>
+    <string name="add_new_folder_cd">Ação adicionar nova pasta</string>
+    <string name="my_books_folder_cd">Meus livros</string>
+    <string name="profile_icon_cd">Foto de perfil</string>
+    <string name="folders">Pastas</string>
+    <string name="add_new_folder">Adicionar nova pasta</string>
+    <string name="communicate">Comunicar</string>
+    <string name="share">Compartilhar</string>
+    <string name="name">Nome</string>
+    <string name="title">Título</string>
+    <string name="author">Autor (opcional)</string>
+    <string name="publisher">Editora (opcional)</string>
+    <string name="book_title">Título</string>
+    <string name="search">Pesquisar</string>
+    <string name="add_book">Adicionar livro customizado</string>
+    <string name="add_sort">Ordenar</string>
+    <string name="borrowed_book_icon_cd">Ícone livro emprestado</string>
+    <string name="btn_return_book_cd">Devolver este livro</string>
+    <string name="btn_lend_book_cd">Emprestar este livro</string>
+    <string name="receiver_email_cd">Email do recebedor (opcional)</string>
+    <string name="search_clear">Histórico de busca limpo</string>
+    <string name="dialog_upgrade">Atualizar para PRO</string>
+    <string name="dialog_add_book">Adicionar livro customizado</string>
+    <string name="dialog_upgrade_message">Você chegou a limite concedido no plano FREE. Por favor, atualize para versão PRO e tenha acesso a criação ilimitada de pastas e livros sem anúncios. E o melhor! Você ainda me paga um cafezinho =D</string>
+    <string name="dialog_btn_updgate">Atualizar para PRO</string>
+    <string name="folder_empty_hint">Voce pode começar procurando pelo seu livro favorito ou scaneando o código de barras de algum livro</string>
+    <string name="btn_search_hint">Pesquisar</string>
+    <string name="search_empty">Nada para mostrar</string>
+    <string name="search_empty_hint">Digite um título, autor ou use a busca por ISBN (código de barras)</string>
+    <string name="no_internet_search">Você não está conectado na internet</string>
+    <string name="insert_success">Livro inserido com sucesso</string>
+    <string name="no_description">Não há descrição disponível para este livro</string>
+    <string name="title_empty">Título não pode estar vazio</string>
+    <string name="title_author">Autor não pode estar vazio</string>
+    <string name="title_publisher">Editora não pode estar vazio</string>
+    <string name="action_about">Sobre</string>
+    <string name="action_to_premium">Upgrade</string>
+
+    <string name="sign_in_with_facebook">Login com Facebook</string>
+    <string name="sign_in_with_google">Login com Google</string>
+    <string name="sign_in_with_email">Login com email</string>
+    <string name="tab_search_online">Web</string>
+
+    <string name="sort_options">Ordernar por</string>
+    <string name="default_sorts_title">Título</string>
+    <string name="default_sorts_author">Autor</string>
+    <string name="default_sorts_release">Data lançamento</string>
+
+    <string name="number_of_books">%01d livro(s)</string>
+
+</resources>

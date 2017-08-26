@@ -2,7 +2,6 @@ package com.quartzodev.task;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
-import android.util.Log;
 
 import com.quartzodev.api.APIService;
 import com.quartzodev.data.Book;
@@ -60,7 +59,6 @@ public class SearchTask extends AsyncTaskLoader<List<Book>> {
 
     @Override
     protected boolean onCancelLoad() {
-        Log.d(LOG, "onCancelLoad() fired!!!");
         return super.onCancelLoad();
     }
 
@@ -78,10 +76,6 @@ public class SearchTask extends AsyncTaskLoader<List<Book>> {
         }
 
         if (isReset() || isLoadInBackgroundCanceled() || isAbandoned()) {
-            Log.d(LOG, "This operation should be cancelled");
-            Log.d(LOG, "isReset() : " + isReset());
-            Log.d(LOG, "isAbandoned() : " + isAbandoned());
-            Log.d(LOG, "isLoadInBackgroundCanceled() : " + isLoadInBackgroundCanceled());
             return null;
         }
 

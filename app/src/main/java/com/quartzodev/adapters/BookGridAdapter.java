@@ -1,6 +1,7 @@
 package com.quartzodev.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -12,17 +13,19 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.quartzodev.buddybook.GlideApp;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.fragments.BookGridFragment;
+import com.quartzodev.utils.TextUtils;
 import com.quartzodev.views.DynamicImageView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +42,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     private final int POS_BOOK_CUSTOM_AVAILABLE = 4;
 
     private Context mContext;
-    private Set<Book> mBookList = new HashSet<>();
+    private List<Book> mBookList = new ArrayList<>();
     private BookGridFragment.OnGridFragmentInteractionListener mListener;
     private String mFolderId;
     private int mMenuId;
@@ -50,7 +53,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     private int lastPosition = -1;
 
     public BookGridAdapter(Context mContext,
-                           Set<Book> bookList,
+                           List<Book> bookList,
                            BookGridFragment.OnGridFragmentInteractionListener listener,
                            int menuId) {
         this.mContext = mContext;
@@ -120,22 +123,16 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     }
 
     public void clearList() {
-        this.mBookList.clear();
-        this.notifyDataSetChanged();
-    }
-
-    public void swap(List<Book> bookApiList) {
-        clearList();
-        if (bookApiList != null) {
-            mBookList.addAll(bookApiList);
+        if(mBookList != null) {
+            this.mBookList.clear();
             this.notifyDataSetChanged();
-
         }
     }
 
-    public void merge(List<Book> bookApiList) {
+    public void swap(List<Book> bookApiList) {
         if (bookApiList != null)
-            mBookList.addAll(bookApiList);
+            clearList();
+            mBookList = bookApiList;
         this.notifyDataSetChanged();
     }
 
@@ -147,7 +144,6 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
             lastPosition = position;
         }
     }
-
 
     @Override
     public void onBindViewHolder(final BookGridAdapter.ViewHolder holder, int position) {
@@ -207,8 +203,9 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
         if (book.getVolumeInfo().getImageLink() != null) {
 
-            Glide.with(mContext)
+            GlideApp.with(mContext)
                     .load(book.getVolumeInfo().getImageLink().getThumbnail())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(holder.imageViewthumbnail);
 
             holder.imageViewthumbnail.setContentDescription(
@@ -217,9 +214,24 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
 
         } else if (book.isCustom()) {
 
+            TextDrawable drawable = TextDrawable.builder()
+                    .buildRect(TextUtils.getFirstLetterTitle(book), Color.BLUE);
+
             holder.imageViewthumbnail.setContentDescription(
                     String.format(mContext.getString(R.string.cover_book_cd), book.getVolumeInfo()
                             .getTitle()));
+
+            holder.imageViewthumbnail.setImageDrawable(drawable);
+
+
+        }else{
+
+            TextDrawable drawable = TextDrawable.builder()
+                    .buildRect(TextUtils.getFirstLetterTitle(book), Color.RED);
+
+            holder.imageViewthumbnail.setImageDrawable(drawable);
+
+            
         }
 
         holder.view.setOnClickListener(new View.OnClickListener() {

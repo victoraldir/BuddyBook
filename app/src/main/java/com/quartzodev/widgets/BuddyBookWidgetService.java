@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
@@ -41,7 +40,6 @@ public class BuddyBookWidgetService extends RemoteViewsService {
             ValueEventListener,
             FirebaseAuth.AuthStateListener {
 
-        private final String TAG = ListRemoteViewFactory.class.getSimpleName();
         List<Book> mData = new ArrayList<>();
         FirebaseDatabaseHelper mFirebaseDatabaseHelper;
         FirebaseAuth mFirebaseAuth;
@@ -162,7 +160,6 @@ public class BuddyBookWidgetService extends RemoteViewsService {
 
         @Override
         public void onCancelled(DatabaseError databaseError) {
-            Log.d(TAG, "onDataChange fired");
         }
 
         @Override

@@ -1,7 +1,6 @@
 package com.quartzodev.data;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,8 +30,6 @@ public class FirebaseDatabaseHelper {
     public static final String MAX_BOOKS_KEY = "max_books";
     public static final String REF_POPULAR_FOLDER = "_popularBooks";
     public static final String REF_MY_BOOKS_FOLDER = "myBooksFolder";
-    public static final String REF_SEARCH_HISTORY = "search_history";
-    private static final String TAG = FirebaseDatabaseHelper.class.getSimpleName();
     private static final String ROOT = "users";
     private static final String REF_FOLDERS = "folders";
     private static final String REF_BOOKS = "books";
@@ -80,14 +77,12 @@ public class FirebaseDatabaseHelper {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Config fetch success");
                         mFirebaseRemoteConfig.activateFetched();
                         applyRetrievedConfig();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "Failure fetching config");
                 applyRetrievedConfig();
             }
         });
@@ -112,17 +107,10 @@ public class FirebaseDatabaseHelper {
         mDatabaseReference.child(userId).updateChildren(fields);
     }
 
-    public void fetchPopularBooks(final OnDataSnapshotListener onDataSnapshotListener) {
+    public void fetchPopularBooks(final ValueEventListener valueEventListener) {
 
         mDatabaseReference.child(REF_POPULAR_FOLDER)
-                .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
-    }
-
-    public void fetchMyBooksFolder(String userId, final OnDataSnapshotListener onDataSnapshotListener) {
-
-        mDatabaseReference.child(userId).child(REF_FOLDERS).child(REF_MY_BOOKS_FOLDER)
-                .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
-
+                .addListenerForSingleValueEvent(valueEventListener);
     }
 
     public ChildEventListener attachBookFolderChildEventListener(String userId, String folderId, ChildEventListener listener) {
@@ -133,10 +121,15 @@ public class FirebaseDatabaseHelper {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).removeEventListener(listener);
     }
 
-    public void fetchBooksFromFolder(String userId, String folderId, final OnDataSnapshotListener onDataSnapshotListener) {
+    public void fetchBooksFromFolder(String userId, String folderId, String sort, final ValueEventListener valueEventListener) {
 
-        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId)
-                .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+        mDatabaseReference
+                .child(userId)
+                .child(REF_FOLDERS)
+                .child(folderId)
+                .child(REF_BOOKS)
+                .orderByChild("volumeInfo/"+sort)
+                .addListenerForSingleValueEvent(valueEventListener);
 
     }
 
@@ -147,27 +140,7 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void findBook(String userId, String folderId, String bookId, final OnDataSnapshotListener onDataSnapshotListener) {
-
-        if (folderId == null) {
-
-            mDatabaseReference.child(userId).child(REF_SEARCH_HISTORY).child(bookId).addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
-
-        } else if (folderId.equals(REF_POPULAR_FOLDER)) {
-
-            mDatabaseReference.child(REF_POPULAR_FOLDER).child("books").child(bookId)
-                    .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
-
-        } else {
-
-            mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child("books").child(bookId)
-                    .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
-
-        }
-
-    }
-
-    public void findBookSearch(String userId, String folderId, String bookQuery, final OnDataSnapshotListener onDataSnapshotListener) {
+    public void findBookSearch(String userId, String folderId, final ValueEventListener valueEventListener) {
 
         if (folderId == null) {
 
@@ -176,7 +149,7 @@ public class FirebaseDatabaseHelper {
                     .child(REF_MY_BOOKS_FOLDER)
                     .child(REF_BOOKS)
                     .orderByChild("volumeInfo/searchField")
-                    .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+                    .addListenerForSingleValueEvent(valueEventListener);
 
         } else {
 
@@ -185,16 +158,16 @@ public class FirebaseDatabaseHelper {
                     .child(folderId)
                     .child(REF_BOOKS)
                     .orderByChild("volumeInfo/searchField")
-                    .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+                    .addListenerForSingleValueEvent(valueEventListener);
 
         }
 
     }
 
-    public void fetchFolders(String userId, final OnDataSnapshotListener onDataSnapshotListener) {
+    public void fetchFolders(String userId, final ValueEventListener valueEventListener) {
 
         DatabaseReference ref = mDatabaseReference.child(userId).child(REF_FOLDERS);
-        ref.addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+        ref.addListenerForSingleValueEvent(valueEventListener);
 
     }
 
@@ -312,7 +285,6 @@ public class FirebaseDatabaseHelper {
     }
 
     private void insert(DataSnapshot dataSnapshot,OnPaidOperationListener listener, final Book bookApi, DatabaseReference ref){
-        Log.d(TAG, "Folder list is: " + dataSnapshot.getChildrenCount());
 
         if (dataSnapshot.getChildrenCount() >= mMaxBooks) {
             listener.onInsertBook(false);
@@ -331,45 +303,11 @@ public class FirebaseDatabaseHelper {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookApi.getId()).removeValue();
     }
 
-    public void fetchUserById(String userId, final OnDataSnapshotListener onDataSnapshotListener) {
+    public void fetchUserById(String userId, final ValueEventListener valueEventListener) {
 
         mDatabaseReference.child(userId)
-                .addListenerForSingleValueEvent(buildValueEventListener(onDataSnapshotListener));
+                .addListenerForSingleValueEvent(valueEventListener);
 
-    }
-
-    private ValueEventListener buildValueEventListener(final OnDataSnapshotListener onDataSnapshotListener) {
-        return new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                try {
-                    onDataSnapshotListener.onDataSnapshotListenerAvailable(dataSnapshot);
-                    notifyCaller(onDataSnapshotListener);
-                } catch (Exception ex) {
-                    Log.e(TAG, ex.getMessage());
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //TODO create method on OnDataSnapshotListener to deal with this
-                Log.e(TAG, databaseError.getDetails());
-            }
-        };
-    }
-
-    private void notifyCaller(final OnDataSnapshotListener onDataSnapshotListener) {
-        synchronized (onDataSnapshotListener) {
-            onDataSnapshotListener.notify(); //Release Task
-        }
-    }
-
-    /**
-     * This interface must be implemented by classes that want
-     * to load DataSnapshot from this util
-     */
-    public interface OnDataSnapshotListener {
-        void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot);
     }
 
     public interface OnPaidOperationListener {

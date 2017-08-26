@@ -47,8 +47,8 @@
 
     <!-- Animations for a non-full-screen window or activity. -->
     <style name="MyAnimation.Window" parent="@android:style/Animation.Dialog">
-        <item name="android:windowEnterAnimation">@anim/slide_in_right</item>
-        <item name="android:windowExitAnimation">@anim/slide_out_left</item>
+        <item name="android:windowEnterAnimation">@anim/fui_slide_in_right</item>
+        <item name="android:windowExitAnimation">@anim/fui_slide_out_left</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">

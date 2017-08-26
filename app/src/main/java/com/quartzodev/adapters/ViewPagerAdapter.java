@@ -3,10 +3,8 @@ package com.quartzodev.adapters;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
-
-import com.quartzodev.fragments.BookGridFragment;
 
 import java.util.List;
 
@@ -14,13 +12,17 @@ import java.util.List;
  * Created by victoraldir on 24/03/2017.
  */
 
-public class ViewPagerAdapter extends FragmentStatePagerAdapter {
+public class ViewPagerAdapter extends FragmentPagerAdapter {
 
-    private List<BookGridFragment> mBookGridFragments;
+    private List<Fragment> mBookGridFragments;
 
-    public ViewPagerAdapter(FragmentManager fm, List<BookGridFragment> bookGridFragments) {
+    public ViewPagerAdapter(FragmentManager fm, List<Fragment> bookGridFragments) {
         super(fm);
         this.mBookGridFragments = bookGridFragments;
+    }
+
+    public List<Fragment> getFragmentsList(){
+        return mBookGridFragments;
     }
 
     @Override

@@ -19,6 +19,7 @@
         android:id="@+id/main_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:text="@string/search_empty"
         android:gravity="center_horizontal|center_vertical"
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
         android:visibility="gone" />

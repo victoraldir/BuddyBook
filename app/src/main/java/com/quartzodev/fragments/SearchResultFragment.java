@@ -8,20 +8,22 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.quartzodev.adapters.BookGridAdapter;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.task.SearchTask;
+import com.quartzodev.utils.ConnectionUtils;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,14 +33,10 @@ import butterknife.ButterKnife;
  * Created by victoraldir on 24/03/2017.
  */
 
-public class SearchResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Book>>,
-        FirebaseDatabaseHelper.OnDataSnapshotListener {
-
-    private static final String TAG = SearchResultFragment.class.getSimpleName();
+public class SearchResultFragment extends Fragment implements LoaderManager.LoaderCallbacks<List<Book>> {
 
     private static final int LOADER_ID_SEARCH = 3;
     private static final String ARG_FOLDER_ID = "mFolderId";
-    private static final String ARG_USER_ID = "mUserId";
     private static final String ARG_ISBN = "mIsbn";
     private static final String ARG_QUERY = "query";
     private static final String ARG_MAX_RESULT = "maxResult";
@@ -54,14 +52,16 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     private Context mContext;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private String mUserId;
-    private boolean mFlagLoadingLocal;
-    private boolean mFlagLoadingRemote;
     private String mQuery;
+    private FirebaseAuth mFirebaseAuth;
 
-    public static SearchResultFragment newInstance(String userId, String folderId, String isbn) {
+    public SearchResultFragment(){
+        mFirebaseAuth = FirebaseAuth.getInstance();
+    }
+
+    public static SearchResultFragment newInstance(String folderId, String isbn) {
 
         Bundle arguments = new Bundle();
-        arguments.putString(ARG_USER_ID, userId);
         arguments.putString(ARG_FOLDER_ID, folderId);
         arguments.putString(ARG_ISBN, isbn);
         SearchResultFragment fragment = new SearchResultFragment();
@@ -79,7 +79,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         ButterKnife.bind(this, rootView);
 
         mAdapter = new BookGridAdapter(getActivity(),
-                new HashSet<Book>(),
+                new ArrayList<Book>(),
                 mListener,
                 R.menu.menu_search_result);
 
@@ -93,10 +93,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
         if (getArguments().containsKey(ARG_ISBN)) {
             mISBN = getArguments().getString(ARG_ISBN);
-        }
-
-        if (getArguments().containsKey(ARG_USER_ID)) {
-            mUserId = getArguments().getString(ARG_USER_ID);
         }
 
         mContext = getContext();
@@ -113,7 +109,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         mLoadManager = getLoaderManager();
 
         if (mISBN != null) {
-            executeSearch(mISBN, 1);
+            executeSearchSearchFragment(mISBN, 1);
         } else {
             mLoadManager.initLoader(LOADER_ID_SEARCH, null, this);
         }
@@ -125,31 +121,68 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         mLoadManager = getLoaderManager();
     }
 
-    public void executeSearch(String query, Integer maxResult) {
 
-        mAdapter.clearList();
+    public void executeSearchSearchFragment(String query, Integer maxResult) {
 
-        Bundle bundle = new Bundle();
-        bundle.putString(ARG_QUERY, query);
-        if (maxResult != null) {
-            bundle.putInt(ARG_MAX_RESULT, maxResult);
-        }
+        if(mAdapter != null) {
 
-        if (mLoadManager.hasRunningLoaders()) {
+            mQuery = query;
 
-            if (mLoadManager.getLoader(LOADER_ID_SEARCH) != null)
-                mLoadManager.getLoader(LOADER_ID_SEARCH).cancelLoad();
+            mAdapter.clearList();
 
-            mLoadManager.restartLoader(LOADER_ID_SEARCH, bundle, this);
-
-        } else {
-            Loader l = mLoadManager.getLoader(LOADER_ID_SEARCH);
-            if (l == null) {
-                mLoadManager.initLoader(LOADER_ID_SEARCH, bundle, this);
-            } else {
-                mLoadManager.restartLoader(LOADER_ID_SEARCH, bundle, this);
+            Bundle bundle = new Bundle();
+            bundle.putString(ARG_QUERY, query);
+            if (maxResult != null) {
+                bundle.putInt(ARG_MAX_RESULT, maxResult);
             }
 
+            if (mFolderId == null && ConnectionUtils.isNetworkConnected(mContext)
+                    && FirebaseAuth.getInstance().getCurrentUser() != null) {
+
+                if (mLoadManager.hasRunningLoaders()) {
+
+                    if (mLoadManager.getLoader(LOADER_ID_SEARCH) != null)
+                        mLoadManager.getLoader(LOADER_ID_SEARCH).cancelLoad();
+
+                    mLoadManager.restartLoader(LOADER_ID_SEARCH, bundle, this);
+
+                } else {
+                    Loader l = mLoadManager.getLoader(LOADER_ID_SEARCH);
+                    if (l == null) {
+                        mLoadManager.initLoader(LOADER_ID_SEARCH, bundle, this);
+                    } else {
+                        mLoadManager.restartLoader(LOADER_ID_SEARCH, bundle, this);
+                    }
+
+                }
+
+            } else {
+
+                setLoading(true);
+
+                mFirebaseDatabaseHelper.findBookSearch(mUserId, mFolderId, new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        List<Book> bookApis = new ArrayList<>();
+
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            Book book = child.getValue(Book.class);
+
+                            if (book.getVolumeInfo().getSearchField().contains(mQuery.toLowerCase())) {
+                                bookApis.add(book);
+                            }
+
+                        }
+                        mAdapter.swap(bookApis);
+                        setLoading(false);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
         }
     }
 
@@ -161,6 +194,8 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         if (getArguments().containsKey(ARG_FOLDER_ID)) {
             mFolderId = getArguments().getString(ARG_FOLDER_ID);
         }
+
+        mUserId = mFirebaseAuth.getCurrentUser().getUid();
     }
 
 
@@ -208,12 +243,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
             mQuery = args.getString(ARG_QUERY);
 
-            mFlagLoadingLocal = true;
-            mFlagLoadingRemote = true;
             setLoading(true);
-
-            //Local search
-            mFirebaseDatabaseHelper.findBookSearch(mUserId, mFolderId, mQuery, this);
 
             if (args.containsKey(ARG_MAX_RESULT)) {
 
@@ -237,11 +267,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     public void onLoadFinished(Loader<List<Book>> loader, List<Book> data) {
         mAdapter.swap(data);
 
-        mFlagLoadingRemote = false;
-
-        if (!mFlagLoadingLocal) {
-            setLoading(false);
-        }
+        setLoading(false);
 
     }
 
@@ -249,29 +275,4 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     public void onLoaderReset(Loader<List<Book>> loader) {
     }
 
-    @Override
-    public void onDataSnapshotListenerAvailable(DataSnapshot dataSnapshot) {
-
-        List<Book> bookApis = new ArrayList<>();
-
-        for (DataSnapshot child : dataSnapshot.getChildren()) {
-            Book book = child.getValue(Book.class);
-
-            if (book.getVolumeInfo().getSearchField().contains(mQuery.toLowerCase())) {
-                bookApis.add(book);
-            }
-
-        }
-
-        mAdapter.merge(bookApis);
-
-        mFlagLoadingLocal = false;
-
-        if (!mFlagLoadingRemote) {
-            setLoading(false);
-        }
-
-        Log.d(TAG, dataSnapshot.toString());
-
-    }
 }

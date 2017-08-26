@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="default_sorts">
+        <item >@string/default_sorts_release</item>
+        <item>@string/default_sorts_title</item>
+        <item>@string/default_sorts_author</item>
+    </string-array>
+
+    <string-array name="default_sorts_codes">
+        <item>@string/release_value</item>
+        <item>@string/title_value</item>
+        <item>@string/author_value</item>
+    </string-array>
+</resources>

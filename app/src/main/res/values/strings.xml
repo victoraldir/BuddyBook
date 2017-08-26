@@ -8,11 +8,11 @@
     <string name="action_clear_search">Clear search history</string>
     <string name="action_sign_out">Sign Out</string>
     <string name="action_remove">Remove</string>
-    <string name="action_copy">Copy to folder...</string>
+    <string name="action_copy">Copy to folder…</string>
     <string name="action_lend">Lend this book</string>
     <string name="action_return_lend">Return this book</string>
     <string name="action_have_this">I have this</string>
-    <string name="action_move_to">Move to folder...</string>
+    <string name="action_move_to">Move to folder…</string>
 
     <string name="added_to_folder">Book added to folder %1$s</string>
     <string name="copied_to_folder">Book copied to folder %1$s</string>
@@ -24,7 +24,7 @@
     <string name="success_lend_book">Book\'s been lent successfully!</string>
     <string name="success_add_book">Book inserted successfully!</string>
 
-    <string name="widget_cd">Stock hawk widget</string>
+    <string name="widget_cd">Buddybook widget</string>
 
     <string name="dialog_return_book_title">Returning a book?</string>
     <string name="dialog_return_book_body">Is %1$s returning this book?</string>
@@ -38,13 +38,14 @@
     <string name="tab_my_books">My books</string>
     <string name="item_add_folder">Add folder</string>
     <string name="app_label">BuddyBook</string>
-    <string name="search_hint">Book tittle, author...</string>
+    <string name="search_hint">Book tittle, author…</string>
     <string name="dialog_message">This will also remove all books saved on this folder</string>
     <string name="dialog_title">Delete %1$s?</string>
 
     <string name="dialog_title_lend">Lend book</string>
 
-    <string name="pick_folder">Move to folder...</string>
+    <string name="pick_folder">Move to folder…</string>
+    <string name="sort_options">Sort by</string>
 
     <string name="folder_already_exits">Folder already exists</string>
     <string name="folder_desc_empty">Folder description cannot be empty</string>
@@ -62,7 +63,7 @@
     <string name="error_adding_card">Error loading fragments</string>
     <string name="simple_scanner_activity">Bar code reader</string>
 
-    <string name="transition_image">transition_image</string>
+    <string name="transition_image" translatable="false">transition_image</string>
 
     <string name="dialog_name_hint">Name</string>
     <string name="dialog_email_hint">Email (optional)</string>
@@ -80,17 +81,20 @@
 
     <string name="receiver_name_cd">Receiver name</string>
 
+
     <string name="ad_app_id" translatable="false">ca-app-pub-6526073251385305~4440436428</string>
-    <string name="ad_inter_scanner_activity">ca-app-pub-6526073251385305/5917169627</string>
+    <string name="ad_inter_scanner_activity" translatable="false">ca-app-pub-6526073251385305/5917169627</string>
     <string name="ad_bottom_details" translatable="false">ca-app-pub-6526073251385305/7915280029</string>
     <string name="ad_bottom_books_main" translatable="false" >ca-app-pub-6526073251385305/7393902820</string>
 
-    <!-- For debug
-    <string name="ad_app_id" translatable="false">@string/ad_unit_test</string>
-    <string name="ad_inter_scanner_activity">@string/ad_unit_test</string>
-    <string name="ad_bottom_details" translatable="false">@string/ad_unit_test</string>
-    <string name="ad_bottom_books_main" translatable="false" >@string/ad_unit_test</string>
-    -->
+
+
+    <!--
+        <string name="ad_app_id" translatable="false">@string/ad_unit_test</string>
+        <string name="ad_inter_scanner_activity">@string/ad_unit_test</string>
+        <string name="ad_bottom_details" translatable="false">@string/ad_unit_test</string>
+        <string name="ad_bottom_books_main" translatable="false" >@string/ad_unit_test</string>
+         For debug-->
 
     <string name="ad_unit_test" translatable="false" >ca-app-pub-3940256099942544/1033173712</string>
 
@@ -114,9 +118,9 @@
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
-    <string name="low_storage_error">Face detector dependencies cannot be downloaded due to low device storage</string>
-    <string name="title_activity_main">Barcode Reader Sample</string>
-    <string name="barcode_header">Click &quot;Read Barcode&quot; to read a barcode</string>
+    <string name="low_storage_error" translatable="false">Face detector dependencies cannot be downloaded due to low device storage</string>
+    <string name="title_activity_main" translatable="false">Barcode Reader Sample</string>
+    <string name="barcode_header" translatable="false">Click &quot;Read Barcode&quot; to read a barcode</string>
     <string name="read_barcode">Read Barcode</string>
     <string name="auto_focus">Auto Focus</string>
     <string name="use_flash">Use Flash</string>
@@ -130,9 +134,9 @@
     <string name="borrowed_book">Lent book</string>
 
 
-    <string name="lorem_ipsum_short">Lorem ipsum dolor sit amet</string>
-    <string name="lorem_ipsum_medium">Lorem ipsum dolor sit amet,consectetur adipiscing elit</string>
-    <string name="lorem_ipsum_large">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="lorem_ipsum_short" translatable="false">Lorem ipsum dolor sit amet</string>
+    <string name="lorem_ipsum_medium" translatable="false">Lorem ipsum dolor sit amet,consectetur adipiscing elit</string>
+    <string name="lorem_ipsum_large" translatable="false">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
     <string name="empty_list">No data</string>
     <string name="move_to_folder_cd">Move to folder</string>
     <string name="lent_book_cd">Lend book action</string>
@@ -151,6 +155,7 @@
     <string name="book_title">Book Title</string>
     <string name="search">Search</string>
     <string name="add_book">Add custom book</string>
+    <string name="add_sort">Sort</string>
     <string name="borrowed_book_icon_cd">Borrowed book icon</string>
     <string name="btn_return_book_cd">Return this book</string>
     <string name="btn_lend_book_cd">Lend this book</string>
@@ -164,7 +169,7 @@
     <string name="btn_search_hint">Search</string>
     <string name="search_empty">Nothing to show</string>
     <string name="search_empty_hint">Type a title, author, or use the ISBN searcher (barcode)</string>
-    <string name="no_internet_search">You are not connected on the internet.</string>
+    <string name="no_internet_search">Not connected. Showing local books</string>
     <string name="insert_success">Book inserted successfully</string>
     <string name="no_description">No description available for this book</string>
     <string name="title_empty">Title cannot be empty</string>
@@ -172,5 +177,24 @@
     <string name="title_publisher">Publisher cannot be empty</string>
     <string name="action_about">About</string>
     <string name="action_to_premium">Upgrade</string>
+
+    <string name="sign_in_with_facebook">Login with Facebook</string>
+    <string name="sign_in_with_google">Login with Google</string>
+    <string name="sign_in_with_email">Login with email</string>
+    <string name="tab_search_online">Web</string>
+    <string name="pref_sort_key" translatable="false">sort</string>
+    <string name="pref_sort_initialized_key" translatable="false">initialized</string>
+
+    <string name="default_sorts_title">Title</string>
+    <string name="default_sorts_author">Author</string>
+    <string name="default_sorts_release">Release date</string>
+
+    <string name="release_value" translatable="false" >publishedDate</string>
+    <string name="title_value" translatable="false" >title</string>
+    <string name="author_value" translatable="false" >authors</string>
+
+
+    <string name="pref_sort_default" translatable="false">0</string>
+    <string name="number_of_books">%01d book(s)</string>
 
 </resources>

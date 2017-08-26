@@ -17,7 +17,19 @@
         android:id="@+id/content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginLeft="@dimen/text_margin"
+        android:layout_marginStart="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem"
         tools:text="Folder name" />
+
+    <TextView
+        android:id="@+id/totalBooks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/text_margin"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:textAppearance="?attr/textAppearanceListItem"
+        tools:text=" (34)" />
 </LinearLayout>

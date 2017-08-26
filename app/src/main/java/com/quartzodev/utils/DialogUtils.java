@@ -71,6 +71,31 @@ public class DialogUtils {
 
     }
 
+    public static void alertDialogSortList(final Context context, final CoordinatorLayout coordinatorLayout) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        int checkedItem = PrefUtils.getSortMode(context);
+
+        builder.setTitle(R.string.sort_options)
+                .setNegativeButton(context.getString(R.string.dialog_btn_cancel), null)
+                .setSingleChoiceItems(R.array.default_sorts, checkedItem, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        PrefUtils.setSortMode(context,i);
+
+                        dialogInterface.dismiss();
+
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+
+        alertDialog.show();
+
+    }
+
     private static String[] formatFolderList(String folderList) {
 
         String[] newList = new String[0];
