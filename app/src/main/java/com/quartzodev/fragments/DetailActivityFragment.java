@@ -3,6 +3,8 @@ package com.quartzodev.fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,9 +21,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,6 +39,7 @@ import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.utils.DateUtils;
 import com.quartzodev.utils.DialogUtils;
+import com.quartzodev.utils.TextUtils;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -123,13 +128,41 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view;
+        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
 
-        view = inflater.inflate(R.layout.fragment_detail, container, false);
+        ButterKnife.bind(this, rootView);
 
-        ButterKnife.bind(this, view);
+        try {
+            Gson gson = new Gson();
+            final Book currentBook = gson.fromJson(mBookJson, Book.class);
 
-        return view;
+            if (currentBook.getVolumeInfo().getImageLink() == null) {
+
+                final ViewTreeObserver observer = rootView.getViewTreeObserver();
+                observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    public boolean onPreDraw() {
+
+                        TextDrawable drawable;
+
+                        if(currentBook.isCustom()){
+                            drawable = TextDrawable.builder()
+                                    .buildRect(TextUtils.getFirstLetterTitle(currentBook), Color.BLUE);
+                        }else{
+                            drawable = TextDrawable.builder()
+                                    .buildRect(TextUtils.getFirstLetterTitle(currentBook), Color.RED);
+                        }
+
+                        mPhoto.setImageDrawable(drawable);
+
+                        return true;
+                    }
+                });
+            }
+        }catch (Exception ex){
+
+        }
+
+        return rootView;
     }
 
     @Override
@@ -228,16 +261,20 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     private void loadImage(final Book book){
         if (book.getVolumeInfo() != null && book.getVolumeInfo().getImageLink() != null) {
 
-            GlideApp.with(mContext)
-                    .load(book.getVolumeInfo().getImageLink().getThumbnail())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(mPhoto);
+            if(book.getVolumeInfo().getImageLink().getThumbnail() != null) {
+                GlideApp.with(mContext)
+                        .load(book.getVolumeInfo().getImageLink().getThumbnail())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(mPhoto);
+            }
 
             String str = String.format(getString(R.string.cover_book_cd), book.getVolumeInfo().getTitle());
 
             mPhoto.setContentDescription(str);
         }else if(book.isCustom()){
-            mPhoto.setImageResource(R.drawable.custom_book_cover);
+            TextDrawable drawable = TextDrawable.builder()
+                    .buildRect(TextUtils.getFirstLetterTitle(book), Color.BLUE);
+            mPhoto.setImageDrawable(drawable);
         }
     }
 
