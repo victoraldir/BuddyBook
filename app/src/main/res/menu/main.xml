@@ -37,14 +37,20 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_about"
+        android:id="@+id/action_do_backup"
         android:orderInCategory="600"
+        android:title="@string/action_do_backup"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="700"
         android:title="@string/action_about"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_sign_out"
-        android:orderInCategory="700"
+        android:orderInCategory="800"
         android:title="@string/action_sign_out"
         app:showAsAction="never" />
 

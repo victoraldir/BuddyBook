@@ -7,9 +7,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +28,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -34,7 +38,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,6 +46,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -77,10 +82,16 @@ import com.quartzodev.provider.SuggestionProvider;
 import com.quartzodev.ui.BarcodeCaptureActivity;
 import com.quartzodev.utils.ConnectionUtils;
 import com.quartzodev.utils.Constants;
+import com.quartzodev.utils.DateUtils;
 import com.quartzodev.utils.DialogUtils;
+import com.quartzodev.utils.TextUtils;
 import com.quartzodev.views.DynamicImageView;
 import com.quartzodev.widgets.BuddyBookWidgetProvider;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -98,12 +109,22 @@ public class MainActivity extends AppCompatActivity
         FirebaseDatabaseHelper.OnPaidOperationListener,
         DetailActivityFragment.OnDetailInteractionListener{
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     public static final String EXTRA_USER_ID = "userId";
     private static final int RC_SIGN_IN = 5;
     private static final int RC_BARCODE_CAPTURE = 2;
+    private static final int RC_PICKFILE = 6;
     private static final String KEY_PARCELABLE_USER = "userKey";
     private static final String KEY_CURRENT_QUERY = "queryKey";
     private static final int TOTAL_SEARCH_RESULT = 40;
+
+    private final int NO_INTERNET = 1;
+    private final int LOADING = 2;
+    private final int READY = 3;
+
+    private final int BACKUP = 0;
+    private final int RESTORE = 1;
 
     @BindView(R.id.main_coordinator)
     CoordinatorLayout mCoordinatorLayout;
@@ -120,10 +141,14 @@ public class MainActivity extends AppCompatActivity
     TextView mTextViewMessage;
     @BindView(R.id.fragment_main_container)
     FrameLayout mFrameLayoutContainer;
+    @BindView(R.id.loading_container)
+    RelativeLayout mLoadingContainer;
     @BindView(R.id.fab)
     FloatingActionButton mFab;
     @BindView(R.id.tabs)
     TabLayout mTabLayout;
+    @BindView(R.id.main_progress_bar)
+    ProgressBar mProgressBar;
 
     private User mUser;
     private Context mContext;
@@ -368,12 +393,40 @@ public class MainActivity extends AppCompatActivity
                 transaction.replace(R.id.fragment_main_container, searchFragment).commitAllowingStateLoss();
 
             }
+        }else if (requestCode == RC_PICKFILE && resultCode == CommonStatusCodes.SUCCESS_CACHE){
+            Log.d(TAG,data.getDataString());
+
+
+            try {
+
+                String realPath = getRealPathFromURI(data.getData());
+
+                Log.d(TAG,realPath);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e(TAG,e.getMessage());
+            }
+
         }
     }
 
-    final int NO_INTERNET = 1;
-    final int LOADING = 2;
-    final int READY = 3;
+    public String getRealPathFromURI(Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = getContentResolver().query(contentUri, proj, null, null,
+                    null);
+            int column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
 
     public void showStatus(int statusCode){
 
@@ -384,7 +437,9 @@ public class MainActivity extends AppCompatActivity
                 mFrameLayoutContainer.setVisibility(View.GONE);
                 mTextViewMessage.setText(getString(R.string.no_internet));
 
+                mLoadingContainer.setVisibility(View.GONE);
                 mFab.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
                 mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 mToolbar.setVisibility(View.GONE);
                 mTabLayout.setVisibility(View.GONE);
@@ -407,15 +462,25 @@ public class MainActivity extends AppCompatActivity
                 break;
             case LOADING:
 
-                mTextViewMessage.setVisibility(View.VISIBLE);
                 mFrameLayoutContainer.setVisibility(View.GONE);
-                mTextViewMessage.setText("LOADING----");
+
+                mLoadingContainer.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.VISIBLE);
+                mTextViewMessage.setVisibility(View.VISIBLE);
+                mTextViewMessage.setText("Loading");
+
+                mFab.setVisibility(View.GONE);
+                mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                mToolbar.setVisibility(View.GONE);
+                mTabLayout.setVisibility(View.GONE);
 
                 break;
             case READY:
 
                 mTextViewMessage.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
                 mFrameLayoutContainer.setVisibility(View.VISIBLE);
+                mLoadingContainer.setVisibility(View.GONE);
 
                 mFab.setVisibility(View.VISIBLE);
                 mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
@@ -557,7 +622,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        if (!TextUtils.isEmpty(mCurrQuery)) {
+        if (!android.text.TextUtils.isEmpty(mCurrQuery)) {
             mSearchItem.expandActionView();
             mSearchView.setQuery(mCurrQuery, true);
             mSearchView.clearFocus();
@@ -665,6 +730,82 @@ public class MainActivity extends AppCompatActivity
                         .withAboutIconShown(true)
                         .withAboutVersionShown(true)
                         .start(this);
+                break;
+            case R.id.action_do_backup:
+                DialogUtils.alertDialogListDBackupRestore(mContext, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+
+
+                        if(i == BACKUP) {
+
+                            showStatus(LOADING);
+
+                            mFirebaseDatabaseHelper.fetchFolders(mUser.getUid(), new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                    try {
+
+                                        String timeString = DateUtils.getCurrentTimeString();
+                                        String content = dataSnapshot.getValue().toString();
+                                        Intent it = new Intent(android.content.Intent.ACTION_SEND);
+                                        it.putExtra(Intent.EXTRA_SUBJECT, "Buddybook backup - " + timeString);
+                                        it.putExtra(Intent.EXTRA_TEXT, "Buddybook backup attached");
+
+                                        File backUpPath = new File(getFilesDir(), "backups");
+
+                                        if (!backUpPath.exists()) {
+                                            backUpPath.mkdir();
+                                        }
+
+                                        File newBackupFile = new File(backUpPath, "BB-Backup-" + DateUtils.getCurrentTimeStringNoSeparator() + ".json");
+
+                                        if (!newBackupFile.exists()) {
+                                            newBackupFile.createNewFile();
+                                        }
+
+                                        FileOutputStream fos = new FileOutputStream(newBackupFile);
+                                        fos.write(content.getBytes());
+                                        Uri fileUri = FileProvider.getUriForFile(mContext, "com.quartzodev.fileprovider", newBackupFile);
+
+                                        Log.d(TAG, "Uri: " + fileUri.toString());
+
+                                        it.setType(getContentResolver().getType(fileUri));
+                                        it.putExtra(Intent.EXTRA_STREAM, fileUri);
+
+                                        startActivity(Intent.createChooser(it, getResources().getText(R.string.send_to)));
+
+                                    } catch (FileNotFoundException e) {
+                                        e.printStackTrace();
+                                        Log.e(TAG, e.getMessage());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        Log.e(TAG, e.getMessage());
+                                    }
+
+                                    showStatus(READY);
+
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                    showStatus(READY);
+
+                                }
+                            });
+                        }else{
+
+                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                            intent.setType("application/octet-stream");
+                            startActivityForResult(intent, RC_PICKFILE);
+
+                        }
+
+                    }
+                });
                 break;
             case R.id.action_to_premium:
 

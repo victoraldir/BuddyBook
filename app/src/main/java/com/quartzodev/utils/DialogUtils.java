@@ -71,6 +71,19 @@ public class DialogUtils {
 
     }
 
+    public static void alertDialogListDBackupRestore(final Context context, DialogInterface.OnClickListener onClickListener) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+
+        builder.setItems(context.getResources().getTextArray(R.array.default_backup_restore), onClickListener);
+
+        AlertDialog alertDialog = builder.create();
+
+        alertDialog.show();
+
+    }
+
     public static void alertDialogSortList(final Context context, final CoordinatorLayout coordinatorLayout) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
