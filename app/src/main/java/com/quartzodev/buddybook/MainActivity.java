@@ -736,8 +736,6 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-
-
                         if(i == BACKUP) {
 
                             showStatus(LOADING);
