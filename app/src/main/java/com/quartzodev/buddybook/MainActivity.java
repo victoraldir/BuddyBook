@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -84,6 +85,7 @@ import com.quartzodev.utils.ConnectionUtils;
 import com.quartzodev.utils.Constants;
 import com.quartzodev.utils.DateUtils;
 import com.quartzodev.utils.DialogUtils;
+import com.quartzodev.utils.PathUtils;
 import com.quartzodev.utils.TextUtils;
 import com.quartzodev.views.DynamicImageView;
 import com.quartzodev.widgets.BuddyBookWidgetProvider;
@@ -92,6 +94,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -385,6 +389,7 @@ public class MainActivity extends AppCompatActivity
         } else if (requestCode == RC_BARCODE_CAPTURE && resultCode == CommonStatusCodes.SUCCESS) {
 
             if (data != null) {
+
                 Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
 
                 Fragment searchFragment = SearchResultFragment.newInstance(mFolderId, barcode.displayValue);
@@ -396,12 +401,27 @@ public class MainActivity extends AppCompatActivity
         }else if (requestCode == RC_PICKFILE && resultCode == CommonStatusCodes.SUCCESS_CACHE){
             Log.d(TAG,data.getDataString());
 
-
             try {
 
-                String realPath = getRealPathFromURI(data.getData());
+                Uri uri = data.getData();
+                String mimeType = getContentResolver().getType(uri);
 
-                Log.d(TAG,realPath);
+                Cursor returnCursor =
+                        getContentResolver().query(uri, null, null, null, null);
+
+                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+                returnCursor.moveToFirst();
+
+                Log.d(TAG,"mimeType: " + mimeType);
+                Log.d(TAG,"nameView: " + returnCursor.getString(nameIndex));
+                Log.d(TAG,"sizeView: " + returnCursor.getLong(sizeIndex));
+
+                File file = new File(PathUtils.getPath(mContext,uri));
+
+                Log.d(TAG,"File path: " + PathUtils.getPath(mContext,uri));
+                Log.d(TAG,"File absolute path: " + PathUtils.getPath(mContext,uri));
+                Log.d(TAG,"File exists? : " + file.exists());
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -758,7 +778,7 @@ public class MainActivity extends AppCompatActivity
                                             backUpPath.mkdir();
                                         }
 
-                                        File newBackupFile = new File(backUpPath, "BB-Backup-" + DateUtils.getCurrentTimeStringNoSeparator() + ".json");
+                                        File newBackupFile = new File(backUpPath, "BB-Backup-" + DateUtils.getCurrentTimeStringNoSeparator() + ".txt");
 
                                         if (!newBackupFile.exists()) {
                                             newBackupFile.createNewFile();
@@ -797,7 +817,7 @@ public class MainActivity extends AppCompatActivity
                         }else{
 
                             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                            intent.setType("application/octet-stream");
+                            intent.setType("text/plain");
                             startActivityForResult(intent, RC_PICKFILE);
 
                         }
