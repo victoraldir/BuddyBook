@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/add_new_folder_cd"
-        android:src="@drawable/ic_create_new_folder_black_24dp" />
+        android:src="@drawable/ic_folder" />
 
     <TextView
         android:id="@+id/content"

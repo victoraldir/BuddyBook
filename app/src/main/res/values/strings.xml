@@ -201,5 +201,8 @@
     <string name="option_backup">Backup</string>
     <string name="option_restore">Restore</string>
     <string name="send_to">Send to</string>
+    <string name="description">Description</string>
+    <string name="product_details">Product details</string>
+    <string name="actions">Actions</string>
 
 </resources>

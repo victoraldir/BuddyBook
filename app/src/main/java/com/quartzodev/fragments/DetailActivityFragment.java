@@ -305,7 +305,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             mTextReceiverEmail.setText(String.format(getString(R.string.lent_to_email), book.getLend().getReceiverEmail()));
             mTextReceiverName.setText(String.format(getString(R.string.lent_to), book.getLend().getReceiverName()));
             mTextLentDate.setText(String.format(getString(R.string.lent_day_ago), days.getDays()));
-            mBtnLendBook.setImageResource(R.drawable.ic_assignment_return_black_24dp);
+            mBtnLendBook.setImageResource(R.drawable.ic_assignment_return);
             mBtnLendBook.setContentDescription(getString(R.string.btn_return_book_cd));
             mBtnLendBook.setVisibility(View.VISIBLE);
             mCardViewBookBorrowed.setVisibility(View.VISIBLE);
@@ -319,7 +319,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
         } else {
 
-            mBtnLendBook.setImageResource(R.drawable.ic_card_giftcard_black_24dp);
+            mBtnLendBook.setImageResource(R.drawable.ic_card_giftcard);
             mBtnLendBook.setContentDescription(getString(R.string.btn_lend_book_cd));
             mBtnLendBook.setVisibility(View.VISIBLE);
             mCardViewBookBorrowed.setVisibility(View.GONE);

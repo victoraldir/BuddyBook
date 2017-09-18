@@ -9,7 +9,7 @@
                 android:title="@string/tab_my_books" />
             <item
                 android:id="@+id/nav_add_folder"
-                android:icon="@drawable/ic_create_new_folder_black_24dp"
+                android:icon="@drawable/ic_folder"
                 android:menuCategory="secondary"
                 android:title="@string/add_new_folder" />
 
