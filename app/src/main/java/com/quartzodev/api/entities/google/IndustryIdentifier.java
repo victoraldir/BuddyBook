@@ -1,11 +1,14 @@
 package com.quartzodev.api.entities.google;
 
+import android.support.annotation.Keep;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by victoraldir on 22/06/2017.
  */
 
+@Keep
 public class IndustryIdentifier {
 
     @SerializedName("type")

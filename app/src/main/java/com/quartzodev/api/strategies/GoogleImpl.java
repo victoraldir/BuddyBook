@@ -24,6 +24,9 @@ public class GoogleImpl implements IQuery{
     private IGoogleBookAPI mIGoogleBookAPI;
     private String mKey;
 
+    private static final String ISBN_10 = "ISBN_10";
+    private static final String ISBN_13 = "ISBN_13";
+
     public GoogleImpl(IGoogleBookAPI iGoogleBookAPI) {
         this.mIGoogleBookAPI = iGoogleBookAPI;
         mKey = BuildConfig.GOOGLE_BOOK_API_KEY;
@@ -108,7 +111,6 @@ public class GoogleImpl implements IQuery{
 
             book = new Book();
 
-            //book.setId(bookApi.getId()); //TODO remove and use Firebase hash!
             book.setIdProvider(bookApi.getId());
             book.setTypeProvider(Constants.TYPE_PROVIDER_GOOGLE);
             book.setCustom(false);
@@ -122,21 +124,31 @@ public class GoogleImpl implements IQuery{
             volumeInfo.setPublishedDate(bookApi.getVolumeInfo().getPublishedDate());
             volumeInfo.setDescription(bookApi.getVolumeInfo().getDescription());
 
+            volumeInfo.setPageCount(bookApi.getVolumeInfo().getPageCount());
+            volumeInfo.setLanguage(bookApi.getVolumeInfo().getLanguage());
+            volumeInfo.setPrintType(bookApi.getVolumeInfo().getPrintType());
+
+            if(bookApi.getVolumeInfo().getIndustryIdentifiers() != null){
+                List<IndustryIdentifier> industryIdentifiers = bookApi.getVolumeInfo().getIndustryIdentifiers();
+
+                for(int x = 0; x < industryIdentifiers.size(); x++){
+
+                    IndustryIdentifier industryIdentifier = industryIdentifiers.get(x);
+
+                    if(industryIdentifier.getType().equals(ISBN_10)){
+                        volumeInfo.setIsbn10(industryIdentifier.getIdentifier());
+                    }else if(industryIdentifier.getType().equals(ISBN_13)){
+                        volumeInfo.setIsbn13(industryIdentifier.getIdentifier());
+                    }
+                }
+            }
+
+
             if (bookApi.getVolumeInfo() != null && bookApi.getVolumeInfo().getImageLink() != null) {
                 ImageLink imageLink = new ImageLink();
                 imageLink.setSmallThumbnail(bookApi.getVolumeInfo().getImageLink().getSmallThumbnail());
                 imageLink.setThumbnail(bookApi.getVolumeInfo().getImageLink().getThumbnail());
                 volumeInfo.setImageLink(imageLink);
-            }
-
-            if(bookApi.getVolumeInfo().getIndustryIdentifiers() != null){
-                for(IndustryIdentifier i: bookApi.getVolumeInfo().getIndustryIdentifiers()){
-                    if(i.getType().equals("ISBN_10")){
-                        volumeInfo.setIsbn10(i.getIdentifier());
-                    }else{
-                        volumeInfo.setIsbn13(i.getIdentifier());
-                    }
-                }
             }
 
             book.setVolumeInfo(volumeInfo);

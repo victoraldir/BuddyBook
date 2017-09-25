@@ -12,6 +12,8 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.Html;
 import android.text.Spanned;
@@ -31,6 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.quartzodev.adapters.ProductDetailGridAdapter;
 import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.GlideApp;
 import com.quartzodev.buddybook.MainActivity;
@@ -89,6 +92,11 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     CardView mCardViewBookBorrowed;
     @BindView(R.id.card_actions)
     CardView mCardViewActions;
+
+    @BindView(R.id.grid_product_details)
+    RecyclerView mGridProductDetails;
+
+    private ProductDetailGridAdapter mProductDetailGridAdapter;
     private String mBookJson;
     private String mUserId;
     private String mFolderListComma;
@@ -135,6 +143,14 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         try {
             Gson gson = new Gson();
             final Book currentBook = gson.fromJson(mBookJson, Book.class);
+
+            int numCol = 2;
+
+            mProductDetailGridAdapter = new ProductDetailGridAdapter(currentBook.getVolumeInfo(), getActivity());
+
+            mGridProductDetails.setLayoutManager(new GridLayoutManager(mContext, numCol));
+
+            mGridProductDetails.setAdapter(mProductDetailGridAdapter);
 
             if (currentBook.getVolumeInfo().getImageLink() == null) {
 

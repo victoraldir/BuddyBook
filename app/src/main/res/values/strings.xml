@@ -82,20 +82,20 @@
 
     <string name="receiver_name_cd">Receiver name</string>
 
-
+<!--
     <string name="ad_app_id" translatable="false">ca-app-pub-6526073251385305~4440436428</string>
     <string name="ad_inter_scanner_activity" translatable="false">ca-app-pub-6526073251385305/5917169627</string>
     <string name="ad_bottom_details" translatable="false">ca-app-pub-6526073251385305/7915280029</string>
     <string name="ad_bottom_books_main" translatable="false" >ca-app-pub-6526073251385305/7393902820</string>
+-->
 
 
 
-    <!--
         <string name="ad_app_id" translatable="false">@string/ad_unit_test</string>
         <string name="ad_inter_scanner_activity">@string/ad_unit_test</string>
         <string name="ad_bottom_details" translatable="false">@string/ad_unit_test</string>
         <string name="ad_bottom_books_main" translatable="false" >@string/ad_unit_test</string>
-         For debug-->
+
 
     <string name="ad_unit_test" translatable="false" >ca-app-pub-3940256099942544/1033173712</string>
 
@@ -204,5 +204,6 @@
     <string name="description">Description</string>
     <string name="product_details">Product details</string>
     <string name="actions">Actions</string>
+    <string name="pages_details">%1$s page(s)</string>
 
 </resources>

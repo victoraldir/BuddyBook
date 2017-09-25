@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -148,101 +149,107 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     @Override
     public void onBindViewHolder(final BookGridAdapter.ViewHolder holder, int position) {
 
-        final Book book = new ArrayList<>(mBookList).get(position);
+        try {
 
-        holder.textViewBookTitle.setText(book.getVolumeInfo().getTitle());
-        holder.textViewBookAuthor.setText(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
+            final Book book = new ArrayList<>(mBookList).get(position);
 
-        holder.toolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onClickListenerBookGridInteraction(mFolderId, book, (DynamicImageView) holder.imageViewthumbnail);
-            }
-        });
+            holder.textViewBookTitle.setText(book.getVolumeInfo().getTitle());
+            holder.textViewBookAuthor.setText(book.getVolumeInfo().getAuthors() == null ? "" : book.getVolumeInfo().getAuthors().get(0));
 
-        if (!holder.toolbar.getMenu().hasVisibleItems()) {
-            holder.toolbar.inflateMenu(mMenuId);
-            if(book.getLend() != null && holder.toolbar.getMenu().findItem(R.id.action_lend) != null) {
-                holder.toolbar.getMenu().findItem(R.id.action_lend)
-                        .setTitle(mContext.getString(R.string.action_return_lend));
-            }
-        }
-
-
-        holder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-
-                int menuId = item.getItemId();
-
-                switch (menuId) {
-                    case R.id.action_delete:
-                        mListener.onDeleteBookClickListener(mFolderId, book);
-                        break;
-                    case R.id.action_have_this:
-                        mListener.onAddBookToFolderClickListener(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, book);
-                        break;
-                    case R.id.action_move_folder:
-                        mListener.onAddBookToFolderClickListener(mFolderId, book);
-                        break;
-                    case R.id.action_copy:
-                        mListener.onCopyBookToFolderClickListener(mFolderId, book);
-                        break;
-                    case R.id.action_lend:
-                        if(item.getTitle().equals(mContext.getString(R.string.action_return_lend))){
-                            mListener.onReturnBookClickListener(book);
-                        }else{
-                            mListener.onLendBookClickListener(book,item);
-                        }
-                        break;
+            holder.toolbar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClickListenerBookGridInteraction(mFolderId, book, (DynamicImageView) holder.imageViewthumbnail);
                 }
+            });
 
-                return false;
+            if (!holder.toolbar.getMenu().hasVisibleItems()) {
+                holder.toolbar.inflateMenu(mMenuId);
+                if (book.getLend() != null && holder.toolbar.getMenu().findItem(R.id.action_lend) != null) {
+                    holder.toolbar.getMenu().findItem(R.id.action_lend)
+                            .setTitle(mContext.getString(R.string.action_return_lend));
+                }
             }
-        });
-
-        if (book.getVolumeInfo().getImageLink() != null) {
-
-            GlideApp.with(mContext)
-                    .load(book.getVolumeInfo().getImageLink().getThumbnail())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .into(holder.imageViewthumbnail);
-
-            holder.imageViewthumbnail.setContentDescription(
-                    String.format(mContext.getString(R.string.cover_book_cd), book.getVolumeInfo()
-                            .getTitle()));
-
-        } else if (book.isCustom()) {
-
-            TextDrawable drawable = TextDrawable.builder()
-                    .buildRect(TextUtils.getFirstLetterTitle(book), Color.BLUE);
-
-            holder.imageViewthumbnail.setContentDescription(
-                    String.format(mContext.getString(R.string.cover_book_cd), book.getVolumeInfo()
-                            .getTitle()));
-
-            holder.imageViewthumbnail.setImageDrawable(drawable);
 
 
-        }else{
+            holder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
 
-            TextDrawable drawable = TextDrawable.builder()
-                    .buildRect(TextUtils.getFirstLetterTitle(book), Color.RED);
+                    int menuId = item.getItemId();
 
-            holder.imageViewthumbnail.setImageDrawable(drawable);
+                    switch (menuId) {
+                        case R.id.action_delete:
+                            mListener.onDeleteBookClickListener(mFolderId, book);
+                            break;
+                        case R.id.action_have_this:
+                            mListener.onAddBookToFolderClickListener(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, book);
+                            break;
+                        case R.id.action_move_folder:
+                            mListener.onAddBookToFolderClickListener(mFolderId, book);
+                            break;
+                        case R.id.action_copy:
+                            mListener.onCopyBookToFolderClickListener(mFolderId, book);
+                            break;
+                        case R.id.action_lend:
+                            if (item.getTitle().equals(mContext.getString(R.string.action_return_lend))) {
+                                mListener.onReturnBookClickListener(book);
+                            } else {
+                                mListener.onLendBookClickListener(book, item);
+                            }
+                            break;
+                    }
 
-            
+                    return false;
+                }
+            });
+
+            if (book.getVolumeInfo().getImageLink() != null) {
+
+                GlideApp.with(mContext)
+                        .load(book.getVolumeInfo().getImageLink().getThumbnail())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .into(holder.imageViewthumbnail);
+
+                holder.imageViewthumbnail.setContentDescription(
+                        String.format(mContext.getString(R.string.cover_book_cd), book.getVolumeInfo()
+                                .getTitle()));
+
+            } else if (book.isCustom()) {
+
+                TextDrawable drawable = TextDrawable.builder()
+                        .buildRect(TextUtils.getFirstLetterTitle(book), Color.BLUE);
+
+                holder.imageViewthumbnail.setContentDescription(
+                        String.format(mContext.getString(R.string.cover_book_cd), book.getVolumeInfo()
+                                .getTitle()));
+
+                holder.imageViewthumbnail.setImageDrawable(drawable);
+
+
+            } else {
+
+                TextDrawable drawable = TextDrawable.builder()
+                        .buildRect(TextUtils.getFirstLetterTitle(book), Color.RED);
+
+                holder.imageViewthumbnail.setImageDrawable(drawable);
+
+
+            }
+
+            holder.view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onClickListenerBookGridInteraction(mFolderId, book, (DynamicImageView) holder.imageViewthumbnail);
+                }
+            });
+
+            // call Animation function
+            setAnimation(holder.itemView, position);
+
+        }catch (Exception ex){
+            Log.wtf("TAG",ex.getMessage());
         }
-
-        holder.view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mListener.onClickListenerBookGridInteraction(mFolderId, book, (DynamicImageView) holder.imageViewthumbnail);
-            }
-        });
-
-        // call Animation function
-        setAnimation(holder.itemView, position);
     }
 
     @Override
