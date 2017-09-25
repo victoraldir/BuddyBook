@@ -5,20 +5,21 @@
     android:orientation="horizontal"
     android:padding="5dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:layout_width="32dp"
         android:layout_height="32dp"
         tools:src="@drawable/ic_folder"
         android:id="@+id/icon_text_info"
+        android:gravity="center_vertical"
         android:paddingLeft="8dp"/>
 
     <TextView
         android:id="@+id/info_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:paddingLeft="8dp"
         tools:text="Must have"/>
 
