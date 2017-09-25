@@ -26,7 +26,6 @@ import com.quartzodev.views.DynamicImageView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
