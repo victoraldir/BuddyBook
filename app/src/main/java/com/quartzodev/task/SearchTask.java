@@ -82,7 +82,7 @@ public class SearchTask extends AsyncTaskLoader<List<Book>> {
         //MaxResult == 1 is a ISBN query TODO make it nicer!
         if (mMaxResult != null && mMaxResult == 1) {
 
-            Book book = APIService.getInstance().getService(APIService.GOODREADS).getBookByISBN(mQuery);
+            Book book = APIService.getInstance().getService(APIService.GOOGLE).getBookByISBN(mQuery);
 
             if(book == null){
                 book = APIService.getInstance().getService(APIService.GOODREADS).getBookByISBN(mQuery);
