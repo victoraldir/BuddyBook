@@ -27,4 +27,5 @@
     <dimen name="expanded_toolbar_height">100dp</dimen>
 
     <dimen name="bar_height">56dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

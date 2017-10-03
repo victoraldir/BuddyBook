@@ -23,7 +23,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
@@ -91,6 +94,12 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     CardView mCardViewBookBorrowed;
     @BindView(R.id.card_actions)
     CardView mCardViewActions;
+
+    @BindView(R.id.descriptionContainer)
+    LinearLayout mDescriptionContainer;
+
+    @BindView(R.id.btn_more_details)
+    TextView mBtnMore;
 
     @BindView(R.id.grid_product_details)
     RecyclerView mGridProductDetails;
@@ -204,6 +213,18 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         loadBook(null);
+    }
+
+    public void expandDescription(View view){
+
+        if(mDescriptionContainer.getVisibility() == View.VISIBLE){
+            mBtnMore.setText(mContext.getString(R.string.more));
+            collapse(mDescriptionContainer);
+        }else{
+            mBtnMore.setText(mContext.getString(R.string.less));
+            expand(mDescriptionContainer);
+        }
+
     }
 
     public void loadBook(Book book) {
@@ -347,6 +368,60 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             });
 
         }
+    }
+
+    public static void expand(final View v) {
+        v.measure(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = v.getMeasuredHeight();
+
+        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
+        v.getLayoutParams().height = 1;
+        v.setVisibility(View.VISIBLE);
+        Animation a = new Animation()
+        {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                v.getLayoutParams().height = interpolatedTime == 1
+                        ? ActionBar.LayoutParams.WRAP_CONTENT
+                        : (int)(targetHeight * interpolatedTime);
+                v.requestLayout();
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        // 1dp/ms
+        a.setDuration((int)(targetHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
+    }
+
+    public static void collapse(final View v) {
+        final int initialHeight = v.getMeasuredHeight();
+
+        Animation a = new Animation()
+        {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                if(interpolatedTime == 1){
+                    v.setVisibility(View.GONE);
+                }else{
+                    v.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+                    v.requestLayout();
+                }
+            }
+
+            @Override
+            public boolean willChangeBounds() {
+                return true;
+            }
+        };
+
+        // 1dp/ms
+        a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
+        v.startAnimation(a);
     }
 
     @Override
