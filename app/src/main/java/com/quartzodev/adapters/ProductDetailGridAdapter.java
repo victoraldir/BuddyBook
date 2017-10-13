@@ -28,11 +28,6 @@ public class ProductDetailGridAdapter extends RecyclerView.Adapter<ProductDetail
     private static final int CELL_NUM_PAGES = 2;
     private static final int CELL_PRINT_TYPE = 3;
 
-    private static final int POS_NUM_PAGES = 0;
-    private static final int POS_ISBN = 1;
-    private static final int POS_LANGUAGE = 2;
-    private static final int POS_PRINT_TYPE = 3;
-
     private List<Integer> listCells = new ArrayList<>();
 
     private VolumeInfo mData;
