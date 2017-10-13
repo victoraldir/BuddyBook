@@ -31,17 +31,20 @@ import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.quartzodev.adapters.ProductDetailGridAdapter;
+import com.quartzodev.buddybook.AnnotationActivity;
 import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.GlideApp;
 import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
+import com.quartzodev.data.Folder;
 import com.quartzodev.utils.DateUtils;
 import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.utils.TextUtils;
@@ -62,6 +65,8 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         ValueEventListener {
 
     private static final String MOVIE_SHARE_HASHTAG = "#BuddyBook ";
+
+    public static final int RC_ANNOTATION = 1;
 
     @BindView(R.id.detail_imageview_thumb)
     ImageView mPhoto;
@@ -94,6 +99,8 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     CardView mCardViewBookBorrowed;
     @BindView(R.id.card_actions)
     CardView mCardViewActions;
+    @BindView(R.id.detail_textview_annotations)
+    TextView mTextViewAnnotation;
 
     @BindView(R.id.descriptionContainer)
     LinearLayout mDescriptionContainer;
@@ -104,14 +111,17 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @BindView(R.id.grid_product_details)
     RecyclerView mGridProductDetails;
 
-    private ProductDetailGridAdapter mProductDetailGridAdapter;
     private String mBookJson;
     private String mUserId;
     private String mFolderListComma;
+    private String mFolderId;
+    private String mBookId;
     private Context mContext;
     private Book mBookSelected;
     private Boolean mFlagLendOp;
     private OnDetailInteractionListener mListener;
+
+    private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
     public DetailActivityFragment() {
         setHasOptionsMenu(true);
@@ -137,7 +147,10 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         mFolderListComma = getArguments().getString(DetailActivity.ARG_FOLDER_LIST_ID);
         mBookJson = getArguments().getString(DetailActivity.ARG_BOOK_JSON);
         mFlagLendOp = getArguments().getBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION);
+        mFolderId = getArguments().getString(DetailActivity.ARG_FOLDER_ID);
         mContext = getContext();
+        mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
+        mBookId = getArguments().getString(DetailActivity.ARG_BOOK_ID);
     }
 
     @Override
@@ -152,9 +165,13 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             Gson gson = new Gson();
             final Book currentBook = gson.fromJson(mBookJson, Book.class);
 
+            if(mBookId != null){
+                loadAnnotationFromDb();
+            }
+
             int numCol = 2;
 
-            mProductDetailGridAdapter = new ProductDetailGridAdapter(currentBook.getVolumeInfo(), getActivity());
+            ProductDetailGridAdapter mProductDetailGridAdapter = new ProductDetailGridAdapter(currentBook.getVolumeInfo(), getActivity());
 
             mGridProductDetails.setLayoutManager(new GridLayoutManager(mContext, numCol));
 
@@ -187,6 +204,24 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         }
 
         return rootView;
+    }
+
+    public void loadAnnotationFromDb(){
+        mFirebaseDatabaseHelper.findBook(mUserId, mFolderId, mBookId, new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.getValue() != null) {
+                    Book book = dataSnapshot.getValue(Book.class);
+                    setAnnotation(book.getAnnotation());
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -247,6 +282,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             loadAuthors(bookApi);
             loadToolbar(bookApi);
 
+            setAnnotation(bookApi.getAnnotation());
             mTitle.setText(bookApi.getVolumeInfo().getTitle());
             mPublishedDate.setText(DateUtils.formatStringDate(bookApi.getVolumeInfo().getPublishedDate()));
             mPublisher.setText(bookApi.getVolumeInfo().getPublisher());
@@ -271,6 +307,15 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
         }
 
+    }
+
+    public void setAnnotation(String content){
+
+        if(content != null && !content.isEmpty()){
+            mTextViewAnnotation.setText(content);
+        }else{
+            mTextViewAnnotation.setText(mContext.getString(R.string.you_have_no_annotations));
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -458,6 +503,32 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                     + " must implement OnDetailInteractionListener");
         }
 
+    }
+
+    public void launchResultActivity(){
+        Intent it = new Intent(mContext,AnnotationActivity.class);
+
+        it.putExtra(AnnotationActivity.ARG_BOOK_ID,mBookSelected.getId());
+        it.putExtra(AnnotationActivity.ARG_FOLDER_ID,mFolderId);
+        it.putExtra(AnnotationActivity.ARG_CONTENT,mBookSelected.getAnnotation());
+        it.putExtra(AnnotationActivity.ARG_BOOK_TITLE,mBookSelected.getVolumeInfo().getTitle());
+
+        startActivityForResult(it,RC_ANNOTATION);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(RC_ANNOTATION == requestCode){
+
+            if (CommonStatusCodes.SUCCESS_CACHE == resultCode || CommonStatusCodes.SUCCESS == resultCode ) {
+                String content = data.getStringExtra(AnnotationActivity.ARG_CONTENT);
+                setAnnotation(content);
+                mBookSelected.setAnnotation(content);
+
+            }
+        }
     }
 
     @Override

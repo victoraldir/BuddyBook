@@ -2,7 +2,6 @@ package com.quartzodev.buddybook;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -37,8 +36,6 @@ public class DetailActivity extends AppCompatActivity implements
     public static final String ARG_BOOK_JSON = "bookJson";
     public static final String ARG_FLAG_LEND_OPERATION = "flagLendOperation";
 
-    public static final int RC_ANNOTATION = 1;
-
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -51,7 +48,6 @@ public class DetailActivity extends AppCompatActivity implements
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private String mUserId;
     private DetailActivityFragment mFragment;
-    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +55,6 @@ public class DetailActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_detail);
 
         ButterKnife.bind(this);
-
-        mContext = this;
 
         if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE))
             initAdView();
@@ -77,35 +71,25 @@ public class DetailActivity extends AppCompatActivity implements
         final String bookJson = getIntent().getExtras().getString(ARG_BOOK_JSON);
         boolean flagLendOp = getIntent().getExtras().getBoolean(ARG_FLAG_LEND_OPERATION);
 
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent it = new Intent(mContext,AnnotationActivity.class);
-
-                Gson gson = new Gson();
-
-                Book book = gson.fromJson(bookJson, Book.class);
-
-                it.putExtra(AnnotationActivity.ARG_BOOK_ID,book.getId());
-                it.putExtra(AnnotationActivity.ARG_FOLDER_ID,folderId);
-                it.putExtra(AnnotationActivity.ARG_CONTENT_ID,book.getAnnotation());
-
-                startActivityForResult(it,RC_ANNOTATION);
-            }
-        });
-
         mFragment = DetailActivityFragment.newInstance(mUserId, bookId, folderId, folderListId, bookJson, flagLendOp);
 
         getSupportFragmentManager().popBackStackImmediate();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.detail_container, mFragment).commit();
 
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFragment.launchResultActivity();
+            }
+        });
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Snackbar.make(mCoordinatorLayout, getString(R.string.annotation_saved), Snackbar.LENGTH_SHORT).show();
     }
 
     private void initAdView(){

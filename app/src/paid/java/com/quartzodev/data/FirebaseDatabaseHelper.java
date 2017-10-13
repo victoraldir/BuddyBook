@@ -56,6 +56,7 @@ public class FirebaseDatabaseHelper {
         mDatabaseReference.child(userId).updateChildren(fields);
     }
 
+    
     public void fetchPopularBooks(final ValueEventListener valueEventListener) {
 
         mDatabaseReference.child(REF_POPULAR_FOLDER)
@@ -111,6 +112,10 @@ public class FirebaseDatabaseHelper {
 
         }
 
+    }
+
+    public void findBook(String userId, String folderId, String bookId, ValueEventListener valueEventListener){
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookId).addListenerForSingleValueEvent(valueEventListener);
     }
 
     public void fetchFolders(String userId, final ValueEventListener valueEventListener) {
@@ -175,6 +180,14 @@ public class FirebaseDatabaseHelper {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
     }
 
+    public void updateBookAnnotation(String userId, String folderId, String bookId, String annotation){
+
+        Map<String, Object> mapAnnotation = new HashMap<>();
+        mapAnnotation.put("annotation", annotation);
+        
+        mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookId).updateChildren(mapAnnotation);
+    }
+    
     public void insertBookFolder(String userId, String folderId, final Book bookApi, final OnPaidOperationListener listener) {
 
         final DatabaseReference ref = mDatabaseReference

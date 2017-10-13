@@ -11,6 +11,9 @@ import android.widget.TextView;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.VolumeInfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -20,12 +23,17 @@ import butterknife.ButterKnife;
 
 public class ProductDetailGridAdapter extends RecyclerView.Adapter<ProductDetailGridAdapter.ViewHolder> {
 
-    private static final int NUM_CELLS = 4;
+    private static final int CELL_ISBN = 0;
+    private static final int CELL_LANGUAGE = 1;
+    private static final int CELL_NUM_PAGES = 2;
+    private static final int CELL_PRINT_TYPE = 3;
 
     private static final int POS_NUM_PAGES = 0;
     private static final int POS_ISBN = 1;
     private static final int POS_LANGUAGE = 2;
     private static final int POS_PRINT_TYPE = 3;
+
+    private List<Integer> listCells = new ArrayList<>();
 
     private VolumeInfo mData;
     private Context mContext;
@@ -33,6 +41,25 @@ public class ProductDetailGridAdapter extends RecyclerView.Adapter<ProductDetail
     public ProductDetailGridAdapter(VolumeInfo volumeInfo, Context context){
         mData = volumeInfo;
         mContext = context;
+        countCellByVolumeInfo(mData);
+    }
+
+    private void countCellByVolumeInfo(VolumeInfo volumeInfo){
+        if(volumeInfo.getIsbn13() != null || volumeInfo.getIsbn10() != null){
+            listCells.add(CELL_ISBN);
+        }
+
+        if(volumeInfo.getLanguage() != null){
+            listCells.add(CELL_LANGUAGE);
+        }
+
+        if(volumeInfo.getPrintType() != null){
+            listCells.add(CELL_PRINT_TYPE);
+        }
+
+        if(volumeInfo.getPageCount() != null){
+            listCells.add(CELL_NUM_PAGES);
+        }
     }
 
     @Override
@@ -48,8 +75,8 @@ public class ProductDetailGridAdapter extends RecyclerView.Adapter<ProductDetail
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
 
-        switch (i){
-            case POS_ISBN:
+        switch (listCells.get(i)){
+            case CELL_ISBN:
                 if(mData.getIsbn10() != null){
                     if(mData.getIsbn13() != null){
                         viewHolder.mTextView.setText(mData.getIsbn10() + "/" + mData.getIsbn13());
@@ -63,19 +90,19 @@ public class ProductDetailGridAdapter extends RecyclerView.Adapter<ProductDetail
                 viewHolder.mImageView.setImageResource(R.drawable.ic_action_barcode_1);
 
                 break;
-            case POS_LANGUAGE:
+            case CELL_LANGUAGE:
 
                 viewHolder.mTextView.setText(mData.getLanguage());
                 viewHolder.mImageView.setImageResource(R.drawable.ic_language);
 
                 break;
-            case POS_NUM_PAGES:
+            case CELL_NUM_PAGES:
 
                 viewHolder.mTextView.setText(String.format(mContext.getString(R.string.pages_details),mData.getPageCount()));
                 viewHolder.mImageView.setImageResource(R.drawable.ic_action_book);
 
                 break;
-            case POS_PRINT_TYPE:
+            case CELL_PRINT_TYPE:
 
                 viewHolder.mTextView.setText(mData.getPrintType());
                 viewHolder.mImageView.setImageResource(R.drawable.ic_print);
@@ -93,7 +120,7 @@ public class ProductDetailGridAdapter extends RecyclerView.Adapter<ProductDetail
 
     @Override
     public int getItemCount() {
-        return NUM_CELLS;
+        return listCells.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -34,26 +34,16 @@
 
         </LinearLayout>
 
-        <TextView
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="You have not annotations. Tap here to add"
-            />
-
         <TextView android:id="@+id/detail_textview_annotations"
             style="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="8dp"
             android:lineSpacingMultiplier="@fraction/detail_body_line_spacing_multiplier"
+            android:text="@string/you_have_no_annotations"
             tools:text="@string/lorem_ipsum_large"
             android:paddingTop="@dimen/activity_horizontal_margin"
-            android:paddingBottom="@dimen/content_details_padding_bottom_adview"
-            android:visibility="gone"/>
+            android:paddingBottom="@dimen/content_details_padding_bottom_adview" />
 
     </LinearLayout>
 

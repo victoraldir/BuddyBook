@@ -208,5 +208,7 @@
     <string name="less">See less</string>
     <string name="annotations">Annotations</string>
     <string name="title_activity_annotation">AnnotationActivity</string>
+    <string name="you_have_no_annotations">You have no annotations.</string>
+    <string name="annotation_saved">Annotation saved!</string>
 
 </resources>
