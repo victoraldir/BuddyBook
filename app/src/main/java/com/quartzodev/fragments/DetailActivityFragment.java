@@ -111,6 +111,12 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @BindView(R.id.grid_product_details)
     RecyclerView mGridProductDetails;
 
+    @BindView(R.id.detail_cardview_annotation)
+    CardView mCardViewAnnotation;
+
+    @BindView(R.id.detail_btn_lend)
+    LinearLayout mBtnLend;
+
     private String mBookJson;
     private String mUserId;
     private String mFolderListComma;
@@ -303,6 +309,12 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
             if (mFlagLendOp) {
                 loadBookActions(bookApi);
+            }
+
+            if(bookApi.getId() != null){
+                mCardViewAnnotation.setVisibility(View.VISIBLE);
+                if(mFolderId != null && mFolderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER))
+                    mBtnLend.setVisibility(View.VISIBLE);
             }
 
         }
