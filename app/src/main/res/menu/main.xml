@@ -36,11 +36,13 @@
         android:title="@string/action_clear_search"
         app:showAsAction="never" />
 
+    <!--
     <item
         android:id="@+id/action_do_backup"
         android:orderInCategory="600"
         android:title="@string/action_do_backup"
         app:showAsAction="never" />
+        -->
 
     <item
         android:id="@+id/action_about"

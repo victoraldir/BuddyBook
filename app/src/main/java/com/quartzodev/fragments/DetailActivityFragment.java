@@ -312,9 +312,12 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             }
 
             if(bookApi.getId() != null){
-                mCardViewAnnotation.setVisibility(View.VISIBLE);
-                if(mFolderId != null && mFolderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER))
+                if(mFolderId != null && !mFolderId.equals(FirebaseDatabaseHelper.REF_POPULAR_FOLDER)){
                     mBtnLend.setVisibility(View.VISIBLE);
+                    mCardViewAnnotation.setVisibility(View.VISIBLE);
+                    if(getActivity() != null)
+                        ((DetailActivity) getActivity()).setFabVisible();
+                }
             }
 
         }

@@ -86,6 +86,10 @@ public class DetailActivity extends AppCompatActivity implements
 
     }
 
+    public void setFabVisible(){
+        mFab.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
