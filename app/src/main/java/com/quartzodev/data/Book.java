@@ -17,6 +17,8 @@ public class Book {
 
     private String kind;
 
+    private String annotation;
+
     private VolumeInfo volumeInfo;
 
     private Lend lend;
@@ -80,6 +82,14 @@ public class Book {
 
     public void setTypeProvider(String typeProvider) {
         this.typeProvider = typeProvider;
+    }
+
+    public String getAnnotation() {
+        return annotation;
+    }
+
+    public void setAnnotation(String annotation) {
+        this.annotation = annotation;
     }
 
     @Override

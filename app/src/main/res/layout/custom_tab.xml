@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     android:gravity="center"
-    tools:background="@color/tw__composer_black">
+    tools:background="@drawable/com_facebook_tooltip_black_background">
 
     <ImageView
         android:id="@+id/tab_icon"

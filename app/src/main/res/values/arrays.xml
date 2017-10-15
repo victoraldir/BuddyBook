@@ -11,4 +11,9 @@
         <item>@string/title_value</item>
         <item>@string/author_value</item>
     </string-array>
+
+    <string-array name="default_backup_restore">
+        <item>@string/option_backup</item>
+        <item>@string/option_restore</item>
+    </string-array>
 </resources>

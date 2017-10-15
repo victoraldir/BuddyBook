@@ -7,8 +7,8 @@ android {
         applicationId "com.quartzodev.buddybook"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 38
-        versionName "1.2.0"
+        versionCode 39
+        versionName "1.2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resConfigs "auto"
@@ -79,12 +79,6 @@ dependencies {
     // FirebaseUI Auth only
     compile 'com.firebaseui:firebase-ui-auth:2.3.0'
 
-    //Firebase Auth
-    //compile 'com.google.firebase:firebase-auth:11.0.4'
-
-    //Play Services Auth
-    //compile 'com.google.android.gms:play-services-auth:11.0.4'
-
     // Required for Facebook login support
     compile('com.facebook.android:facebook-android-sdk:4.22.1')
 
@@ -145,7 +139,5 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
 
 }
-
-
 
 apply plugin: 'com.google.gms.google-services'

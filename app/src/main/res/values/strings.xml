@@ -6,6 +6,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="action_clear_search">Clear search history</string>
+    <string name="action_do_backup">Backup/Restore</string>
     <string name="action_sign_out">Sign Out</string>
     <string name="action_remove">Remove</string>
     <string name="action_copy">Copy to folder…</string>
@@ -88,17 +89,16 @@
     <string name="ad_bottom_books_main" translatable="false" >ca-app-pub-6526073251385305/7393902820</string>
 
 
-
     <!--
-        <string name="ad_app_id" translatable="false">@string/ad_unit_test</string>
-        <string name="ad_inter_scanner_activity">@string/ad_unit_test</string>
-        <string name="ad_bottom_details" translatable="false">@string/ad_unit_test</string>
-        <string name="ad_bottom_books_main" translatable="false" >@string/ad_unit_test</string>
-         For debug-->
+    <string name="ad_app_id" translatable="false">@string/ad_unit_test</string>
+    <string name="ad_inter_scanner_activity">@string/ad_unit_test</string>
+    <string name="ad_bottom_details" translatable="false">@string/ad_unit_test</string>
+    <string name="ad_bottom_books_main" translatable="false">@string/ad_unit_test</string>
+    -->
 
-    <string name="ad_unit_test" translatable="false" >ca-app-pub-3940256099942544/1033173712</string>
+    <string name="ad_unit_test" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
 
-    <string name="aboutLibraries_description_showIcon" translatable="false" >true</string>
+    <string name="aboutLibraries_description_showIcon" translatable="false">true</string>
     <string name="aboutLibraries_description_showVersion" translatable="false">true</string>
     <string name="aboutLibraries_description_text">
 
@@ -189,12 +189,26 @@
     <string name="default_sorts_author">Author</string>
     <string name="default_sorts_release">Release date</string>
 
-    <string name="release_value" translatable="false" >publishedDate</string>
-    <string name="title_value" translatable="false" >title</string>
-    <string name="author_value" translatable="false" >authors</string>
+    <string name="release_value" translatable="false">publishedDate</string>
+    <string name="title_value" translatable="false">title</string>
+    <string name="author_value" translatable="false">authors</string>
 
 
     <string name="pref_sort_default" translatable="false">0</string>
     <string name="number_of_books">%01d book(s)</string>
+
+    <string name="option_backup">Backup</string>
+    <string name="option_restore">Restore</string>
+    <string name="send_to">Send to</string>
+    <string name="description">Description</string>
+    <string name="product_details">Product details</string>
+    <string name="actions">Actions</string>
+    <string name="pages_details">%1$s page(s)</string>
+    <string name="more">See more</string>
+    <string name="less">See less</string>
+    <string name="annotations">Annotations</string>
+    <string name="title_activity_annotation">@string/annotations</string>
+    <string name="you_have_no_annotations">You have no annotations.</string>
+    <string name="annotation_saved">Annotation saved!</string>
 
 </resources>

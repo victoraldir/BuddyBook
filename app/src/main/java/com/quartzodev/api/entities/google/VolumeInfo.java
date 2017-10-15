@@ -27,6 +27,12 @@ public class VolumeInfo {
     public ImageLink imageLink;
     @SerializedName("searchField")
     public String searchField;
+    @SerializedName("pageCount")
+    public String pageCount;
+    @SerializedName("language")
+    public String language;
+    @SerializedName("printType")
+    public String printType;
     @SerializedName("industryIdentifiers")
     public List<IndustryIdentifier> industryIdentifiers;
 
@@ -103,5 +109,29 @@ public class VolumeInfo {
 
     public void setIndustryIdentifiers(List<IndustryIdentifier> industryIdentifiers) {
         this.industryIdentifiers = industryIdentifiers;
+    }
+
+    public String getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(String pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getPrintType() {
+        return printType;
+    }
+
+    public void setPrintType(String printType) {
+        this.printType = printType;
     }
 }

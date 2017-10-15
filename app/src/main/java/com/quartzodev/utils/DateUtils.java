@@ -16,6 +16,7 @@ public class DateUtils {
 
     private static final String DUBLIN_TIME_ZONE = "Europe/Dublin";
     private static final String MASK = "yyyy-MM-dd HH:mm:ss";
+    private static final String MASK_NO_SEPARATOR = "yyyyMMddHHmmss";
     private static final String MASK_PUBLISH_IN = "yyyy-MM-dd";
     private static final String MASK_PUBLISH_OUT = "MMMM dd, yyyy";
 
@@ -24,6 +25,15 @@ public class DateUtils {
         GregorianCalendar gc = new GregorianCalendar();
         gc.setTimeZone(TimeZone.getTimeZone(DUBLIN_TIME_ZONE));
         SimpleDateFormat sfd = new SimpleDateFormat(MASK, Locale.ENGLISH);
+
+        return sfd.format(gc.getTime());
+    }
+
+    public static String getCurrentTimeStringNoSeparator() {
+
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTimeZone(TimeZone.getTimeZone(DUBLIN_TIME_ZONE));
+        SimpleDateFormat sfd = new SimpleDateFormat(MASK_NO_SEPARATOR, Locale.ENGLISH);
 
         return sfd.format(gc.getTime());
     }

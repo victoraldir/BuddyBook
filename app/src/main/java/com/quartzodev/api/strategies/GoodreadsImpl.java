@@ -69,6 +69,12 @@ public class GoodreadsImpl implements IQuery {
 
         volumeInfo.setDescription(bookApi.getDescription());
 
+        volumeInfo.setLanguage(bookApi.getLanguageCode());
+
+        volumeInfo.setPrintType(bookApi.getFormat());
+
+        volumeInfo.setPageCount(bookApi.getNumPages());
+
         if(bookApi.getPublishDate() != null)
             volumeInfo.setPublishedDate(bookApi.getPublishDate());
 

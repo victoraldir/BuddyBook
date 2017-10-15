@@ -4,6 +4,8 @@ import android.support.annotation.Keep;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by victoraldir on 23/03/2017.
  */
@@ -19,6 +21,9 @@ public class BookApi {
 
     @SerializedName("volumeInfo")
     private VolumeInfo volumeInfo;
+
+    @SerializedName("industryIdentifiers")
+    private List<IndustryIdentifier> industryIdentifiers;
 
     public BookApi() {
     }

@@ -142,20 +142,22 @@ public class ViewPagerFragment extends Fragment {
         super.onAttach(context);
     }
 
+    public String getTypeFragment(){
+        return mTypeFragment;
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         MainActivity activity = ((MainActivity) getActivity());
 
-        activity.showTab();
         activity.getTabLayout().setupWithViewPager(mViewPager);
-        activity.setupTabIcons(mTypeFragment);
+        activity.checkTabLayout();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        ((MainActivity) getActivity()).hideTab();
     }
 
     @Override

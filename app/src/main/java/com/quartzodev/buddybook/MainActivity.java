@@ -7,9 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -27,14 +31,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -43,6 +45,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -78,9 +82,11 @@ import com.quartzodev.ui.BarcodeCaptureActivity;
 import com.quartzodev.utils.ConnectionUtils;
 import com.quartzodev.utils.Constants;
 import com.quartzodev.utils.DialogUtils;
+import com.quartzodev.utils.PathUtils;
 import com.quartzodev.views.DynamicImageView;
 import com.quartzodev.widgets.BuddyBookWidgetProvider;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -98,12 +104,23 @@ public class MainActivity extends AppCompatActivity
         FirebaseDatabaseHelper.OnPaidOperationListener,
         DetailActivityFragment.OnDetailInteractionListener{
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     public static final String EXTRA_USER_ID = "userId";
     private static final int RC_SIGN_IN = 5;
     private static final int RC_BARCODE_CAPTURE = 2;
+    private static final int RC_PICKFILE = 6;
     private static final String KEY_PARCELABLE_USER = "userKey";
     private static final String KEY_CURRENT_QUERY = "queryKey";
+    private static final String KEY_FLAG_SEARCH_OPEN = "flagSearchOpenKey";
     private static final int TOTAL_SEARCH_RESULT = 40;
+
+    private final int NO_INTERNET = 1;
+    private final int LOADING = 2;
+    private final int READY = 3;
+
+    private final int BACKUP = 0;
+    private final int RESTORE = 1;
 
     @BindView(R.id.main_coordinator)
     CoordinatorLayout mCoordinatorLayout;
@@ -120,10 +137,14 @@ public class MainActivity extends AppCompatActivity
     TextView mTextViewMessage;
     @BindView(R.id.fragment_main_container)
     FrameLayout mFrameLayoutContainer;
+    @BindView(R.id.loading_container)
+    RelativeLayout mLoadingContainer;
     @BindView(R.id.fab)
     FloatingActionButton mFab;
     @BindView(R.id.tabs)
     TabLayout mTabLayout;
+    @BindView(R.id.main_progress_bar)
+    ProgressBar mProgressBar;
 
     private User mUser;
     private Context mContext;
@@ -137,12 +158,15 @@ public class MainActivity extends AppCompatActivity
     private SearchView mSearchView;
     private MenuItem mSearchItem;
     private String mCurrQuery;
+    private boolean mFlagSeachBarOpen;
     private List<Folder> mFolderList;
     private String mFolderListComma;
     private SearchRecentSuggestions mSuggestions;
     private boolean mTwoPane;
     private Snackbar mSnackbarNoInternet;
     private SharedPreferences mPrefs;
+    private LinearLayout mTabLinearLayoutLeft;
+    private LinearLayout mTabLinearLayoutRight;
 
     // The Idling Resource which will be null in production.
     @Nullable
@@ -360,6 +384,7 @@ public class MainActivity extends AppCompatActivity
         } else if (requestCode == RC_BARCODE_CAPTURE && resultCode == CommonStatusCodes.SUCCESS) {
 
             if (data != null) {
+
                 Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
 
                 Fragment searchFragment = SearchResultFragment.newInstance(mFolderId, barcode.displayValue);
@@ -368,12 +393,55 @@ public class MainActivity extends AppCompatActivity
                 transaction.replace(R.id.fragment_main_container, searchFragment).commitAllowingStateLoss();
 
             }
+        }else if (requestCode == RC_PICKFILE && resultCode == CommonStatusCodes.SUCCESS_CACHE){
+            Log.d(TAG,data.getDataString());
+
+            try {
+
+                Uri uri = data.getData();
+                String mimeType = getContentResolver().getType(uri);
+
+                Cursor returnCursor =
+                        getContentResolver().query(uri, null, null, null, null);
+
+                int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
+                returnCursor.moveToFirst();
+
+                Log.d(TAG,"mimeType: " + mimeType);
+                Log.d(TAG,"nameView: " + returnCursor.getString(nameIndex));
+                Log.d(TAG,"sizeView: " + returnCursor.getLong(sizeIndex));
+
+                File file = new File(PathUtils.getPath(mContext,uri));
+
+                Log.d(TAG,"File path: " + PathUtils.getPath(mContext,uri));
+                Log.d(TAG,"File absolute path: " + PathUtils.getPath(mContext,uri));
+                Log.d(TAG,"File exists? : " + file.exists());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e(TAG,e.getMessage());
+            }
+
         }
     }
 
-    final int NO_INTERNET = 1;
-    final int LOADING = 2;
-    final int READY = 3;
+    public String getRealPathFromURI(Uri contentUri) {
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            cursor = getContentResolver().query(contentUri, proj, null, null,
+                    null);
+            int column_index = cursor
+                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
 
     public void showStatus(int statusCode){
 
@@ -384,10 +452,12 @@ public class MainActivity extends AppCompatActivity
                 mFrameLayoutContainer.setVisibility(View.GONE);
                 mTextViewMessage.setText(getString(R.string.no_internet));
 
+                mLoadingContainer.setVisibility(View.GONE);
                 mFab.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
                 mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 mToolbar.setVisibility(View.GONE);
-                mTabLayout.setVisibility(View.GONE);
+                //mTabLayout.setVisibility(View.GONE);
 
                 final DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
                 connectedRef.addValueEventListener(new ValueEventListener() {
@@ -407,20 +477,30 @@ public class MainActivity extends AppCompatActivity
                 break;
             case LOADING:
 
-                mTextViewMessage.setVisibility(View.VISIBLE);
                 mFrameLayoutContainer.setVisibility(View.GONE);
-                mTextViewMessage.setText("LOADING----");
+
+                mLoadingContainer.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.VISIBLE);
+                mTextViewMessage.setVisibility(View.VISIBLE);
+                mTextViewMessage.setText("Loading");
+
+                mFab.setVisibility(View.GONE);
+                mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                mToolbar.setVisibility(View.GONE);
+//                mTabLayout.setVisibility(View.GONE);
 
                 break;
             case READY:
 
                 mTextViewMessage.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
                 mFrameLayoutContainer.setVisibility(View.VISIBLE);
+                mLoadingContainer.setVisibility(View.GONE);
 
                 mFab.setVisibility(View.VISIBLE);
                 mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 mToolbar.setVisibility(View.VISIBLE);
-                mTabLayout.setVisibility(View.VISIBLE);
+//                mTabLayout.setVisibility(View.VISIBLE);
 
                 break;
         }
@@ -433,8 +513,9 @@ public class MainActivity extends AppCompatActivity
             mUser = (User) savedInstanceState.get(KEY_PARCELABLE_USER);
         }
 
-        if (savedInstanceState.containsKey(KEY_CURRENT_QUERY)) {
+        if (savedInstanceState.containsKey(KEY_FLAG_SEARCH_OPEN)) {
             mCurrQuery = savedInstanceState.getString(KEY_CURRENT_QUERY);
+            mFlagSeachBarOpen = savedInstanceState.getBoolean(KEY_FLAG_SEARCH_OPEN);
         }
 
         super.onRestoreInstanceState(savedInstanceState);
@@ -442,13 +523,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putParcelable(KEY_PARCELABLE_USER, mUser);
 
-        if (mSearchView != null && mSearchView.getQuery() != null && mSearchView.isEnabled()) {
+        if (mSearchView != null && mSearchView.isEnabled()) {
             outState.putCharSequence(KEY_CURRENT_QUERY, mSearchView.getQuery().toString());
-        }
+            outState.putBoolean(KEY_FLAG_SEARCH_OPEN, mSearchView.isShown());
 
-        super.onSaveInstanceState(outState);
+        }
     }
 
     private void launchLoginActivityResult() {
@@ -557,7 +639,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        if (!TextUtils.isEmpty(mCurrQuery)) {
+        if (mFlagSeachBarOpen) {
             mSearchItem.expandActionView();
             mSearchView.setQuery(mCurrQuery, true);
             mSearchView.clearFocus();
@@ -578,17 +660,8 @@ public class MainActivity extends AppCompatActivity
                     mSnackbarNoInternet.show();
                 }
 
-                Fragment mCurrentGridFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
-
-                if (mCurrentGridFragment instanceof ViewPagerFragment) {
-                    hideTab();
-                }
-
                 ViewPagerFragment fragment = ViewPagerFragment.newInstance(ViewPagerFragment.SEARCH_VIEW_PAGER, mFolderId, null, null);
-
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.add(R.id.fragment_main_container, fragment, search_tag);
-                transaction.commitNow();
+                loadFragment(fragment,search_tag);
 
                 return true;
             }
@@ -596,26 +669,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
 
-                Fragment fragment = getSupportFragmentManager().findFragmentByTag(search_tag);
-
-                if (fragment != null) {
-                    getSupportFragmentManager().beginTransaction().remove(fragment).commitNow();
-                }
-
-                fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
-
-
-                if (fragment instanceof ViewPagerFragment) {
-
-                    ViewPager viewPager = ((ViewPagerFragment) fragment).getViewPager();
-
-                    mTabLayout.setVisibility(View.VISIBLE);
-                    mTabLayout.setupWithViewPager(viewPager);
-
-                    showTab();
-
-                    setupTabIcons(ViewPagerFragment.MAIN_VIEW_PAGER);
-                }
+                removeFragment(search_tag);
 
                 if (mSnackbarNoInternet != null && mSnackbarNoInternet.isShown()) {
                     mSnackbarNoInternet.dismiss();
@@ -666,6 +720,80 @@ public class MainActivity extends AppCompatActivity
                         .withAboutVersionShown(true)
                         .start(this);
                 break;
+//            case R.id.action_do_backup:
+//                DialogUtils.alertDialogListDBackupRestore(mContext, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                        if(i == BACKUP) {
+//
+//                            showStatus(LOADING);
+//
+//                            mFirebaseDatabaseHelper.fetchFolders(mUser.getUid(), new ValueEventListener() {
+//                                @Override
+//                                public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                                    try {
+//
+//                                        String timeString = DateUtils.getCurrentTimeString();
+//                                        String content = dataSnapshot.getValue().toString();
+//                                        Intent it = new Intent(android.content.Intent.ACTION_SEND);
+//                                        it.putExtra(Intent.EXTRA_SUBJECT, "Buddybook backup - " + timeString);
+//                                        it.putExtra(Intent.EXTRA_TEXT, "Buddybook backup attached");
+//
+//                                        File backUpPath = new File(getFilesDir(), "backups");
+//
+//                                        if (!backUpPath.exists()) {
+//                                            backUpPath.mkdir();
+//                                        }
+//
+//                                        File newBackupFile = new File(backUpPath, "BB-Backup-" + DateUtils.getCurrentTimeStringNoSeparator() + ".txt");
+//
+//                                        if (!newBackupFile.exists()) {
+//                                            newBackupFile.createNewFile();
+//                                        }
+//
+//                                        FileOutputStream fos = new FileOutputStream(newBackupFile);
+//                                        fos.write(content.getBytes());
+//                                        Uri fileUri = FileProvider.getUriForFile(mContext, "com.quartzodev.fileprovider", newBackupFile);
+//
+//                                        Log.d(TAG, "Uri: " + fileUri.toString());
+//
+//                                        it.setType(getContentResolver().getType(fileUri));
+//                                        it.putExtra(Intent.EXTRA_STREAM, fileUri);
+//
+//                                        startActivity(Intent.createChooser(it, getResources().getText(R.string.send_to)));
+//
+//                                    } catch (FileNotFoundException e) {
+//                                        e.printStackTrace();
+//                                        Log.e(TAG, e.getMessage());
+//                                    } catch (IOException e) {
+//                                        e.printStackTrace();
+//                                        Log.e(TAG, e.getMessage());
+//                                    }
+//
+//                                    showStatus(READY);
+//
+//                                }
+//
+//                                @Override
+//                                public void onCancelled(DatabaseError databaseError) {
+//
+//                                    showStatus(READY);
+//
+//                                }
+//                            });
+//                        }else{
+//
+//                            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                            intent.setType("text/plain");
+//                            startActivityForResult(intent, RC_PICKFILE);
+//
+//                        }
+//
+//                    }
+//                });
+//                break;
             case R.id.action_to_premium:
 
                 DialogUtils.alertDialogUpgradePro(this);
@@ -716,14 +844,14 @@ public class MainActivity extends AppCompatActivity
             mFolderName = getString(R.string.tab_my_books);
             loadMainViewPagerFragment();
             loadFragment(ViewPagerFragment.newInstance(ViewPagerFragment.MAIN_VIEW_PAGER,
-                    mFolderId,null,null));
+                    mFolderId,null,null), null);
 
         }else{
 
             mToolbar.findViewById(R.id.toolbar_container).setVisibility(View.GONE);
             mFolderName = folder.getDescription();
             mToolbar.setTitle(mFolderName);
-            loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_folders));
+            loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_folders), null);
         }
     }
 
@@ -782,16 +910,44 @@ public class MainActivity extends AppCompatActivity
 
         if (frag == null) {
             loadFragment(ViewPagerFragment.newInstance(ViewPagerFragment.MAIN_VIEW_PAGER,
-                    mFolderId,null,null));
+                    mFolderId,null,null), null);
         }
     }
 
-    private void loadFragment(Fragment fragment){
+    private void loadFragment(Fragment fragment, String tag){
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_main_container, fragment);
-        transaction.commitAllowingStateLoss();
 
+        if(tag != null) {
+            transaction.add(R.id.fragment_main_container, fragment, tag);
+        }else{
+            transaction.replace(R.id.fragment_main_container, fragment);
+        }
+
+        transaction.commitNow();
+        checkTabLayout();
+    }
+
+    private void removeFragment(String tag){
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
+
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(fragment).commitNow();
+        }
+
+        checkTabLayout();
+    }
+
+    public void checkTabLayout(){
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+
+        if (currentFragment instanceof ViewPagerFragment) {
+            mTabLayout.setVisibility(View.VISIBLE);
+            mTabLayout.setupWithViewPager(((ViewPagerFragment) currentFragment).getViewPager());
+            setupTabIcons(((ViewPagerFragment) currentFragment).getTypeFragment());
+        }else{
+            mTabLayout.setVisibility(View.GONE);
+        }
     }
 
     //Gets fired when FolderListFragment is done
@@ -1056,45 +1212,42 @@ public class MainActivity extends AppCompatActivity
         return mTabLayout;
     }
 
-    public void hideTab() {
-        mTabLayout.setVisibility(View.GONE);
-    }
-
-    public void showTab() {
-        mTabLayout.setVisibility(View.VISIBLE);
-    }
-
     public void setupTabIcons(String typeFragment) {
 
-        LinearLayout tabLinearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        TabLayout.Tab tab1 =  mTabLayout.getTabAt(0);
+        TabLayout.Tab tab2 =  mTabLayout.getTabAt(1);
 
-
-        if(typeFragment.equals(ViewPagerFragment.MAIN_VIEW_PAGER)) {
-            ((ImageView) tabLinearLayout.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_favorite_border);
-            ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_my_books));
-        }else{
-            ((ImageView) tabLinearLayout.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_action_globe);
-            ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_search_online));
+        if(tab1 == null || mTabLinearLayoutLeft == null) {
+            mTabLinearLayoutLeft = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         }
 
-        mTabLayout.getTabAt(0).setCustomView(tabLinearLayout);
-
-        tabLinearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        if(tab2 == null || mTabLinearLayoutRight == null){
+            mTabLinearLayoutRight = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
+        }
 
         if(typeFragment.equals(ViewPagerFragment.MAIN_VIEW_PAGER)) {
-            ((ImageView) tabLinearLayout.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_library_books);
-            ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_top_books));
+            ((ImageView) mTabLinearLayoutLeft.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_favorite_border);
+            ((TextView) mTabLinearLayoutLeft.findViewById(R.id.tab_title)).setText(getString(R.string.tab_my_books));
         }else{
-            ((ImageView) tabLinearLayout.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_action_folder_closed);
+            ((ImageView) mTabLinearLayoutLeft.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_action_globe);
+            ((TextView) mTabLinearLayoutLeft.findViewById(R.id.tab_title)).setText(getString(R.string.tab_search_online));
+        }
+
+        mTabLayout.getTabAt(0).setCustomView(mTabLinearLayoutLeft);
+
+        if(typeFragment.equals(ViewPagerFragment.MAIN_VIEW_PAGER)) {
+            ((ImageView) mTabLinearLayoutRight.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_library_books);
+            ((TextView) mTabLinearLayoutRight.findViewById(R.id.tab_title)).setText(getString(R.string.tab_top_books));
+        }else{
+            ((ImageView) mTabLinearLayoutRight.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_action_folder_closed);
             if(mFolderName != null) {
-                ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(mFolderName);
+                ((TextView) mTabLinearLayoutRight.findViewById(R.id.tab_title)).setText(mFolderName);
             }else{
-                ((TextView) tabLinearLayout.findViewById(R.id.tab_title)).setText(getString(R.string.tab_my_books));
+                ((TextView) mTabLinearLayoutRight.findViewById(R.id.tab_title)).setText(getString(R.string.tab_my_books));
             }
         }
 
-        mTabLayout.getTabAt(1).setCustomView(tabLinearLayout);
-
+        mTabLayout.getTabAt(1).setCustomView(mTabLinearLayoutRight);
     }
 
     @Override

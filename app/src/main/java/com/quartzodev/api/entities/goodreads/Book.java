@@ -49,6 +49,15 @@ public class Book {
     @Element(name = "publication_year", required = false)
     private Integer year;
 
+    @Element(name = "num_pages", required = false)
+    private String numPages;
+
+    @Element(name = "format", required = false)
+    private String format;
+
+    @Element(name = "language_code", required = false)
+    private String languageCode;
+
     public String getId() {
         return id;
     }
@@ -142,6 +151,30 @@ public class Book {
 
     }
 
+    public String getNumPages() {
+        return numPages;
+    }
+
+    public void setNumPages(String numPages) {
+        this.numPages = numPages;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    public String getLanguageCode() {
+        return languageCode;
+    }
+
+    public void setLanguageCode(String languageCode) {
+        this.languageCode = languageCode;
+    }
+
     public String getPublishDate(){
         if(year != null && year != null && day != null) {
             return year + "-" + month + "-" + day;
@@ -153,4 +186,6 @@ public class Book {
     public void setYear(Integer year) {
         this.year = year;
     }
+
+
 }

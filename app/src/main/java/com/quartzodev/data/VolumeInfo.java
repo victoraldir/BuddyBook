@@ -33,6 +33,12 @@ public class VolumeInfo {
 
     public String isbn13;
 
+    public String pageCount;
+
+    public String language;
+
+    public String printType;
+
     public String getSearchField() {
 
         searchField = title;
@@ -110,5 +116,33 @@ public class VolumeInfo {
 
     public void setImageLink(ImageLink imageLink) {
         this.imageLink = imageLink;
+    }
+
+    public void setSearchField(String searchField) {
+        this.searchField = searchField;
+    }
+
+    public String getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(String pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getPrintType() {
+        return printType;
+    }
+
+    public void setPrintType(String printType) {
+        this.printType = printType;
     }
 }

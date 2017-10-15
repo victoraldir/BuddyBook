@@ -4,6 +4,21 @@
     <string name="navigation_drawer_open">Abrir gaveta</string>
     <string name="navigation_drawer_close">Fechar gaveta</string>
 
+    <string name="option_backup">Backup</string>
+    <string name="option_restore">Restore</string>
+
+    <string name="annotation_saved">Anotação salva!</string>
+    <string name="you_have_no_annotations">Você não fez anotações.</string>
+    <string name="title_activity_annotation">@string/annotations</string>
+    <string name="annotations">Anotações</string>
+    <string name="more">Ver mais</string>
+    <string name="less">Ver menos</string>
+    <string name="pages_details">%1$s página(s)</string>
+    <string name="actions">Ações</string>
+    <string name="product_details">Detalhes do Produto</string>
+    <string name="description">Descrição</string>
+    <string name="send_to">Enviar para</string>
+    <string name="action_do_backup">Backup/Restore</string>
     <string name="action_settings">Configurações</string>
     <string name="action_clear_search">Apagar histórico de busca</string>
     <string name="action_sign_out">Sair</string>
