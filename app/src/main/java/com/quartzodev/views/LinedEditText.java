@@ -3,13 +3,9 @@ package com.quartzodev.views;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.widget.EditText;
-
-import com.quartzodev.buddybook.R;
 
 /**
  * Created by victoraldir on 03/10/2017.

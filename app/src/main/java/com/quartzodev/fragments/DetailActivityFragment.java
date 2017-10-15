@@ -44,7 +44,6 @@ import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
-import com.quartzodev.data.Folder;
 import com.quartzodev.utils.DateUtils;
 import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.utils.TextUtils;
