@@ -31,7 +31,6 @@ public class AnnotationActivity extends AppCompatActivity {
     public String mFolderId;
     public String mContent;
     public String mBookTitle;
-    public String mUserId;
 
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private FirebaseAuth mFirebaseAuth;
@@ -93,7 +92,7 @@ public class AnnotationActivity extends AppCompatActivity {
 
     private void setResultContent(){
         Intent resultIntent = new Intent();
-        mContent = mContentEditText.getText().toString();
+        mContent = mContentEditText.getText().toString().trim();
         resultIntent.putExtra(ARG_CONTENT,mContent);
         mFirebaseDatabaseHelper.updateBookAnnotation(mFirebaseAuth.getCurrentUser().getUid(),
                 mFolderId,

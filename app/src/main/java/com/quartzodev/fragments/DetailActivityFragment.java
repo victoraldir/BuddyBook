@@ -525,7 +525,11 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
         it.putExtra(AnnotationActivity.ARG_BOOK_ID,mBookSelected.getId());
         it.putExtra(AnnotationActivity.ARG_FOLDER_ID,mFolderId);
-        it.putExtra(AnnotationActivity.ARG_CONTENT,mBookSelected.getAnnotation());
+        if(mTextViewAnnotation.getText().toString().equals(getString(R.string.you_have_no_annotations))){
+            it.putExtra(AnnotationActivity.ARG_CONTENT,"");
+        }else{
+            it.putExtra(AnnotationActivity.ARG_CONTENT,mTextViewAnnotation.getText().toString());
+        }
         it.putExtra(AnnotationActivity.ARG_BOOK_TITLE,mBookSelected.getVolumeInfo().getTitle());
 
         startActivityForResult(it,RC_ANNOTATION);
