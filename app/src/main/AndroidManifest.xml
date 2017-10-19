@@ -20,7 +20,7 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="YOUR_KEY_GOES_HERE"
+            android:value="${FABRIC_API_ID}"
             tools:replace="android:value"/>
         <meta-data
             android:name="com.quartzodev.buddybook.GlideModuleConfiguration"
