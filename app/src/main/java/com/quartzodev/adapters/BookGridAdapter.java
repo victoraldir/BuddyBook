@@ -181,9 +181,6 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
                         case R.id.action_delete:
                             mListener.onDeleteBookClickListener(mFolderId, book);
                             break;
-                        case R.id.action_have_this:
-                            mListener.onAddBookToFolderClickListener(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, book);
-                            break;
                         case R.id.action_move_folder:
                             mListener.onAddBookToFolderClickListener(mFolderId, book);
                             break;

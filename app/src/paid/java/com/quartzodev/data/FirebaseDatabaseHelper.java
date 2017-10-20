@@ -177,6 +177,10 @@ public class FirebaseDatabaseHelper {
     }
 
     public void updateBook(String userId, String folderId, Book bookApi) {
+
+        if(folderId == null)
+            folderId = REF_MY_BOOKS_FOLDER;
+
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
     }
 

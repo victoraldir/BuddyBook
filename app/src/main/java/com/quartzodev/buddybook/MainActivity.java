@@ -858,7 +858,7 @@ public class MainActivity extends AppCompatActivity
             mToolbar.findViewById(R.id.toolbar_container).setVisibility(View.GONE);
             mFolderName = folder.getDescription();
             mToolbar.setTitle(mFolderName);
-            loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_folders), null);
+            loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_my_books), null);
         }
     }
 
@@ -1052,14 +1052,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onAddBookToFolderClickListener(final String folderId, final Book book) {
 
-        if (folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //I have this operation
-
-            Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.added_to_folder),
-                    getString(R.string.tab_my_books)), Snackbar.LENGTH_SHORT).show();
-
-            mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book, this);
-            return;
-        }
+//        if (folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //I have this operation
+//
+//            Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.added_to_folder),
+//                    getString(R.string.tab_my_books)), Snackbar.LENGTH_SHORT).show();
+//
+//            mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book, this);
+//            return;
+//        }
 
         DialogUtils.alertDialogListFolder(mContext, mFolderListComma, new DialogInterface.OnClickListener() {
             @Override
