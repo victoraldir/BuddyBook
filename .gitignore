@@ -9,5 +9,5 @@
 .externalNativeBuild
 app/google-services.json
 .idea
-gradle.properties
 google-services.json
+gradle.properties
