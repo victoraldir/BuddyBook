@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity
     private static final int RC_BARCODE_CAPTURE = 2;
     private static final int RC_PICKFILE = 6;
     private static final String KEY_PARCELABLE_USER = "userKey";
+    private static final String KEY_FOLDER_ID = "folderIdKey";
     private static final String KEY_CURRENT_QUERY = "queryKey";
     private static final String KEY_FLAG_SEARCH_OPEN = "flagSearchOpenKey";
     private static final int TOTAL_SEARCH_RESULT = 40;
@@ -206,6 +207,7 @@ public class MainActivity extends AppCompatActivity
 
         if(savedInstanceState != null){
             mUser = (User) savedInstanceState.get(KEY_PARCELABLE_USER);
+            mFolderId = savedInstanceState.getString(KEY_FOLDER_ID);
         }
 
         setupFab();
@@ -525,6 +527,7 @@ public class MainActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(KEY_PARCELABLE_USER, mUser);
+        outState.putString(KEY_FOLDER_ID,mFolderId);
 
         if (mSearchView != null && mSearchView.isEnabled()) {
             outState.putCharSequence(KEY_CURRENT_QUERY, mSearchView.getQuery().toString());
