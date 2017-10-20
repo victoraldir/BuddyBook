@@ -11,6 +11,8 @@ import com.quartzodev.data.Folder;
 import com.quartzodev.fragments.FolderListFragment.OnListFragmentInteractionListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -70,9 +72,24 @@ public class FolderListAdapter extends RecyclerView.Adapter<FolderListAdapter.Vi
         if (folderList != null) {
             mFolderList.clear();
             mFolderList.addAll(folderList);
+            sortList();
             this.notifyDataSetChanged();
         }
     }
+
+    public void sortList(){
+        Collections.sort(mFolderList, new Comparator<Folder>() {
+            @Override
+            public int compare(Folder f1, Folder f2) {
+
+                if(f1.getDescription() == null || f2.getDescription() == null)
+                    return 0;
+
+                return f1.getDescription().compareTo(f2.getDescription());
+            }
+        });
+    }
+
     //TODO make this flow better. Too confusing!
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {

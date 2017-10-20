@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 26
@@ -7,11 +8,19 @@ android {
         applicationId "com.quartzodev.buddybook"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 39
-        versionName "1.2.1"
+        versionCode 40
+        versionName "1.2.1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resConfigs "auto"
+
+        def addConstant = {constantName, constantValue ->
+            manifestPlaceholders = [ (constantName):constantValue]
+            buildConfigField "String", "${constantName}", "\"${constantValue}\""
+        }
+
+
+        addConstant("FABRIC_API_ID", "YOUR_KEY_GOES_HERE")
     }
 
     lintOptions {
@@ -89,7 +98,10 @@ dependencies {
     freeCompile 'com.google.firebase:firebase-config:11.0.4'
 
     //Crash report
-    releaseCompile 'com.google.firebase:firebase-crash:11.0.4'
+    //releaseCompile 'com.google.firebase:firebase-crash:11.0.4'
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
+        transitive = true;
+    }
 
     //Google Vision
     compile 'com.google.android.gms:play-services-vision:11.0.4'
