@@ -1113,12 +1113,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLendBookClickListener(Book book, MenuItem menuItem) {
-        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUser.getUid(), book, menuItem);
+        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUser.getUid(), mFolderId, book, menuItem);
     }
 
     @Override
     public void onReturnBookClickListener(Book book) {
-        DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUser.getUid(), book);
+        DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUser.getUid(), mFolderId, book);
     }
 
     @Override
@@ -1259,12 +1259,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLendBook(Book bookApi) {
-        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUser.getUid(), bookApi,null);
+        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUser.getUid(),mFolderId, bookApi,null);
     }
 
     @Override
     public void onReturnBook(Book bookApi) {
-        DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUser.getUid(), bookApi);
+        DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUser.getUid(),mFolderId, bookApi);
     }
 
     /**

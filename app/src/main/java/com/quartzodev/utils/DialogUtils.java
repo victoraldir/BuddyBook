@@ -192,6 +192,7 @@ public class DialogUtils {
                                            final CoordinatorLayout coordinatorLayout,
                                            final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
                                            final String userId,
+                                           final String folderId,
                                            final Book book,
                                            final MenuItem menuItem) {
 
@@ -246,7 +247,7 @@ public class DialogUtils {
                                 menuItem.setTitle(activity.getString(R.string.action_return_lend));
                             }
 
-                            mFirebaseDatabaseHelper.updateBook(userId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, book);
+                            mFirebaseDatabaseHelper.updateBook(userId, folderId, book);
 
                             try {
                                 DetailActivity detailActivity = ((DetailActivity) activity);
@@ -283,6 +284,7 @@ public class DialogUtils {
     public static void alertDialogReturnBook(final Activity activity,
                                              final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
                                              final String userId,
+                                             final String folderId,
                                              final Book book) {
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
@@ -294,7 +296,7 @@ public class DialogUtils {
 
                         Book updatedBook = book;
                         updatedBook.setLend(null);
-                        mFirebaseDatabaseHelper.updateBook(userId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, updatedBook);
+                        mFirebaseDatabaseHelper.updateBook(userId, folderId, updatedBook);
 
                         try {
                             ((DetailActivity) activity).loadBook(book);
