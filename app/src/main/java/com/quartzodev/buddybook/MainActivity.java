@@ -1032,10 +1032,18 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDeleteBookClickListener(final String mFolderId, final Book book) {
+
+        final Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+
         mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), mFolderId, book);
 
-        showToolbar();
+        if(frag instanceof BookGridFragment) {
+            ((BookGridFragment) frag).removeBook(book);
+        }else if (frag instanceof ViewPagerFragment) {
+            ((ViewPagerFragment) frag).removeBook(book);
+        }
 
+        showToolbar();
         updateFolderList();
 
         Snackbar.make(mCoordinatorLayout, getString(R.string.deleted_folder), Snackbar.LENGTH_LONG)
@@ -1044,6 +1052,11 @@ public class MainActivity extends AppCompatActivity
                     public void onClick(View v) {
 
                         mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), mFolderId, book, (MainActivity) mContext);
+                        if(frag instanceof BookGridFragment) {
+                            ((BookGridFragment) frag).addBook(book);
+                        }else if (frag instanceof ViewPagerFragment) {
+                            ((ViewPagerFragment) frag).addBook(book);
+                        }
 
                     }
                 }).show();
@@ -1173,6 +1186,11 @@ public class MainActivity extends AppCompatActivity
         mPrefs.registerOnSharedPreferenceChangeListener(listener);
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+    }
+
     /**
      * Makes sure to unregister the BroadcastReceiver when this activity is destroyed
      */
@@ -1185,9 +1203,7 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
             if(key != null && !key.equals("com.facebook.appevents.SessionInfo.sessionEndTime")){
-
                 refreshCurrentFragment();
-
             }
 
         }

@@ -37,8 +37,7 @@ import butterknife.ButterKnife;
  * Created by victoraldir on 24/03/2017.
  */
 
-public class BookGridFragment extends Fragment implements
-        ChildEventListener {
+public class BookGridFragment extends Fragment{
 
     private final String KEY_USER_ID = "userId";
     private final String KEY_FOLDER_ID = "mFolderId";
@@ -56,6 +55,7 @@ public class BookGridFragment extends Fragment implements
     private OnGridFragmentInteractionListener mListener;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private FirebaseAuth mFirebaseAuth;
+    private int mIndexItemRemoved = 0;
 
     public static BookGridFragment newInstance(String folderId, Integer menuId) {
         Bundle arguments = new Bundle();
@@ -102,7 +102,7 @@ public class BookGridFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
-        attachFirebaseListener();
+        loadBooks();
     }
 
     @Nullable
@@ -142,6 +142,7 @@ public class BookGridFragment extends Fragment implements
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupHideFloatButtonOnScroll();
+        setLoading(true);
         loadBooks();
     }
 
@@ -153,8 +154,8 @@ public class BookGridFragment extends Fragment implements
 
         if(mAdapter != null) {
 
-            setLoading(true);
-            mAdapter.clearList();
+//            setLoading(true);
+//            mAdapter.clearList();
 
             if (mFolderId != null && mFolderId.equals(FirebaseDatabaseHelper.REF_POPULAR_FOLDER)) {
 
@@ -279,59 +280,23 @@ public class BookGridFragment extends Fragment implements
         mListener = null;
     }
 
-    public void detachFirebaseListener() {
-        mFirebaseDatabaseHelper.detachBookFolderChildEventListener(mUserId, mFolderId, this);
-    }
-
-    public void attachFirebaseListener() {
-        mFirebaseDatabaseHelper.attachBookFolderChildEventListener(mUserId, mFolderId, this);
-    }
-
     @Override
     public void onPause() {
         super.onPause();
-        detachFirebaseListener();
     }
 
-
-
-    @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        if (dataSnapshot.getValue() != null) {
-            Book bookApi = dataSnapshot.getValue(Book.class);
-            mAdapter.addItem(bookApi);
+    public void addBook(Book book){
+        if(mIndexItemRemoved != -1) {
+            mAdapter.addItem(mIndexItemRemoved, book);
             setLoading(false);
-
             updateSubtitle();
         }
     }
 
-    @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-        if (dataSnapshot.getValue() != null) {
-            Book bookApi = dataSnapshot.getValue(Book.class);
-            mAdapter.removeItem(bookApi);
-            setLoading(false);
-
-            updateSubtitle();
-        }
-
-    }
-
-    @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onCancelled(DatabaseError databaseError) {
-
+    public void removeBook(Book book){
+        mIndexItemRemoved = mAdapter.removeItem(book);
+        setLoading(false);
+        updateSubtitle();
     }
 
     public interface OnGridFragmentInteractionListener {

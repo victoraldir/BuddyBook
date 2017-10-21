@@ -91,7 +91,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
             return 0;
         }
 
-        if(mFolderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER) && book.getLend() != null){
+        if(book.getLend() != null){
             if(book.isCustom()){
                 return POS_BOOK_CUSTOM_LENT;
             }
@@ -108,21 +108,27 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
         mFolderId = folderId;
     }
 
-    public void removeItem(Book bookApi) {
+    public int removeItem(Book bookApi) {
+
+        int mIndexItemRemoved = 0;
+
         if (mBookList != null) {
+            mIndexItemRemoved = mBookList.indexOf(bookApi);
             mBookList.remove(bookApi);
             notifyDataSetChanged();
         }
+
+        return mIndexItemRemoved;
     }
 
-    public void addItem(Book bookApi) {
+    public void addItem(int index, Book bookApi) {
         if (mBookList != null && !mBookList.contains(bookApi)) {
-            mBookList.add(bookApi);
+            mBookList.add(index,bookApi);
             notifyDataSetChanged();
         }
     }
 
-    public void clearList() {
+    private void clearList() {
         if(mBookList != null) {
             this.mBookList.clear();
             this.notifyDataSetChanged();
@@ -130,10 +136,27 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
     }
 
     public void swap(List<Book> bookApiList) {
-        if (bookApiList != null)
-            clearList();
-            mBookList = bookApiList;
-        this.notifyDataSetChanged();
+        if (bookApiList != null) {
+            bookApiList.removeAll(mBookList);
+            if(!bookApiList.isEmpty()) {
+                if(!mBookList.isEmpty()) {
+                    for (Book book1 : bookApiList) {
+                        for (Book book2 : mBookList) {
+                            if(book1.getId().equals(book2.getId())){
+                                int position = mBookList.indexOf(book2);
+                                mBookList.remove(position);
+                                mBookList.add(position,book1);
+                                break;
+                            }
+                        }
+                    }
+                }else{
+                    mBookList.addAll(bookApiList);
+                }
+
+                this.notifyDataSetChanged();
+            }
+        }
     }
 
     private void setAnimation(View viewToAnimate, int position) {
@@ -169,7 +192,6 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
                             .setTitle(mContext.getString(R.string.action_return_lend));
                 }
             }
-
 
             holder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override

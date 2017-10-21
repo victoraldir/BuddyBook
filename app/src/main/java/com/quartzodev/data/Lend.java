@@ -44,4 +44,20 @@ public class Lend {
     public void setLendDate(Date lendDate) {
         this.lendDate = lendDate;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Lend lend = (Lend) o;
+
+        return receiverName.equals(lend.receiverName);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return receiverName.hashCode();
+    }
 }

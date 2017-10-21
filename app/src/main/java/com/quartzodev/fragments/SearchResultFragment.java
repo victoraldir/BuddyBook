@@ -128,7 +128,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
             mQuery = query;
 
-            mAdapter.clearList();
+//            mAdapter.clearList();
 
             Bundle bundle = new Bundle();
             bundle.putString(ARG_QUERY, query);
