@@ -149,6 +149,8 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridAdapter.ViewHo
                                 break;
                             }
                         }
+
+                        mBookList.add(0,book1);
                     }
                 }else{
                     mBookList.addAll(bookApiList);

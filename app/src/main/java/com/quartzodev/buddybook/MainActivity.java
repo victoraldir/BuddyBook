@@ -678,6 +678,13 @@ public class MainActivity extends AppCompatActivity
 
                 removeFragment(search_tag);
 
+                final Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
+                if(frag instanceof BookGridFragment) {
+                    ((BookGridFragment) frag).refresh();
+                }else if (frag instanceof ViewPagerFragment) {
+                    ((ViewPagerFragment) frag).refresh();
+                }
+
                 if (mSnackbarNoInternet != null && mSnackbarNoInternet.isShown()) {
                     mSnackbarNoInternet.dismiss();
                 }
