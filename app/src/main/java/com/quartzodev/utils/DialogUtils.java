@@ -207,6 +207,7 @@ public class DialogUtils {
                 .create();
 
         final EditText nameEdtText = view.findViewById(R.id.edittext_receiver_name);
+        nameEdtText.setOnClickListener(null);
         nameEdtText.setSingleLine(true);
         nameEdtText.setContentDescription(activity.getString(R.string.receiver_name_cd));
 

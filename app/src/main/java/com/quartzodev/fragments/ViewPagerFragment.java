@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import com.quartzodev.adapters.ViewPagerAdapter;
 import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
-import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 
 import java.util.ArrayList;
@@ -185,27 +184,6 @@ public class ViewPagerFragment extends Fragment {
             }
         }
     }
-
-    public void removeBook(Book book){
-        List<Fragment> fragmentList =  mViewPagerAdapter.getFragmentsList();
-        for (int x=0; x<fragmentList.size(); x++){
-            Fragment fragment = fragmentList.get(x);
-            if(fragment instanceof BookGridFragment){
-                ((BookGridFragment) fragment).removeBook(book);
-            }
-        }
-    }
-
-    public void addBook(Book book){
-        List<Fragment> fragmentList =  mViewPagerAdapter.getFragmentsList();
-        for (int x=0; x<fragmentList.size(); x++){
-            Fragment fragment = fragmentList.get(x);
-            if(fragment instanceof BookGridFragment){
-                ((BookGridFragment) fragment).addBook(book);
-            }
-        }
-    }
-
 
     public void refresh(){
         executeSearch(mQuery,mMaxResult);

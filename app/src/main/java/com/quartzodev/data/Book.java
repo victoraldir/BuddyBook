@@ -99,14 +99,18 @@ public class Book {
 
         Book book = (Book) o;
 
-        if (!getId().equals(book.getId())) return false;
+        if (getId() != null ? !getId().equals(book.getId()) : book.getId() != null) return false;
+
+        if (!getIdProvider().equals(book.getIdProvider())) return false;
+
         return getLend() != null ? getLend().equals(book.getLend()) : book.getLend() == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = getId().hashCode();
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + getIdProvider().hashCode();
         result = 31 * result + (getLend() != null ? getLend().hashCode() : 0);
         return result;
     }

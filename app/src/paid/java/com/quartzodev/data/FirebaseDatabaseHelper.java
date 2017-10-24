@@ -5,6 +5,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.quartzodev.utils.DateUtils;
 
@@ -63,6 +64,14 @@ public class FirebaseDatabaseHelper {
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
+    public Query fetchPopularBooks(){
+        return mDatabaseReference.child(REF_POPULAR_FOLDER);
+    }
+
+    public DatabaseReference getDatabaseRef(){
+        return mDatabaseReference;
+    }
+
     public ChildEventListener attachBookFolderChildEventListener(String userId, String folderId, ChildEventListener listener) {
         return mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).addChildEventListener(listener);
     }
@@ -81,6 +90,16 @@ public class FirebaseDatabaseHelper {
                 .orderByChild("volumeInfo/"+sort)
                 .addListenerForSingleValueEvent(valueEventListener);
 
+    }
+
+    public Query fetchBooksFromFolder(String userId, String folderId, String sort) {
+        return mDatabaseReference
+                .getRef()
+                .child(userId)
+                .child(REF_FOLDERS)
+                .child(folderId)
+                .child(REF_BOOKS)
+                .orderByChild("volumeInfo/"+sort);
     }
 
     public ValueEventListener fetchLentBooks(String userId, final ValueEventListener valueEventListener) {
@@ -112,6 +131,26 @@ public class FirebaseDatabaseHelper {
 
         }
 
+    }
+
+    public Query findBookSearch(String userId, String folderId) {
+        if (folderId == null) {
+
+            return mDatabaseReference.child(userId)
+                    .child(REF_FOLDERS)
+                    .child(REF_MY_BOOKS_FOLDER)
+                    .child(REF_BOOKS)
+                    .orderByChild("volumeInfo/searchField");
+
+        } else {
+
+            return mDatabaseReference.child(userId)
+                    .child(REF_FOLDERS)
+                    .child(folderId)
+                    .child(REF_BOOKS)
+                    .orderByChild("volumeInfo/searchField");
+
+        }
     }
 
     public void findBook(String userId, String folderId, String bookId, ValueEventListener valueEventListener){

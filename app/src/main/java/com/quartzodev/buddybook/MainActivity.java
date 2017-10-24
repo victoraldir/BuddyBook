@@ -678,13 +678,6 @@ public class MainActivity extends AppCompatActivity
 
                 removeFragment(search_tag);
 
-                final Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
-                if(frag instanceof BookGridFragment) {
-                    ((BookGridFragment) frag).refresh();
-                }else if (frag instanceof ViewPagerFragment) {
-                    ((ViewPagerFragment) frag).refresh();
-                }
-
                 if (mSnackbarNoInternet != null && mSnackbarNoInternet.isShown()) {
                     mSnackbarNoInternet.dismiss();
                 }
@@ -1040,15 +1033,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDeleteBookClickListener(final String mFolderId, final Book book) {
 
-        final Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
-
         mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), mFolderId, book);
-
-        if(frag instanceof BookGridFragment) {
-            ((BookGridFragment) frag).removeBook(book);
-        }else if (frag instanceof ViewPagerFragment) {
-            ((ViewPagerFragment) frag).removeBook(book);
-        }
 
         showToolbar();
         updateFolderList();
@@ -1057,29 +1042,13 @@ public class MainActivity extends AppCompatActivity
                 .setAction(getString(R.string.redo), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), mFolderId, book, (MainActivity) mContext);
-                        if(frag instanceof BookGridFragment) {
-                            ((BookGridFragment) frag).addBook(book);
-                        }else if (frag instanceof ViewPagerFragment) {
-                            ((ViewPagerFragment) frag).addBook(book);
-                        }
-
                     }
                 }).show();
     }
 
     @Override
     public void onAddBookToFolderClickListener(final String folderId, final Book book) {
-
-//        if (folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //I have this operation
-//
-//            Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.added_to_folder),
-//                    getString(R.string.tab_my_books)), Snackbar.LENGTH_SHORT).show();
-//
-//            mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book, this);
-//            return;
-//        }
 
         DialogUtils.alertDialogListFolder(mContext, mFolderListComma, new DialogInterface.OnClickListener() {
             @Override
@@ -1171,6 +1140,8 @@ public class MainActivity extends AppCompatActivity
         }else if(frag instanceof ViewPagerFragment){
             ((ViewPagerFragment) frag).refresh();
         }
+
+        Snackbar.make(mCoordinatorLayout,"We should refresh sort here",Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
