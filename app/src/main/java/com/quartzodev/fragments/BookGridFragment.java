@@ -66,6 +66,10 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
         super.onSaveInstanceState(outState);
     }
 
+    public String getFolderId(){
+        return mFolderId;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,12 +141,32 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
                                     Book.class)
                             .build();
 
-            mAdapter = new BookGridAdapterFirebase(options,this,mListener,mFolderId,mMenuId,getContext());
+            setAdapterWithSort(options);
+
         }else{
-            setAdapterWithSort(false);
+
+            String sort = getResources()
+                    .getStringArray(R.array.default_sorts_codes)[PrefUtils.getSortMode(getContext())];
+
+            FirebaseRecyclerOptions<Book> options =
+                    new FirebaseRecyclerOptions.Builder<Book>()
+                            .setQuery(FirebaseDatabaseHelper.getInstance()
+                                            .fetchBooksFromFolder(mUserId,mFolderId,sort),
+                                    Book.class)
+                            .build();
+
+            setAdapterWithSort(options);
         }
 
+        return rootView;
+    }
+
+    private void setAdapterWithSort(FirebaseRecyclerOptions<Book> options){
+
+
+        mAdapter = new BookGridAdapterFirebase(options,this,mListener,mFolderId,mMenuId,getContext());
         mRecyclerView.setAdapter(mAdapter);
+
         int columnCount = getResources().getInteger(R.integer.list_column_count);
         GridLayoutManager gridLayoutManager =
                 new GridLayoutManager(getContext(), columnCount);
@@ -150,10 +174,11 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        return rootView;
+        mAdapter.startListening();
     }
 
-    private void setAdapterWithSort(boolean flagNotify){
+    public void refresh(){
+
         String sort = getResources()
                 .getStringArray(R.array.default_sorts_codes)[PrefUtils.getSortMode(getContext())];
 
@@ -164,14 +189,7 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
                                 Book.class)
                         .build();
 
-        mAdapter = new BookGridAdapterFirebase(options,this,mListener,mFolderId,mMenuId,getContext());
-
-        if(flagNotify)
-            mAdapter.notifyDataSetChanged();
-    }
-
-    public void refresh(){
-        setAdapterWithSort(true);
+        setAdapterWithSort(options);
     }
 
     @Override

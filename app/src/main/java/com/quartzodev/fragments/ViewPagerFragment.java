@@ -178,6 +178,8 @@ public class ViewPagerFragment extends Fragment {
             Fragment fragment = fragmentList.get(x);
 
             if(fragment instanceof BookGridFragment){
+                if(((BookGridFragment) fragment).getFolderId() != null &&
+                        !((BookGridFragment) fragment).getFolderId().equals(FirebaseDatabaseHelper.REF_POPULAR_FOLDER))
                 ((BookGridFragment) fragment).refresh();
             }else if(fragment instanceof SearchResultFragment){
                 ((SearchResultFragment) fragment).executeSearchSearchFragment(query,maxResult);
