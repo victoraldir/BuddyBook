@@ -71,9 +71,7 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridViewHolder> {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
         }
 
-        final BookGridViewHolder vh = new BookGridViewHolder(view);
-
-        return vh;
+        return new BookGridViewHolder(view);
     }
 
     @Override
@@ -132,8 +130,11 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridViewHolder> {
                     mBookList.addAll(bookApiList);
                 }
 
-                this.notifyDataSetChanged();
+            }else{
+                mBookList.clear();
             }
+
+            this.notifyDataSetChanged();
         }
     }
 
