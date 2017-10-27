@@ -104,6 +104,8 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridViewHolder> {
 
             if(bookApiList.isEmpty()){
                 mBookList.clear();
+                this.notifyDataSetChanged();
+                return;
             }
 
             bookApiList.removeAll(mBookList);
