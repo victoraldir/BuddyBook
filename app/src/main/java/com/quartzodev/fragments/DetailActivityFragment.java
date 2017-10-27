@@ -113,6 +113,9 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @BindView(R.id.detail_cardview_annotation)
     CardView mCardViewAnnotation;
 
+    @BindView(R.id.detail_cardview_product_details)
+    CardView mCardViewProductDetails;
+
     @BindView(R.id.detail_btn_lend)
     LinearLayout mBtnLend;
 

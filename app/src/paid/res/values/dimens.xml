@@ -4,4 +4,5 @@
     <dimen name="fab_margin_bottom">16dp</dimen>
     <dimen name="content_padding_bottom_adview">0dp</dimen>
     <dimen name="content_details_padding_bottom_adview">16dp</dimen>
+    <dimen name="card_product_detail_padding">0dp</dimen>
 </resources>
