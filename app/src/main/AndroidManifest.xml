@@ -28,7 +28,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.quartzodev.fileprovider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -61,7 +61,7 @@
 
         <provider
             android:name="com.quartzodev.provider.SuggestionProvider"
-            android:authorities="com.quartzodev.provider.SuggestionProvider" />
+            android:authorities="${applicationId}.provider.SuggestionProvider" />
 
         <activity
             android:name=".DetailActivity"

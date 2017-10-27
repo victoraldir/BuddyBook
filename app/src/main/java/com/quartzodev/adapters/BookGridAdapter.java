@@ -101,6 +101,11 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridViewHolder> {
 
     public void swap(List<Book> bookApiList) {
         if (bookApiList != null) {
+
+            if(bookApiList.isEmpty()){
+                mBookList.clear();
+            }
+
             bookApiList.removeAll(mBookList);
             if(!bookApiList.isEmpty()) {
                 if(!mBookList.isEmpty()) {
@@ -130,8 +135,6 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridViewHolder> {
                     mBookList.addAll(bookApiList);
                 }
 
-            }else{
-                mBookList.clear();
             }
 
             this.notifyDataSetChanged();
