@@ -19,7 +19,6 @@ android {
             buildConfigField "String", "${constantName}", "\"${constantValue}\""
         }
 
-
         addConstant("FABRIC_API_ID", "YOUR_KEY_GOES_HERE")
     }
 
@@ -51,12 +50,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
+        flavorDimensions "tier"
+
         productFlavors {
             free {
                 applicationId 'com.quartzodev.buddybook.free'
+                dimension "tier"
             }
             paid {
                 applicationId 'com.quartzodev.buddybook.paid'
+                dimension "tier"
             }
         }
 
@@ -131,10 +134,10 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.8.0'
 
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.2'
 
     //Espresso Idling
-    compile 'com.android.support.test.espresso:espresso-idling-resource:2.2.2'
+    compile 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
 
     compile ('com.squareup.retrofit2:converter-simplexml:2.3.0'){
         exclude group: 'xpp3', module: 'xpp3'
