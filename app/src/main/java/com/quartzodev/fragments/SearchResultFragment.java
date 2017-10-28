@@ -17,6 +17,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.quartzodev.adapters.BookGridAdapter;
+import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
@@ -40,6 +41,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     private static final String ARG_ISBN = "mIsbn";
     private static final String ARG_QUERY = "query";
     private static final String ARG_MAX_RESULT = "maxResult";
+    private static final String ARG_MENU_ID = "mMenuId";
 
     @BindView(R.id.recycler_view_books)
     RecyclerView mRecyclerView;
@@ -53,21 +55,39 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private String mUserId;
     private String mQuery;
+    private Integer mMenuId;
     private FirebaseAuth mFirebaseAuth;
 
     public SearchResultFragment(){
         mFirebaseAuth = FirebaseAuth.getInstance();
     }
 
-    public static SearchResultFragment newInstance(String folderId, String isbn) {
+    public static SearchResultFragment newInstance(String folderId, String isbn, Integer menuId) {
 
         Bundle arguments = new Bundle();
         arguments.putString(ARG_FOLDER_ID, folderId);
         arguments.putString(ARG_ISBN, isbn);
+        arguments.putInt(ARG_MENU_ID,menuId);
         SearchResultFragment fragment = new SearchResultFragment();
         fragment.setArguments(arguments);
         return fragment;
 
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);
+
+        if (getArguments().containsKey(ARG_FOLDER_ID)) {
+            mFolderId = getArguments().getString(ARG_FOLDER_ID);
+        }
+
+        if (getArguments().containsKey(ARG_MENU_ID)) {
+            mMenuId = getArguments().getInt(ARG_MENU_ID);
+        }
+
+        mUserId = mFirebaseAuth.getCurrentUser().getUid();
     }
 
     @Nullable
@@ -81,7 +101,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         mAdapter = new BookGridAdapter(getActivity(),
                 new ArrayList<Book>(),
                 mListener,
-                R.menu.menu_search_result);
+                mMenuId);
 
         mAdapter.setFolderId(mFolderId);
         mRecyclerView.setAdapter(mAdapter);
@@ -109,6 +129,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         mLoadManager = getLoaderManager();
 
         if (mISBN != null) {
+            ((MainActivity) getActivity()).getTabLayout().setVisibility(View.GONE);
             executeSearchSearchFragment(mISBN, 1);
         } else {
             mLoadManager.initLoader(LOADER_ID_SEARCH, null, this);
@@ -186,19 +207,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         }
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-
-        if (getArguments().containsKey(ARG_FOLDER_ID)) {
-            mFolderId = getArguments().getString(ARG_FOLDER_ID);
-        }
-
-        mUserId = mFirebaseAuth.getCurrentUser().getUid();
-    }
-
-
     public void setLoading(boolean flag) {
         ViewGroup container = (ViewGroup) this.getView();
 
@@ -266,7 +274,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     @Override
     public void onLoadFinished(Loader<List<Book>> loader, List<Book> data) {
         mAdapter.swap(data);
-
         setLoading(false);
 
     }

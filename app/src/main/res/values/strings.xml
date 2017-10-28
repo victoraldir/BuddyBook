@@ -17,7 +17,7 @@
 
     <string name="added_to_folder">Book added to folder %1$s</string>
     <string name="copied_to_folder">Book copied to folder %1$s</string>
-    <string name="deleted_folder">Book deleted</string>
+    <string name="book_deleted">Book deleted</string>
     <string name="redo">Redo</string>
 
     <string name="success_sign_in">You\'re now signed in!</string>
@@ -177,6 +177,8 @@
     <string name="title_publisher">Publisher cannot be empty</string>
     <string name="action_about">About</string>
     <string name="action_to_premium">Upgrade</string>
+    <string name="cant_delete_folder"> You can\'t delete @string/my_books_folder_cd</string>
+
 
     <string name="sign_in_with_facebook">Login with Facebook</string>
     <string name="sign_in_with_google">Login with Google</string>
@@ -210,5 +212,6 @@
     <string name="title_activity_annotation">@string/annotations</string>
     <string name="you_have_no_annotations">You have no annotations.</string>
     <string name="annotation_saved">Annotation saved!</string>
+    <string name="folder_deleted">Folder deleted</string>
 
 </resources>

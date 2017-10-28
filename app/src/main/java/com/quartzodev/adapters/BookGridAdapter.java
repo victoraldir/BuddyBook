@@ -104,39 +104,9 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridViewHolder> {
 
             if(bookApiList.isEmpty()){
                 mBookList.clear();
-                this.notifyDataSetChanged();
-                return;
-            }
-
-            bookApiList.removeAll(mBookList);
-            if(!bookApiList.isEmpty()) {
-                if(!mBookList.isEmpty()) {
-                    for (Book book1 : bookApiList) {
-                        for (Book book2 : mBookList) {
-                            if(book1.getId() != null && book2.getId() != null){
-                                if(book1.getId().equals(book2.getId())){
-                                    int position = mBookList.indexOf(book2);
-                                    mBookList.remove(position);
-                                    mBookList.add(position,book1);
-                                    break;
-                                }
-                            }else if(book1.getIdProvider() != null && book2.getIdProvider() != null){
-                                if(book1.getIdProvider().equals(book2.getIdProvider())){
-                                    int position = mBookList.indexOf(book2);
-                                    mBookList.remove(position);
-                                    mBookList.add(position,book1);
-                                    break;
-                                }
-                            }
-
-                        }
-
-                        mBookList.add(0,book1);
-                    }
-                }else{
-                    mBookList.addAll(bookApiList);
-                }
-
+            }else{
+                mBookList.clear();
+                mBookList.addAll(bookApiList);
             }
 
             this.notifyDataSetChanged();

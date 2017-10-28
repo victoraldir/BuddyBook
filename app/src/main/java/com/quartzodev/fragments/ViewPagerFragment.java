@@ -110,11 +110,11 @@ public class ViewPagerFragment extends Fragment {
                     R.menu.menu_search_result));
         }else{
 
-            list.add(SearchResultFragment.newInstance(null,mIsbn)); //Web search
+            list.add(SearchResultFragment.newInstance(null,mIsbn,R.menu.menu_search_result)); //Web search
             if(mFolderId == null){
-                list.add(SearchResultFragment.newInstance(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,mIsbn));
+                list.add(SearchResultFragment.newInstance(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,mIsbn,R.menu.menu_my_books));
             }else{
-                list.add(SearchResultFragment.newInstance(mFolderId,mIsbn));
+                list.add(SearchResultFragment.newInstance(mFolderId,mIsbn,R.menu.menu_my_books));
             }
 
         }

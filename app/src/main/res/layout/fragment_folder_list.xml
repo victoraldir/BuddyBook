@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/folder_list_recycleview"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin" />
 
-</FrameLayout>
+    <Button
+        android:layout_gravity="center_horizontal"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:text="@string/add_new_folder"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:id="@+id/btn_add_new_folder"/>
+
+</LinearLayout>

@@ -158,7 +158,7 @@ public class DialogUtils {
                     @Override
                     public void onClick(View arg0) {
 
-                        if (urlEditText.getText().toString().isEmpty()) {
+                        if (urlEditText.getText().toString().trim().isEmpty()) {
 
                             textInputLayout.setError(activity.getString(R.string.folder_desc_empty));
 

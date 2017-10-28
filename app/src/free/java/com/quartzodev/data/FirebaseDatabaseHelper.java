@@ -186,6 +186,10 @@ public class FirebaseDatabaseHelper {
 
     }
 
+    public Query fetchFolders(String userId) {
+        return mDatabaseReference.child(userId).child(REF_FOLDERS);
+    }
+
     public void attachFetchFolders(String userId, ChildEventListener listener) {
         DatabaseReference ref = mDatabaseReference.child(userId).child(REF_FOLDERS);
         ref.addChildEventListener(listener);
