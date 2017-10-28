@@ -2,6 +2,6 @@
 <searchable xmlns:android="http://schemas.android.com/apk/res/android"
     android:hint="@string/search_hint"
     android:label="@string/app_label"
-    android:searchSuggestAuthority="com.quartzodev.provider.SuggestionProvider"
+    android:searchSuggestAuthority="com.quartzodev.buddybook.paid.provider.SuggestionProvider"
     android:searchSuggestSelection=" ?"
     android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"></searchable>

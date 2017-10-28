@@ -3,13 +3,13 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.quartzodev.buddybook"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 40
-        versionName "1.2.1.1"
+        versionCode 42
+        versionName "1.2.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resConfigs "auto"
@@ -19,8 +19,7 @@ android {
             buildConfigField "String", "${constantName}", "\"${constantValue}\""
         }
 
-
-        addConstant("FABRIC_API_ID", "YOUR_API_GOES_HERE")
+        addConstant("FABRIC_API_ID", "YOUR_KEY_GOES_HERE")
     }
 
     lintOptions {
@@ -42,7 +41,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
 
@@ -51,12 +50,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
+        flavorDimensions "tier"
+
         productFlavors {
             free {
                 applicationId 'com.quartzodev.buddybook.free'
+                dimension "tier"
             }
             paid {
                 applicationId 'com.quartzodev.buddybook.paid'
+                dimension "tier"
             }
         }
 
@@ -78,37 +81,37 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+
     compile 'com.jakewharton:butterknife:8.8.1'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     //Firebase DB
-    compile 'com.google.firebase:firebase-database:11.0.4'
+    //compile 'com.google.firebase:firebase-database:11.4.2'
+
+    // FirebaseUI for Firebase Realtime Database
+    compile 'com.firebaseui:firebase-ui-database:3.1.0'
 
     // FirebaseUI Auth only
-    compile 'com.firebaseui:firebase-ui-auth:2.3.0'
+    compile 'com.firebaseui:firebase-ui-auth:3.1.0'
 
-    // Required for Facebook login support
-    compile('com.facebook.android:facebook-android-sdk:4.22.1')
-
-    // Required only if Twitter login support is required
-    compile("com.twitter.sdk.android:twitter-core:3.0.0@aar") { transitive = true }
+    // Required only if Facebook login support is required
+    compile 'com.facebook.android:facebook-login:4.27.0'
 
     //Firebase remote config
-    freeCompile 'com.google.firebase:firebase-config:11.0.4'
+    freeCompile 'com.google.firebase:firebase-config:11.4.2'
 
     //Crash report
-    //releaseCompile 'com.google.firebase:firebase-crash:11.0.4'
     compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
         transitive = true;
     }
 
     //Google Vision
-    compile 'com.google.android.gms:play-services-vision:11.0.4'
+    compile 'com.google.android.gms:play-services-vision:11.4.2'
     //Joda
     compile 'net.danlew:android.joda:2.9.9'
     //Admobi
-    compile 'com.google.android.gms:play-services-ads:11.0.4'
+    compile 'com.google.android.gms:play-services-ads:11.4.2'
     //Calligraphy
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 
@@ -131,10 +134,10 @@ dependencies {
 
     compile 'com.google.code.gson:gson:2.8.0'
 
-    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.2'
 
     //Espresso Idling
-    compile 'com.android.support.test.espresso:espresso-idling-resource:2.2.2'
+    compile 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
 
     compile ('com.squareup.retrofit2:converter-simplexml:2.3.0'){
         exclude group: 'xpp3', module: 'xpp3'

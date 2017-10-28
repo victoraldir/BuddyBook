@@ -9,6 +9,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
@@ -113,6 +114,20 @@ public class FirebaseDatabaseHelper {
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
+    public Query fetchPopularBooks(){
+        return mDatabaseReference.child(REF_POPULAR_FOLDER);
+    }
+
+    public Query fetchBooksFromFolder(String userId, String folderId, String sort) {
+        return mDatabaseReference
+                .getRef()
+                .child(userId)
+                .child(REF_FOLDERS)
+                .child(folderId)
+                .child(REF_BOOKS)
+                .orderByChild("volumeInfo/"+sort);
+    }
+
     public ChildEventListener attachBookFolderChildEventListener(String userId, String folderId, ChildEventListener listener) {
         return mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).addChildEventListener(listener);
     }
@@ -169,6 +184,10 @@ public class FirebaseDatabaseHelper {
         DatabaseReference ref = mDatabaseReference.child(userId).child(REF_FOLDERS);
         ref.addListenerForSingleValueEvent(valueEventListener);
 
+    }
+
+    public Query fetchFolders(String userId) {
+        return mDatabaseReference.child(userId).child(REF_FOLDERS);
     }
 
     public void attachFetchFolders(String userId, ChildEventListener listener) {
@@ -231,6 +250,10 @@ public class FirebaseDatabaseHelper {
     }
 
     public void updateBook(String userId, String folderId, Book bookApi) {
+
+        if(folderId == null)
+            folderId = REF_MY_BOOKS_FOLDER;
+
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
     }
 

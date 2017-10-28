@@ -48,6 +48,7 @@ public class DetailActivity extends AppCompatActivity implements
 
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private String mUserId;
+    private String mFolderId;
     private DetailActivityFragment mFragment;
 
     @Override
@@ -67,13 +68,13 @@ public class DetailActivity extends AppCompatActivity implements
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
 
         final String bookId = getIntent().getExtras().getString(ARG_BOOK_ID);
-        final String folderId = getIntent().getExtras().getString(ARG_FOLDER_ID);
+        mFolderId = getIntent().getExtras().getString(ARG_FOLDER_ID);
         mUserId = getIntent().getExtras().getString(ARG_USER_ID);
         String folderListId = getIntent().getExtras().getString(ARG_FOLDER_LIST_ID);
         final String bookJson = getIntent().getExtras().getString(ARG_BOOK_JSON);
         boolean flagLendOp = getIntent().getExtras().getBoolean(ARG_FLAG_LEND_OPERATION);
 
-        mFragment = DetailActivityFragment.newInstance(mUserId, bookId, folderId, folderListId, bookJson, flagLendOp);
+        mFragment = DetailActivityFragment.newInstance(mUserId, bookId, mFolderId, folderListId, bookJson, flagLendOp);
 
         getSupportFragmentManager().popBackStackImmediate();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -133,12 +134,12 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onLendBook(Book bookApi) {
-        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUserId, bookApi,null);
+        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUserId, mFolderId, bookApi,null);
     }
 
     @Override
     public void onReturnBook(Book bookApi) {
-        DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUserId, bookApi);
+        DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUserId, mFolderId, bookApi);
     }
 
     public void loadBook(Book book) {

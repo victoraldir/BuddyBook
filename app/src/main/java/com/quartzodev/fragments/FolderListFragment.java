@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -18,11 +20,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.quartzodev.adapters.FolderListAdapter;
 import com.quartzodev.buddybook.R;
+import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * A fragment representing a list of Items.
@@ -30,19 +36,20 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class FolderListFragment extends Fragment implements
-        ChildEventListener {
+public class FolderListFragment extends Fragment{
 
-    private static final String TAG = FolderListFragment.class.getSimpleName();
 
     // TODO: Customize parameter argument names
     private static final String ARG_USER_ID = "user-id";
     private final String KEY_USER_ID = "userId";
+
+    @BindView(R.id.btn_add_new_folder)
+    Button mBtnAddFolder;
+
     private OnListFragmentInteractionListener mListener;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private FirebaseAuth mFirebaseAuth;
     private FolderListAdapter mAdapter;
-    private List<Folder> mFolderList;
     private String mUserId;
 
     /**
@@ -50,7 +57,6 @@ public class FolderListFragment extends Fragment implements
      * fragment (e.g. upon screen orientation changes).
      */
     public FolderListFragment() {
-        mFolderList = new ArrayList<>();
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
     }
@@ -89,75 +95,34 @@ public class FolderListFragment extends Fragment implements
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public void loadFoldersList(){
-        mFirebaseDatabaseHelper.fetchFolders(mUserId, new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(isAdded()) {
-                    List<Folder> folderList = new ArrayList<>();
-
-                    if (dataSnapshot.getValue() != null) {
-                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                            Folder folder = postSnapshot.getValue(Folder.class);
-                            if (postSnapshot.getKey() != null) {
-                                folderList.add(folder);
-                            }
-                        }
-
-                        mFolderList = folderList;
-                        mAdapter.swap(mFolderList);
-                        mAdapter.notifyDataSetChanged();
-                        mListener.onFolderListIsAvailable(mFolderList, getmFolderListCommaSeparated());
-
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        mFirebaseDatabaseHelper.attachFetchFolders(mUserId, this);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_folder_list, container, false);
 
-        mAdapter = new FolderListAdapter(mListener);
+        ButterKnife.bind(this, root);
+
+        FirebaseRecyclerOptions<Folder> options =
+                new FirebaseRecyclerOptions.Builder<Folder>()
+                        .setQuery(mFirebaseDatabaseHelper.fetchFolders(mUserId)
+                                        .orderByChild("description"),
+                                Folder.class)
+                        .build();
+
+        mAdapter = new FolderListAdapter(options,mListener, getContext());
 
         RecyclerView recyclerView = root.findViewById(R.id.folder_list_recycleview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(mAdapter);
 
-        if(mFirebaseAuth.getCurrentUser() != null) {
-            loadFoldersList();
-        }
+        mBtnAddFolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onClickAddFolderListInteraction();
+            }
+        });
 
         return root;
-    }
-
-    public String getmFolderListCommaSeparated() {
-
-        List<String> stringList = new ArrayList<>();
-
-        for (Folder folder : mFolderList) {
-            if(folder.getDescription() != null) {
-                if (folder.getDescription().equals(getString(R.string.tab_my_books))) {
-                    stringList.add(getString(R.string.tab_my_books) + "=" + "myBooksFolder");
-                } else {
-                    stringList.add(folder.getDescription() + "=" + folder.getId());
-                }
-            }else{
-                Log.wtf(TAG,"What's that??" + folder);
-            }
-
-        }
-
-        return android.text.TextUtils.join(",", stringList);
     }
 
     @Override
@@ -174,63 +139,15 @@ public class FolderListFragment extends Fragment implements
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        if(mFirebaseAuth.getCurrentUser() != null) {
-            mListener = null;
-            mFirebaseDatabaseHelper.detachFetchFolders(mFirebaseAuth.getCurrentUser().getUid(), this);
-        }
+    public void onStart() {
+        super.onStart();
+        mAdapter.startListening();
     }
 
     @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-        if (isAdded()) {
-            if (mFolderList != null && dataSnapshot.getValue() != null) {
-                Folder folder = dataSnapshot.getValue(Folder.class);
-
-                if (!mFolderList.contains(folder) && !dataSnapshot.getKey().equals("myBooksFolder")) {
-                    mFolderList.add(mFolderList.size() == 0 ? 0 : mFolderList.size() - 1,folder);
-                    mAdapter.swap(mFolderList);
-                    mAdapter.notifyDataSetChanged();
-
-                    mListener.onFolderListIsAvailable(mFolderList, getmFolderListCommaSeparated());
-                }
-
-            }
-        }
-
-    }
-
-    @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-        if (dataSnapshot.getValue() != null) {
-            Folder folder = dataSnapshot.getValue(Folder.class);
-
-            mFolderList.remove(folder);
-            mAdapter.swap(mFolderList);
-            mAdapter.notifyDataSetChanged();
-
-            mListener.onFolderListIsAvailable(mFolderList, getmFolderListCommaSeparated());
-
-        }
-
-    }
-
-    @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onCancelled(DatabaseError databaseError) {
-
+    public void onStop() {
+        super.onStop();
+        mAdapter.stopListening();
     }
 
     /**

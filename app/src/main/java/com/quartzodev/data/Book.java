@@ -95,19 +95,22 @@ public class Book {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Book)) return false;
 
         Book book = (Book) o;
 
-        if (id != null ? !id.equals(book.id) : book.id != null) return false;
-        return idProvider != null ? idProvider.equals(book.idProvider) : book.idProvider == null;
+        if (getId() != null ? !getId().equals(book.getId()) : book.getId() != null) return false;
+        if (getIdProvider() != null ? !getIdProvider().equals(book.getIdProvider()) : book.getIdProvider() != null)
+            return false;
+        return getLend() != null ? getLend().equals(book.getLend()) : book.getLend() == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (idProvider != null ? idProvider.hashCode() : 0);
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + (getIdProvider() != null ? getIdProvider().hashCode() : 0);
+        result = 31 * result + (getLend() != null ? getLend().hashCode() : 0);
         return result;
     }
 }

@@ -158,7 +158,7 @@ public class DialogUtils {
                     @Override
                     public void onClick(View arg0) {
 
-                        if (urlEditText.getText().toString().isEmpty()) {
+                        if (urlEditText.getText().toString().trim().isEmpty()) {
 
                             textInputLayout.setError(activity.getString(R.string.folder_desc_empty));
 
@@ -192,6 +192,7 @@ public class DialogUtils {
                                            final CoordinatorLayout coordinatorLayout,
                                            final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
                                            final String userId,
+                                           final String folderId,
                                            final Book book,
                                            final MenuItem menuItem) {
 
@@ -206,6 +207,7 @@ public class DialogUtils {
                 .create();
 
         final EditText nameEdtText = view.findViewById(R.id.edittext_receiver_name);
+        nameEdtText.setOnClickListener(null);
         nameEdtText.setSingleLine(true);
         nameEdtText.setContentDescription(activity.getString(R.string.receiver_name_cd));
 
@@ -246,7 +248,7 @@ public class DialogUtils {
                                 menuItem.setTitle(activity.getString(R.string.action_return_lend));
                             }
 
-                            mFirebaseDatabaseHelper.updateBook(userId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, book);
+                            mFirebaseDatabaseHelper.updateBook(userId, folderId, book);
 
                             try {
                                 DetailActivity detailActivity = ((DetailActivity) activity);
@@ -283,6 +285,7 @@ public class DialogUtils {
     public static void alertDialogReturnBook(final Activity activity,
                                              final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
                                              final String userId,
+                                             final String folderId,
                                              final Book book) {
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
@@ -294,7 +297,7 @@ public class DialogUtils {
 
                         Book updatedBook = book;
                         updatedBook.setLend(null);
-                        mFirebaseDatabaseHelper.updateBook(userId, FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, updatedBook);
+                        mFirebaseDatabaseHelper.updateBook(userId, folderId, updatedBook);
 
                         try {
                             ((DetailActivity) activity).loadBook(book);

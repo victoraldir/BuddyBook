@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.quartzodev.buddybook">
 
@@ -21,14 +20,15 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="${FABRIC_API_ID}"
-            tools:replace="android:value"/>
+            tools:replace="android:value"
+            />
         <meta-data
             android:name="com.quartzodev.buddybook.GlideModuleConfiguration"
             android:value="GlideModuleConfiguration" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.quartzodev.fileprovider"
+            android:authorities="${applicationId}.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -61,7 +61,7 @@
 
         <provider
             android:name="com.quartzodev.provider.SuggestionProvider"
-            android:authorities="com.quartzodev.provider.SuggestionProvider" />
+            android:authorities="${applicationId}.provider.SuggestionProvider" />
 
         <activity
             android:name=".DetailActivity"
