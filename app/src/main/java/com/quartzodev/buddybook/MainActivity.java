@@ -940,9 +940,8 @@ public class MainActivity extends AppCompatActivity
         mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), mFolderId, book);
 
         showToolbar();
-//        updateFolderList();
 
-        Snackbar.make(mCoordinatorLayout, getString(R.string.deleted_folder), Snackbar.LENGTH_LONG)
+        Snackbar.make(mCoordinatorLayout, getString(R.string.book_deleted), Snackbar.LENGTH_LONG)
                 .setAction(getString(R.string.redo), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

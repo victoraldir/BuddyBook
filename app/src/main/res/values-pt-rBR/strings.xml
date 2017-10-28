@@ -31,7 +31,6 @@
 
     <string name="added_to_folder">Livro adicionado para a pasta %1$s</string>
     <string name="copied_to_folder">Livro copiado para a pasta %1$s</string>
-    <string name="deleted_folder">Livro deletado</string>
     <string name="redo">Desfazer</string>
 
     <string name="success_sign_in">Você foi logado!</string>
@@ -134,7 +133,7 @@
     <string name="lent_book_cd">Ação emprestar livro</string>
     <string name="folder_icon_cd">Icone da pasta</string>
     <string name="add_new_folder_cd">Ação adicionar nova pasta</string>
-    <string name="my_books_folder_cd">Pasta Meus livros</string>
+    <string name="my_books_folder_cd">pasta Meus livros</string>
     <string name="profile_icon_cd">Foto de perfil</string>
     <string name="folders">Pastas</string>
     <string name="add_new_folder">Adicionar nova pasta</string>
@@ -174,6 +173,10 @@
     <string name="sign_in_with_google">Login com Google</string>
     <string name="sign_in_with_email">Login com email</string>
     <string name="tab_search_online">Web</string>
+
+    <string name="book_deleted">Livro deletado</string>
+    <string name="cant_delete_folder"> Você não pode deletar a @string/my_books_folder_cd</string>
+    <string name="folder_deleted">Pasta deletada</string>
 
     <string name="sort_options">Ordernar por</string>
     <string name="default_sorts_title">Título</string>
