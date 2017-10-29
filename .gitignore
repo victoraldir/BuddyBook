@@ -12,3 +12,4 @@ app/google-services.json
 google-services.json
 gradle.properties
 fabric.properties
+installer/

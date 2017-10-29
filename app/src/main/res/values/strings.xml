@@ -36,7 +36,7 @@
     <string name="facebook_login_protocol_scheme" translatable="false">fb1512425405485278</string>
 
     <string name="tab_top_books">Explore</string>
-    <string name="tab_my_books">My books</string>
+    <string name="tab_my_books">My books BETA</string>
     <string name="item_add_folder">Add folder</string>
     <string name="app_label">BuddyBook</string>
     <string name="search_hint">Book tittle, author…</string>

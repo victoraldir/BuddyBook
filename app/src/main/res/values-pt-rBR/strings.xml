@@ -111,6 +111,9 @@
     <string name="no_camera_permission">Essa funcionalidade não pôde ser ativada pois a permissão de acesso a câmera é necessária.  Fechando tela.</string>
 
 
+    <string name="no_flash">Flash não dispinível</string>
+    <string name="flash_on">Flash ligado</string>
+    <string name="flash_off">Flash desligado</string>
 
     <string name="read_barcode">Ler código de barras</string>
     <string name="auto_focus">Foco automático</string>
