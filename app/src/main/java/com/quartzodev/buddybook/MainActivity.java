@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;

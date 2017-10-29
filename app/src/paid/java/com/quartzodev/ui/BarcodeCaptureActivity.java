@@ -35,6 +35,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -126,6 +128,37 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         data.putExtra(BarcodeObject, mBarcode);
         setResult(CommonStatusCodes.SUCCESS, data);
         finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.barcode, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (rc == PackageManager.PERMISSION_GRANTED) {
+            if (item.getItemId() == R.id.action_flash){
+                if(mCameraSource.isFlashSupported()) {
+                    if (mCameraSource.getFlashMode().equals(Camera.Parameters.FLASH_MODE_OFF)) {
+                        mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                        item.setIcon(R.drawable.ic_flash_off);
+                    } else {
+                        mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                        item.setIcon(R.drawable.ic_action_flash);
+                    }
+                }else{
+                    Toast.makeText(this,getString(R.string.no_flash),Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else {
+            requestCameraPermission();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -236,6 +269,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         mCameraSource = builder
                 .setFlashMode(useFlash ? Camera.Parameters.FLASH_MODE_TORCH : null)
                 .build();
+
     }
 
     /**
@@ -300,6 +334,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
             boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
             boolean useFlash = getIntent().getBooleanExtra(UseFlash, false);
             createCameraSource(autoFocus, useFlash);
+
             return;
         }
 
@@ -310,7 +345,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Multitracker sample")
+        builder.setTitle("Scanner")
                 .setMessage(R.string.no_camera_permission)
                 .setPositiveButton(R.string.ok, listener)
                 .show();

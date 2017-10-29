@@ -1003,6 +1003,20 @@ public class CameraSource {
         }
     }
 
+    public boolean isFlashSupported(){
+
+        synchronized (mCameraLock) {
+            if (mCamera != null) {
+                Camera.Parameters parameters = mCamera.getParameters();
+                if (parameters.getFlashMode() != null) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+    }
+
     /**
      * Wraps the camera1 auto focus callback so that the deprecated API isn't exposed.
      */
