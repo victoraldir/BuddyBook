@@ -42,16 +42,21 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.quartzodev.buddybook.BuildConfig;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.ui.camera.CameraSource;
 import com.quartzodev.ui.camera.CameraSourcePreview;
 import com.quartzodev.ui.camera.GraphicOverlay;
+import com.quartzodev.utils.Constants;
 
 import java.io.IOException;
 
@@ -80,11 +85,12 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     // helper objects for detecting taps and pinches.
 
     private ScaleGestureDetector scaleGestureDetector;
-
     private GestureDetector gestureDetector;
-
     private Barcode mBarcode;
 
+    //Adsense stuff
+    private InterstitialAd mInterstitialAd;
+    private AdManager adManager;
     /**
      * Initializes the UI and creates the detector pipeline.
      */
@@ -94,6 +100,13 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         setContentView(R.layout.barcode_capture);
 
         ButterKnife.bind(this);
+
+        if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)){
+            mInterstitialAd = new InterstitialAd(this);
+            mInterstitialAd.setAdUnitId(getString(R.string.ad_inter_scanner_activity));
+            adManager = new AdManager();
+            mInterstitialAd.setAdListener(adManager);
+        }
 
         setSupportActionBar(toolbar);
 
@@ -121,6 +134,22 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         Snackbar.make(mGraphicOverlay, getString(R.string.point_bar_code),
                 Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    private void loadAdRequest() {
+        if (!mInterstitialAd.isLoading()) {
+            AdRequest request = new AdRequest.Builder().build();
+            mInterstitialAd.loadAd(request);
+        }
+    }
+
+    private void showInterstitialAd() {
+        if (mInterstitialAd.isLoaded()) {
+            mInterstitialAd.show();
+            adManager.flagAdIsOpen = true;
+        } else {
+            sendResultMainActivity();
+        }
     }
 
     private void sendResultMainActivity() {
@@ -285,6 +314,10 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     protected void onResume() {
         super.onResume();
         startCameraSource();
+
+        if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE))
+            loadAdRequest();
+
     }
 
     /**
@@ -431,7 +464,16 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         mBarcode = barcode;
         vibrateDetection();
 
-        sendResultMainActivity();
+        if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showInterstitialAd();
+                }
+            });
+        }else{
+            sendResultMainActivity();
+        }
     }
 
     private class CaptureGestureListener extends GestureDetector.SimpleOnGestureListener {
@@ -492,6 +534,28 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
             mCameraSource.doZoom(detector.getScaleFactor());
+        }
+    }
+
+    public class AdManager extends AdListener {
+
+        public boolean flagAdIsOpen;
+
+        public AdManager() {
+            flagAdIsOpen = false;
+        }
+
+        @Override
+        public void onAdOpened() {
+            super.onAdOpened();
+            //flagAdIsOpen = true;
+        }
+
+        @Override
+        public void onAdClosed() {
+            super.onAdClosed();
+            flagAdIsOpen = false;
+            sendResultMainActivity();
         }
     }
 }
