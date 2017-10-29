@@ -142,6 +142,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
 
+    implementation 'com.android.support:support-annotations:27.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
