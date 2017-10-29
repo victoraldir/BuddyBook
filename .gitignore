@@ -11,3 +11,4 @@ app/google-services.json
 .idea
 google-services.json
 gradle.properties
+fabric.properties

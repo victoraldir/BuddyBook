@@ -4,6 +4,7 @@ apply plugin: 'io.fabric'
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
+
     defaultConfig {
         applicationId "com.quartzodev.buddybook"
         minSdkVersion 16
@@ -14,18 +15,11 @@ android {
         multiDexEnabled true
         resConfigs "auto"
 
-        def addConstant = {constantName, constantValue ->
-            manifestPlaceholders = [ (constantName):constantValue]
-            buildConfigField "String", "${constantName}", "\"${constantValue}\""
-        }
-
-        addConstant("FABRIC_API_ID", "YOUR_KEY_GOES_HERE")
     }
 
     lintOptions {
         abortOnError false
     }
-
 
     signingConfigs {
         release {
@@ -48,6 +42,7 @@ android {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            ext.enableCrashlytics = false
         }
 
         flavorDimensions "tier"
@@ -61,11 +56,11 @@ android {
                 applicationId 'com.quartzodev.buddybook.paid'
                 dimension "tier"
             }
-        }
 
-        buildTypes.each {
-            it.buildConfigField 'String', 'GOOGLE_BOOK_API_KEY', GOOGLE_BOOK_API_KEY
-            it.buildConfigField 'String', 'GOODREADS_API_KEY', GOODREADS_API_KEY
+            buildTypes.each {
+                it.buildConfigField 'String', 'GOOGLE_BOOK_API_KEY', GOOGLE_BOOK_API_KEY
+                it.buildConfigField 'String', 'GOODREADS_API_KEY', GOOGLE_BOOK_API_KEY
+            }
         }
     }
 

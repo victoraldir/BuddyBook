@@ -18,11 +18,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="${FABRIC_API_ID}"
-            tools:replace="android:value"
-            />
-        <meta-data
             android:name="com.quartzodev.buddybook.GlideModuleConfiguration"
             android:value="GlideModuleConfiguration" />
 
