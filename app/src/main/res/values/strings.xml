@@ -133,7 +133,9 @@
     <string name="checkbook">Check this book</string>
     <string name="borrowed_book">Lent book</string>
 
-    <string name="no_flash">"No flash available"</string>
+    <string name="no_flash">Flash is not available</string>
+    <string name="flash_on">Flash is ON</string>
+    <string name="flash_off">Flash is OFF</string>
 
     <string name="lorem_ipsum_short" translatable="false">Lorem ipsum dolor sit amet</string>
     <string name="lorem_ipsum_medium" translatable="false">Lorem ipsum dolor sit amet,consectetur adipiscing elit</string>

@@ -1100,9 +1100,6 @@ public class MainActivity extends AppCompatActivity
         if (!success) {
             DialogUtils.alertDialogUpgradePro(this);
         }
-//        else{
-//            updateFolderList();
-//        }
     }
 
     @Override

@@ -144,11 +144,17 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
             if (item.getItemId() == R.id.action_flash){
                 if(mCameraSource.isFlashSupported()) {
                     if (mCameraSource.getFlashMode().equals(Camera.Parameters.FLASH_MODE_OFF)) {
+
                         mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                         item.setIcon(R.drawable.ic_flash_off);
+                        Toast.makeText(this,getString(R.string.flash_on),Toast.LENGTH_SHORT).show();
+
                     } else {
+
                         mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                         item.setIcon(R.drawable.ic_action_flash);
+                        Toast.makeText(this,getString(R.string.flash_off),Toast.LENGTH_SHORT).show();
+
                     }
                 }else{
                     Toast.makeText(this,getString(R.string.no_flash),Toast.LENGTH_SHORT).show();
