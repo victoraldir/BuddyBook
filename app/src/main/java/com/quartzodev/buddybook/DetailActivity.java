@@ -101,7 +101,7 @@ public class DetailActivity extends AppCompatActivity implements
 
     private void initAdView(){
         //Ad main
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }

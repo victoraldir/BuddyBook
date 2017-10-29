@@ -179,11 +179,8 @@ public class CameraSourcePreview extends ViewGroup {
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             return false;
         }
-        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            return true;
-        }
+        return orientation == Configuration.ORIENTATION_PORTRAIT;
 
-        return false;
     }
 
     private class SurfaceCallback implements SurfaceHolder.Callback {

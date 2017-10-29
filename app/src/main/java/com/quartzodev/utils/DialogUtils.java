@@ -136,10 +136,10 @@ public class DialogUtils {
 
         View view = inflater.inflate(R.layout.dialog_add_folder, null);
 
-        final EditText urlEditText = (EditText) view.findViewById(R.id.edittext_add_folder_description);
+        final EditText urlEditText = view.findViewById(R.id.edittext_add_folder_description);
         urlEditText.setSingleLine(true);
         urlEditText.setContentDescription(activity.getString(R.string.receiver_name_cd));
-        final TextInputLayout textInputLayout = (TextInputLayout) view.findViewById(R.id.signup_input_layout_name);
+        final TextInputLayout textInputLayout = view.findViewById(R.id.signup_input_layout_name);
 
         final AlertDialog dialog = new AlertDialog.Builder(activity)
                 .setTitle(R.string.item_add_folder)

@@ -76,13 +76,9 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-
     compile 'com.jakewharton:butterknife:8.8.1'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-
-    //Firebase DB
-    //compile 'com.google.firebase:firebase-database:11.4.2'
 
     // FirebaseUI for Firebase Realtime Database
     compile 'com.firebaseui:firebase-ui-database:3.1.0'
@@ -98,7 +94,7 @@ dependencies {
 
     //Crash report
     compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
-        transitive = true;
+        transitive = true
     }
 
     //Google Vision
@@ -111,12 +107,10 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 
     //Okhttp
-    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    compile 'com.squareup.okhttp3:okhttp:3.9.0'
 
     //Glide
-    compile('com.github.bumptech.glide:glide:4.0.0') {
-        compile 'com.android.support:support-v4:25.3.1'
-    }
+    compile('com.github.bumptech.glide:glide:4.2.0')
 
     //OKhttp Glide integration
     compile 'com.github.bumptech.glide:okhttp3-integration:4.0.0@aar'
@@ -146,7 +140,7 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
 
 }
 
