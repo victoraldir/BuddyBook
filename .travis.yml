@@ -18,14 +18,14 @@ android:
     - tools
     - build-tools-26.0.2
     - platform-tools
-    - android-26
+    - android-27
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
 
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
-    - sys-img-armeabi-v7a-android-26
+    - sys-img-armeabi-v7a-android-27
     - sys-img-armeabi-v7a-android-16
     
   licenses:
