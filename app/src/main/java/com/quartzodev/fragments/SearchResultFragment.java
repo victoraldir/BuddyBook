@@ -186,15 +186,19 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         List<Book> bookApis = new ArrayList<>();
 
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            Book book = child.getValue(Book.class);
+                        if(mQuery != null) {
 
-                            if (book.getVolumeInfo().getSearchField().contains(mQuery.toLowerCase())) {
-                                bookApis.add(book);
+                            for (DataSnapshot child : dataSnapshot.getChildren()) {
+                                Book book = child.getValue(Book.class);
+
+                                if (book.getVolumeInfo().getSearchField().contains(mQuery.toLowerCase())) {
+                                    bookApis.add(book);
+                                }
+
                             }
-
+                            mAdapter.swap(bookApis);
                         }
-                        mAdapter.swap(bookApis);
+
                         setLoading(false);
                     }
 
