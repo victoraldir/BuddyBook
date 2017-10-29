@@ -16,7 +16,7 @@ android:
     # Uncomment the lines below if you want to
     # use the latest revision of Android SDK Tools
     - tools
-    - build-tools-26.0.1
+    - build-tools-26.0.2
     - platform-tools
     - android-26
     - extra-google-google_play_services
