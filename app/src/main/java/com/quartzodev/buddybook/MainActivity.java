@@ -626,11 +626,18 @@ public class MainActivity extends AppCompatActivity
 
         mSearchView.setOnQueryTextListener(this);
 
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                return false;
+            }
+        });
+
         final String search_tag = "SEARCH_TAG";
 
-        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
+        mSearchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
 
                 if (!ConnectionUtils.isNetworkConnected(mContext)) {
                     mSnackbarNoInternet = Snackbar.make(mCoordinatorLayout, R.string.no_internet_search, Snackbar.LENGTH_INDEFINITE);
@@ -644,8 +651,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
                 removeFragment(search_tag);
 
                 if (mSnackbarNoInternet != null && mSnackbarNoInternet.isShown()) {
@@ -875,18 +881,8 @@ public class MainActivity extends AppCompatActivity
 
         if (mTwoPane) {
 
-            boolean flagLendOp = false;
-
-            if (book.getId() != null
-                    && folderId != null
-                    && folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //For now we just show lend operations to 'My books' section
-
-                flagLendOp = true;
-
-            }
-
             Gson gson = new Gson();
-            DetailActivityFragment newFragment = DetailActivityFragment.newInstance(mUser.getUid(), book.getId(), folderId, mFolderListComma, gson.toJson(book), flagLendOp);
+            DetailActivityFragment newFragment = DetailActivityFragment.newInstance(mUser.getUid(), book.getId(), folderId, mFolderListComma, gson.toJson(book));
 
             getSupportFragmentManager().popBackStackImmediate();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -900,18 +896,6 @@ public class MainActivity extends AppCompatActivity
             bundle.putString(DetailActivity.ARG_FOLDER_ID, folderId);
             bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
             bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, mFolderListComma);
-
-            if (book.getId() != null
-                    && folderId != null
-                    && folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //For now we just show lend operations to 'My books' section
-
-                bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, true);
-
-            } else {
-
-                bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, false);
-
-            }
 
             Gson gson = new Gson();
             bundle.putString(DetailActivity.ARG_BOOK_JSON, gson.toJson(book));

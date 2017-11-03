@@ -15,24 +15,40 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin">
 
-            <com.quartzodev.views.DynamicImageView
-                android:id="@+id/detail_imageview_thumb"
+            <FrameLayout
+                android:id="@+id/photo_contatiner"
                 android:layout_width="105dp"
-                android:layout_height="182dp"
+                android:layout_height="182dp">
+
+                <ImageView
+                android:id="@+id/detail_imageview_thumb"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:transitionName="@string/transition_image"
                 tools:src="@drawable/com_facebook_profile_picture_blank_portrait"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/detail_imageview_no_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_launcher"/>
+
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="8dp">
 
                 <TextView android:id="@+id/detail_textview_title"
                     android:layout_width="match_parent"
