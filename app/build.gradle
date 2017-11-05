@@ -72,6 +72,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
@@ -84,8 +85,18 @@ dependencies {
     // FirebaseUI for Firebase Realtime Database
     compile 'com.firebaseui:firebase-ui-database:3.1.0'
 
+    /**
+     * firebase-ui-auth
+     |--- com.google.firebase:firebase-auth
+     |--- com.google.android.gms:play-services-auth
+     */
+
     // FirebaseUI Auth only
     compile 'com.firebaseui:firebase-ui-auth:3.1.0'
+    compile 'com.google.firebase:firebase-auth:11.4.2'
+    compile 'com.google.android.gms:play-services-auth:11.4.2'
+    //Code is breaking without it and I don't know why
+    compile("com.twitter.sdk.android:twitter-core:3.0.0@aar") { transitive = true }
 
     // Required only if Facebook login support is required
     compile 'com.facebook.android:facebook-login:4.27.0'
@@ -129,7 +140,7 @@ dependencies {
     //Espresso Idling
     compile 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
 
-    compile ('com.squareup.retrofit2:converter-simplexml:2.3.0'){
+    compile('com.squareup.retrofit2:converter-simplexml:2.3.0') {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
@@ -151,3 +162,4 @@ apply plugin: 'com.google.gms.google-services'
 repositories {
     mavenCentral()
 }
+apply plugin: 'kotlin-android-extensions'

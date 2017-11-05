@@ -29,6 +29,9 @@ public class AnnotationActivity extends AppCompatActivity {
     @BindView(R.id.editText_content)
     EditText mContentEditText;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     public String mBookId;
     public String mFolderId;
     public String mContent;
@@ -45,7 +48,6 @@ public class AnnotationActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

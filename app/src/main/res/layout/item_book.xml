@@ -23,8 +23,8 @@
 
             <com.quartzodev.views.DynamicImageView
                 android:id="@+id/thumbnail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/book_cover_width"
+                android:layout_height="@dimen/book_cover_height"
                 android:layout_weight="1"
                 android:scaleType="centerCrop"
                 android:transitionName="@string/transition_image"

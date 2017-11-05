@@ -23,8 +23,8 @@
 
             <FrameLayout
                 android:id="@+id/photo_contatiner"
-                android:layout_width="105dp"
-                android:layout_height="182dp">
+                android:layout_width="@dimen/book_cover_width"
+                android:layout_height="@dimen/book_cover_height">
 
                 <ImageView
                 android:id="@+id/detail_imageview_thumb"

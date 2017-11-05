@@ -10,12 +10,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -41,7 +43,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.database.DataSnapshot;
@@ -56,6 +57,8 @@ import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
+import com.quartzodev.data.ImageLink;
+import com.quartzodev.data.VolumeInfo;
 import com.quartzodev.utils.DateUtils;
 import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.utils.TextUtils;
@@ -63,6 +66,7 @@ import com.quartzodev.utils.TextUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
@@ -78,10 +82,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         ValueEventListener {
 
     public static final int RC_ANNOTATION = 1;
-    private static final int RC_CAMERA_PERM = 2;
-    private static final int RC_HANDLE_WRITE_PERM = 3;
-    private static final int RC_IMAGE_PICK = 4;
-    private static final int RC_CAMERA = 5;
 
     private static final String MOVIE_SHARE_HASHTAG = "#BuddyBook ";
 
@@ -150,8 +150,6 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     private Book mBookSelected;
     private OnDetailInteractionListener mListener;
 
-    private Uri mSavedImageUri;
-
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
     public DetailActivityFragment() {
@@ -216,7 +214,8 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
                 if (dataSnapshot.getValue() != null) {
                     Book book = dataSnapshot.getValue(Book.class);
-                    setAnnotation(book.getAnnotation());
+                    if(book != null)
+                        setAnnotation(book.getAnnotation());
                 }
             }
 
@@ -367,8 +366,8 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
         if (book.isCustom()) {
 
-            mPhoto.setOnClickListener(onPhotoClick);
-            mPhotoNoImage.setOnClickListener(onPhotoClick);
+//            mPhoto.setOnClickListener(onPhotoClick);
+//            mPhotoNoImage.setOnClickListener(onPhotoClick);
         }
 
         if (book.getVolumeInfo().getImageLink() == null) {
@@ -376,12 +375,8 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    TextDrawable drawable;
 
-                    drawable = TextDrawable.builder()
-                            .buildRect(TextUtils.getFirstLetterTitle(book), Color.BLUE);
-
-                    mPhotoNoImage.setImageDrawable(drawable);
+                    mPhotoNoImage.setImageDrawable(generateTextDrawable());
                     mPhotoNoImage.invalidate();
                 }
             });
@@ -389,108 +384,16 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         }
     }
 
-    View.OnClickListener onPhotoClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+    private TextDrawable generateTextDrawable(){
+        if(mBookSelected != null) {
+            TextDrawable drawable;
+            drawable = TextDrawable.builder()
+                    .buildRect(TextUtils.getFirstLetterTitle(mBookSelected), Color.BLUE);
 
-            final CharSequence[] items = new CharSequence[2];
-            items[0] = "Camera";
-            items[1] = "Gallery";
-
-            android.app.AlertDialog.Builder alertdialog = new android.app.AlertDialog.Builder(mContext);
-            alertdialog.setTitle("Add Image");
-            alertdialog.setItems(items, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int item) {
-
-                    if (items[item].equals("Camera")) {
-
-                        int rc = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA);
-                        if (rc == PackageManager.PERMISSION_GRANTED) {
-                            callCamera();
-                        } else {
-                            requestCameraPermission();
-                        }
-
-                    } else if (items[item].equals("Gallery")) {
-
-                        int rc = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                        if (rc == PackageManager.PERMISSION_GRANTED) {
-                            callPickPhoto();
-                        } else {
-                            requestWriteExternalStoragePermission(RC_HANDLE_WRITE_PERM);
-                        }
-                    }
-                }
-            });
-            alertdialog.show();
+            return drawable;
         }
-    };
 
-    private void callPickPhoto() {
-        Intent intent2 = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent2.setType("image/*");
-        startActivityForResult(intent2, RC_IMAGE_PICK);
-    }
-
-    private void callCamera() {
-        ContentValues values = new ContentValues();
-        mSavedImageUri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        Intent it = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        it.putExtra(MediaStore.EXTRA_OUTPUT, mSavedImageUri);
-        startActivityForResult(it, RC_CAMERA);
-    }
-
-    /**
-     * Handles the requesting of the camera permission.  This includes
-     * showing a "Snackbar" message of why the permission is needed then
-     * sending the request.
-     */
-    private void requestWriteExternalStoragePermission(int requestCode) {
-
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-            requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, requestCode);
-        }
-    }
-
-    /**
-     * Handles the requesting of the camera permission.  This includes
-     * showing a "Snackbar" message of why the permission is needed then
-     * sending the request.
-     */
-    private void requestCameraPermission() {
-
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                Manifest.permission.CAMERA)) {
-
-            requestPermission(Manifest.permission.CAMERA, RC_CAMERA_PERM);
-        }
-    }
-
-    private void requestPermission(String permissionName, int permissionRequestCode) {
-        requestPermissions(new String[]{permissionName}, permissionRequestCode);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-
-        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            if (requestCode == RC_HANDLE_WRITE_PERM) {
-                callPickPhoto();
-            } else if (requestCode == RC_CAMERA_PERM) {
-
-                int rc = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
-                if (rc == PackageManager.PERMISSION_GRANTED) {
-                    callCamera();
-                } else {
-                    requestWriteExternalStoragePermission(RC_CAMERA_PERM);
-                }
-            }
-        }
+        return null;
     }
 
     private void loadAuthors(final Book book) {
@@ -649,6 +552,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         }
         it.putExtra(AnnotationActivity.ARG_BOOK_TITLE, mBookSelected.getVolumeInfo().getTitle());
 
+        it.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivityForResult(it, RC_ANNOTATION);
     }
 
@@ -664,24 +568,18 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                 setAnnotation(content);
                 mBookSelected.setAnnotation(content);
 
-            } else if (requestCode == RC_IMAGE_PICK || requestCode == RC_CAMERA) {
-
-                Object img = null;
-
-                if (data.getData() != null) {
-                    img = data.getData();
-                } else {
-                    img = mSavedImageUri;
-                }
-                renderImage(img);
             }
         }
     }
+
+
 
     private void renderImage(Object image){
         GlideApp.with(mContext)
                 .asBitmap()
                 .load(image)
+                .placeholder(R.drawable.iconerror)
+                .error(R.drawable.iconerror)
                 .into(simpleTarget);
     }
 

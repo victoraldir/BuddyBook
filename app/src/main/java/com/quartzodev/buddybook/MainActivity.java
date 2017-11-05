@@ -108,10 +108,12 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    public static final String EXTRA_USER_ID = "userId";
-    private static final int RC_SIGN_IN = 5;
     private static final int RC_BARCODE_CAPTURE = 2;
+    private static final int RC_SIGN_IN = 5;
     private static final int RC_PICKFILE = 6;
+    private static final int RC_INSERT_BOOK = 7;
+
+    public static final String EXTRA_USER_ID = "userId";
     private static final String KEY_PARCELABLE_USER = "userKey";
     private static final String KEY_FOLDER_ID = "folderIdKey";
     private static final String KEY_CURRENT_QUERY = "queryKey";
@@ -521,7 +523,6 @@ public class MainActivity extends AppCompatActivity
                         .createSignInIntentBuilder()
                         .setTheme(R.style.LoginTheme)
                         .setIsSmartLockEnabled(!BuildConfig.DEBUG)
-                        .setIsSmartLockEnabled(true)
                         .setAvailableProviders(
                                 Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                         new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
@@ -693,7 +694,13 @@ public class MainActivity extends AppCompatActivity
                 return true;
 
             case R.id.action_add_book:
-                DialogUtils.alertDialogAddBook(this,mCoordinatorLayout,mFirebaseDatabaseHelper,mUser.getUid(),mFolderId);
+
+                Intent it = new Intent(mContext, InsertEditBookActivity.class);
+                it.putExtra(InsertEditBookActivity.ARG_FOLDER_NAME, mFolderName);
+                it.putExtra(InsertEditBookActivity.ARG_FOLDER_ID, mFolderId);
+                it.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivityForResult(it, RC_INSERT_BOOK);
+
                 break;
 
             case R.id.action_about:

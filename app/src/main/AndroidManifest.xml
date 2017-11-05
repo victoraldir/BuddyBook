@@ -8,7 +8,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.Manifest.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS" />
 
     <application
         android:name="com.quartzodev.app.App"
@@ -68,9 +69,9 @@
         </activity>
         <activity
             android:name="com.quartzodev.ui.BarcodeCaptureActivity"
-            android:screenOrientation="portrait"
             android:label="@string/activity_title"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
 
         <service
             android:name="com.quartzodev.widgets.BuddyBookWidgetService"
@@ -92,12 +93,15 @@
         <activity
             android:name=".AnnotationActivity"
             android:label="@string/title_activity_annotation"
+            android:launchMode="singleTop"
             android:parentActivityName=".DetailActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.quartzodev.buddybook.DetailActivity" />
         </activity>
+        <activity android:name=".InsertEditBookActivity"
+            android:launchMode="singleTop"/>
     </application>
 
 </manifest>
