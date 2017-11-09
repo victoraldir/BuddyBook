@@ -19,6 +19,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_insert_book" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/insert_progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"/>
+
+        <include layout="@layout/content_insert_book" />
+
+    </FrameLayout>
 
 </LinearLayout>

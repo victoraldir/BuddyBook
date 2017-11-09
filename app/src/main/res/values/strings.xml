@@ -219,5 +219,11 @@
     <string name="folder_deleted">Folder deleted</string>
     <string name="insert_new_book">Insert book</string>
     <string name="folder_subtitle">Folder: %1$s</string>
+    <string name="more_fields">More fields</string>
+    <string name="number_of_pages">Number of pages (optional)</string>
+    <string name="language_optional">Language (optional)</string>
+    <string name="print_type">Print type (optional)</string>
+    <string name="isbn_10">ISBN 10 (optional)</string>
+    <string name="isbn_13">ISBN 13 (optional)</string>
 
 </resources>

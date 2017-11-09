@@ -1,6 +1,5 @@
 package com.quartzodev.buddybook;
 
-import android.*;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentValues;
@@ -14,18 +13,21 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -35,14 +37,16 @@ import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.ImageLink;
 import com.quartzodev.data.VolumeInfo;
+import com.quartzodev.utils.AnimationUtils;
 
 import java.io.File;
+import java.util.Collections;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
-public class InsertEditBookActivity extends AppCompatActivity implements View.OnClickListener {
+public class InsertEditBookActivity extends AppCompatActivity implements View.OnClickListener, FirebaseDatabaseHelper.OnPaidOperationListener {
 
     private static final int RC_CAMERA_PERM = 2;
     private static final int RC_HANDLE_WRITE_PERM = 3;
@@ -53,18 +57,49 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
     public static final String ARG_FOLDER_ID = "argFolderId";
     public static final String ARG_FOLDER_NAME = "argFolderName";
 
+    public static final String SAVE_PICTURE = "savePicure";
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.insert_imageview_thumb)
     ImageView mPhoto;
     @BindView(R.id.container_no_picture)
     FrameLayout mPhotoNoImage;
+    @BindView(R.id.container_more_fields)
+    LinearLayout mMoreFieldsContainer;
+    @BindView(R.id.btn_more_fields)
+    TextView mBtnMoreFields;
+
+    @BindView(R.id.insert_edit_editext_title)
+    TextInputEditText mTitle;
+    @BindView(R.id.insert_edit_editext_author)
+    TextInputEditText mAuthor;
+    @BindView(R.id.insert_edit_editext_publisher)
+    TextInputEditText mPublisher;
+    @BindView(R.id.insert_edit_editext_number_pages)
+    TextInputEditText mNumberPages;
+    @BindView(R.id.insert_edit_editext_language)
+    TextInputEditText mLanguage;
+    @BindView(R.id.insert_edit_editext_print_type)
+    TextInputEditText mPrintType;
+    @BindView(R.id.insert_edit_editext_isbn10)
+    TextInputEditText mIsbn10;
+    @BindView(R.id.insert_edit_editext_isbn13)
+    TextInputEditText mIsbn13;
+    @BindView(R.id.insert_edit_editext_description)
+    TextInputEditText mDescription;
+
+    @BindView(R.id.insert_container)
+    ScrollView mInsertContainer;
+    @BindView(R.id.insert_progressbar)
+    ProgressBar mProgressBar;
 
     private String mUserId;
     private String mBookId;
     private String mFolderId;
     private String mFolderName;
-    private Uri mSavedImageUri;
+    private Uri mPicturePath;
+    private String mPictureChosen;
     private Book mBookSelected;
     private Context mContext;
 
@@ -75,6 +110,11 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         setContentView(R.layout.activity_insert_book);
 
         ButterKnife.bind(this);
+
+        if(savedInstanceState != null){
+            mPictureChosen = savedInstanceState.getString(SAVE_PICTURE);
+            renderImage(mPictureChosen);
+        }
 
         mContext = this;
 
@@ -95,28 +135,53 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         mPhoto.setOnClickListener(this);
         mPhotoNoImage.setOnClickListener(this);
 
+        setLoading(false);
+    }
+
+    private void setLoading(boolean flag){
+        if(!flag){
+            mInsertContainer.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.GONE);
+        }else{
+            mInsertContainer.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        outState.putString(SAVE_PICTURE,mPictureChosen);
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RC_IMAGE_PICK || requestCode == RC_CAMERA) {
+        if (resultCode == Activity.RESULT_OK) {
 
-            Object img;
+            if (requestCode == RC_IMAGE_PICK || requestCode == RC_CAMERA) {
 
-            if (data.getData() != null) {
-                img = data.getData();
-            } else {
-                img = mSavedImageUri;
+                Object img;
+
+                if (data.getData() != null) {
+                    img = data.getData();
+                } else {
+                    img = mPicturePath;
+                }
+
+                //saveImageDb(img);
+                renderImage(img);
             }
-
-            //saveImageDb(img);
-            renderImage(img);
         }
     }
 
     private void renderImage(Object image){
+
+        mPictureChosen = image.toString();
+
         GlideApp.with(this)
                 .asBitmap()
                 .load(image)
@@ -125,15 +190,15 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
                 .into(simpleTarget);
     }
 
-    private void saveImageDb(Object image){
-
-        VolumeInfo volumeInfo = mBookSelected.getVolumeInfo();
-        ImageLink imageLink = new ImageLink();
-        imageLink.setThumbnail(image.toString());
-        volumeInfo.setImageLink(imageLink);
-        mBookSelected.setVolumeInfo(volumeInfo);
-        FirebaseDatabaseHelper.getInstance().updateBook(mUserId,mFolderId,mBookSelected);
-    }
+//    private void saveImageDb(Object image){
+//
+//        VolumeInfo volumeInfo = mBookSelected.getVolumeInfo();
+//        ImageLink imageLink = new ImageLink();
+//        imageLink.setThumbnail(image.toString());
+//        volumeInfo.setImageLink(imageLink);
+//        mBookSelected.setVolumeInfo(volumeInfo);
+//        FirebaseDatabaseHelper.getInstance().updateBook(mUserId,mFolderId,mBookSelected);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -150,6 +215,12 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
                 setResult(Activity.RESULT_CANCELED, new Intent());
                 finish();
                 return true;
+
+            case R.id.action_save_book:
+                if(mInsertContainer.getVisibility() == View.VISIBLE){
+                    saveBook();
+                }
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -162,14 +233,14 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         File newFile = new File(imagePath, System.currentTimeMillis() + "photo.png");
 
         if (Build.VERSION.SDK_INT > 21) { //use this if Lollipop_Mr1 (API 22) or above
-            mSavedImageUri = FileProvider.getUriForFile(this, getPackageName()+".fileprovider", newFile);
+            mPicturePath = FileProvider.getUriForFile(this, getPackageName()+".fileprovider", newFile);
         } else {
-            mSavedImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            mPicturePath = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         }
 
         Intent it = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         it.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        it.putExtra(MediaStore.EXTRA_OUTPUT, mSavedImageUri);
+        it.putExtra(MediaStore.EXTRA_OUTPUT, mPicturePath);
         startActivityForResult(it, RC_CAMERA);
     }
 
@@ -263,6 +334,73 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
     }
 
+    public void moreFields(View view){
+
+        if (mMoreFieldsContainer.getVisibility() == View.VISIBLE) {
+            AnimationUtils.collapse(mMoreFieldsContainer);
+        } else {
+            view.setVisibility(View.GONE);
+            AnimationUtils.expand(mMoreFieldsContainer);
+        }
+
+    }
+
+    private Book buildBookFromForm(){
+
+        Book book = new Book();
+        VolumeInfo volumeInfo = new VolumeInfo();
+        ImageLink imageLink = new ImageLink();
+
+        if(mPictureChosen != null){
+            imageLink.setThumbnail(mPictureChosen);
+        }
+
+        volumeInfo.setTitle(mTitle.getText().toString());
+        volumeInfo.setAuthors(Collections.singletonList(mAuthor.getText().toString()));
+        volumeInfo.setDescription(mDescription.getText().toString());
+        volumeInfo.setIsbn13(mIsbn13.getText().toString());
+        volumeInfo.setIsbn10(mIsbn10.getText().toString());
+        volumeInfo.setLanguage(mLanguage.getText().toString());
+        volumeInfo.setPageCount(mNumberPages.getText().toString());
+        volumeInfo.setPrintType(mPrintType.getText().toString());
+        volumeInfo.setPublisher(mPublisher.getText().toString());
+
+        volumeInfo.setImageLink(imageLink);
+        book.setVolumeInfo(volumeInfo);
+        book.setCustom(true);
+        return book;
+
+    }
+
+    private boolean saveBook(){
+
+        Book newBook = buildBookFromForm();
+
+        if(validateBook(newBook)){
+            if(mFolderId == null)
+                mFolderId = FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER;
+
+            FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId, mFolderId, newBook,this);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean validateBook(Book book){
+
+        if(book.getVolumeInfo().getTitle() == null){
+            mTitle.setError("Title cannot be empty");
+            return false;
+        }else if (book.getVolumeInfo().getTitle().isEmpty()){
+            mTitle.setError("Title cannot be empty");
+            return false;
+        }
+
+        return true;
+    }
+
     SimpleTarget simpleTarget = new SimpleTarget<Bitmap>() {
         @Override
         public void onResourceReady(final Bitmap resource, Transition<? super Bitmap> transition) {
@@ -280,4 +418,17 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
         }
     };
+
+    @Override
+    public void onInsertBook(boolean success) {
+        if(success){
+            setResult(Activity.RESULT_OK, new Intent());
+            finish();
+        }
+    }
+
+    @Override
+    public void onInsertFolder(boolean success) {
+
+    }
 }
