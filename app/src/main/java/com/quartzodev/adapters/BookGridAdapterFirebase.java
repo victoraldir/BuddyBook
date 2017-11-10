@@ -5,11 +5,13 @@ import android.graphics.Color;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -35,6 +37,8 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
     private final int POS_BOOK_AVAILABLE = 2;
     private final int POS_BOOK_CUSTOM_LENT = 3;
     private final int POS_BOOK_CUSTOM_AVAILABLE = 4;
+
+    private final int EDIT = 9;
 
     private Context mContext;
     private ILoading mLoading;
@@ -80,6 +84,12 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
                     holder.toolbar.getMenu().findItem(R.id.action_lend)
                             .setTitle(mContext.getString(R.string.action_return_lend));
                 }
+
+                if(book.isCustom()){
+                    Menu menu = holder.toolbar.getMenu();
+
+                    menu.add(0, EDIT, Menu.NONE, mContext.getString(R.string.edit));
+                }
             }
 
             holder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
@@ -104,6 +114,9 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
                             } else {
                                 mListener.onLendBookClickListener(book, item);
                             }
+                            break;
+                        case EDIT:
+                            mListener.onEditListener(book);
                             break;
                     }
 

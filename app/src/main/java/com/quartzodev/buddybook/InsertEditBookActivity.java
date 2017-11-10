@@ -28,11 +28,15 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.crashlytics.android.Crashlytics;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.ImageLink;
@@ -118,6 +122,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
         mContext = this;
 
+        mBookId = getIntent().getExtras().getString(ARG_BOOK_ID);
         mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mFolderId = getIntent().getExtras().getString(ARG_FOLDER_ID);
         mFolderName = getIntent().getExtras().getString(ARG_FOLDER_NAME);
@@ -125,6 +130,10 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.insert_new_book));
+
+        if(mFolderId == null){
+            mFolderId = FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER;
+        }
 
         if(mFolderName == null){
             mFolderName = getString(R.string.tab_my_books);
@@ -135,7 +144,55 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         mPhoto.setOnClickListener(this);
         mPhotoNoImage.setOnClickListener(this);
 
-        setLoading(false);
+        if(mBookId == null){
+            setLoading(false);
+        }else{
+            loadBook();
+        }
+    }
+
+    public void loadBook(){
+
+        FirebaseDatabaseHelper.getInstance().findBook(mUserId, mFolderId, mBookId, new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                setLoading(false);
+
+                if(dataSnapshot.getValue() != null){
+
+                    Book book = dataSnapshot.getValue(Book.class);
+
+                    populateForm(book);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(mContext,"Error loading book",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void populateForm(Book book){
+
+        VolumeInfo volumeInfo = book.getVolumeInfo();
+
+        mTitle.setText(volumeInfo.getTitle());
+        if(volumeInfo.getAuthors() != null)
+            mAuthor.setText(volumeInfo.getAuthors().get(0));
+
+        if(volumeInfo.getImageLink() != null && volumeInfo.getImageLink().getThumbnail() != null)
+            renderImage(volumeInfo.getImageLink().getThumbnail());
+
+        mDescription.setText(volumeInfo.getDescription());
+        mIsbn13.setText(volumeInfo.getIsbn13());
+        mIsbn10.setText(volumeInfo.getIsbn10());
+        mLanguage.setText(volumeInfo.getLanguage());
+        mNumberPages.setText(volumeInfo.getPageCount());
+        mPrintType.setText(volumeInfo.getPrintType());
+        mPublisher.setText(volumeInfo.getPublisher());
     }
 
     private void setLoading(boolean flag){
@@ -351,6 +408,8 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         VolumeInfo volumeInfo = new VolumeInfo();
         ImageLink imageLink = new ImageLink();
 
+        book.setId(mBookId);
+
         if(mPictureChosen != null){
             imageLink.setThumbnail(mPictureChosen);
         }
@@ -371,6 +430,8 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         return book;
 
     }
+
+
 
     private boolean saveBook(){
 

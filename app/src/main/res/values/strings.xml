@@ -225,5 +225,6 @@
     <string name="print_type">Print type (optional)</string>
     <string name="isbn_10">ISBN 10 (optional)</string>
     <string name="isbn_13">ISBN 13 (optional)</string>
+    <string name="edit">Edit</string>
 
 </resources>

@@ -695,11 +695,7 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.action_add_book:
 
-                Intent it = new Intent(mContext, InsertEditBookActivity.class);
-                it.putExtra(InsertEditBookActivity.ARG_FOLDER_NAME, mFolderName);
-                it.putExtra(InsertEditBookActivity.ARG_FOLDER_ID, mFolderId);
-                it.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivityForResult(it, RC_INSERT_BOOK);
+                lauchInsertEditActivity(null);
 
                 break;
 
@@ -725,6 +721,20 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void lauchInsertEditActivity(String bookId){
+
+        Intent it = new Intent(mContext, InsertEditBookActivity.class);
+
+        if(bookId != null)
+            it.putExtra(InsertEditBookActivity.ARG_BOOK_ID,bookId);
+
+        it.putExtra(InsertEditBookActivity.ARG_FOLDER_NAME, mFolderName);
+        it.putExtra(InsertEditBookActivity.ARG_FOLDER_ID, mFolderId);
+        it.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivityForResult(it, RC_INSERT_BOOK);
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -1002,6 +1012,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onReturnBookClickListener(Book book) {
         DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUser.getUid(), mFolderId, book);
+    }
+
+    @Override
+    public void onEditListener(Book book) {
+        lauchInsertEditActivity(book.getId());
     }
 
     @Override
