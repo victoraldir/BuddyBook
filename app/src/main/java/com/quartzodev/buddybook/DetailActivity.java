@@ -3,6 +3,7 @@ package com.quartzodev.buddybook;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -35,7 +36,6 @@ public class DetailActivity extends AppCompatActivity implements
     public static final String ARG_USER_ID = "userId";
     public static final String ARG_FOLDER_LIST_ID = "folderListId";
     public static final String ARG_BOOK_JSON = "bookJson";
-    public static final String ARG_FLAG_LEND_OPERATION = "flagLendOperation";
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -72,9 +72,8 @@ public class DetailActivity extends AppCompatActivity implements
         mUserId = getIntent().getExtras().getString(ARG_USER_ID);
         String folderListId = getIntent().getExtras().getString(ARG_FOLDER_LIST_ID);
         final String bookJson = getIntent().getExtras().getString(ARG_BOOK_JSON);
-        boolean flagLendOp = getIntent().getExtras().getBoolean(ARG_FLAG_LEND_OPERATION);
 
-        mFragment = DetailActivityFragment.newInstance(mUserId, bookId, mFolderId, folderListId, bookJson, flagLendOp);
+        mFragment = DetailActivityFragment.newInstance(mUserId, bookId, mFolderId, folderListId, bookJson);
 
         getSupportFragmentManager().popBackStackImmediate();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -87,6 +86,11 @@ public class DetailActivity extends AppCompatActivity implements
             }
         });
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     public void setFabVisible(){

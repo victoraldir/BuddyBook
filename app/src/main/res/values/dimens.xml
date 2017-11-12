@@ -28,4 +28,7 @@
 
     <dimen name="bar_height">56dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="book_cover_width">105dp</dimen>
+    <dimen name="book_cover_height">180dp</dimen>
 </resources>
