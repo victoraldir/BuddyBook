@@ -39,8 +39,8 @@ before_install:
     - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
     - touch fabric.properties
     - touch gradle.properties
-    - echo "GOODREADS_API_KEY=$GOODREADS_API_KEY" >> gradle.properties
-    - echo "GOOGLE_BOOK_API_KEY=$GOOGLE_BOOK_API_KEY" >> gradle.properties
-    - echo "apiKey=$FABRIC_KEY" >> fabric.properties
+    - echo "GOODREADS_API_KEY=/"$GOODREADS_API_KEY/"" >> gradle.properties
+    - echo "GOOGLE_BOOK_API_KEY=/"$GOOGLE_BOOK_API_KEY/"" >> gradle.properties
+    - echo "apiKey=/"$FABRIC_KEY/"" >> fabric.properties
 
 script: ./gradlew clean assembleDebug check
