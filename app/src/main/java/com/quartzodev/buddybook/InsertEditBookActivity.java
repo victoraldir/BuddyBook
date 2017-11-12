@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -17,7 +18,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -92,6 +92,8 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
     TextInputEditText mIsbn13;
     @BindView(R.id.insert_edit_editext_description)
     TextInputEditText mDescription;
+    @BindView(R.id.insert_edit_editext_annotation)
+    TextInputEditText mAnnotation;
 
     @BindView(R.id.insert_container)
     ScrollView mInsertContainer;
@@ -194,6 +196,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         mNumberPages.setText(volumeInfo.getPageCount());
         mPrintType.setText(volumeInfo.getPrintType());
         mPublisher.setText(volumeInfo.getPublisher());
+        mAnnotation.setText(book.getAnnotation());
     }
 
     private void setLoading(boolean flag){
@@ -347,17 +350,17 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
     public void onClick(View view) {
 
         final CharSequence[] items = new CharSequence[2];
-        items[0] = "Camera";
-        items[1] = "Gallery";
+        items[0] = getString(R.string.camera);
+        items[1] = getString(R.string.gallery);
 
         android.app.AlertDialog.Builder alertdialog = new android.app.AlertDialog.Builder(mContext);
-        alertdialog.setTitle("Add Image");
+        alertdialog.setTitle(getString(R.string.add_image));
         alertdialog.setItems(items, new DialogInterface.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(DialogInterface dialog, int item) {
 
-                if (items[item].equals("Camera")) {
+                if (items[item].equals(getString(R.string.camera))) {
 
                     int rc = ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.CAMERA);
                     if (rc == PackageManager.PERMISSION_GRANTED) {
@@ -366,7 +369,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
                         requestCameraPermission();
                     }
 
-                } else if (items[item].equals("Gallery")) {
+                } else if (items[item].equals(getString(R.string.gallery))) {
 
                     int rc = ActivityCompat.checkSelfPermission(mContext, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
                     if (rc == PackageManager.PERMISSION_GRANTED) {
@@ -407,13 +410,15 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
         volumeInfo.setTitle(mTitle.getText().toString());
         volumeInfo.setAuthors(Collections.singletonList(mAuthor.getText().toString()));
-        volumeInfo.setDescription(mDescription.getText().toString());
         volumeInfo.setIsbn13(mIsbn13.getText().toString());
         volumeInfo.setIsbn10(mIsbn10.getText().toString());
         volumeInfo.setLanguage(mLanguage.getText().toString());
         volumeInfo.setPageCount(mNumberPages.getText().toString());
         volumeInfo.setPrintType(mPrintType.getText().toString());
         volumeInfo.setPublisher(mPublisher.getText().toString());
+        volumeInfo.setDescription(mDescription.getText().toString());
+
+        book.setAnnotation(mAnnotation.getText().toString());
 
         volumeInfo.setImageLink(imageLink);
         book.setVolumeInfo(volumeInfo);

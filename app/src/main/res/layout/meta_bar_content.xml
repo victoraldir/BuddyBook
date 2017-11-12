@@ -18,8 +18,7 @@
             android:id="@+id/book_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
-            android:maxLines="2"
+            android:maxLines="1"
             android:textAppearance="@style/BookToolbar.Title"
             tools:text="book_title" />
 
@@ -28,7 +27,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:textSize="8sp"
             android:maxLines="1"
             android:scaleType="fitXY"
             android:textAppearance="@style/BookToolbar.Subtitle"

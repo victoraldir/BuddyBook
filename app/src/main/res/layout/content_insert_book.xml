@@ -244,6 +244,23 @@
                     android:maxLength="1500" />
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/insert_edit_editext_annotation"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@null"
+                    android:gravity="start"
+                    android:hint="@string/annotations"
+                    android:imeOptions="actionNone"
+                    android:inputType="textMultiLine|textNoSuggestions"
+                    android:maxLength="1500" />
+            </android.support.design.widget.TextInputLayout>
+
         </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>
