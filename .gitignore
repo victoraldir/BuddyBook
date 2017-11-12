@@ -15,3 +15,5 @@ fabric.properties
 installer/
 Appfile
 report.xml
+fabric.properties
+gradle.properties
