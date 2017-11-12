@@ -117,7 +117,8 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
         if(savedInstanceState != null){
             mPictureChosen = savedInstanceState.getString(SAVE_PICTURE);
-            renderImage(mPictureChosen);
+            if(mPictureChosen != null)
+                renderImage(mPictureChosen);
         }
 
         mContext = this;
@@ -223,13 +224,12 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
                 Object img;
 
-                if (data.getData() != null) {
+                if (data != null && data.getData() != null) {
                     img = data.getData();
                 } else {
                     img = mPicturePath;
                 }
 
-                //saveImageDb(img);
                 renderImage(img);
             }
         }
@@ -246,16 +246,6 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
                 .error(R.drawable.iconerror)
                 .into(simpleTarget);
     }
-
-//    private void saveImageDb(Object image){
-//
-//        VolumeInfo volumeInfo = mBookSelected.getVolumeInfo();
-//        ImageLink imageLink = new ImageLink();
-//        imageLink.setThumbnail(image.toString());
-//        volumeInfo.setImageLink(imageLink);
-//        mBookSelected.setVolumeInfo(volumeInfo);
-//        FirebaseDatabaseHelper.getInstance().updateBook(mUserId,mFolderId,mBookSelected);
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -302,7 +292,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
     }
 
     private void callPickPhoto() {
-        Intent intent2 = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent intent2 = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent2.setType("image/*");
         startActivityForResult(intent2, RC_IMAGE_PICK);
     }
@@ -412,6 +402,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
         if(mPictureChosen != null){
             imageLink.setThumbnail(mPictureChosen);
+            imageLink.setSmallThumbnail(mPictureChosen);
         }
 
         volumeInfo.setTitle(mTitle.getText().toString());
@@ -470,8 +461,8 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
             int valueHeight = (int) getResources().getDimension(R.dimen.book_cover_height);
 
 
-            final Bitmap scaledBitmap = Bitmap.createScaledBitmap(resource, valueWidth, valueHeight, true);
-            mPhoto.setImageBitmap(scaledBitmap);
+            //final Bitmap scaledBitmap = Bitmap.createScaledBitmap(resource, valueWidth, valueHeight, true);
+            mPhoto.setImageBitmap(resource);
             mPhoto.invalidate();
 
             mPhoto.setVisibility(View.VISIBLE);

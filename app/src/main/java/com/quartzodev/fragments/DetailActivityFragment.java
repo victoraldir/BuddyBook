@@ -527,6 +527,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         GlideApp.with(mContext)
                 .asBitmap()
                 .load(image)
+                //.centerCrop()
                 .placeholder(R.drawable.iconerror)
                 .error(R.drawable.iconerror)
                 .into(simpleTarget);
@@ -541,8 +542,8 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                 observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                     public boolean onPreDraw() {
 
-                        final Bitmap scaledBitmap = Bitmap.createScaledBitmap(resource, mPhotoContainer.getWidth(), mPhotoContainer.getHeight(), true);
-                        mPhoto.setImageBitmap(scaledBitmap);
+                        //final Bitmap scaledBitmap = Bitmap.createScaledBitmap(resource, mPhotoContainer.getWidth(), mPhotoContainer.getHeight(), true);
+                        mPhoto.setImageBitmap(resource);
                         mPhoto.invalidate();
 
                         mPhoto.setVisibility(View.VISIBLE);

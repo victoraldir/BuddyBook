@@ -18,17 +18,16 @@
 
         <!--suppress AndroidLintContentDescription -->
         <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <com.quartzodev.views.DynamicImageView
                 android:id="@+id/thumbnail"
-                android:layout_width="@dimen/book_cover_width"
-                android:layout_height="@dimen/book_cover_height"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
-                android:transitionName="@string/transition_image"
-                tools:layout_width="200dp" />
+                android:layout_weight="1"
+                android:transitionName="@string/transition_image" />
 
             <ImageView
                 android:id="@+id/icon_book_lend"
@@ -43,51 +42,8 @@
 
         </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/meta_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="0"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+        <include layout="@layout/meta_bar_content" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/book_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:minHeight="?attr/actionBarSize"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/book_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:maxLines="2"
-                        android:textAppearance="@style/BookToolbar.Title"
-                        tools:text="book_title" />
-
-                    <TextView
-                        android:id="@+id/book_author"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:maxLines="1"
-                        android:scaleType="fitXY"
-                        android:textAppearance="@style/BookToolbar.Subtitle"
-                        tools:text="book_author" />
-
-                </LinearLayout>
-
-
-            </android.support.v7.widget.Toolbar>
-        </FrameLayout>
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

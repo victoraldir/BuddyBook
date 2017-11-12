@@ -25,11 +25,12 @@
             android:layout_marginTop="16dp"
             android:background="?selectableItemBackground">
 
-            <ImageView
+            <com.quartzodev.views.DynamicImageView
                 android:id="@+id/insert_imageview_thumb"
                 android:layout_width="@dimen/book_cover_width"
                 android:layout_height="@dimen/book_cover_height"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:scaleType="centerCrop"/>
 
             <FrameLayout
                 android:id="@+id/container_no_picture"
@@ -159,7 +160,7 @@
                     android:hint="@string/number_of_pages"
                     android:maxLines="1"
                     android:ems="10"
-                    android:maxLength="5"
+                    android:maxLength="8"
                     android:inputType="number"/>
             </android.support.design.widget.TextInputLayout>
             <android.support.design.widget.TextInputLayout
@@ -223,7 +224,7 @@
                     android:ems="10"
                     android:maxLines="1"
                     android:maxLength="10"
-                    android:inputType="textPersonName"/>
+                    android:inputType="number"/>
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout

@@ -784,7 +784,6 @@ public class MainActivity extends AppCompatActivity
                 mToolbar.setSubtitle( String.format(getString(R.string.number_of_books),0));
             }
 
-
             loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_my_books), null);
         }
     }
