@@ -1,4 +1,4 @@
 <resources>
-    <integer name="list_column_count">4</integer>
+    <integer name="list_column_count">5</integer>
     <dimen name="margin_details">96dp</dimen>
 </resources>

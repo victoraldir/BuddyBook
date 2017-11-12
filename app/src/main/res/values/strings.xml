@@ -86,7 +86,7 @@
     <string name="ad_app_id" translatable="false">ca-app-pub-6526073251385305~4440436428</string>
     <string name="ad_inter_scanner_activity" translatable="false">ca-app-pub-6526073251385305/5917169627</string>
     <string name="ad_bottom_details" translatable="false">ca-app-pub-6526073251385305/7915280029</string>
-    <string name="ad_bottom_books_main" translatable="false" >ca-app-pub-6526073251385305/7393902820</string>
+    <string name="ad_bottom_books_main" translatable="false">ca-app-pub-6526073251385305/7393902820</string>
 
 
     <!--
@@ -157,7 +157,7 @@
     <string name="publisher">Publisher (optional)</string>
     <string name="book_title">Book Title</string>
     <string name="search">Search</string>
-    <string name="add_book">Add custom book</string>
+    <string name="add_book">Save</string>
     <string name="add_sort">Sort</string>
     <string name="borrowed_book_icon_cd">Borrowed book icon</string>
     <string name="btn_return_book_cd">Return this book</string>
@@ -206,6 +206,7 @@
     <string name="option_restore">Restore</string>
     <string name="send_to">Send to</string>
     <string name="description">Description</string>
+    <string name="description_optional">Description (Optional)</string>
     <string name="product_details">Product details</string>
     <string name="actions">Actions</string>
     <string name="pages_details">%1$s page(s)</string>
@@ -216,5 +217,17 @@
     <string name="you_have_no_annotations">You have no annotations.</string>
     <string name="annotation_saved">Annotation saved!</string>
     <string name="folder_deleted">Folder deleted</string>
+    <string name="insert_new_book">Insert book</string>
+    <string name="folder_subtitle">Folder: %1$s</string>
+    <string name="more_fields">More fields</string>
+    <string name="number_of_pages">Number of pages (optional)</string>
+    <string name="language_optional">Language (optional)</string>
+    <string name="print_type">Print type (optional)</string>
+    <string name="isbn_10">ISBN 10 (optional)</string>
+    <string name="isbn_13">ISBN 13 (optional)</string>
+    <string name="edit">Edit</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="add_image">Add Image</string>
 
 </resources>

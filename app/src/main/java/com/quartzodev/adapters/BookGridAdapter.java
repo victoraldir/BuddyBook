@@ -61,39 +61,41 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridViewHolder> {
 
         View view;
 
-        if (viewType == POS_BOOK_LENT) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_lent, parent, false);
-        } else if (viewType == POS_BOOK_CUSTOM_LENT) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_custom, parent, false);
-        } else if (viewType == POS_BOOK_CUSTOM_AVAILABLE) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_custom_available, parent, false);
-        } else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
-        }
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
+
+//        if (viewType == POS_BOOK_LENT) {
+//            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_lent, parent, false);
+//        } else if (viewType == POS_BOOK_CUSTOM_LENT) {
+//            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_custom, parent, false);
+//        } else if (viewType == POS_BOOK_CUSTOM_AVAILABLE) {
+//            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_custom_available, parent, false);
+//        } else {
+//            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
+//        }
 
         return new BookGridViewHolder(view);
     }
 
-    @Override
-    public int getItemViewType(int position) {
-
-        final Book book = new ArrayList<>(mBookList).get(position);
-
-        if(mFolderId == null){
-            return 0;
-        }
-
-        if(book.getLend() != null){
-            if(book.isCustom()){
-                return POS_BOOK_CUSTOM_LENT;
-            }
-            return POS_BOOK_LENT;
-        }else if (book.isCustom()) {
-            return POS_BOOK_CUSTOM_AVAILABLE;
-        }
-
-        return POS_BOOK_AVAILABLE;
-    }
+//    @Override
+//    public int getItemViewType(int position) {
+//
+//        final Book book = new ArrayList<>(mBookList).get(position);
+//
+//        if(mFolderId == null){
+//            return 0;
+//        }
+//
+//        if(book.getLend() != null){
+//            if(book.isCustom()){
+//                return POS_BOOK_CUSTOM_LENT;
+//            }
+//            return POS_BOOK_LENT;
+//        }else if (book.isCustom()) {
+//            return POS_BOOK_CUSTOM_AVAILABLE;
+//        }
+//
+//        return POS_BOOK_AVAILABLE;
+//    }
 
     public void setFolderId(String folderId) {
         mFolderId = folderId;

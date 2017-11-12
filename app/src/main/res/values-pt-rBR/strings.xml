@@ -187,5 +187,18 @@
     <string name="default_sorts_release">Data lançamento</string>
 
     <string name="number_of_books">%01d livro(s)</string>
+    <string name="description_optional">Descrição (opcional)</string>
+    <string name="insert_new_book">Inserir livro</string>
+    <string name="folder_subtitle">Pasta: %1$s</string>
+    <string name="more_fields">Mais campos</string>
+    <string name="number_of_pages">Número de páginas (opcional)</string>
+    <string name="language_optional">Língua</string>
+    <string name="print_type">Tipo de impressão (opcional)</string>
+    <string name="isbn_10">ISBN 10 (opcional)</string>
+    <string name="isbn_13">ISBN 13 (opcional)</string>
+    <string name="edit">Editar</string>
+    <string name="camera">Câmera</string>
+    <string name="gallery">Galeria</string>
+    <string name="add_image">"Adicionar imagem "</string>
 
 </resources>

@@ -40,19 +40,21 @@ public class ProductDetailGridAdapter extends RecyclerView.Adapter<ProductDetail
     }
 
     private void countCellByVolumeInfo(VolumeInfo volumeInfo){
-        if(volumeInfo.getIsbn13() != null || volumeInfo.getIsbn10() != null){
+        if((volumeInfo.getIsbn13() != null && !volumeInfo.getIsbn13().isEmpty())
+                || (volumeInfo.getIsbn10() != null && !volumeInfo.getIsbn10().isEmpty())){
+
             listCells.add(CELL_ISBN);
         }
 
-        if(volumeInfo.getLanguage() != null){
+        if(volumeInfo.getLanguage() != null && !volumeInfo.getLanguage().isEmpty()){
             listCells.add(CELL_LANGUAGE);
         }
 
-        if(volumeInfo.getPrintType() != null){
+        if(volumeInfo.getPrintType() != null && !volumeInfo.getPrintType().isEmpty()){
             listCells.add(CELL_PRINT_TYPE);
         }
 
-        if(volumeInfo.getPageCount() != null){
+        if(volumeInfo.getPageCount() != null && !volumeInfo.getPageCount().isEmpty()){
             listCells.add(CELL_NUM_PAGES);
         }
     }

@@ -271,5 +271,6 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
         void onCopyBookToFolderClickListener(String mFolderId, Book book);
         void onLendBookClickListener(Book book, MenuItem menuItem);
         void onReturnBookClickListener(Book book);
+        void onEditListener(Book book);
     }
 }

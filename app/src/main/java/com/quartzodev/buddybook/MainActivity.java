@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
@@ -108,10 +107,12 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    public static final String EXTRA_USER_ID = "userId";
-    private static final int RC_SIGN_IN = 5;
     private static final int RC_BARCODE_CAPTURE = 2;
+    private static final int RC_SIGN_IN = 5;
     private static final int RC_PICKFILE = 6;
+    private static final int RC_INSERT_BOOK = 7;
+
+    public static final String EXTRA_USER_ID = "userId";
     private static final String KEY_PARCELABLE_USER = "userKey";
     private static final String KEY_FOLDER_ID = "folderIdKey";
     private static final String KEY_CURRENT_QUERY = "queryKey";
@@ -521,7 +522,6 @@ public class MainActivity extends AppCompatActivity
                         .createSignInIntentBuilder()
                         .setTheme(R.style.LoginTheme)
                         .setIsSmartLockEnabled(!BuildConfig.DEBUG)
-                        .setIsSmartLockEnabled(true)
                         .setAvailableProviders(
                                 Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                                         new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
@@ -626,11 +626,18 @@ public class MainActivity extends AppCompatActivity
 
         mSearchView.setOnQueryTextListener(this);
 
+        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                return false;
+            }
+        });
+
         final String search_tag = "SEARCH_TAG";
 
-        MenuItemCompat.setOnActionExpandListener(menu.findItem(R.id.action_search), new MenuItemCompat.OnActionExpandListener() {
+        mSearchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
+            public boolean onMenuItemActionExpand(MenuItem menuItem) {
 
                 if (!ConnectionUtils.isNetworkConnected(mContext)) {
                     mSnackbarNoInternet = Snackbar.make(mCoordinatorLayout, R.string.no_internet_search, Snackbar.LENGTH_INDEFINITE);
@@ -644,8 +651,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-
+            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
                 removeFragment(search_tag);
 
                 if (mSnackbarNoInternet != null && mSnackbarNoInternet.isShown()) {
@@ -687,7 +693,9 @@ public class MainActivity extends AppCompatActivity
                 return true;
 
             case R.id.action_add_book:
-                DialogUtils.alertDialogAddBook(this,mCoordinatorLayout,mFirebaseDatabaseHelper,mUser.getUid(),mFolderId);
+
+                lauchInsertEditActivity(null);
+
                 break;
 
             case R.id.action_about:
@@ -712,6 +720,20 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void lauchInsertEditActivity(String bookId){
+
+        Intent it = new Intent(mContext, InsertEditBookActivity.class);
+
+        if(bookId != null)
+            it.putExtra(InsertEditBookActivity.ARG_BOOK_ID,bookId);
+
+        it.putExtra(InsertEditBookActivity.ARG_FOLDER_NAME, mFolderName);
+        it.putExtra(InsertEditBookActivity.ARG_FOLDER_ID, mFolderId);
+        it.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivityForResult(it, RC_INSERT_BOOK);
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -760,7 +782,6 @@ public class MainActivity extends AppCompatActivity
             }else{
                 mToolbar.setSubtitle( String.format(getString(R.string.number_of_books),0));
             }
-
 
             loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_my_books), null);
         }
@@ -875,18 +896,8 @@ public class MainActivity extends AppCompatActivity
 
         if (mTwoPane) {
 
-            boolean flagLendOp = false;
-
-            if (book.getId() != null
-                    && folderId != null
-                    && folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //For now we just show lend operations to 'My books' section
-
-                flagLendOp = true;
-
-            }
-
             Gson gson = new Gson();
-            DetailActivityFragment newFragment = DetailActivityFragment.newInstance(mUser.getUid(), book.getId(), folderId, mFolderListComma, gson.toJson(book), flagLendOp);
+            DetailActivityFragment newFragment = DetailActivityFragment.newInstance(mUser.getUid(), book.getId(), folderId, mFolderListComma, gson.toJson(book));
 
             getSupportFragmentManager().popBackStackImmediate();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -900,18 +911,6 @@ public class MainActivity extends AppCompatActivity
             bundle.putString(DetailActivity.ARG_FOLDER_ID, folderId);
             bundle.putString(DetailActivity.ARG_USER_ID, mUser.getUid());
             bundle.putString(DetailActivity.ARG_FOLDER_LIST_ID, mFolderListComma);
-
-            if (book.getId() != null
-                    && folderId != null
-                    && folderId.equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) { //For now we just show lend operations to 'My books' section
-
-                bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, true);
-
-            } else {
-
-                bundle.putBoolean(DetailActivity.ARG_FLAG_LEND_OPERATION, false);
-
-            }
 
             Gson gson = new Gson();
             bundle.putString(DetailActivity.ARG_BOOK_JSON, gson.toJson(book));
@@ -1011,6 +1010,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onReturnBookClickListener(Book book) {
         DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUser.getUid(), mFolderId, book);
+    }
+
+    @Override
+    public void onEditListener(Book book) {
+        lauchInsertEditActivity(book.getId());
     }
 
     @Override

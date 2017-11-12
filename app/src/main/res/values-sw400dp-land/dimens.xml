@@ -1,4 +1,3 @@
 <resources>
-    <dimen name="margin_details">32dp</dimen>
     <integer name="list_column_count">6</integer>
 </resources>

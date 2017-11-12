@@ -1,18 +1,22 @@
 package com.quartzodev.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseError;
@@ -35,6 +39,8 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
     private final int POS_BOOK_AVAILABLE = 2;
     private final int POS_BOOK_CUSTOM_LENT = 3;
     private final int POS_BOOK_CUSTOM_AVAILABLE = 4;
+
+    private final int EDIT = 9;
 
     private Context mContext;
     private ILoading mLoading;
@@ -80,7 +86,17 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
                     holder.toolbar.getMenu().findItem(R.id.action_lend)
                             .setTitle(mContext.getString(R.string.action_return_lend));
                 }
+
+                if(book.isCustom()){
+                    Menu menu = holder.toolbar.getMenu();
+
+                    menu.add(0, EDIT, Menu.NONE, mContext.getString(R.string.edit));
+                }
             }
+
+            if(book.getLend() != null)
+                holder.containerIconLend.setVisibility(View.VISIBLE);
+
 
             holder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                 @Override
@@ -105,6 +121,9 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
                                 mListener.onLendBookClickListener(book, item);
                             }
                             break;
+                        case EDIT:
+                            mListener.onEditListener(book);
+                            break;
                     }
 
                     return false;
@@ -113,10 +132,12 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
 
             if (book.getVolumeInfo().getImageLink() != null) {
 
-                GlideApp.with(mContext)
-                        .load(book.getVolumeInfo().getImageLink().getThumbnail())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .into(holder.imageViewThumbnail);
+//                GlideApp.with(mContext)
+//                        .load(book.getVolumeInfo().getImageLink().getSmallThumbnail())
+//                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                        .into(holder.imageViewThumbnail);
+
+                renderImage(book.getVolumeInfo().getImageLink().getSmallThumbnail(), holder.imageViewThumbnail);
 
                 holder.imageViewThumbnail.setContentDescription(
                         String.format(mContext.getString(R.string.cover_book_cd), book.getVolumeInfo()
@@ -159,6 +180,29 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
         }
     }
 
+    private void renderImage(Object image, final ImageView imageView){
+
+        GlideApp.with(mContext)
+                .asBitmap()
+                .load(image)
+                .placeholder(R.drawable.iconerror)
+                .error(R.drawable.iconerror)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(final Bitmap resource, Transition<? super Bitmap> transition) {
+
+                        int valueWidth = (int) mContext.getResources().getDimension(R.dimen.book_cover_width);
+                        int valueHeight = (int) mContext.getResources().getDimension(R.dimen.book_cover_height);
+
+
+                        final Bitmap scaledBitmap = Bitmap.createScaledBitmap(resource, valueWidth, valueHeight, true);
+                        imageView.setImageBitmap(resource);
+                        imageView.invalidate();
+
+                    }
+                });
+    }
+
     private void setAnimation(View viewToAnimate, int position) {
         // If the bound view wasn't previously displayed on screen, it's animated
         if (position > mLastPosition) {
@@ -193,15 +237,7 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
     public BookGridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
 
-        if (viewType == POS_BOOK_LENT) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_lent, parent, false);
-        } else if (viewType == POS_BOOK_CUSTOM_LENT) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_custom, parent, false);
-        } else if (viewType == POS_BOOK_CUSTOM_AVAILABLE) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book_custom_available, parent, false);
-        } else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
-        }
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
 
         final BookGridViewHolder vh = new BookGridViewHolder(view);
 
