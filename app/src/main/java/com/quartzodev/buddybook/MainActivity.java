@@ -1047,8 +1047,6 @@ public class MainActivity extends AppCompatActivity
         }else if(frag instanceof ViewPagerFragment){
             ((ViewPagerFragment) frag).refresh();
         }
-
-        Snackbar.make(mCoordinatorLayout,"We should refresh sort here",Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
