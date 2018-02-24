@@ -4,7 +4,7 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion "27.0.2"
+    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "com.quartzodev.buddybook"
@@ -83,7 +83,7 @@ dependencies {
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     // FirebaseUI for Firebase Realtime Database
-    compile 'com.firebaseui:firebase-ui-database:3.1.0'
+    implementation 'com.firebaseui:firebase-ui-database:3.2.1'
 
     /**
      * firebase-ui-auth
@@ -92,9 +92,9 @@ dependencies {
      */
 
     // FirebaseUI Auth only
-    compile 'com.firebaseui:firebase-ui-auth:3.1.0'
-    compile 'com.google.firebase:firebase-auth:11.4.2'
-    compile 'com.google.android.gms:play-services-auth:11.4.2'
+    implementation 'com.firebaseui:firebase-ui-auth:3.2.1'
+    compile 'com.google.firebase:firebase-auth:11.8.0'
+    compile 'com.google.android.gms:play-services-auth:11.8.0'
     //Code is breaking without it and I don't know why
     compile("com.twitter.sdk.android:twitter-core:3.0.0@aar") { transitive = true }
 
@@ -102,7 +102,7 @@ dependencies {
     compile 'com.facebook.android:facebook-login:4.27.0'
 
     //Firebase remote config
-    freeCompile 'com.google.firebase:firebase-config:11.4.2'
+    freeCompile 'com.google.firebase:firebase-config:11.8.0'
 
     //Crash report
     compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
@@ -110,22 +110,23 @@ dependencies {
     }
 
     //Google Vision
-    compile 'com.google.android.gms:play-services-vision:11.4.2'
+    compile 'com.google.android.gms:play-services-vision:11.8.0'
     //Joda
     compile 'net.danlew:android.joda:2.9.9'
     //Admobi
-    compile 'com.google.android.gms:play-services-ads:11.4.2'
+    compile 'com.google.android.gms:play-services-ads:11.8.0'
     //Calligraphy
     compile 'uk.co.chrisjenx:calligraphy:2.3.0'
 
     //Okhttp
-    compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    compile 'com.squareup.okhttp3:okhttp:3.9.1'
 
     //Glide
-    compile('com.github.bumptech.glide:glide:4.2.0')
+    implementation 'com.github.bumptech.glide:glide:4.6.1'
+    implementation 'com.github.bumptech.glide:annotations:4.6.1'
 
     //OKhttp Glide integration
-    compile 'com.github.bumptech.glide:okhttp3-integration:4.0.0@aar'
+    compile "com.github.bumptech.glide:okhttp3-integration:4.6.1"
 
     //TextDrawable
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
@@ -152,7 +153,7 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
 
     implementation 'com.android.support:support-annotations:27.0.2'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
@@ -163,3 +164,5 @@ repositories {
     mavenCentral()
 }
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+
