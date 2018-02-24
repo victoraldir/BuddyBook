@@ -22,6 +22,10 @@
             android:name="com.quartzodev.buddybook.GlideModuleConfiguration"
             android:value="GlideModuleConfiguration" />
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="535eaf4515793975a58e16aa0c097291ed581443" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

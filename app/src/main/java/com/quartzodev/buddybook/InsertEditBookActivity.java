@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -111,8 +112,10 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Fabric.with(this, new Crashlytics());
         super.onCreate(savedInstanceState);
+
+        Fabric.with(this, new Crashlytics(), new Answers());
+
         setContentView(R.layout.activity_insert_book);
 
         ButterKnife.bind(this);

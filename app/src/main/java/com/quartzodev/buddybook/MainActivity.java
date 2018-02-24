@@ -51,6 +51,7 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.google.android.gms.ads.AdRequest;
@@ -178,7 +179,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics(), new Answers());
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -1088,7 +1089,6 @@ public class MainActivity extends AppCompatActivity
             if(key != null && !key.equals("com.facebook.appevents.SessionInfo.sessionEndTime")){
                 refreshCurrentFragment();
             }
-
         }
     };
 
