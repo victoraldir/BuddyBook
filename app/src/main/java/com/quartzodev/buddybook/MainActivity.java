@@ -3,6 +3,7 @@ package com.quartzodev.buddybook;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +12,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
@@ -28,6 +31,7 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -47,6 +51,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
@@ -82,14 +87,34 @@ import com.quartzodev.provider.SuggestionProvider;
 import com.quartzodev.ui.BarcodeCaptureActivity;
 import com.quartzodev.utils.ConnectionUtils;
 import com.quartzodev.utils.Constants;
+import com.quartzodev.utils.DateUtils;
 import com.quartzodev.utils.DialogUtils;
 import com.quartzodev.utils.PathUtils;
 import com.quartzodev.views.DynamicImageView;
 import com.quartzodev.widgets.BuddyBookWidgetProvider;
 
+import org.supercsv.cellprocessor.ConvertNullTo;
+import org.supercsv.cellprocessor.FmtBool;
+import org.supercsv.cellprocessor.FmtDate;
+import org.supercsv.cellprocessor.Optional;
+import org.supercsv.cellprocessor.constraint.LMinMax;
+import org.supercsv.cellprocessor.constraint.NotNull;
+import org.supercsv.cellprocessor.constraint.UniqueHashCode;
+import org.supercsv.cellprocessor.ift.CellProcessor;
+import org.supercsv.io.CsvMapWriter;
+import org.supercsv.io.ICsvMapWriter;
+import org.supercsv.prefs.CsvPreference;
+
 import java.io.File;
+import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -716,11 +741,143 @@ public class MainActivity extends AppCompatActivity
                 DialogUtils.alertDialogSortList(mContext,mCoordinatorLayout);
 
                 break;
+            case R.id.action_export_csv:
+
+                Toast.makeText(mContext,"Should export to CSV folder: " + mFolderId,Toast.LENGTH_SHORT).show();
+
+                FirebaseDatabaseHelper.getInstance().findBookSearch(mUser.getUid(),mFolderId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Toast.makeText(mContext,"Found it: " + dataSnapshot.getValue(),Toast.LENGTH_SHORT).show();
+
+                        List<Book> bookList = new ArrayList<>();
+
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            Book book = child.getValue(Book.class);
+                            bookList.add(book);
+                        }
+
+                        try {
+                            writeWithCsvMapWriter(mFolderName, bookList);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                break;
             default:
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //TODO make it out of UI thread. Also place this logic somewhere else to keep MainActivity clean
+    private void writeWithCsvMapWriter(String folderTitle, List<Book> bookList) throws Exception {
+
+        final String[] header = new String[] {
+                "Folder Title",
+                "Book Title",
+                "Author",
+                "Publisher",
+                "Publishing Date",
+                "ISBN (10 - 13",
+                "Print type",
+                "Language",
+                "Number of page",
+                "Annotations",
+                "Description" };
+
+        // create the customer Maps (using the header elements for the column keys)
+
+        List<Map<String, Object>> mapList = new ArrayList<>();
+
+        for(Book book : bookList){
+
+            final Map<String, Object> row = new HashMap<>();
+            row.put(header[0], folderTitle);
+            row.put(header[1], book.getVolumeInfo().title);
+            row.put(header[2], book.getVolumeInfo().authors != null ?  book.getVolumeInfo().authors.get(0) : "");
+            row.put(header[3], book.getVolumeInfo().getPublisher());
+            //row.put(header[3], new GregorianCalendar(1945, Calendar.JUNE, 13).getTime());
+            //TODO set as Calendar so that user can order
+            row.put(header[4], book.getVolumeInfo().getPublishedDate());
+            row.put(header[5], book.getVolumeInfo().getIsbn10());
+            row.put(header[6], book.getVolumeInfo().getPrintType());
+            row.put(header[7], book.getVolumeInfo().language);
+            row.put(header[8], book.getVolumeInfo().pageCount);
+            row.put(header[9], book.getAnnotation());
+            row.put(header[10], book.getVolumeInfo().getDescription());
+
+            mapList.add(row);
+
+        }
+
+        ICsvMapWriter mapWriter = null;
+        try {
+
+            ContentValues values = new ContentValues();
+            Uri reportPathUri;
+            File reportPath = new File(getFilesDir(), "csvreports");
+            if(!reportPath.exists()) reportPath.mkdir();
+            File newFile = new File(reportPath, System.currentTimeMillis() + "report.csv");
+
+            mapWriter = new CsvMapWriter(new FileWriter(newFile),
+                    CsvPreference.STANDARD_PREFERENCE);
+
+            if (Build.VERSION.SDK_INT > 21) { //use this if Lollipop_Mr1 (API 22) or above
+                reportPathUri = FileProvider.getUriForFile(this, getPackageName()+".fileprovider", newFile);
+            } else {
+                reportPathUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            }
+
+            final CellProcessor[] processors = getProcessors();
+
+            // write the header
+            mapWriter.writeHeader(header);
+
+            // write the customer maps
+            for(Map<String, Object> row : mapList) {
+                mapWriter.write(row, header, processors);
+            }
+
+            Intent intent = new Intent(Intent.ACTION_SEND).setType("text/csv");
+            intent.putExtra(Intent.EXTRA_STREAM, reportPathUri);
+            startActivity(Intent.createChooser(intent, getString(R.string.send_to)));
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        finally {
+            if( mapWriter != null ) {
+                mapWriter.close();
+            }
+        }
+    }
+
+    private static CellProcessor[] getProcessors() {
+
+        final CellProcessor[] processors = new CellProcessor[] {
+                new ConvertNullTo("Null"), // customerNo (must be unique)
+                new ConvertNullTo("Null"), // firstName
+                new ConvertNullTo("Null"), // lastName
+                new ConvertNullTo("Null"), // birthDate
+                new ConvertNullTo("Null"), // mailingAddress
+                new ConvertNullTo("Null"), // married
+                new ConvertNullTo("Null"), // numberOfKids
+                new ConvertNullTo("Null"), // favouriteQuote
+                new ConvertNullTo("Null"), // email
+                new ConvertNullTo("Null"), // loyaltyPoints
+                new ConvertNullTo("Null")
+        };
+
+        return processors;
     }
 
     public void lauchInsertEditActivity(String bookId){

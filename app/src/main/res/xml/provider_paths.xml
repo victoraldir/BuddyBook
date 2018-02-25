@@ -2,4 +2,5 @@
 <paths>
     <files-path name="my_backups" path="backups/" />
     <files-path name="my_book_covers" path="covers/" />
+    <files-path name="my_csv_reports" path="csvreports/" />
 </paths>

@@ -6,6 +6,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="action_clear_search">Clear search history</string>
+    <string name="action_export_csv">Export CSV</string>
     <string name="action_do_backup">Backup/Restore</string>
     <string name="action_sign_out">Sign Out</string>
     <string name="action_remove">Remove</string>
@@ -82,19 +83,19 @@
 
     <string name="receiver_name_cd">Receiver name</string>
 
-
-    <string name="ad_app_id" translatable="false">ca-app-pub-6526073251385305~4440436428</string>
-    <string name="ad_inter_scanner_activity" translatable="false">ca-app-pub-6526073251385305/5917169627</string>
-    <string name="ad_bottom_details" translatable="false">ca-app-pub-6526073251385305/7915280029</string>
-    <string name="ad_bottom_books_main" translatable="false">ca-app-pub-6526073251385305/7393902820</string>
-
-
     <!--
+        <string name="ad_app_id" translatable="false">ca-app-pub-6526073251385305~4440436428</string>
+        <string name="ad_inter_scanner_activity" translatable="false">ca-app-pub-6526073251385305/5917169627</string>
+        <string name="ad_bottom_details" translatable="false">ca-app-pub-6526073251385305/7915280029</string>
+        <string name="ad_bottom_books_main" translatable="false">ca-app-pub-6526073251385305/7393902820</string>
+    -->
+
+
     <string name="ad_app_id" translatable="false">@string/ad_unit_test</string>
     <string name="ad_inter_scanner_activity">@string/ad_unit_test</string>
     <string name="ad_bottom_details" translatable="false">@string/ad_unit_test</string>
     <string name="ad_bottom_books_main" translatable="false">@string/ad_unit_test</string>
-    -->
+
 
     <string name="ad_unit_test" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
 
