@@ -745,7 +745,7 @@ public class MainActivity extends AppCompatActivity
 
                 Toast.makeText(mContext,"Should export to CSV folder: " + mFolderId,Toast.LENGTH_SHORT).show();
 
-                FirebaseDatabaseHelper.getInstance().findBookSearch(mUser.getUid(),mFolderId).addListenerForSingleValueEvent(new ValueEventListener() {
+                FirebaseDatabaseHelper.getInstance().findBookSearch(mUser.getUid(),mFolderId,new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Toast.makeText(mContext,"Found it: " + dataSnapshot.getValue(),Toast.LENGTH_SHORT).show();
