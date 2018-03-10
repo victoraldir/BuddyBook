@@ -37,6 +37,7 @@ public class BarcodeTrackerFactory implements MultiProcessor.Factory<Barcode> {
     @Override
     public Tracker<Barcode> create(Barcode barcode) {
 
+
         mListener.onBarcodeCreated(barcode);
 
         BarcodeGraphic graphic = new BarcodeGraphic(mGraphicOverlay);
