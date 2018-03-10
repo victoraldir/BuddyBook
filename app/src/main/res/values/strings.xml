@@ -231,4 +231,7 @@
     <string name="gallery">Gallery</string>
     <string name="add_image">Add Image</string>
 
+    <string name="generating_csv">Generating CSV</string>
+
+    <string name="loading_dot">Loading...</string>
 </resources>
