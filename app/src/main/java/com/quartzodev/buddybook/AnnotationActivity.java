@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.google.firebase.auth.FirebaseAuth;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 
@@ -43,7 +44,7 @@ public class AnnotationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics(), new Answers());
         setContentView(R.layout.activity_annotation);
 
         ButterKnife.bind(this);

@@ -1,5 +1,6 @@
 package com.quartzodev.buddybook;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -51,6 +52,7 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.google.android.gms.ads.AdRequest;
@@ -82,11 +84,13 @@ import com.quartzodev.ui.BarcodeCaptureActivity;
 import com.quartzodev.utils.ConnectionUtils;
 import com.quartzodev.utils.Constants;
 import com.quartzodev.utils.DialogUtils;
+import com.quartzodev.utils.ExportCSVUtil;
 import com.quartzodev.utils.PathUtils;
 import com.quartzodev.views.DynamicImageView;
 import com.quartzodev.widgets.BuddyBookWidgetProvider;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -178,7 +182,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Fabric.with(this, new Crashlytics());
+        Fabric.with(this, new Crashlytics(), new Answers());
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -227,7 +231,7 @@ public class MainActivity extends AppCompatActivity
             if (ConnectionUtils.isNetworkConnected(getApplication())) {
                 launchLoginActivityResult();
             }else{
-                showStatus(NO_INTERNET);
+                showStatus(NO_INTERNET, null);
             }
         }
     }
@@ -371,7 +375,7 @@ public class MainActivity extends AppCompatActivity
 
             if (resultCode == ErrorCodes.NO_NETWORK) {
 
-                showStatus(NO_INTERNET);
+                showStatus(NO_INTERNET, null);
 
             } else {
                 checkUserIsLoged();
@@ -383,7 +387,7 @@ public class MainActivity extends AppCompatActivity
 
                 Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
 
-                Fragment searchFragment = SearchResultFragment.newInstance(mFolderId, barcode.displayValue, R.menu.menu_search_result);
+                Fragment searchFragment = SearchResultFragment.newInstance(null, barcode.displayValue, R.menu.menu_search_result);
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_main_container, searchFragment).commitAllowingStateLoss();
@@ -422,7 +426,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void showStatus(int statusCode){
+    public void showStatus(int statusCode, String msg){
 
         switch (statusCode){
             case NO_INTERNET:
@@ -461,7 +465,7 @@ public class MainActivity extends AppCompatActivity
                 mLoadingContainer.setVisibility(View.VISIBLE);
                 mProgressBar.setVisibility(View.VISIBLE);
                 mTextViewMessage.setVisibility(View.VISIBLE);
-                mTextViewMessage.setText("Loading");
+                mTextViewMessage.setText(msg);
 
                 mFab.setVisibility(View.GONE);
                 mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -715,12 +719,45 @@ public class MainActivity extends AppCompatActivity
                 DialogUtils.alertDialogSortList(mContext,mCoordinatorLayout);
 
                 break;
+            case R.id.action_export_csv:
+
+                showStatus(LOADING, getString(R.string.generating_csv));
+
+                FirebaseDatabaseHelper.getInstance().findBookSearch(mUser.getUid(),mFolderId,new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        showStatus(READY, null);
+
+                        List<Book> bookList = new ArrayList<>();
+
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            Book book = child.getValue(Book.class);
+                            bookList.add(book);
+                        }
+
+                        try {
+                            ExportCSVUtil.writeWithCsvMapWriter(mFolderName == null ? getString(R.string.tab_my_books) : mFolderName, bookList,(Activity) mContext);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        showStatus(READY,null);
+                    }
+                });
+
+                break;
             default:
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     public void lauchInsertEditActivity(String bookId){
 
@@ -815,7 +852,7 @@ public class MainActivity extends AppCompatActivity
         updateWidget();
         loadMainViewPagerFragment();
         setupRateApp();
-        showStatus(READY);
+        showStatus(READY, null);
     }
 
     public void setupRateApp(){
@@ -1088,7 +1125,6 @@ public class MainActivity extends AppCompatActivity
             if(key != null && !key.equals("com.facebook.appevents.SessionInfo.sessionEndTime")){
                 refreshCurrentFragment();
             }
-
         }
     };
 

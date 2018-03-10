@@ -201,4 +201,10 @@
     <string name="gallery">Galeria</string>
     <string name="add_image">"Adicionar imagem "</string>
 
+    <string name="generating_csv">Gerando CSV</string>
+
+    <string name="loading_dot">Carregando...</string>
+
+    <string name="action_export_csv">Exportar CSV</string>
+
 </resources>

@@ -59,7 +59,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.google.android.gms.internal.zzahg.runOnUiThread;
+import static com.google.android.gms.internal.zzahn.runOnUiThread;
 
 /**
  * A placeholder fragment containing a simple view.

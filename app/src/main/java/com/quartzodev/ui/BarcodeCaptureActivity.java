@@ -57,6 +57,7 @@ import com.quartzodev.ui.camera.CameraSource;
 import com.quartzodev.ui.camera.CameraSourcePreview;
 import com.quartzodev.ui.camera.GraphicOverlay;
 import com.quartzodev.utils.Constants;
+import com.quartzodev.utils.StringUtils;
 
 import java.io.IOException;
 
@@ -463,6 +464,9 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
         mBarcode = barcode;
         vibrateDetection();
+
+        if(!StringUtils.isIsbn(mBarcode.displayValue))
+            return;
 
         if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) {
             runOnUiThread(new Runnable() {

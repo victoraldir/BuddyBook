@@ -16,17 +16,19 @@ android:
     # Uncomment the lines below if you want to
     # use the latest revision of Android SDK Tools
     - tools
-    - build-tools-26.0.2
-    - platform-tools
-    - android-27
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
+    - tools
+    - build-tools-27.0.2
+    - build-tools-27.0.3
+    #- platform-tools
+    #- android-27
+    #- extra-google-google_play_services
+    #- extra-google-m2repository
+    #- extra-android-m2repository
 
     # Specify at least one system image,
     # if you need to run emulator(s) during your tests
-    - sys-img-armeabi-v7a-android-27
-    - sys-img-armeabi-v7a-android-16
+    #- sys-img-armeabi-v7a-android-27
+    #- sys-img-armeabi-v7a-android-16
     
   licenses:
     - 'android-sdk-preview-license-52d11cd2'
@@ -34,13 +36,9 @@ android:
     - 'google-gdk-license-.+'
     
 before_install:
-    - chmod +x gradlew
-    - mkdir "$ANDROID_HOME/licenses"
-    - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-    - touch fabric.properties
-    - touch gradle.properties
-    - echo "GOODREADS_API_KEY="123"" >> gradle.properties
-    - echo "GOOGLE_BOOK_API_KEY="123"" >> gradle.properties
-    - echo "apiKey="123"" >> fabric.properties
+    - mkdir "$ANDROID_HOME/licenses" || true
+    - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
+    - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd\n504667f4c0de7af1a06de9f4b1727b84351f2910" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+    - yes | sdkmanager "platforms;android-27"
 
 script: ./gradlew clean assembleDebug check
