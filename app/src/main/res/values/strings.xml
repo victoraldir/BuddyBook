@@ -92,7 +92,7 @@
 
 
     <string name="ad_app_id" translatable="false">@string/ad_unit_test</string>
-    <string name="ad_inter_scanner_activity">@string/ad_unit_test</string>
+    <string name="ad_inter_scanner_activity" translatable="false">@string/ad_unit_test</string>
     <string name="ad_bottom_details" translatable="false">@string/ad_unit_test</string>
     <string name="ad_bottom_books_main" translatable="false">@string/ad_unit_test</string>
 
