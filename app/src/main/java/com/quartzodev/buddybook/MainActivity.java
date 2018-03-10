@@ -387,7 +387,7 @@ public class MainActivity extends AppCompatActivity
 
                 Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
 
-                Fragment searchFragment = SearchResultFragment.newInstance(mFolderId, barcode.displayValue, R.menu.menu_search_result);
+                Fragment searchFragment = SearchResultFragment.newInstance(null, barcode.displayValue, R.menu.menu_search_result);
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_main_container, searchFragment).commitAllowingStateLoss();
