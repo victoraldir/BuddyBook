@@ -104,7 +104,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.quartzodev.buddybook.DetailActivity" />
         </activity>
-        <activity android:name=".InsertEditBookActivity"
+        <activity android:name="com.quartzodev.inserteditbook.InsertEditBookActivity"
             android:launchMode="singleTop"/>
     </application>
 

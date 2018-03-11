@@ -144,6 +144,8 @@ dependencies {
     //Espresso Idling
     compile 'com.android.support.test.espresso:espresso-idling-resource:3.0.1'
 
+    compile "com.google.guava:guava:$rootProject.guavaVersion"
+
     compile('com.squareup.retrofit2:converter-simplexml:2.3.0') {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'stax', module: 'stax-api'

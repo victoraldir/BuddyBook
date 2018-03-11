@@ -761,7 +761,7 @@ public class MainActivity extends AppCompatActivity
 
     public void lauchInsertEditActivity(String bookId){
 
-        Intent it = new Intent(mContext, InsertEditBookActivity.class);
+        Intent it = new Intent(mContext, com.quartzodev.inserteditbook.InsertEditBookActivity.class);
 
         if(bookId != null)
             it.putExtra(InsertEditBookActivity.ARG_BOOK_ID,bookId);
