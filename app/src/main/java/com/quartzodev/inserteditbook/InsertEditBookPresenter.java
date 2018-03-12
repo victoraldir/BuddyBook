@@ -1,7 +1,5 @@
 package com.quartzodev.inserteditbook;
 
-import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
 import android.support.annotation.NonNull;
 
 import com.quartzodev.data.Book;
@@ -10,15 +8,14 @@ import com.quartzodev.data.Book;
  * Created by victoraldir on 11/03/2018.
  */
 
-public class InsertEditBookPresenter extends AndroidViewModel implements InsertEditBookContract.Presenter {
+public class InsertEditBookPresenter implements InsertEditBookContract.Presenter {
 
     @NonNull
     private final InsertEditBookContract.View mInsertEditBookView;
 
     private String mBookId;
 
-    public InsertEditBookPresenter(@NonNull Application application, InsertEditBookContract.View view, String bookId){
-        super(application);
+    public InsertEditBookPresenter(InsertEditBookContract.View view, String bookId){
 
         mInsertEditBookView = view;
         mBookId = bookId;
