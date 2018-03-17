@@ -241,7 +241,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         }
     }
 
-    private void renderImage(Object image){
+    public void renderImage(Object image){
 
         mPictureChosen = image.toString();
 
@@ -313,7 +313,6 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
         if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
                 android.Manifest.permission.CAMERA)) {
-
             requestPermission(Manifest.permission.CAMERA, RC_CAMERA_PERM);
         }
     }
@@ -465,11 +464,6 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         @Override
         public void onResourceReady(final Bitmap resource, Transition<? super Bitmap> transition) {
 
-            int valueWidth = (int) getResources().getDimension(R.dimen.book_cover_width);
-            int valueHeight = (int) getResources().getDimension(R.dimen.book_cover_height);
-
-
-            //final Bitmap scaledBitmap = Bitmap.createScaledBitmap(resource, valueWidth, valueHeight, true);
             mPhoto.setImageBitmap(resource);
             mPhoto.invalidate();
 

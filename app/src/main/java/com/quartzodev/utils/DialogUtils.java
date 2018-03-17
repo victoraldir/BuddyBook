@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -33,6 +35,16 @@ import java.util.List;
  */
 
 public class DialogUtils {
+
+    public static void showMultipleOptionDialog(final Context context, CharSequence[] items,
+                                                DialogInterface.OnClickListener callBack){
+
+        android.app.AlertDialog.Builder alertdialog = new android.app.AlertDialog.Builder(context);
+        alertdialog.setTitle(context.getString(R.string.add_image));
+        alertdialog.setItems(items, callBack);
+        alertdialog.show();
+
+    }
 
     public static void alertDialogDeleteFolder(final Context context, Folder folder, DialogInterface.OnClickListener onClickListener) {
 
