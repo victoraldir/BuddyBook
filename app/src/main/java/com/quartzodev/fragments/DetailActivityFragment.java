@@ -59,7 +59,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.google.android.gms.internal.zzahn.runOnUiThread;
+
 
 /**
  * A placeholder fragment containing a simple view.
@@ -351,22 +351,14 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             mPhoto.setContentDescription(str);
         }
 
-        if (book.isCustom()) {
-
-//            mPhoto.setOnClickListener(onPhotoClick);
-//            mPhotoNoImage.setOnClickListener(onPhotoClick);
-        }
-
         if (book.getVolumeInfo().getImageLink() == null) {
-
-            runOnUiThread(new Runnable() {
+            new Thread(new Runnable() {
                 @Override
                 public void run() {
-
                     mPhotoNoImage.setImageDrawable(generateTextDrawable());
                     mPhotoNoImage.invalidate();
                 }
-            });
+            }).start();
 
         }
     }

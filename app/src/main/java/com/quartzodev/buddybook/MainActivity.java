@@ -525,11 +525,11 @@ public class MainActivity extends AppCompatActivity
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setTheme(R.style.LoginTheme)
-                        .setIsSmartLockEnabled(!BuildConfig.DEBUG)
+                        .setIsSmartLockEnabled(false)
                         .setAvailableProviders(
-                                Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
-                                        new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
+                                Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(),
+                                        new AuthUI.IdpConfig.GoogleBuilder().build(),
+                                        new AuthUI.IdpConfig.FacebookBuilder().build()))
                         .build(),
                 RC_SIGN_IN);
 
@@ -761,7 +761,7 @@ public class MainActivity extends AppCompatActivity
 
     public void lauchInsertEditActivity(String bookId){
 
-        Intent it = new Intent(mContext, InsertEditBookActivity.class);
+        Intent it = new Intent(mContext, com.quartzodev.inserteditbook.InsertEditBookActivity.class);
 
         if(bookId != null)
             it.putExtra(InsertEditBookActivity.ARG_BOOK_ID,bookId);
