@@ -12,13 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +27,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -47,6 +41,12 @@ import com.quartzodev.utils.AnimationUtils;
 import java.io.File;
 import java.util.Collections;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
@@ -120,9 +120,9 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
         ButterKnife.bind(this);
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mPictureChosen = savedInstanceState.getString(SAVE_PICTURE);
-            if(mPictureChosen != null)
+            if (mPictureChosen != null)
                 renderImage(mPictureChosen);
         }
 
@@ -137,27 +137,27 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(getString(R.string.insert_new_book));
 
-        if(mFolderId == null){
+        if (mFolderId == null) {
             mFolderId = FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER;
         }
 
-        if(mFolderName == null){
+        if (mFolderName == null) {
             mFolderName = getString(R.string.tab_my_books);
         }
 
-        getSupportActionBar().setSubtitle(String.format(getString(R.string.folder_subtitle),mFolderName));
+        getSupportActionBar().setSubtitle(String.format(getString(R.string.folder_subtitle), mFolderName));
 
         mPhoto.setOnClickListener(this);
         mPhotoNoImage.setOnClickListener(this);
 
-        if(mBookId == null){
+        if (mBookId == null) {
             setLoading(false);
-        }else{
+        } else {
             loadBook();
         }
     }
 
-    public void loadBook(){
+    public void loadBook() {
 
         FirebaseDatabaseHelper.getInstance().findBook(mUserId, mFolderId, mBookId, new ValueEventListener() {
             @Override
@@ -165,7 +165,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
                 setLoading(false);
 
-                if(dataSnapshot.getValue() != null){
+                if (dataSnapshot.getValue() != null) {
 
                     Book book = dataSnapshot.getValue(Book.class);
 
@@ -175,21 +175,21 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(mContext,"Error loading book",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Error loading book", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-    private void populateForm(Book book){
+    private void populateForm(Book book) {
 
         VolumeInfo volumeInfo = book.getVolumeInfo();
 
         mTitle.setText(volumeInfo.getTitle());
-        if(volumeInfo.getAuthors() != null)
+        if (volumeInfo.getAuthors() != null)
             mAuthor.setText(volumeInfo.getAuthors().get(0));
 
-        if(volumeInfo.getImageLink() != null && volumeInfo.getImageLink().getThumbnail() != null)
+        if (volumeInfo.getImageLink() != null && volumeInfo.getImageLink().getThumbnail() != null)
             renderImage(volumeInfo.getImageLink().getThumbnail());
 
         mDescription.setText(volumeInfo.getDescription());
@@ -202,11 +202,11 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         mAnnotation.setText(book.getAnnotation());
     }
 
-    private void setLoading(boolean flag){
-        if(!flag){
+    private void setLoading(boolean flag) {
+        if (!flag) {
             mInsertContainer.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
-        }else{
+        } else {
             mInsertContainer.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.VISIBLE);
         }
@@ -215,7 +215,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
     @Override
     protected void onSaveInstanceState(Bundle outState) {
 
-        outState.putString(SAVE_PICTURE,mPictureChosen);
+        outState.putString(SAVE_PICTURE, mPictureChosen);
 
         super.onSaveInstanceState(outState);
     }
@@ -241,7 +241,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         }
     }
 
-    public void renderImage(Object image){
+    public void renderImage(Object image) {
 
         mPictureChosen = image.toString();
 
@@ -270,7 +270,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
                 return true;
 
             case R.id.action_save_book:
-                if(mInsertContainer.getVisibility() == View.VISIBLE){
+                if (mInsertContainer.getVisibility() == View.VISIBLE) {
                     saveBook();
                 }
                 break;
@@ -282,11 +282,11 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
     private void callCamera() {
         ContentValues values = new ContentValues();
         File imagePath = new File(getFilesDir(), "covers");
-        if(!imagePath.exists()) imagePath.mkdir();
+        if (!imagePath.exists()) imagePath.mkdir();
         File newFile = new File(imagePath, System.currentTimeMillis() + "photo.png");
 
         if (Build.VERSION.SDK_INT > 21) { //use this if Lollipop_Mr1 (API 22) or above
-            mPicturePath = FileProvider.getUriForFile(this, getPackageName()+".fileprovider", newFile);
+            mPicturePath = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", newFile);
         } else {
             mPicturePath = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         }
@@ -386,7 +386,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
     }
 
-    public void moreFields(View view){
+    public void moreFields(View view) {
 
         if (mMoreFieldsContainer.getVisibility() == View.VISIBLE) {
             AnimationUtils.collapse(mMoreFieldsContainer);
@@ -397,7 +397,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
     }
 
-    private Book buildBookFromForm(){
+    private Book buildBookFromForm() {
 
         Book book = new Book();
         VolumeInfo volumeInfo = new VolumeInfo();
@@ -405,7 +405,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
         book.setId(mBookId);
 
-        if(mPictureChosen != null){
+        if (mPictureChosen != null) {
             imageLink.setThumbnail(mPictureChosen);
             imageLink.setSmallThumbnail(mPictureChosen);
         }
@@ -430,16 +430,15 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
     }
 
 
-
-    private boolean saveBook(){
+    private boolean saveBook() {
 
         Book newBook = buildBookFromForm();
 
-        if(validateBook(newBook)){
-            if(mFolderId == null)
+        if (validateBook(newBook)) {
+            if (mFolderId == null)
                 mFolderId = FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER;
 
-            FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId, mFolderId, newBook,this);
+            FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId, mFolderId, newBook, this);
 
             return true;
         }
@@ -447,12 +446,12 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         return false;
     }
 
-    private boolean validateBook(Book book){
+    private boolean validateBook(Book book) {
 
-        if(book.getVolumeInfo().getTitle() == null){
+        if (book.getVolumeInfo().getTitle() == null) {
             mTitle.setError("Title cannot be empty");
             return false;
-        }else if (book.getVolumeInfo().getTitle().isEmpty()){
+        } else if (book.getVolumeInfo().getTitle().isEmpty()) {
             mTitle.setError("Title cannot be empty");
             return false;
         }
@@ -475,7 +474,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onInsertBook(boolean success) {
-        if(success){
+        if (success) {
             setResult(Activity.RESULT_OK, new Intent());
             finish();
         }

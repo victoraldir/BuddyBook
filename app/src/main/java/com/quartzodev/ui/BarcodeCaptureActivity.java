@@ -29,11 +29,6 @@ import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +46,7 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.android.material.snackbar.Snackbar;
 import com.quartzodev.buddybook.BuildConfig;
 import com.quartzodev.buddybook.R;
 import com.quartzodev.ui.camera.CameraSource;
@@ -61,6 +57,10 @@ import com.quartzodev.utils.StringUtils;
 
 import java.io.IOException;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -92,6 +92,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
     //Adsense stuff
     private InterstitialAd mInterstitialAd;
     private AdManager adManager;
+
     /**
      * Initializes the UI and creates the detector pipeline.
      */
@@ -102,7 +103,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
         ButterKnife.bind(this);
 
-        if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)){
+        if (BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) {
             mInterstitialAd = new InterstitialAd(this);
             mInterstitialAd.setAdUnitId(getString(R.string.ad_inter_scanner_activity));
             adManager = new AdManager();
@@ -171,23 +172,23 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
 
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
-            if (item.getItemId() == R.id.action_flash){
-                if(mCameraSource.isFlashSupported()) {
+            if (item.getItemId() == R.id.action_flash) {
+                if (mCameraSource.isFlashSupported()) {
                     if (mCameraSource.getFlashMode().equals(Camera.Parameters.FLASH_MODE_OFF)) {
 
                         mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                         item.setIcon(R.drawable.ic_flash_off);
-                        Toast.makeText(this,getString(R.string.flash_on),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.flash_on), Toast.LENGTH_SHORT).show();
 
                     } else {
 
                         mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                         item.setIcon(R.drawable.ic_action_flash);
-                        Toast.makeText(this,getString(R.string.flash_off),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.flash_off), Toast.LENGTH_SHORT).show();
 
                     }
-                }else{
-                    Toast.makeText(this,getString(R.string.no_flash),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, getString(R.string.no_flash), Toast.LENGTH_SHORT).show();
                 }
             }
         } else {
@@ -316,7 +317,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         super.onResume();
         startCameraSource();
 
-        if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE))
+        if (BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE))
             loadAdRequest();
 
     }
@@ -465,17 +466,17 @@ public final class BarcodeCaptureActivity extends AppCompatActivity implements B
         mBarcode = barcode;
         vibrateDetection();
 
-        if(!StringUtils.isIsbn(mBarcode.displayValue))
+        if (!StringUtils.isIsbn(mBarcode.displayValue))
             return;
 
-        if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) {
+        if (BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     showInterstitialAd();
                 }
             });
-        }else{
+        } else {
             sendResultMainActivity();
         }
     }

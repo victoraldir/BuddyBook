@@ -1,8 +1,6 @@
 package com.quartzodev.buddybook;
 
 import android.content.Context;
-import android.support.test.InstrumentationRegistry;
-import android.support.test.runner.AndroidJUnit4;
 
 import com.google.firebase.database.FirebaseDatabase;
 import com.quartzodev.api.APIService;
@@ -15,6 +13,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+
+import androidx.test.InstrumentationRegistry;
+import androidx.test.runner.AndroidJUnit4;
 
 import static org.junit.Assert.assertEquals;
 
@@ -44,7 +45,7 @@ public class ExampleInstrumentedTest {
     @Test
     @Ignore
     public void shouldGetBookByISBNGoodreads() throws IOException, InterruptedException {
-        
+
         IQuery query = APIService.getInstance().getService(APIService.GOODREADS);
 
         FirebaseDatabaseHelper db = FirebaseDatabaseHelper.getInstance();

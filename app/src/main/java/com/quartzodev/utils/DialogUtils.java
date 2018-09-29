@@ -6,17 +6,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
@@ -30,6 +27,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 /**
  * Created by victoraldir on 28/03/2017.
  */
@@ -37,7 +36,7 @@ import java.util.List;
 public class DialogUtils {
 
     public static void showMultipleOptionDialog(final Context context, CharSequence[] items,
-                                                DialogInterface.OnClickListener callBack){
+                                                DialogInterface.OnClickListener callBack) {
 
         android.app.AlertDialog.Builder alertdialog = new android.app.AlertDialog.Builder(context);
         alertdialog.setTitle(context.getString(R.string.add_image));
@@ -108,7 +107,7 @@ public class DialogUtils {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        PrefUtils.setSortMode(context,i);
+                        PrefUtils.setSortMode(context, i);
 
                         dialogInterface.dismiss();
 
@@ -256,7 +255,7 @@ public class DialogUtils {
 
                             book.setLend(lend);
 
-                            if(menuItem != null){
+                            if (menuItem != null) {
                                 menuItem.setTitle(activity.getString(R.string.action_return_lend));
                             }
 
@@ -367,7 +366,7 @@ public class DialogUtils {
         edtAuthor.setSingleLine(true);
         final EditText edtPublisher = view.findViewById(R.id.add_book_publisher);
         edtPublisher.setSingleLine(true);
-        final TextInputLayout layoutTitle =  view.findViewById(R.id.layout_title);
+        final TextInputLayout layoutTitle = view.findViewById(R.id.layout_title);
 //        final TextInputLayout layoutAuthor =  view.findViewById(R.id.layout_author);
 //        final TextInputLayout layoutPublisher =  view.findViewById(R.id.layout_publisher);
 
@@ -403,12 +402,12 @@ public class DialogUtils {
                         customBookApi.setVolumeInfo(volumeInfo);
                         customBookApi.setCustom(true);
 
-                        if(folderId == null){
+                        if (folderId == null) {
                             mFirebaseDatabaseHelper.insertBookFolder(userId,
                                     FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,
                                     customBookApi,
                                     (MainActivity) activity);
-                        }else{
+                        } else {
                             mFirebaseDatabaseHelper.insertBookFolder(userId,
                                     folderId,
                                     customBookApi,
@@ -420,7 +419,6 @@ public class DialogUtils {
                         dialog.dismiss();
                     }
                 });
-
 
 
             }

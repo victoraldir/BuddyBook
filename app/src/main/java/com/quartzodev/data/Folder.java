@@ -1,9 +1,10 @@
 package com.quartzodev.data;
 
 import android.os.Parcel;
-import android.support.annotation.Keep;
 
 import java.util.Map;
+
+import androidx.annotation.Keep;
 
 /**
  * Created by victoraldir on 26/03/2017.
@@ -15,6 +16,7 @@ public class Folder {
     private String description;
     private boolean isCustom;
     private Map<String, Book> books;
+
     public Folder() {
     }
 
@@ -60,7 +62,7 @@ public class Folder {
 
     @Override
     public boolean equals(Object o) {
-        if(description == null) return false;
+        if (description == null) return false;
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 

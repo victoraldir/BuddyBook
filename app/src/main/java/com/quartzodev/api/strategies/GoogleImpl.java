@@ -19,7 +19,7 @@ import java.util.List;
  * Created by victoraldir on 15/06/2017.
  */
 
-public class GoogleImpl implements IQuery{
+public class GoogleImpl implements IQuery {
 
     private IGoogleBookAPI mIGoogleBookAPI;
     private String mKey;
@@ -40,9 +40,9 @@ public class GoogleImpl implements IQuery{
         try {
             BookResponse bookResponse = mIGoogleBookAPI.getBooks(query, mKey).execute().body();
 
-            if(bookResponse != null && bookResponse.getItems() != null){
+            if (bookResponse != null && bookResponse.getItems() != null) {
 
-                for (int x=0 ; x < bookResponse.getItems().size(); x++){
+                for (int x = 0; x < bookResponse.getItems().size(); x++) {
 
                     BookApi bookApi = bookResponse.getItems().get(x);
                     bookList.add(parseBookApiToBook(bookApi));
@@ -63,10 +63,10 @@ public class GoogleImpl implements IQuery{
         List<Book> bookList = new ArrayList<>();
 
         try {
-            BookResponse bookResponse = mIGoogleBookAPI.getBooksMaxResult(query,maxResults,mKey).execute().body();
+            BookResponse bookResponse = mIGoogleBookAPI.getBooksMaxResult(query, maxResults, mKey).execute().body();
 
-            if(bookResponse != null && bookResponse.getItems() != null){
-                for (int x=0 ; x < bookResponse.getItems().size(); x++){
+            if (bookResponse != null && bookResponse.getItems() != null) {
+                for (int x = 0; x < bookResponse.getItems().size(); x++) {
 
                     BookApi bookApi = bookResponse.getItems().get(x);
                     bookList.add(parseBookApiToBook(bookApi));
@@ -89,11 +89,11 @@ public class GoogleImpl implements IQuery{
 
             String query = "isbn:" + isbn;
 
-            BookResponse bookResponse = mIGoogleBookAPI.getBooksMaxResult(query,1,mKey).execute().body();
-            if(bookResponse != null && bookResponse.getItems() != null && !bookResponse.getItems().isEmpty()){
+            BookResponse bookResponse = mIGoogleBookAPI.getBooksMaxResult(query, 1, mKey).execute().body();
+            if (bookResponse != null && bookResponse.getItems() != null && !bookResponse.getItems().isEmpty()) {
 
-                    BookApi bookApi = bookResponse.getItems().get(0);
-                    book = parseBookApiToBook(bookApi);
+                BookApi bookApi = bookResponse.getItems().get(0);
+                book = parseBookApiToBook(bookApi);
             }
 
         } catch (IOException e) {
@@ -103,7 +103,7 @@ public class GoogleImpl implements IQuery{
         return book;
     }
 
-    private Book parseBookApiToBook(BookApi bookApi){
+    private Book parseBookApiToBook(BookApi bookApi) {
 
         Book book = null;
 
@@ -128,16 +128,16 @@ public class GoogleImpl implements IQuery{
             volumeInfo.setLanguage(bookApi.getVolumeInfo().getLanguage());
             volumeInfo.setPrintType(bookApi.getVolumeInfo().getPrintType());
 
-            if(bookApi.getVolumeInfo().getIndustryIdentifiers() != null){
+            if (bookApi.getVolumeInfo().getIndustryIdentifiers() != null) {
                 List<IndustryIdentifier> industryIdentifiers = bookApi.getVolumeInfo().getIndustryIdentifiers();
 
-                for(int x = 0; x < industryIdentifiers.size(); x++){
+                for (int x = 0; x < industryIdentifiers.size(); x++) {
 
                     IndustryIdentifier industryIdentifier = industryIdentifiers.get(x);
 
-                    if(industryIdentifier.getType().equals(ISBN_10)){
+                    if (industryIdentifier.getType().equals(ISBN_10)) {
                         volumeInfo.setIsbn10(industryIdentifier.getIdentifier());
-                    }else if(industryIdentifier.getType().equals(ISBN_13)){
+                    } else if (industryIdentifier.getType().equals(ISBN_13)) {
                         volumeInfo.setIsbn13(industryIdentifier.getIdentifier());
                     }
                 }
@@ -153,7 +153,7 @@ public class GoogleImpl implements IQuery{
 
             book.setVolumeInfo(volumeInfo);
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
         }
 

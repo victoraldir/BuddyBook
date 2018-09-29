@@ -8,14 +8,16 @@
     android:visibility="visible"
     android:id="@+id/insert_container">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context="com.quartzodev.buddybook.InsertEditBookActivity">
 
-        <include android:id="@+id/include_book_photo" layout="@layout/content_book_photo"/>
+        <include
+            android:id="@+id/include_book_photo"
+            layout="@layout/content_book_photo" />
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,7 +28,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include_book_photo">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/insert_edit_editext_title"
                 android:layout_width="match_parent"
                 android:maxLines="1"
@@ -36,9 +38,9 @@
                 android:maxLength="35"
                 android:inputType="textPersonName" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/layout_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,7 +51,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout_title">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/insert_edit_editext_author"
                 android:layout_width="match_parent"
                 android:maxLines="1"
@@ -59,30 +61,30 @@
                 android:maxLength="25"
                 android:inputType="textPersonName" />
 
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
-                android:id="@+id/layout_publisher"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_publisher"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_author">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/insert_edit_editext_publisher"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/layout_author">
+                android:maxLines="1"
+                android:hint="@string/publisher"
+                android:ems="10"
+                android:maxLength="25"
+                android:inputType="textPersonName" />
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/insert_edit_editext_publisher"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:hint="@string/publisher"
-                    android:ems="10"
-                    android:maxLength="25"
-                    android:inputType="textPersonName"/>
-
-            </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/btn_more_fields"
@@ -97,8 +99,8 @@
             app:layout_constraintTop_toBottomOf="@+id/layout_publisher"
             android:textColor="#0645AD" />
 
-        <include layout="@layout/content_more_fields" ></include>
+        <include layout="@layout/content_more_fields"></include>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

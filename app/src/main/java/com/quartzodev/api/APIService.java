@@ -33,7 +33,7 @@ public class APIService {
         initService();
     }
 
-    private void initService(){
+    private void initService() {
         // Add the interceptor to OkHttpClient
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         OkHttpClient client = builder
@@ -68,12 +68,12 @@ public class APIService {
     }
 
 
-    public IQuery getService(int typeService){
+    public IQuery getService(int typeService) {
 
-        switch (typeService){
-            case GOOGLE :
+        switch (typeService) {
+            case GOOGLE:
                 return new GoogleImpl(mGoogleService);
-            case GOODREADS :
+            case GOODREADS:
                 return new GoodreadsImpl(mGoodreadsService);
             default:
                 return null;

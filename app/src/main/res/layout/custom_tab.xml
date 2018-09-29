@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,7 +15,7 @@
         android:paddingStart="6dp"
         android:paddingLeft="6dp"
         android:paddingRight="6dp"
-        android:paddingEnd="6dp"/>
+        android:paddingEnd="6dp" />
 
     <TextView
         android:id="@+id/tab_title"
@@ -25,5 +24,5 @@
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:gravity="center"
-        tools:text="My book"/>
+        tools:text="My book" />
 </LinearLayout>

@@ -3,8 +3,6 @@ package com.quartzodev.buddybook;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Selection;
 import android.view.MenuItem;
@@ -15,6 +13,8 @@ import com.crashlytics.android.answers.Answers;
 import com.google.firebase.auth.FirebaseAuth;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
@@ -96,10 +96,10 @@ public class AnnotationActivity extends AppCompatActivity {
         setResultContent();
     }
 
-    private void setResultContent(){
+    private void setResultContent() {
         Intent resultIntent = new Intent();
         mContent = mContentEditText.getText().toString().trim();
-        resultIntent.putExtra(ARG_CONTENT,mContent);
+        resultIntent.putExtra(ARG_CONTENT, mContent);
         mFirebaseDatabaseHelper.updateBookAnnotation(mFirebaseAuth.getCurrentUser().getUid(),
                 mFolderId,
                 mBookId,

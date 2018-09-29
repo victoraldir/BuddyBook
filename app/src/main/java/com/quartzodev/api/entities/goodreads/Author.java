@@ -7,7 +7,7 @@ import org.simpleframework.xml.Root;
  * Created by victoraldir on 15/06/2017.
  */
 
-@Root(name = "author",strict = false)
+@Root(name = "author", strict = false)
 public class Author {
 
     @Element

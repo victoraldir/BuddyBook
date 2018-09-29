@@ -1,20 +1,18 @@
-import com.google.gms.googleservices.GoogleServicesPlugin
-
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "com.quartzodev.buddybook"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 47
         versionName "1.2.4.1"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resConfigs "en"
 
@@ -74,109 +72,57 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.firebase:firebase-core:16.0.3'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation "com.google.firebase:firebase-core:16.0.3"
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
     implementation files('libs/super-csv-2.4.0.jar')
-
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-
-    implementation 'com.jakewharton:butterknife:8.8.1'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-
-    // FirebaseUI for Firebase Realtime Database
-    implementation 'com.firebaseui:firebase-ui-database:4.1.0'
-
-//    implementation 'com.google.firebase:firebase-database:16.0.1'
-
-    /**
-     * firebase-ui-auth
-     |--- com.google.firebase:firebase-auth
-     |--- com.google.android.gms:play-services-auth
-     */
-
-    // FirebaseUI for Firebase Auth
-    implementation 'com.firebaseui:firebase-ui-auth:4.1.0'
-//    implementation 'com.google.firebase:firebase-auth:16.0.1'
-    implementation 'com.google.android.gms:play-services-auth:16.0.0'
-    //Code is breaking without it and I don't know why
-//    implementation("com.twitter.sdk.android:twitter-core:3.0.0@aar") { transitive = true }
-
-    // Required only if Facebook login support is required
-    implementation 'com.facebook.android:facebook-login:4.27.0'
-
-    //Firebase remote config
-    freeImplementation 'com.google.firebase:firebase-config:16.0.0'
-
-    //Crash report
-    implementation('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
+    implementation 'com.firebaseui:firebase-ui-database:4.2.0'
+    implementation 'com.firebaseui:firebase-ui-auth:4.2.0'
+    implementation 'com.facebook.android:facebook-login:4.33.0'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
         transitive = true
     }
 
-    //Google Vision
+    implementation 'com.google.android.gms:play-services-auth:16.0.0'
     implementation 'com.google.android.gms:play-services-vision:15.0.2'
-    //Joda
-    implementation 'net.danlew:android.joda:2.9.9'
-    //Admobi
     implementation 'com.google.android.gms:play-services-ads:15.0.1'
-    //Calligraphy
+    implementation 'net.danlew:android.joda:2.9.9.4'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
-
-    //Okhttp
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-
-    //Glide
-    implementation ('com.github.bumptech.glide:glide:4.7.1'){
-        exclude group: "com.android.support"
-    }
-
-    implementation 'com.github.bumptech.glide:annotations:4.7.1'
-
-    //OKhttp Glide integration
-    implementation "com.github.bumptech.glide:okhttp3-integration:4.7.1"
-
-    //TextDrawable
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
+    implementation 'com.github.bumptech.glide:annotations:4.8.0'
+    implementation "com.github.bumptech.glide:okhttp3-integration:4.8.0"
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-
-    //Android-Rate
     implementation 'com.github.hotchemi:android-rate:1.0.1'
-
     implementation 'com.google.code.gson:gson:2.8.5'
-
-    implementation 'com.android.support:multidex:1.0.3'
-
-    //Espresso Idling
-    implementation 'com.android.support.test.espresso:espresso-idling-resource:3.0.2'
-
+    implementation 'androidx.multidex:multidex:2.0.0'
     implementation "com.google.guava:guava:$rootProject.guavaVersion"
-
-    implementation('com.squareup.retrofit2:converter-simplexml:2.3.0') {
+    implementation('com.squareup.retrofit2:converter-simplexml:2.4.0') {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'
     }
-
-    implementation('com.mikepenz:aboutlibraries:5.9.6@aar') {
+    implementation('com.mikepenz:aboutlibraries:6.2.0') {
         transitive = true
     }
 
-    testImplementation 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+    implementation 'androidx.annotation:annotation:1.0.0'
 
-    implementation 'com.android.support:support-annotations:27.1.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    freeImplementation 'com.google.firebase:firebase-config:16.0.0'
+
+    implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+
+    testImplementation 'junit:junit:4.12'
+
 }
 
-apply plugin: 'com.google.gms.google-services'
+com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
+
 repositories {
     mavenCentral()
 }
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-android'
 
-GoogleServicesPlugin.config.disableVersionCheck = true

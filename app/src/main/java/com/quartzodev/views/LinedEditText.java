@@ -11,7 +11,7 @@ import android.util.AttributeSet;
  * Created by victoraldir on 03/10/2017.
  */
 
-public class LinedEditText extends android.support.v7.widget.AppCompatEditText {
+public class LinedEditText extends androidx.appcompat.widget.AppCompatEditText {
 
     private Rect mRect;
     private Paint mPaint;

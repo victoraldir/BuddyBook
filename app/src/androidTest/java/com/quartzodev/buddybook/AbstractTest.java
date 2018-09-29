@@ -6,7 +6,7 @@ package com.quartzodev.buddybook;
 
 public class AbstractTest {
 
-    public void sleep(long millis){
+    public void sleep(long millis) {
 
         try {
             Thread.sleep(millis);

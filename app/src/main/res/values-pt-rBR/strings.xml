@@ -88,9 +88,6 @@
     <string name="receiver_name_cd">Nome do recebedor</string>
 
 
-
-
-
     <string name="aboutLibraries_description_text">
 
          <![CDATA[
@@ -126,9 +123,6 @@
     <string name="action_share">Compartilhar</string>
     <string name="checkbook">Olhe esse livro</string>
     <string name="borrowed_book">Livro emprestado</string>
-
-
-
 
 
     <string name="empty_list">Sem dados</string>

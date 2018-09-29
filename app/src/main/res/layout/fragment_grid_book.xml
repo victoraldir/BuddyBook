@@ -9,7 +9,7 @@
     android:orientation="vertical"
     tools:context="com.quartzodev.buddybook.MainActivity">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_books"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         android:paddingBottom="@dimen/content_padding_bottom_adview"
         android:layout_weight="1"
         android:visibility="gone"
-        app:layoutManager="android.support.v7.widget.StaggeredGridLayoutManager"
+        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="com.quartzodev.buddybook.MainActivity" />
 

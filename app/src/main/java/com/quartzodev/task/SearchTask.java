@@ -1,7 +1,6 @@
 package com.quartzodev.task;
 
 import android.content.Context;
-import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import com.quartzodev.api.APIService;
@@ -9,6 +8,8 @@ import com.quartzodev.data.Book;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.loader.content.AsyncTaskLoader;
 
 /**
  * Created by victoraldir on 14/05/2017.
@@ -83,15 +84,15 @@ public class SearchTask extends AsyncTaskLoader<List<Book>> {
         //MaxResult == 1 is a ISBN query TODO make it nicer!
         if (mMaxResult != null && mMaxResult == 1) {
 
-            Log.i(LOG,"Searching for: " + mQuery);
+            Log.i(LOG, "Searching for: " + mQuery);
 
             Book book = APIService.getInstance().getService(APIService.GOOGLE).getBookByISBN(mQuery);
 
-            if(book == null){
+            if (book == null) {
                 book = APIService.getInstance().getService(APIService.GOODREADS).getBookByISBN(mQuery);
             }
 
-            if(book != null){
+            if (book != null) {
                 bookList.add(book);
             }
         }

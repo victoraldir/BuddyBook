@@ -7,7 +7,7 @@ package com.quartzodev.views;
 import android.content.Context;
 import android.util.AttributeSet;
 
-public class DynamicImageView extends android.support.v7.widget.AppCompatImageView {
+public class DynamicImageView extends androidx.appcompat.widget.AppCompatImageView {
 
     private static final float ASPECT_RATIO = 1.5f;
 

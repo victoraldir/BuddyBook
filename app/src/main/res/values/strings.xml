@@ -84,10 +84,10 @@
     <string name="receiver_name_cd">Receiver name</string>
 
 
-        <string name="ad_app_id" translatable="false">ca-app-pub-6526073251385305~4440436428</string>
-        <string name="ad_inter_scanner_activity" translatable="false">ca-app-pub-6526073251385305/5917169627</string>
-        <string name="ad_bottom_details" translatable="false">ca-app-pub-6526073251385305/7915280029</string>
-        <string name="ad_bottom_books_main" translatable="false">ca-app-pub-6526073251385305/7393902820</string>
+    <string name="ad_app_id" translatable="false">ca-app-pub-6526073251385305~4440436428</string>
+    <string name="ad_inter_scanner_activity" translatable="false">ca-app-pub-6526073251385305/5917169627</string>
+    <string name="ad_bottom_details" translatable="false">ca-app-pub-6526073251385305/7915280029</string>
+    <string name="ad_bottom_books_main" translatable="false">ca-app-pub-6526073251385305/7393902820</string>
 
 
     <!--
@@ -101,9 +101,9 @@
         <string name="ad_unit_test" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
         -->
 
-        <string name="aboutLibraries_description_showIcon" translatable="false">true</string>
-        <string name="aboutLibraries_description_showVersion" translatable="false">true</string>
-        <string name="aboutLibraries_description_text">
+    <string name="aboutLibraries_description_showIcon" translatable="false">true</string>
+    <string name="aboutLibraries_description_showVersion" translatable="false">true</string>
+    <string name="aboutLibraries_description_text">
 
              <![CDATA[
              This is an open source project and you can find the source code on my <a href="https://github.com/victoraldir/BuddyBook" >GitHub</a>.
@@ -117,7 +117,7 @@
 
         </string>
 
-        <!-- TODO barcode stuff. Review them! -->
+    <!-- TODO barcode stuff. Review them! -->
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>

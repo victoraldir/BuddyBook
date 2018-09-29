@@ -2,9 +2,6 @@ package com.quartzodev.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +14,9 @@ import com.quartzodev.data.FirebaseDatabaseHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -44,7 +44,7 @@ public class ViewPagerFragment extends Fragment {
     @BindView(R.id.main_pager)
     ViewPager mViewPager;
 
-    public static ViewPagerFragment newInstance(String type, String folderId, String query, String isbn){
+    public static ViewPagerFragment newInstance(String type, String folderId, String query, String isbn) {
 
         ViewPagerFragment viewPagerFragment = new ViewPagerFragment();
         Bundle arguments = new Bundle();
@@ -52,13 +52,13 @@ public class ViewPagerFragment extends Fragment {
         arguments.putString(ARG_FOLDER_ID, folderId);
         arguments.putString(ARG_QUERY, query);
         arguments.putString(ARG_ISBN, isbn);
-        arguments.putString(ARG_TYPE_FRAGMENT,type);
+        arguments.putString(ARG_TYPE_FRAGMENT, type);
         viewPagerFragment.setArguments(arguments);
 
         return viewPagerFragment;
     }
 
-    public ViewPagerFragment(){
+    public ViewPagerFragment() {
     }
 
     @Override
@@ -66,7 +66,7 @@ public class ViewPagerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        if(getArguments() != null) {
+        if (getArguments() != null) {
 
             if (getArguments().containsKey(ARG_FOLDER_ID)) {
                 mFolderId = getArguments().getString(ARG_FOLDER_ID);
@@ -99,22 +99,22 @@ public class ViewPagerFragment extends Fragment {
     }
 
 
-    private List<Fragment> getListFragments(){
+    private List<Fragment> getListFragments() {
 
         List<Fragment> list = new ArrayList<>();
 
-        if(mTypeFragment.equals(MAIN_VIEW_PAGER)) {
+        if (mTypeFragment.equals(MAIN_VIEW_PAGER)) {
             list.add(BookGridFragment.newInstance(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,
                     R.menu.menu_my_books));
             list.add(BookGridFragment.newInstance(FirebaseDatabaseHelper.REF_POPULAR_FOLDER,
                     R.menu.menu_search_result));
-        }else{
+        } else {
 
-            list.add(SearchResultFragment.newInstance(null,mIsbn,R.menu.menu_search_result)); //Web search
-            if(mFolderId == null){
-                list.add(SearchResultFragment.newInstance(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,mIsbn,R.menu.menu_my_books));
-            }else{
-                list.add(SearchResultFragment.newInstance(mFolderId,mIsbn,R.menu.menu_my_books));
+            list.add(SearchResultFragment.newInstance(null, mIsbn, R.menu.menu_search_result)); //Web search
+            if (mFolderId == null) {
+                list.add(SearchResultFragment.newInstance(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER, mIsbn, R.menu.menu_my_books));
+            } else {
+                list.add(SearchResultFragment.newInstance(mFolderId, mIsbn, R.menu.menu_my_books));
             }
 
         }
@@ -128,7 +128,7 @@ public class ViewPagerFragment extends Fragment {
 
     }
 
-    public ViewPager getViewPager(){
+    public ViewPager getViewPager() {
         return mViewPager;
     }
 
@@ -142,7 +142,7 @@ public class ViewPagerFragment extends Fragment {
         super.onAttach(context);
     }
 
-    public String getTypeFragment(){
+    public String getTypeFragment() {
         return mTypeFragment;
     }
 
@@ -172,22 +172,22 @@ public class ViewPagerFragment extends Fragment {
     public void executeSearch(String query, Integer maxResult) {
         mQuery = query;
         mMaxResult = maxResult;
-        List<Fragment> fragmentList =  mViewPagerAdapter.getFragmentsList();
+        List<Fragment> fragmentList = mViewPagerAdapter.getFragmentsList();
 
-        for (int x=0; x<fragmentList.size(); x++){
+        for (int x = 0; x < fragmentList.size(); x++) {
             Fragment fragment = fragmentList.get(x);
 
-            if(fragment instanceof BookGridFragment){
-                if(((BookGridFragment) fragment).getFolderId() != null &&
+            if (fragment instanceof BookGridFragment) {
+                if (((BookGridFragment) fragment).getFolderId() != null &&
                         !((BookGridFragment) fragment).getFolderId().equals(FirebaseDatabaseHelper.REF_POPULAR_FOLDER))
-                ((BookGridFragment) fragment).refresh();
-            }else if(fragment instanceof SearchResultFragment){
-                ((SearchResultFragment) fragment).executeSearchSearchFragment(query,maxResult);
+                    ((BookGridFragment) fragment).refresh();
+            } else if (fragment instanceof SearchResultFragment) {
+                ((SearchResultFragment) fragment).executeSearchSearchFragment(query, maxResult);
             }
         }
     }
 
-    public void refresh(){
-        executeSearch(mQuery,mMaxResult);
+    public void refresh() {
+        executeSearch(mQuery, mMaxResult);
     }
 }
