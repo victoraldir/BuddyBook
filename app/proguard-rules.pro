@@ -24,8 +24,8 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class android.support.v7.widget.ShareActionProvider { *; }
--keep class android.support.v7.widget.SearchView { *; }
+-keep class androidx.appcompat.widget.ShareActionProvider { *; }
+-keep class androidx.appcompat.widget.SearchView { *; }
 -keep class com.quartzodev.data.**  { *; }
 -keep class com.quartzodev.api.entities.**  { *; }
 -keep interface com.quartzodev.api.interfaces.** {*;}
