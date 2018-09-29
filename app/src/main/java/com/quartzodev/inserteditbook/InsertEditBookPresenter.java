@@ -2,7 +2,6 @@ package com.quartzodev.inserteditbook;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -12,7 +11,6 @@ import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.ImageLink;
 import com.quartzodev.data.VolumeInfo;
 
-import java.util.Collections;
 import java.util.List;
 
 /**

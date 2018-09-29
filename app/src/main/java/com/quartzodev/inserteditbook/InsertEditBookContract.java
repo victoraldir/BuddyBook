@@ -1,7 +1,5 @@
 package com.quartzodev.inserteditbook;
 
-import android.net.Uri;
-
 import com.quartzodev.BasePresenter;
 import com.quartzodev.BaseView;
 import com.quartzodev.data.Book;
