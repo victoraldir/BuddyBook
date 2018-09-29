@@ -83,39 +83,41 @@
 
     <string name="receiver_name_cd">Receiver name</string>
 
-    <!--
+
         <string name="ad_app_id" translatable="false">ca-app-pub-6526073251385305~4440436428</string>
         <string name="ad_inter_scanner_activity" translatable="false">ca-app-pub-6526073251385305/5917169627</string>
         <string name="ad_bottom_details" translatable="false">ca-app-pub-6526073251385305/7915280029</string>
         <string name="ad_bottom_books_main" translatable="false">ca-app-pub-6526073251385305/7393902820</string>
-    -->
 
 
-    <string name="ad_app_id" translatable="false">@string/ad_unit_test</string>
-    <string name="ad_inter_scanner_activity" translatable="false">@string/ad_unit_test</string>
-    <string name="ad_bottom_details" translatable="false">@string/ad_unit_test</string>
-    <string name="ad_bottom_books_main" translatable="false">@string/ad_unit_test</string>
+    <!--
+        <string name="ad_app_id" translatable="false">@string/ad_unit_test</string>
+        <string name="ad_inter_scanner_activity" translatable="false">@string/ad_unit_test</string>
+        <string name="ad_bottom_details" translatable="false">@string/ad_unit_test</string>
+        <string name="ad_bottom_books_main" translatable="false">@string/ad_unit_test</string>
 
 
-    <string name="ad_unit_test" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
 
-    <string name="aboutLibraries_description_showIcon" translatable="false">true</string>
-    <string name="aboutLibraries_description_showVersion" translatable="false">true</string>
-    <string name="aboutLibraries_description_text">
+        <string name="ad_unit_test" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+        -->
 
-         <![CDATA[
-         This is an open source project and you can find the source code on my <a href="https://github.com/victoraldir/BuddyBook" >GitHub</a>.
-          <br/>
-          Below you can find open source libraries used in this project.
-          <br/> If you find any <b>bug</b> or <b>suggestion</b>, please open an issue in here <a href="https://github.com/victoraldir/BuddyBook/issues" >Issues</a>
-          <br/>
-          <br/>
-          Developed with \u2764 by <a href="https://about.me/victoraldir">Victor Neves</a>
-]]>
+        <string name="aboutLibraries_description_showIcon" translatable="false">true</string>
+        <string name="aboutLibraries_description_showVersion" translatable="false">true</string>
+        <string name="aboutLibraries_description_text">
 
-    </string>
+             <![CDATA[
+             This is an open source project and you can find the source code on my <a href="https://github.com/victoraldir/BuddyBook" >GitHub</a>.
+              <br/>
+              Below you can find open source libraries used in this project.
+              <br/> If you find any <b>bug</b> or <b>suggestion</b>, please open an issue in here <a href="https://github.com/victoraldir/BuddyBook/issues" >Issues</a>
+              <br/>
+              <br/>
+              Developed with \u2764 by <a href="https://about.me/victoraldir">Victor Neves</a>
+    ]]>
 
-    <!-- TODO barcode stuff. Review them! -->
+        </string>
+
+        <!-- TODO barcode stuff. Review them! -->
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
     <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
