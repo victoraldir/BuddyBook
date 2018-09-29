@@ -1,7 +1,6 @@
 package com.quartzodev.inserteditbook;
 
 import android.net.Uri;
-import android.support.annotation.NonNull;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -11,7 +10,11 @@ import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.ImageLink;
 import com.quartzodev.data.VolumeInfo;
 
+import java.io.File;
+import java.net.URI;
 import java.util.List;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by victoraldir on 11/03/2018.
@@ -28,7 +31,7 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
     private boolean mFlagFieldsOpen;
 
     InsertEditBookPresenter(InsertEditBookContract.View view, String userId, String folderId,
-                            String bookId, String imagePath, boolean isMoreFieldsOpen){
+                            String bookId, String imagePath, boolean isMoreFieldsOpen) {
 
         mInsertEditBookView = view;
         mBookId = bookId;
@@ -44,36 +47,38 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
         FirebaseDatabaseHelper.getInstance().findBook(mUserId, mFolderId, mBookId, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getValue() != null){
+                if (dataSnapshot.getValue() != null) {
                     Book book = dataSnapshot.getValue(Book.class);
-                    if(book != null && book.getVolumeInfo() != null) {
-                        if(book.getVolumeInfo().getImageLink() != null) {
+                    if (book != null && book.getVolumeInfo() != null) {
+                        if (book.getVolumeInfo().getImageLink() != null && new File(URI.create(book.getVolumeInfo().getImageLink().getSmallThumbnail()).getPath()).exists()) {
                             mImagePath = book.getVolumeInfo().getImageLink().getSmallThumbnail();
-                        }else{
+                        } else {
                             mInsertEditBookView.showNoPictureAvailable();
                         }
                         mInsertEditBookView.showBook(book);
                     }
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) {}
+            public void onCancelled(DatabaseError databaseError) {
+            }
         });
     }
 
     @Override
     public void loadForm() {
-        if(mBookId == null) {
+        if (mBookId == null) {
             mInsertEditBookView.setLoading(false);
-        }else{
+        } else {
             mInsertEditBookView.setLoadingPhoto(true);
             loadBook();
         }
 
-        if(mImagePath != null)
+        if (mImagePath != null)
             mInsertEditBookView.loadChosenImage(Uri.parse(mImagePath));
 
-        if(mFlagFieldsOpen)
+        if (mFlagFieldsOpen)
             mInsertEditBookView.expandMoreFields();
     }
 
@@ -94,7 +99,7 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
 
         newBook.setId(mBookId);
 
-        if(imagePath != null){
+        if (imagePath != null) {
             imageLink.setThumbnail(imagePath);
             imageLink.setSmallThumbnail(imagePath);
         }
@@ -115,14 +120,14 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
         newBook.setVolumeInfo(volumeInfo);
         newBook.setCustom(true);
 
-        if(validateBook(newBook)){
-            if(mFolderId == null)
+        if (validateBook(newBook)) {
+            if (mFolderId == null)
                 mFolderId = FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER;
 
             FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId, mFolderId, newBook, new FirebaseDatabaseHelper.OnPaidOperationListener() {
                 @Override
                 public void onInsertBook(boolean success) {
-                    if(success){
+                    if (success) {
                         mInsertEditBookView.finishActivity();
                     }
                 }
@@ -138,12 +143,12 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
 
     @Override
     public boolean validateBook(Book book) {
-        if(book.getVolumeInfo().getTitle() == null) {
+        if (book.getVolumeInfo().getTitle() == null) {
             mInsertEditBookView.setErrorMessage("Title cannot be empty");
             return false;
         }
 
-        if (book.getVolumeInfo().getTitle().isEmpty()){
+        if (book.getVolumeInfo().getTitle().isEmpty()) {
             mInsertEditBookView.setErrorMessage("Title cannot be empty");
             return false;
         }
@@ -163,9 +168,9 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
 
     @Override
     public void openCameraGallery() {
-        if(!mInsertEditBookView.hasExternalPermission()) {
+        if (!mInsertEditBookView.hasExternalPermission()) {
             mInsertEditBookView.requestCameraPermission();
-        }else{
+        } else {
             mInsertEditBookView.showCaptureOptions();
         }
     }
@@ -183,7 +188,8 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
     }
 
     @Override
-    public void start() {}
+    public void start() {
+    }
 
     public String getUserId() {
         return mUserId;
@@ -197,11 +203,11 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
         return mBookId;
     }
 
-    public boolean getFlagFieldsOpen(){
+    public boolean getFlagFieldsOpen() {
         return mFlagFieldsOpen;
     }
 
-    public String getImagePath(){
+    public String getImagePath() {
         return mImagePath;
     }
 }
