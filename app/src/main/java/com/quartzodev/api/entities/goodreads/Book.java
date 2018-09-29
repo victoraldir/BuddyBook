@@ -19,28 +19,28 @@ public class Book {
     @Element
     private String title;
 
-    @Element(name ="image_url")
+    @Element(name = "image_url")
     private String imageUrl;
 
-    @Element(name ="small_image_url")
+    @Element(name = "small_image_url")
     private String smallImageUrl;
 
-    @Element(name ="isbn", required = false)
+    @Element(name = "isbn", required = false)
     private String isbn;
 
-    @Element(name ="isbn13", required = false)
+    @Element(name = "isbn13", required = false)
     private String isbn13;
 
-    @Element(name ="description", required = false)
+    @Element(name = "description", required = false)
     private String description;
 
-    @Element(name ="publisher", required = false)
+    @Element(name = "publisher", required = false)
     private String publisher;
 
-    @ElementList(name ="authors", required = false)
+    @ElementList(name = "authors", required = false)
     private List<Author> authors;
 
-    @Element(name = "publication_day",required = false)
+    @Element(name = "publication_day", required = false)
     private Integer day;
 
     @Element(name = "publication_month", required = false)
@@ -175,8 +175,8 @@ public class Book {
         this.languageCode = languageCode;
     }
 
-    public String getPublishDate(){
-        if(year != null && year != null && day != null) {
+    public String getPublishDate() {
+        if (year != null && year != null && day != null) {
             return year + "-" + month + "-" + day;
         }
 

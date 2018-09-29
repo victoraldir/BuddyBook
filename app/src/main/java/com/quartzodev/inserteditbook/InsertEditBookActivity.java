@@ -12,13 +12,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +27,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.quartzodev.buddybook.GlideApp;
 import com.quartzodev.buddybook.R;
@@ -45,13 +39,19 @@ import com.quartzodev.utils.DialogUtils;
 import java.io.File;
 import java.util.Collections;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
-public class InsertEditBookActivity extends AppCompatActivity implements InsertEditBookContract.View{
+public class InsertEditBookActivity extends AppCompatActivity implements InsertEditBookContract.View {
 
     private static final String[] PERMISSIONS = new String[]{Manifest.permission.CAMERA,
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -66,24 +66,42 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
     private static final int RC_IMAGE_PICK = 2;
     private static final int RC_CAMERA = 3;
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.container_no_picture) FrameLayout mPhotoNoImage;
-    @BindView(R.id.insert_imageview_thumb) ImageView mPhoto;
-    @BindView(R.id.container_more_fields) LinearLayout mMoreFieldsContainer;
-    @BindView(R.id.btn_more_fields) TextView btnMoreFields;
-    @BindView(R.id.insert_container) ScrollView mInsertContainer;
-    @BindView(R.id.insert_progressbar) ProgressBar mProgressBar;
-    @BindView(R.id.loading_picture) ProgressBar mLoadingPhotoProgressBar;
-    @BindView(R.id.insert_edit_editext_title) TextInputEditText mTitle;
-    @BindView(R.id.insert_edit_editext_author) TextInputEditText mAuthor;
-    @BindView(R.id.insert_edit_editext_publisher) TextInputEditText mPublisher;
-    @BindView(R.id.insert_edit_editext_number_pages) TextInputEditText mNumberPages;
-    @BindView(R.id.insert_edit_editext_language) TextInputEditText mLanguage;
-    @BindView(R.id.insert_edit_editext_print_type) TextInputEditText mPrintType;
-    @BindView(R.id.insert_edit_editext_isbn10) TextInputEditText mIsbn10;
-    @BindView(R.id.insert_edit_editext_isbn13) TextInputEditText mIsbn13;
-    @BindView(R.id.insert_edit_editext_description) TextInputEditText mDescription;
-    @BindView(R.id.insert_edit_editext_annotation) TextInputEditText mAnnotation;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.container_no_picture)
+    FrameLayout mPhotoNoImage;
+    @BindView(R.id.insert_imageview_thumb)
+    ImageView mPhoto;
+    @BindView(R.id.container_more_fields)
+    LinearLayout mMoreFieldsContainer;
+    @BindView(R.id.btn_more_fields)
+    TextView btnMoreFields;
+    @BindView(R.id.insert_container)
+    ScrollView mInsertContainer;
+    @BindView(R.id.insert_progressbar)
+    ProgressBar mProgressBar;
+    @BindView(R.id.loading_picture)
+    ProgressBar mLoadingPhotoProgressBar;
+    @BindView(R.id.insert_edit_editext_title)
+    TextInputEditText mTitle;
+    @BindView(R.id.insert_edit_editext_author)
+    TextInputEditText mAuthor;
+    @BindView(R.id.insert_edit_editext_publisher)
+    TextInputEditText mPublisher;
+    @BindView(R.id.insert_edit_editext_number_pages)
+    TextInputEditText mNumberPages;
+    @BindView(R.id.insert_edit_editext_language)
+    TextInputEditText mLanguage;
+    @BindView(R.id.insert_edit_editext_print_type)
+    TextInputEditText mPrintType;
+    @BindView(R.id.insert_edit_editext_isbn10)
+    TextInputEditText mIsbn10;
+    @BindView(R.id.insert_edit_editext_isbn13)
+    TextInputEditText mIsbn13;
+    @BindView(R.id.insert_edit_editext_description)
+    TextInputEditText mDescription;
+    @BindView(R.id.insert_edit_editext_annotation)
+    TextInputEditText mAnnotation;
 
     private InsertEditBookContract.Presenter mPresenter;
     private String mPicturePath;
@@ -112,24 +130,24 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
         mPhoto.setOnClickListener(onOpenCameraGalleryListener);
     }
 
-    public void setupPresenter(Bundle savedInstanceState){
+    public void setupPresenter(Bundle savedInstanceState) {
 
         String mBookId, mUserId, mFolderId;
         boolean isMoreFieldsOpen = false;
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mBookId = savedInstanceState.getString(ARG_BOOK_ID);
             mUserId = savedInstanceState.getString(ARG_USER_ID);
             mFolderId = savedInstanceState.getString(ARG_FOLDER_ID);
             mPicturePath = savedInstanceState.getString(ARG_PHOTO_PATH);
             isMoreFieldsOpen = savedInstanceState.getBoolean(ARG_FLAG_MORE);
-        }else{
+        } else {
             mBookId = getIntent().getExtras().getString(ARG_BOOK_ID);
             mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
             mFolderId = getIntent().getExtras().getString(ARG_FOLDER_ID);
         }
 
-        mPresenter = new InsertEditBookPresenter(this, mUserId, mFolderId, mBookId, mPicturePath,isMoreFieldsOpen);
+        mPresenter = new InsertEditBookPresenter(this, mUserId, mFolderId, mBookId, mPicturePath, isMoreFieldsOpen);
         mPresenter.loadForm();
     }
 
@@ -142,7 +160,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
         outState.putString(ARG_BOOK_ID, currentPresenter.getBookId());
         outState.putString(ARG_FOLDER_ID, currentPresenter.getFolderId());
         outState.putString(ARG_USER_ID, currentPresenter.getUserId());
-        outState.putBoolean(ARG_FLAG_MORE,currentPresenter.getFlagFieldsOpen());
+        outState.putBoolean(ARG_FLAG_MORE, currentPresenter.getFlagFieldsOpen());
 
         super.onSaveInstanceState(outState);
     }
@@ -152,10 +170,10 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
         VolumeInfo volumeInfo = book.getVolumeInfo();
 
         mTitle.setText(volumeInfo.getTitle());
-        if(volumeInfo.getAuthors() != null)
+        if (volumeInfo.getAuthors() != null)
             mAuthor.setText(volumeInfo.getAuthors().get(0));
 
-        if(volumeInfo.getImageLink() != null && volumeInfo.getImageLink().getThumbnail() != null) {
+        if (volumeInfo.getImageLink() != null && volumeInfo.getImageLink().getThumbnail() != null) {
             loadChosenImage(Uri.parse(volumeInfo.getImageLink().getThumbnail()));
         }
 
@@ -174,17 +192,17 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
         final CharSequence[] items = getResources().getTextArray(R.array.capture_list);
         DialogUtils.showMultipleOptionDialog(this, getResources().getTextArray(R.array.capture_list),
                 new DialogInterface.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
 
-                if (items[item].equals(getString(R.string.camera))) {
-                    mPresenter.openCamera();
-                } else {
-                    mPresenter.openGallery();
-                }
-            }
-        });
+                        if (items[item].equals(getString(R.string.camera))) {
+                            mPresenter.openCamera();
+                        } else {
+                            mPresenter.openGallery();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -199,13 +217,13 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
     public void launchCameraActivity() {
         ContentValues values = new ContentValues();
         File imagePath = new File(getFilesDir(), "covers");
-        if(!imagePath.exists()) imagePath.mkdir();
+        if (!imagePath.exists()) imagePath.mkdir();
         File newFile = new File(imagePath, System.currentTimeMillis() + "photo.png");
 
         Uri picturePath;
 
         if (Build.VERSION.SDK_INT > 21) { //use this if Lollipop_Mr1 (API 22) or above
-            picturePath = FileProvider.getUriForFile(this, getPackageName()+".fileprovider", newFile);
+            picturePath = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", newFile);
         } else {
             picturePath = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         }
@@ -226,7 +244,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
     }
 
     @Override
-    public void loadChosenImage(Object image){
+    public void loadChosenImage(Object image) {
 
         GlideApp.with(this)
                 .asBitmap()
@@ -255,7 +273,6 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
     };
 
 
-
     @Override
     public void expandMoreFields() {
 
@@ -269,10 +286,10 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
 
     @Override
     public void setLoading(boolean flag) {
-        if(!flag){
+        if (!flag) {
             mInsertContainer.setVisibility(View.VISIBLE);
             mProgressBar.setVisibility(View.GONE);
-        }else{
+        } else {
             mInsertContainer.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.VISIBLE);
         }
@@ -280,9 +297,9 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
 
     @Override
     public void setLoadingPhoto(boolean flag) {
-        if(!flag){
+        if (!flag) {
             mLoadingPhotoProgressBar.setVisibility(View.GONE);
-        }else{
+        } else {
             mLoadingPhotoProgressBar.setVisibility(View.VISIBLE);
             mPhotoNoImage.setVisibility(View.GONE);
             mPhoto.setVisibility(View.GONE);
@@ -306,7 +323,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
                 return true;
 
             case R.id.action_save_book:
-                if(mInsertContainer.getVisibility() == View.VISIBLE){
+                if (mInsertContainer.getVisibility() == View.VISIBLE) {
                     mPresenter.saveBook(mTitle.getText().toString(),
                             Collections.singletonList(mAuthor.getText().toString()),
                             mIsbn13.getText().toString(),
@@ -338,8 +355,8 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
 
     @Override
     public boolean hasExternalPermission() {
-        for (int x = 0; x < PERMISSIONS.length; x++){
-            if(checkCallingOrSelfPermission(PERMISSIONS[x]) != PackageManager.PERMISSION_GRANTED)
+        for (int x = 0; x < PERMISSIONS.length; x++) {
+            if (checkCallingOrSelfPermission(PERMISSIONS[x]) != PackageManager.PERMISSION_GRANTED)
                 return false;
         }
         return true;
@@ -351,10 +368,10 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
                                            @NonNull int[] grantResults) {
 
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this,"All privileges given successfully",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "All privileges given successfully", Toast.LENGTH_SHORT).show();
             mPresenter.openCameraGallery();
-        }else{
-            Toast.makeText(this,"Buddybook needs privileges to capture images",Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Buddybook needs privileges to capture images", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -363,9 +380,9 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK) {
-            if(requestCode == RC_CAMERA){
+            if (requestCode == RC_CAMERA) {
                 mPresenter.setCameraResult(mPicturePath);
-            } else if (requestCode == RC_IMAGE_PICK){
+            } else if (requestCode == RC_IMAGE_PICK) {
                 mPicturePath = data.getData().toString();
                 mPresenter.setGalleryResult(data.getData());
             }

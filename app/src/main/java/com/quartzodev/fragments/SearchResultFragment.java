@@ -2,12 +2,6 @@ package com.quartzodev.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.Loader;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +21,12 @@ import com.quartzodev.utils.ConnectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -58,7 +58,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     private Integer mMenuId;
     private FirebaseAuth mFirebaseAuth;
 
-    public SearchResultFragment(){
+    public SearchResultFragment() {
         mFirebaseAuth = FirebaseAuth.getInstance();
     }
 
@@ -67,7 +67,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
         Bundle arguments = new Bundle();
         arguments.putString(ARG_FOLDER_ID, folderId);
         arguments.putString(ARG_ISBN, isbn);
-        arguments.putInt(ARG_MENU_ID,menuId);
+        arguments.putInt(ARG_MENU_ID, menuId);
         SearchResultFragment fragment = new SearchResultFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -145,7 +145,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
     public void executeSearchSearchFragment(String query, Integer maxResult) {
 
-        if(mAdapter != null) {
+        if (mAdapter != null) {
 
             mQuery = query;
 
@@ -186,7 +186,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         List<Book> bookApis = new ArrayList<>();
 
-                        if(mQuery != null) {
+                        if (mQuery != null) {
 
                             for (DataSnapshot child : dataSnapshot.getChildren()) {
                                 Book book = child.getValue(Book.class);

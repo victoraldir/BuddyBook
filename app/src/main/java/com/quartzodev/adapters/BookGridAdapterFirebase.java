@@ -3,7 +3,6 @@ package com.quartzodev.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +27,8 @@ import com.quartzodev.utils.TextUtils;
 import com.quartzodev.views.DynamicImageView;
 
 import java.util.List;
+
+import androidx.appcompat.widget.Toolbar;
 
 /**
  * Created by victoraldir on 18/04/2017.
@@ -87,14 +88,14 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
                             .setTitle(mContext.getString(R.string.action_return_lend));
                 }
 
-                if(book.isCustom()){
+                if (book.isCustom()) {
                     Menu menu = holder.toolbar.getMenu();
 
                     menu.add(0, EDIT, Menu.NONE, mContext.getString(R.string.edit));
                 }
             }
 
-            if(book.getLend() != null)
+            if (book.getLend() != null)
                 holder.containerIconLend.setVisibility(View.VISIBLE);
 
 
@@ -175,12 +176,12 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
             // call Animation function
             setAnimation(holder.itemView, i);
 
-        }catch (Exception ex){
-            Log.wtf("TAG",ex.getMessage());
+        } catch (Exception ex) {
+            Log.wtf("TAG", ex.getMessage());
         }
     }
 
-    private void renderImage(Object image, final ImageView imageView){
+    private void renderImage(Object image, final ImageView imageView) {
 
         GlideApp.with(mContext)
                 .asBitmap()
@@ -217,16 +218,16 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
 
         Book book = getItem(position);
 
-        if(mFolderId == null){
+        if (mFolderId == null) {
             return 0;
         }
 
-        if(book.getLend() != null){
-            if(book.isCustom()){
+        if (book.getLend() != null) {
+            if (book.isCustom()) {
                 return POS_BOOK_CUSTOM_LENT;
             }
             return POS_BOOK_LENT;
-        }else if (book.isCustom()) {
+        } else if (book.isCustom()) {
             return POS_BOOK_CUSTOM_AVAILABLE;
         }
 
@@ -272,7 +273,7 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
         super.onError(error);
     }
 
-    public interface ILoading{
-       void setLoading(boolean flag);
+    public interface ILoading {
+        void setLoading(boolean flag);
     }
 }

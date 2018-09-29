@@ -15,28 +15,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
 import android.provider.SearchRecentSuggestions;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
-import android.support.test.espresso.IdlingResource;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.ShareActionProvider;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,6 +37,12 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -69,7 +53,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
-import com.quartzodev.IdlingResource.SimpleIdlingResource;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.Folder;
@@ -94,6 +77,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.ShareActionProvider;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import hotchemi.android.rate.AppRate;
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity
         BookGridFragment.OnGridFragmentInteractionListener,
         SearchView.OnQueryTextListener,
         FirebaseDatabaseHelper.OnPaidOperationListener,
-        DetailActivityFragment.OnDetailInteractionListener{
+        DetailActivityFragment.OnDetailInteractionListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -173,11 +172,6 @@ public class MainActivity extends AppCompatActivity
     private LinearLayout mTabLinearLayoutLeft;
     private LinearLayout mTabLinearLayoutRight;
 
-    // The Idling Resource which will be null in production.
-    @Nullable
-    private SimpleIdlingResource mIdlingResource;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -188,17 +182,15 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
 
-        if(findViewById(R.id.detail_container) != null) {
+        if (findViewById(R.id.detail_container) != null) {
             mTwoPane = true;
         }
-
-        // Get the IdlingResource instance
-        getIdlingResource();
 
         mContext = this;
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         //Auth
+        FirebaseApp.initializeApp(getApplicationContext());
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
         mNavigationView.setNavigationItemSelectedListener(this);
@@ -211,32 +203,32 @@ public class MainActivity extends AppCompatActivity
         mSuggestions = new SearchRecentSuggestions(this,
                 SuggestionProvider.AUTHORITY, SuggestionProvider.MODE);
 
-        if(savedInstanceState != null){
+        if (savedInstanceState != null) {
             mUser = (User) savedInstanceState.get(KEY_PARCELABLE_USER);
             mFolderId = savedInstanceState.getString(KEY_FOLDER_ID);
         }
 
         setupFab();
 
-        if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) initAdView();
+        if (BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) initAdView();
 
         checkUserIsLoged();
     }
 
-    private void checkUserIsLoged(){
+    private void checkUserIsLoged() {
 
         if (mFirebaseAuth.getCurrentUser() != null) {
             onSignedIn(mFirebaseAuth.getCurrentUser());
         } else {
             if (ConnectionUtils.isNetworkConnected(getApplication())) {
                 launchLoginActivityResult();
-            }else{
+            } else {
                 showStatus(NO_INTERNET, null);
             }
         }
     }
 
-    public void setupFab(){
+    public void setupFab() {
         if (ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
             mFab.setVisibility(View.VISIBLE);
             mFab.setOnClickListener(new View.OnClickListener() {
@@ -255,11 +247,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public FloatingActionButton getFab(){
+    public FloatingActionButton getFab() {
         return mFab;
     }
 
-    private void initAdView(){
+    private void initAdView() {
         //Ad main
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -288,7 +280,7 @@ public class MainActivity extends AppCompatActivity
 
     private void updateUser(DataSnapshot dataSnapshot) {
 
-        if(mUser != null) {
+        if (mUser != null) {
 
             if (dataSnapshot.getValue() != null) {
 
@@ -341,7 +333,7 @@ public class MainActivity extends AppCompatActivity
 
     private void loadProfileOnDrawer() {
 
-        if(mUser != null) {
+        if (mUser != null) {
 
             LinearLayout linearLayout = (LinearLayout) mNavigationView.getHeaderView(0); //LinearLayout Index
             ImageView mImageViewProfile = linearLayout.findViewById(R.id.main_imageview_user_photo);
@@ -357,9 +349,6 @@ public class MainActivity extends AppCompatActivity
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(mImageViewProfile);
 
-            //Test
-            if (mIdlingResource != null)
-                mIdlingResource.setIdleState(true);
         }
     }
 
@@ -393,8 +382,8 @@ public class MainActivity extends AppCompatActivity
                 transaction.replace(R.id.fragment_main_container, searchFragment).commitAllowingStateLoss();
 
             }
-        }else if (requestCode == RC_PICKFILE && resultCode == CommonStatusCodes.SUCCESS_CACHE){
-            Log.d(TAG,data.getDataString());
+        } else if (requestCode == RC_PICKFILE && resultCode == CommonStatusCodes.SUCCESS_CACHE) {
+            Log.d(TAG, data.getDataString());
 
             try {
 
@@ -408,27 +397,27 @@ public class MainActivity extends AppCompatActivity
                 int sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE);
                 returnCursor.moveToFirst();
 
-                Log.d(TAG,"mimeType: " + mimeType);
-                Log.d(TAG,"nameView: " + returnCursor.getString(nameIndex));
-                Log.d(TAG,"sizeView: " + returnCursor.getLong(sizeIndex));
+                Log.d(TAG, "mimeType: " + mimeType);
+                Log.d(TAG, "nameView: " + returnCursor.getString(nameIndex));
+                Log.d(TAG, "sizeView: " + returnCursor.getLong(sizeIndex));
 
-                File file = new File(PathUtils.getPath(mContext,uri));
+                File file = new File(PathUtils.getPath(mContext, uri));
 
-                Log.d(TAG,"File path: " + PathUtils.getPath(mContext,uri));
-                Log.d(TAG,"File absolute path: " + PathUtils.getPath(mContext,uri));
-                Log.d(TAG,"File exists? : " + file.exists());
+                Log.d(TAG, "File path: " + PathUtils.getPath(mContext, uri));
+                Log.d(TAG, "File absolute path: " + PathUtils.getPath(mContext, uri));
+                Log.d(TAG, "File exists? : " + file.exists());
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e(TAG,e.getMessage());
+                Log.e(TAG, e.getMessage());
             }
 
         }
     }
 
-    public void showStatus(int statusCode, String msg){
+    public void showStatus(int statusCode, String msg) {
 
-        switch (statusCode){
+        switch (statusCode) {
             case NO_INTERNET:
 
                 mTextViewMessage.setVisibility(View.VISIBLE);
@@ -454,7 +443,8 @@ public class MainActivity extends AppCompatActivity
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError error) {}
+                    public void onCancelled(DatabaseError error) {
+                    }
                 });
 
                 break;
@@ -506,7 +496,7 @@ public class MainActivity extends AppCompatActivity
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(KEY_PARCELABLE_USER, mUser);
-        outState.putString(KEY_FOLDER_ID,mFolderId);
+        outState.putString(KEY_FOLDER_ID, mFolderId);
 
         if (mSearchView != null && mSearchView.isEnabled()) {
             outState.putCharSequence(KEY_CURRENT_QUERY, mSearchView.getQuery().toString());
@@ -516,10 +506,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void launchLoginActivityResult() {
-
-        //Test
-        if(mIdlingResource != null)
-            mIdlingResource.setIdleState(false);
 
         startActivityForResult(
                 AuthUI.getInstance()
@@ -566,9 +552,9 @@ public class MainActivity extends AppCompatActivity
         handleIntent(intent);
     }
 
-    public void setIntentShareMenu(Intent intent){
+    public void setIntentShareMenu(Intent intent) {
 
-        if(mToolbar2 != null) {
+        if (mToolbar2 != null) {
             MenuItem menushareItem = mToolbar2.getMenu().findItem(R.id.action_share);
             ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menushareItem);
             menushareItem.setVisible(true);
@@ -649,7 +635,7 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 ViewPagerFragment fragment = ViewPagerFragment.newInstance(ViewPagerFragment.SEARCH_VIEW_PAGER, mFolderId, null, null);
-                loadFragment(fragment,search_tag);
+                loadFragment(fragment, search_tag);
 
                 return true;
             }
@@ -716,14 +702,14 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.action_sort:
 
-                DialogUtils.alertDialogSortList(mContext,mCoordinatorLayout);
+                DialogUtils.alertDialogSortList(mContext, mCoordinatorLayout);
 
                 break;
             case R.id.action_export_csv:
 
                 showStatus(LOADING, getString(R.string.generating_csv));
 
-                FirebaseDatabaseHelper.getInstance().findBookSearch(mUser.getUid(),mFolderId,new ValueEventListener() {
+                FirebaseDatabaseHelper.getInstance().findBookSearch(mUser.getUid(), mFolderId, new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -737,7 +723,7 @@ public class MainActivity extends AppCompatActivity
                         }
 
                         try {
-                            ExportCSVUtil.writeWithCsvMapWriter(mFolderName == null ? getString(R.string.tab_my_books) : mFolderName, bookList,(Activity) mContext);
+                            ExportCSVUtil.writeWithCsvMapWriter(mFolderName == null ? getString(R.string.tab_my_books) : mFolderName, bookList, (Activity) mContext);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -746,7 +732,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        showStatus(READY,null);
+                        showStatus(READY, null);
                     }
                 });
 
@@ -759,12 +745,12 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void lauchInsertEditActivity(String bookId){
+    public void lauchInsertEditActivity(String bookId) {
 
         Intent it = new Intent(mContext, com.quartzodev.inserteditbook.InsertEditBookActivity.class);
 
-        if(bookId != null)
-            it.putExtra(InsertEditBookActivity.ARG_BOOK_ID,bookId);
+        if (bookId != null)
+            it.putExtra(InsertEditBookActivity.ARG_BOOK_ID, bookId);
 
         it.putExtra(InsertEditBookActivity.ARG_FOLDER_NAME, mFolderName);
         it.putExtra(InsertEditBookActivity.ARG_FOLDER_ID, mFolderId);
@@ -789,7 +775,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(DialogInterface dialog, int which) {
                 mFirebaseDatabaseHelper.deleteFolder(mUser.getUid(), folder.getId());
                 onClickListenerFolderListInteraction(null);
-                Snackbar.make(mCoordinatorLayout,getText(R.string.folder_deleted),Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(mCoordinatorLayout, getText(R.string.folder_deleted), Snackbar.LENGTH_SHORT).show();
             }
         });
 
@@ -800,27 +786,27 @@ public class MainActivity extends AppCompatActivity
 
         mDrawer.closeDrawer(GravityCompat.START);
         mFolderId = folder != null ? folder.getId() : null;
-        if(mFolderId == null){
+        if (mFolderId == null) {
 
             mToolbar.findViewById(R.id.toolbar_container).setVisibility(View.VISIBLE);
             mFolderName = getString(R.string.tab_my_books);
             loadMainViewPagerFragment();
             loadFragment(ViewPagerFragment.newInstance(ViewPagerFragment.MAIN_VIEW_PAGER,
-                    mFolderId,null,null), null);
+                    mFolderId, null, null), null);
 
-        }else{
+        } else {
 
             mToolbar.findViewById(R.id.toolbar_container).setVisibility(View.GONE);
             mFolderName = folder.getDescription();
             mToolbar.setTitle(mFolderName);
 
-            if(folder.getBooks() != null){
-                mToolbar.setSubtitle( String.format(getString(R.string.number_of_books),folder.getBooks().size()));
-            }else{
-                mToolbar.setSubtitle( String.format(getString(R.string.number_of_books),0));
+            if (folder.getBooks() != null) {
+                mToolbar.setSubtitle(String.format(getString(R.string.number_of_books), folder.getBooks().size()));
+            } else {
+                mToolbar.setSubtitle(String.format(getString(R.string.number_of_books), 0));
             }
 
-            loadFragment(BookGridFragment.newInstance(mFolderId,R.menu.menu_my_books), null);
+            loadFragment(BookGridFragment.newInstance(mFolderId, R.menu.menu_my_books), null);
         }
     }
 
@@ -832,15 +818,15 @@ public class MainActivity extends AppCompatActivity
                 mUser.getUid());
     }
 
-    private void clearFragmentBackStack(){
+    private void clearFragmentBackStack() {
         FragmentManager fm = getSupportFragmentManager();
-        for(int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+        for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
             fm.popBackStack();
         }
     }
 
     //Comes first
-    private void loadFolderListFragment(){
+    private void loadFolderListFragment() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container_nav_header, new FolderListFragment());
         transaction.commitAllowingStateLoss();
@@ -855,7 +841,7 @@ public class MainActivity extends AppCompatActivity
         showStatus(READY, null);
     }
 
-    public void setupRateApp(){
+    public void setupRateApp() {
         AppRate.with(this)
                 .setInstallDays(0) // default 10, 0 means install day.
                 .setLaunchTimes(3) // default 10
@@ -874,22 +860,22 @@ public class MainActivity extends AppCompatActivity
         AppRate.showRateDialogIfMeetsConditions(this);
     }
 
-    private void loadMainViewPagerFragment(){
+    private void loadMainViewPagerFragment() {
         Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
         if (frag == null) {
             loadFragment(ViewPagerFragment.newInstance(ViewPagerFragment.MAIN_VIEW_PAGER,
-                    mFolderId,null,null), null);
+                    mFolderId, null, null), null);
         }
     }
 
-    private void loadFragment(Fragment fragment, String tag){
+    private void loadFragment(Fragment fragment, String tag) {
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        if(tag != null) {
+        if (tag != null) {
             transaction.add(R.id.fragment_main_container, fragment, tag);
-        }else{
+        } else {
             transaction.replace(R.id.fragment_main_container, fragment);
         }
 
@@ -897,7 +883,7 @@ public class MainActivity extends AppCompatActivity
         checkTabLayout();
     }
 
-    private void removeFragment(String tag){
+    private void removeFragment(String tag) {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
 
         if (fragment != null) {
@@ -907,14 +893,14 @@ public class MainActivity extends AppCompatActivity
         checkTabLayout();
     }
 
-    public void checkTabLayout(){
+    public void checkTabLayout() {
         Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
         if (currentFragment instanceof ViewPagerFragment) {
             mTabLayout.setVisibility(View.VISIBLE);
             mTabLayout.setupWithViewPager(((ViewPagerFragment) currentFragment).getViewPager());
             setupTabIcons(((ViewPagerFragment) currentFragment).getTypeFragment());
-        }else{
+        } else {
             mTabLayout.setVisibility(View.GONE);
         }
     }
@@ -940,7 +926,7 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.detail_container, newFragment).commitAllowingStateLoss();
 
-        }else {
+        } else {
 
             Intent it = new Intent(this, DetailActivity.class);
             Bundle bundle = new Bundle();
@@ -964,9 +950,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void showToolbar(){
-        if (mToolbar.getParent() instanceof AppBarLayout){
-            ((AppBarLayout)mToolbar.getParent()).setExpanded(true,true);
+    private void showToolbar() {
+        if (mToolbar.getParent() instanceof AppBarLayout) {
+            ((AppBarLayout) mToolbar.getParent()).setExpanded(true, true);
         }
     }
 
@@ -1063,7 +1049,7 @@ public class MainActivity extends AppCompatActivity
 
             Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
-            if(frag instanceof ViewPagerFragment){
+            if (frag instanceof ViewPagerFragment) {
                 ((ViewPagerFragment) frag).executeSearch(query, TOTAL_SEARCH_RESULT);
             }
 
@@ -1076,12 +1062,12 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void refreshCurrentFragment(){
+    public void refreshCurrentFragment() {
         Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
 
-        if(frag instanceof BookGridFragment){
+        if (frag instanceof BookGridFragment) {
             ((BookGridFragment) frag).refresh();
-        }else if(frag instanceof ViewPagerFragment){
+        } else if (frag instanceof ViewPagerFragment) {
             ((ViewPagerFragment) frag).refresh();
         }
     }
@@ -1091,7 +1077,7 @@ public class MainActivity extends AppCompatActivity
 
         if (newText != null && !newText.isEmpty()) {
             Fragment frag = getSupportFragmentManager().findFragmentById(R.id.fragment_main_container);
-            if(frag instanceof ViewPagerFragment){
+            if (frag instanceof ViewPagerFragment) {
                 ((ViewPagerFragment) frag).executeSearch(newText, TOTAL_SEARCH_RESULT);
             }
 
@@ -1122,7 +1108,7 @@ public class MainActivity extends AppCompatActivity
 
     SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-            if(key != null && !key.equals("com.facebook.appevents.SessionInfo.sessionEndTime")){
+            if (key != null && !key.equals("com.facebook.appevents.SessionInfo.sessionEndTime")) {
                 refreshCurrentFragment();
             }
         }
@@ -1148,41 +1134,41 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public TabLayout getTabLayout(){
+    public TabLayout getTabLayout() {
         return mTabLayout;
     }
 
     public void setupTabIcons(String typeFragment) {
 
-        TabLayout.Tab tab1 =  mTabLayout.getTabAt(0);
-        TabLayout.Tab tab2 =  mTabLayout.getTabAt(1);
+        TabLayout.Tab tab1 = mTabLayout.getTabAt(0);
+        TabLayout.Tab tab2 = mTabLayout.getTabAt(1);
 
-        if(tab1 == null || mTabLinearLayoutLeft == null) {
+        if (tab1 == null || mTabLinearLayoutLeft == null) {
             mTabLinearLayoutLeft = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         }
 
-        if(tab2 == null || mTabLinearLayoutRight == null){
+        if (tab2 == null || mTabLinearLayoutRight == null) {
             mTabLinearLayoutRight = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.custom_tab, null);
         }
 
-        if(typeFragment.equals(ViewPagerFragment.MAIN_VIEW_PAGER)) {
+        if (typeFragment.equals(ViewPagerFragment.MAIN_VIEW_PAGER)) {
             ((ImageView) mTabLinearLayoutLeft.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_favorite_border);
             ((TextView) mTabLinearLayoutLeft.findViewById(R.id.tab_title)).setText(getString(R.string.tab_my_books));
-        }else{
+        } else {
             ((ImageView) mTabLinearLayoutLeft.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_action_globe);
             ((TextView) mTabLinearLayoutLeft.findViewById(R.id.tab_title)).setText(getString(R.string.tab_search_online));
         }
 
         mTabLayout.getTabAt(0).setCustomView(mTabLinearLayoutLeft);
 
-        if(typeFragment.equals(ViewPagerFragment.MAIN_VIEW_PAGER)) {
+        if (typeFragment.equals(ViewPagerFragment.MAIN_VIEW_PAGER)) {
             ((ImageView) mTabLinearLayoutRight.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_library_books);
             ((TextView) mTabLinearLayoutRight.findViewById(R.id.tab_title)).setText(getString(R.string.tab_top_books));
-        }else{
+        } else {
             ((ImageView) mTabLinearLayoutRight.findViewById(R.id.tab_icon)).setImageResource(R.drawable.ic_action_folder_closed);
-            if(mFolderName != null) {
+            if (mFolderName != null) {
                 ((TextView) mTabLinearLayoutRight.findViewById(R.id.tab_title)).setText(mFolderName);
-            }else{
+            } else {
                 ((TextView) mTabLinearLayoutRight.findViewById(R.id.tab_title)).setText(getString(R.string.tab_my_books));
             }
         }
@@ -1192,24 +1178,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLendBook(Book bookApi) {
-        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUser.getUid(),mFolderId, bookApi,null);
+        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUser.getUid(), mFolderId, bookApi, null);
     }
 
     @Override
     public void onReturnBook(Book bookApi) {
-        DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUser.getUid(),mFolderId, bookApi);
-    }
-
-    /**
-     * Only called from test, creates and returns a new {@link SimpleIdlingResource}.
-     */
-    @VisibleForTesting
-    @NonNull
-    public IdlingResource getIdlingResource() {
-        if (mIdlingResource == null) {
-            mIdlingResource = new SimpleIdlingResource();
-        }
-        return mIdlingResource;
+        DialogUtils.alertDialogReturnBook(this, mFirebaseDatabaseHelper, mUser.getUid(), mFolderId, bookApi);
     }
 
 }

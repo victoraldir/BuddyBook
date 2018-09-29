@@ -1,10 +1,10 @@
 package com.quartzodev.api.interfaces;
 
-import android.support.annotation.Keep;
-
 import com.quartzodev.data.Book;
 
 import java.util.List;
+
+import androidx.annotation.Keep;
 
 /**
  * Created by victoraldir on 15/06/2017.
@@ -14,7 +14,9 @@ import java.util.List;
 public interface IQuery {
 
     List<Book> getBooks(String query);
+
     List<Book> getBooksMaxResult(String query, int maxResults);
+
     Book getBookByISBN(String isbn);
 
 }

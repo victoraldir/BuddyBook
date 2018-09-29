@@ -6,7 +6,6 @@
     android:layout_height="match_parent">
 
 
-
     <com.quartzodev.views.LinedEditText
         android:layout_margin="8dp"
         android:id="@+id/editText_content"
@@ -17,7 +16,6 @@
         android:background="@null"
         android:inputType="textMultiLine|textNoSuggestions"
         android:imeOptions="actionNone"
-        android:maxLength="1500"
-        />
+        android:maxLength="1500" />
 
 </FrameLayout>

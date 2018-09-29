@@ -2,8 +2,6 @@ package com.quartzodev.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,6 +21,9 @@ import com.quartzodev.views.DynamicImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by victoraldir on 18/04/2017.
@@ -104,9 +105,9 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridViewHolder> {
     public void swap(List<Book> bookApiList) {
         if (bookApiList != null) {
 
-            if(bookApiList.isEmpty()){
+            if (bookApiList.isEmpty()) {
                 mBookList.clear();
-            }else{
+            } else {
                 mBookList.clear();
                 mBookList.addAll(bookApiList);
             }
@@ -221,8 +222,8 @@ public class BookGridAdapter extends RecyclerView.Adapter<BookGridViewHolder> {
             // call Animation function
             setAnimation(holder.itemView, position);
 
-        }catch (Exception ex){
-            Log.wtf("TAG",ex.getMessage());
+        } catch (Exception ex) {
+            Log.wtf("TAG", ex.getMessage());
         }
     }
 

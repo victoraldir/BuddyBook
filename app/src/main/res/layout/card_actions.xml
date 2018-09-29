@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/card_actions"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -24,14 +23,14 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_work"
-                android:layout_margin="8dp"/>
+                android:layout_margin="8dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/actions"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-                android:layout_margin="8dp"/>
+                android:layout_margin="8dp" />
 
         </LinearLayout>
 
@@ -49,18 +48,17 @@
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
 
-                <ImageView android:id="@+id/detail_imageView_bookmark"
+                <ImageView
+                    android:id="@+id/detail_imageView_bookmark"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:contentDescription="@string/move_to_folder_cd"
-                    android:src="@drawable/ic_folder"
-                    />
+                    android:src="@drawable/ic_folder" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/action_move_to"
-                        />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/action_move_to" />
 
             </LinearLayout>
 
@@ -79,18 +77,17 @@
                     android:layout_height="48dp"
                     android:src="@drawable/ic_card_giftcard"
                     android:contentDescription="@string/lent_book_cd"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/action_lend"
-                    />
+                    android:text="@string/action_lend" />
 
-                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

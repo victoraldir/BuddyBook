@@ -46,9 +46,9 @@ public class GoodreadsImpl implements IQuery {
         Book book = null;
 
         try {
-            GoodreadsResponse goodreadsResponse = mGoodreadsAPI.findBookByISBN(isbn,mKey).execute().body();
+            GoodreadsResponse goodreadsResponse = mGoodreadsAPI.findBookByISBN(isbn, mKey).execute().body();
 
-            if(goodreadsResponse != null) {
+            if (goodreadsResponse != null) {
                 com.quartzodev.api.entities.goodreads.Book bookApi = goodreadsResponse.getBook();
                 book = parseBookApiToBook(bookApi);
             }
@@ -59,7 +59,7 @@ public class GoodreadsImpl implements IQuery {
         return book;
     }
 
-    private Book parseBookApiToBook(com.quartzodev.api.entities.goodreads.Book bookApi){
+    private Book parseBookApiToBook(com.quartzodev.api.entities.goodreads.Book bookApi) {
 
         Book book = new Book();
 
@@ -75,25 +75,25 @@ public class GoodreadsImpl implements IQuery {
 
         volumeInfo.setPageCount(bookApi.getNumPages());
 
-        if(bookApi.getPublishDate() != null)
+        if (bookApi.getPublishDate() != null)
             volumeInfo.setPublishedDate(bookApi.getPublishDate());
 
         volumeInfo.setPublisher(bookApi.getPublisher());
 
-        if(bookApi.getAuthors() != null && !bookApi.getAuthors().isEmpty()){
+        if (bookApi.getAuthors() != null && !bookApi.getAuthors().isEmpty()) {
             List<String> authors = new ArrayList<>();
 
-            for(int x=0; x<bookApi.getAuthors().size(); x++){
+            for (int x = 0; x < bookApi.getAuthors().size(); x++) {
                 authors.add(bookApi.getAuthors().get(x).getName());
             }
 
             volumeInfo.setAuthors(authors);
         }
 
-        if(bookApi.getIsbn() != null){
+        if (bookApi.getIsbn() != null) {
             volumeInfo.setIsbn10(bookApi.getIsbn());
         }
-        if(bookApi.getIsbn13() != null){
+        if (bookApi.getIsbn13() != null) {
             volumeInfo.setIsbn13(bookApi.getIsbn13());
         }
 

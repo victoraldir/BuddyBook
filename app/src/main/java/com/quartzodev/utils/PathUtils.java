@@ -27,16 +27,16 @@ public class PathUtils {
                 String storageDefinition;
 
 
-                if("primary".equalsIgnoreCase(type)){
+                if ("primary".equalsIgnoreCase(type)) {
 
                     return Environment.getExternalStorageDirectory() + "/" + split[1];
 
                 } else {
 
-                    if(Environment.isExternalStorageRemovable()){
+                    if (Environment.isExternalStorageRemovable()) {
                         storageDefinition = "EXTERNAL_STORAGE";
 
-                    } else{
+                    } else {
                         storageDefinition = "SECONDARY_STORAGE";
                     }
 
@@ -50,7 +50,7 @@ public class PathUtils {
                         Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
                 return getDataColumn(context, contentUri, null, null);
-            } else if (isGoogleDriveDocsUri(uri)){
+            } else if (isGoogleDriveDocsUri(uri)) {
 
                 final String id = DocumentsContract.getDocumentId(uri);
                 final Uri contentUri = ContentUris.withAppendedId(

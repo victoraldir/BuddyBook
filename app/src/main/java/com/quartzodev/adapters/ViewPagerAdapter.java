@@ -1,12 +1,13 @@
 package com.quartzodev.adapters;
 
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 import java.util.List;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 /**
  * Created by victoraldir on 24/03/2017.
@@ -21,7 +22,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         this.mBookGridFragments = bookGridFragments;
     }
 
-    public List<Fragment> getFragmentsList(){
+    public List<Fragment> getFragmentsList() {
         return mBookGridFragments;
     }
 

@@ -1,7 +1,6 @@
 package com.quartzodev.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,8 @@ import com.quartzodev.fragments.FolderListFragment.OnListFragmentInteractionList
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Folder} and makes a call to the
@@ -50,7 +51,7 @@ public class FolderListAdapter extends FirebaseRecyclerAdapter<Folder, FolderLis
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.fragment_folder, parent, false);
+                .inflate(R.layout.fragment_folder, parent, false);
 
         return new ViewHolder(view);
     }
@@ -77,10 +78,10 @@ public class FolderListAdapter extends FirebaseRecyclerAdapter<Folder, FolderLis
             public boolean onLongClick(View v) {
 
                 if (null != mListener) {
-                    if(v.getTag().equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)){
-                        Toast.makeText(mContext,"You can't delete my books folder",Toast.LENGTH_SHORT).show();
+                    if (v.getTag().equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) {
+                        Toast.makeText(mContext, "You can't delete my books folder", Toast.LENGTH_SHORT).show();
                         return true;
-                    }else{
+                    } else {
                         mListener.onLongClickListenerFolderListInteraction(holder.mItem);
                     }
                 }
@@ -93,9 +94,9 @@ public class FolderListAdapter extends FirebaseRecyclerAdapter<Folder, FolderLis
             public void onClick(View view) {
                 if (null != mListener) {
 
-                    if(view.getTag().equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)){
+                    if (view.getTag().equals(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER)) {
                         mListener.onClickListenerFolderListInteraction(null);
-                    }else{
+                    } else {
                         mListener.onClickListenerFolderListInteraction(holder.mItem);
                     }
 
@@ -176,7 +177,7 @@ public class FolderListAdapter extends FirebaseRecyclerAdapter<Folder, FolderLis
     @Override
     public void onDataChanged() {
         super.onDataChanged();
-        mListener.onFolderListIsAvailable(getSnapshots(),getmFolderListCommaSeparated());
+        mListener.onFolderListIsAvailable(getSnapshots(), getmFolderListCommaSeparated());
     }
 
     public String getmFolderListCommaSeparated() {
@@ -184,7 +185,7 @@ public class FolderListAdapter extends FirebaseRecyclerAdapter<Folder, FolderLis
         List<String> stringList = new ArrayList<>();
 
         for (Folder folder : getSnapshots()) {
-            if(folder.getDescription() != null) {
+            if (folder.getDescription() != null) {
                 if (folder.getDescription().equals(mContext.getString(R.string.tab_my_books))) {
                     stringList.add(mContext.getString(R.string.tab_my_books) + "=" + "myBooksFolder");
                 } else {

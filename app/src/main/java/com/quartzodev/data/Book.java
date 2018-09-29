@@ -1,6 +1,6 @@
 package com.quartzodev.data;
 
-import android.support.annotation.Keep;
+import androidx.annotation.Keep;
 
 /**
  * Created by victoraldir on 23/03/2017.

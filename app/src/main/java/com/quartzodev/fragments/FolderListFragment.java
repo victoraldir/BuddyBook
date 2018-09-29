@@ -2,10 +2,6 @@ package com.quartzodev.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +16,10 @@ import com.quartzodev.data.Folder;
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class FolderListFragment extends Fragment{
+public class FolderListFragment extends Fragment {
 
 
     // TODO: Customize parameter argument names
@@ -66,7 +66,7 @@ public class FolderListFragment extends Fragment{
 
         super.onCreate(savedInstanceState);
 
-        if(mFirebaseAuth.getCurrentUser() != null) {
+        if (mFirebaseAuth.getCurrentUser() != null) {
 
             if (savedInstanceState != null && savedInstanceState.containsKey(KEY_USER_ID)) {
                 mUserId = savedInstanceState.getString(KEY_USER_ID);
@@ -102,7 +102,7 @@ public class FolderListFragment extends Fragment{
                                 Folder.class)
                         .build();
 
-        mAdapter = new FolderListAdapter(options,mListener, getContext());
+        mAdapter = new FolderListAdapter(options, mListener, getContext());
 
         RecyclerView recyclerView = root.findViewById(R.id.folder_list_recycleview);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

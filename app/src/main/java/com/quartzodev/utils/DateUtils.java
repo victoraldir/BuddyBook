@@ -38,7 +38,7 @@ public class DateUtils {
         return sfd.format(gc.getTime());
     }
 
-    public static String formatStringDate(String date){
+    public static String formatStringDate(String date) {
 
         String result = "";
 

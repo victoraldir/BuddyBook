@@ -15,17 +15,17 @@ import java.io.InputStreamReader;
 
 public class TextUtils {
 
-    public static String getFirstLetterTitle(Book book){
+    public static String getFirstLetterTitle(Book book) {
 
         char result = '#';
 
-        try{
+        try {
             result = book.getVolumeInfo().getTitle().trim().charAt(0);
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
         }
 
-        return  Character.toString(result);
+        return Character.toString(result);
     }
 
     private static String convertStreamToString(InputStream is) throws Exception {
@@ -39,7 +39,7 @@ public class TextUtils {
         return sb.toString();
     }
 
-    public static String getStringFromFile (String filePath) throws Exception {
+    public static String getStringFromFile(String filePath) throws Exception {
         File fl = new File(filePath);
         FileInputStream fin = new FileInputStream(fl);
         String ret = convertStreamToString(fin);

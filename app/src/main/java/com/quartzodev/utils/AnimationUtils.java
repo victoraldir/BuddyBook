@@ -1,9 +1,10 @@
 package com.quartzodev.utils;
 
-import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+
+import androidx.appcompat.app.ActionBar;
 
 /**
  * Created by victoraldir on 05/11/2017.

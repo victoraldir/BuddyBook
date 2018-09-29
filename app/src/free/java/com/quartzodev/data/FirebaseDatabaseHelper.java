@@ -1,7 +1,5 @@
 package com.quartzodev.data;
 
-import android.support.annotation.NonNull;
-
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.ChildEventListener;
@@ -20,6 +18,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by victoraldir on 29/03/2017.
@@ -114,7 +114,7 @@ public class FirebaseDatabaseHelper {
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
-    public Query fetchPopularBooks(){
+    public Query fetchPopularBooks() {
         return mDatabaseReference.child(REF_POPULAR_FOLDER);
     }
 
@@ -125,7 +125,7 @@ public class FirebaseDatabaseHelper {
                 .child(REF_FOLDERS)
                 .child(folderId)
                 .child(REF_BOOKS)
-                .orderByChild("volumeInfo/"+sort);
+                .orderByChild("volumeInfo/" + sort);
     }
 
     public ChildEventListener attachBookFolderChildEventListener(String userId, String folderId, ChildEventListener listener) {
@@ -143,7 +143,7 @@ public class FirebaseDatabaseHelper {
                 .child(REF_FOLDERS)
                 .child(folderId)
                 .child(REF_BOOKS)
-                .orderByChild("volumeInfo/"+sort)
+                .orderByChild("volumeInfo/" + sort)
                 .addListenerForSingleValueEvent(valueEventListener);
 
     }
@@ -251,7 +251,7 @@ public class FirebaseDatabaseHelper {
 
     public void updateBook(String userId, String folderId, Book bookApi) {
 
-        if(folderId == null)
+        if (folderId == null)
             folderId = REF_MY_BOOKS_FOLDER;
 
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
@@ -266,7 +266,7 @@ public class FirebaseDatabaseHelper {
                 .child("books");
 
 
-        if(bookApi.getId() == null && bookApi.getIdProvider() != null){ //If it's search book
+        if (bookApi.getId() == null && bookApi.getIdProvider() != null) { //If it's search book
 
             ref.orderByChild("idProvider")
                     .equalTo(bookApi.getIdProvider())
@@ -274,13 +274,14 @@ public class FirebaseDatabaseHelper {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            if(dataSnapshot.getValue() == null){
-                                insert(dataSnapshot,listener,bookApi,ref);
+                            if (dataSnapshot.getValue() == null) {
+                                insert(dataSnapshot, listener, bookApi, ref);
                             }
                         }
 
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {}
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
                     });
         } else {
 
@@ -291,7 +292,8 @@ public class FirebaseDatabaseHelper {
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {}
+                public void onCancelled(DatabaseError databaseError) {
+                }
             });
         }
 
@@ -307,11 +309,11 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    public void findBook(String userId, String folderId, String bookId, ValueEventListener valueEventListener){
+    public void findBook(String userId, String folderId, String bookId, ValueEventListener valueEventListener) {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookId).addListenerForSingleValueEvent(valueEventListener);
     }
 
-    public void updateBookAnnotation(String userId, String folderId, String bookId, String annotation){
+    public void updateBookAnnotation(String userId, String folderId, String bookId, String annotation) {
 
         Map<String, Object> mapAnnotation = new HashMap<>();
         mapAnnotation.put("annotation", annotation);
@@ -319,13 +321,13 @@ public class FirebaseDatabaseHelper {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookId).updateChildren(mapAnnotation);
     }
 
-    private void insert(DataSnapshot dataSnapshot,OnPaidOperationListener listener, final Book bookApi, DatabaseReference ref){
+    private void insert(DataSnapshot dataSnapshot, OnPaidOperationListener listener, final Book bookApi, DatabaseReference ref) {
 
         if (dataSnapshot.getChildrenCount() >= mMaxBooks) {
             listener.onInsertBook(false);
         } else {
 
-            if(bookApi.getId() == null ){ //Here we generate our id
+            if (bookApi.getId() == null) { //Here we generate our id
                 bookApi.setId(ref.push().getKey());
             }
 

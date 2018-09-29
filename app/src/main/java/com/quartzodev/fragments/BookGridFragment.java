@@ -2,17 +2,13 @@ package com.quartzodev.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.quartzodev.adapters.BookGridAdapterFirebase;
 import com.quartzodev.buddybook.MainActivity;
@@ -22,6 +18,10 @@ import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.utils.PrefUtils;
 import com.quartzodev.views.DynamicImageView;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
  * Created by victoraldir on 24/03/2017.
  */
 
-public class BookGridFragment extends Fragment implements BookGridAdapterFirebase.ILoading{
+public class BookGridFragment extends Fragment implements BookGridAdapterFirebase.ILoading {
 
     private final String KEY_USER_ID = "userId";
     private final String KEY_FOLDER_ID = "mFolderId";
@@ -60,11 +60,11 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(KEY_USER_ID, mUserId);
         outState.putString(KEY_FOLDER_ID, mFolderId);
-        outState.putInt(KEY_MENU_ID,mMenuId);
+        outState.putInt(KEY_MENU_ID, mMenuId);
         super.onSaveInstanceState(outState);
     }
 
-    public String getFolderId(){
+    public String getFolderId() {
         return mFolderId;
     }
 
@@ -78,7 +78,7 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
             mFolderId = savedInstanceState.getString(KEY_FOLDER_ID);
             mMenuId = savedInstanceState.getInt(KEY_MENU_ID);
 
-        }else{
+        } else {
 
             if (getArguments().containsKey(ARG_FOLDER_ID)) {
                 mFolderId = getArguments().getString(ARG_FOLDER_ID);
@@ -92,7 +92,7 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        if(mFirebaseAuth.getCurrentUser() != null) {
+        if (mFirebaseAuth.getCurrentUser() != null) {
 
             if (savedInstanceState != null && savedInstanceState.containsKey(KEY_USER_ID)) {
                 mUserId = savedInstanceState.getString(KEY_USER_ID);
@@ -141,7 +141,7 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
 
             setAdapterWithSort(options);
 
-        }else{
+        } else {
 
             String sort = getResources()
                     .getStringArray(R.array.default_sorts_codes)[PrefUtils.getSortMode(getContext())];
@@ -149,7 +149,7 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
             FirebaseRecyclerOptions<Book> options =
                     new FirebaseRecyclerOptions.Builder<Book>()
                             .setQuery(FirebaseDatabaseHelper.getInstance()
-                                            .fetchBooksFromFolder(mUserId,mFolderId,sort),
+                                            .fetchBooksFromFolder(mUserId, mFolderId, sort),
                                     Book.class)
                             .build();
 
@@ -159,10 +159,10 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
         return rootView;
     }
 
-    private void setAdapterWithSort(FirebaseRecyclerOptions<Book> options){
+    private void setAdapterWithSort(FirebaseRecyclerOptions<Book> options) {
 
 
-        mAdapter = new BookGridAdapterFirebase(options,this,mListener,mFolderId,mMenuId,getContext());
+        mAdapter = new BookGridAdapterFirebase(options, this, mListener, mFolderId, mMenuId, getContext());
         mRecyclerView.setAdapter(mAdapter);
 
         int columnCount = getResources().getInteger(R.integer.list_column_count);
@@ -175,7 +175,7 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
         mAdapter.startListening();
     }
 
-    public void refresh(){
+    public void refresh() {
 
         String sort = getResources()
                 .getStringArray(R.array.default_sorts_codes)[PrefUtils.getSortMode(getContext())];
@@ -183,7 +183,7 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
         FirebaseRecyclerOptions<Book> options =
                 new FirebaseRecyclerOptions.Builder<Book>()
                         .setQuery(FirebaseDatabaseHelper.getInstance()
-                                        .fetchBooksFromFolder(mUserId,mFolderId,sort),
+                                        .fetchBooksFromFolder(mUserId, mFolderId, sort),
                                 Book.class)
                         .build();
 
@@ -197,9 +197,9 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
         setLoading(true);
     }
 
-    private void setupHideFloatButtonOnScroll(){
+    private void setupHideFloatButtonOnScroll() {
 
-        if((getActivity()) != null) {
+        if ((getActivity()) != null) {
 
             final FloatingActionButton fab = ((MainActivity) getActivity()).getFab();
 
@@ -266,11 +266,17 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
     public interface OnGridFragmentInteractionListener {
 
         void onClickListenerBookGridInteraction(String mFolderId, Book book, DynamicImageView imageView);
+
         void onDeleteBookClickListener(String mFolderId, Book book);
+
         void onAddBookToFolderClickListener(String mFolderId, Book book);
+
         void onCopyBookToFolderClickListener(String mFolderId, Book book);
+
         void onLendBookClickListener(Book book, MenuItem menuItem);
+
         void onReturnBookClickListener(Book book);
+
         void onEditListener(Book book);
     }
 }

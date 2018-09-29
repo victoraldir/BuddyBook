@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:padding="24dp">
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dialog_input_layout_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,9 +20,9 @@
             android:hint="@string/dialog_name_hint"
             android:maxLength="50"
             android:maxLines="1" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dialog_input_layout_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
             android:hint="@string/dialog_email_hint"
             android:maxLength="35"
             android:maxLines="1" />
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>
 

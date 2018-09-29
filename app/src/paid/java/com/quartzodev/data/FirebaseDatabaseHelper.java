@@ -57,18 +57,18 @@ public class FirebaseDatabaseHelper {
         mDatabaseReference.child(userId).updateChildren(fields);
     }
 
-    
+
     public void fetchPopularBooks(final ValueEventListener valueEventListener) {
 
         mDatabaseReference.child(REF_POPULAR_FOLDER)
                 .addListenerForSingleValueEvent(valueEventListener);
     }
 
-    public Query fetchPopularBooks(){
+    public Query fetchPopularBooks() {
         return mDatabaseReference.child(REF_POPULAR_FOLDER);
     }
 
-    public DatabaseReference getDatabaseRef(){
+    public DatabaseReference getDatabaseRef() {
         return mDatabaseReference;
     }
 
@@ -87,7 +87,7 @@ public class FirebaseDatabaseHelper {
                 .child(REF_FOLDERS)
                 .child(folderId)
                 .child(REF_BOOKS)
-                .orderByChild("volumeInfo/"+sort)
+                .orderByChild("volumeInfo/" + sort)
                 .addListenerForSingleValueEvent(valueEventListener);
 
     }
@@ -99,7 +99,7 @@ public class FirebaseDatabaseHelper {
                 .child(REF_FOLDERS)
                 .child(folderId)
                 .child(REF_BOOKS)
-                .orderByChild("volumeInfo/"+sort);
+                .orderByChild("volumeInfo/" + sort);
     }
 
     public ValueEventListener fetchLentBooks(String userId, final ValueEventListener valueEventListener) {
@@ -153,7 +153,7 @@ public class FirebaseDatabaseHelper {
         }
     }
 
-    public void findBook(String userId, String folderId, String bookId, ValueEventListener valueEventListener){
+    public void findBook(String userId, String folderId, String bookId, ValueEventListener valueEventListener) {
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookId).addListenerForSingleValueEvent(valueEventListener);
     }
 
@@ -163,6 +163,7 @@ public class FirebaseDatabaseHelper {
         ref.addListenerForSingleValueEvent(valueEventListener);
 
     }
+
     public Query fetchFolders(String userId) {
         return mDatabaseReference.child(userId).child(REF_FOLDERS);
     }
@@ -221,20 +222,20 @@ public class FirebaseDatabaseHelper {
 
     public void updateBook(String userId, String folderId, Book bookApi) {
 
-        if(folderId == null)
+        if (folderId == null)
             folderId = REF_MY_BOOKS_FOLDER;
 
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).updateChildren(Collections.singletonMap(bookApi.getId(), (Object) bookApi));
     }
 
-    public void updateBookAnnotation(String userId, String folderId, String bookId, String annotation){
+    public void updateBookAnnotation(String userId, String folderId, String bookId, String annotation) {
 
         Map<String, Object> mapAnnotation = new HashMap<>();
         mapAnnotation.put("annotation", annotation);
-        
+
         mDatabaseReference.child(userId).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookId).updateChildren(mapAnnotation);
     }
-    
+
     public void insertBookFolder(String userId, String folderId, final Book bookApi, final OnPaidOperationListener listener) {
 
         final DatabaseReference ref = mDatabaseReference
@@ -244,7 +245,7 @@ public class FirebaseDatabaseHelper {
                 .child("books");
 
 
-        if(bookApi.getId() == null && bookApi.getIdProvider() != null){ //If it's search book
+        if (bookApi.getId() == null && bookApi.getIdProvider() != null) { //If it's search book
 
             ref.orderByChild("idProvider")
                     .equalTo(bookApi.getIdProvider())
@@ -252,13 +253,14 @@ public class FirebaseDatabaseHelper {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            if(dataSnapshot.getValue() == null){
-                                insert(dataSnapshot,listener,bookApi,ref);
+                            if (dataSnapshot.getValue() == null) {
+                                insert(dataSnapshot, listener, bookApi, ref);
                             }
                         }
 
                         @Override
-                        public void onCancelled(DatabaseError databaseError) {}
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
                     });
         } else {
 
@@ -269,7 +271,8 @@ public class FirebaseDatabaseHelper {
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {}
+                public void onCancelled(DatabaseError databaseError) {
+                }
             });
         }
 
@@ -285,9 +288,9 @@ public class FirebaseDatabaseHelper {
 
     }
 
-    private void insert(DataSnapshot dataSnapshot,OnPaidOperationListener listener, final Book bookApi, DatabaseReference ref){
+    private void insert(DataSnapshot dataSnapshot, OnPaidOperationListener listener, final Book bookApi, DatabaseReference ref) {
 
-        if(bookApi.getId() == null ){ //Here we generate our id
+        if (bookApi.getId() == null) { //Here we generate our id
             bookApi.setId(ref.push().getKey());
         }
 

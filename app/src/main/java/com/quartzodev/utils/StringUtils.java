@@ -6,8 +6,8 @@ package com.quartzodev.utils;
 
 public class StringUtils {
 
-    public static boolean isIsbn(String isbn){
-        if(isbn.length() == 10 || isbn.length() == 13){
+    public static boolean isIsbn(String isbn) {
+        if (isbn.length() == 10 || isbn.length() == 13) {
             return true;
         }
 

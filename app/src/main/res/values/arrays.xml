@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="default_sorts">
-        <item >@string/default_sorts_release</item>
+        <item>@string/default_sorts_release</item>
         <item>@string/default_sorts_title</item>
         <item>@string/default_sorts_author</item>
     </string-array>

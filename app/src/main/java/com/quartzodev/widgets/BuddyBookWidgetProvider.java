@@ -9,12 +9,13 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
 import com.quartzodev.buddybook.DetailActivity;
 import com.quartzodev.buddybook.MainActivity;
 import com.quartzodev.buddybook.R;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by victoraldir on 21/05/2017.

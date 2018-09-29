@@ -7,14 +7,12 @@
     <alpha
         android:fromAlpha="0"
         android:toAlpha="1"
-        android:duration="2000" >
-    </alpha>
+        android:duration="2000"></alpha>
 
     <alpha
         android:startOffset="2000"
         android:fromAlpha="1"
         android:toAlpha="0"
-        android:duration="2000" >
-    </alpha>
+        android:duration="2000"></alpha>
 
 </set>

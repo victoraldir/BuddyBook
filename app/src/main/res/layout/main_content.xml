@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:visibility="gone"
         tools:layout="@layout/fragment_grid_book"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -21,12 +21,12 @@
         android:visibility="visible"
         android:id="@+id/loading_container">
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/main_progress_bar"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/main_progress_bar"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
 
         <TextView
             android:id="@+id/main_message"
@@ -37,7 +37,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_below="@+id/main_progress_bar"
-            tools:text="Bla bla"/>
+            tools:text="Bla bla" />
 
     </RelativeLayout>
 

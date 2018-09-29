@@ -7,15 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.ShareActionProvider;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -56,9 +47,17 @@ import org.joda.time.Days;
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ShareActionProvider;
+import androidx.cardview.widget.CardView;
+import androidx.core.view.MenuItemCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 
 
 /**
@@ -192,7 +191,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         mGridProductDetails.setAdapter(mProductDetailGridAdapter);
 
         return rootView;
-}
+    }
 
     public void loadAnnotationFromDb() {
         mFirebaseDatabaseHelper.findBook(mUserId, mFolderId, mBookId, new ValueEventListener() {
@@ -201,7 +200,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
                 if (dataSnapshot.getValue() != null) {
                     Book book = dataSnapshot.getValue(Book.class);
-                    if(book != null)
+                    if (book != null)
                         setAnnotation(book.getAnnotation());
                 }
             }
@@ -363,8 +362,8 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         }
     }
 
-    private TextDrawable generateTextDrawable(){
-        if(mBookSelected != null) {
+    private TextDrawable generateTextDrawable() {
+        if (mBookSelected != null) {
             TextDrawable drawable;
             drawable = TextDrawable.builder()
                     .buildRect(TextUtils.getFirstLetterTitle(mBookSelected), Color.BLUE);
@@ -500,8 +499,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     }
 
 
-
-    private void renderImage(Object image){
+    private void renderImage(Object image) {
         GlideApp.with(mContext)
                 .asBitmap()
                 .load(image)
@@ -532,7 +530,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                 });
 
             } catch (Exception ex) {
-                Log.e(getClass().getSimpleName(),ex.getMessage());
+                Log.e(getClass().getSimpleName(), ex.getMessage());
             }
         }
     };
@@ -550,11 +548,11 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     public void onCancelled(DatabaseError databaseError) {
     }
 
-public interface OnDetailInteractionListener {
+    public interface OnDetailInteractionListener {
 
-    void onLendBook(Book bookApi);
+        void onLendBook(Book bookApi);
 
-    void onReturnBook(Book bookApi);
+        void onReturnBook(Book bookApi);
 
-}
+    }
 }

@@ -3,13 +3,6 @@ package com.quartzodev.buddybook;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -17,12 +10,19 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.fragments.DetailActivityFragment;
 import com.quartzodev.utils.Constants;
 import com.quartzodev.utils.DialogUtils;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
@@ -60,7 +60,7 @@ public class DetailActivity extends AppCompatActivity implements
 
         ButterKnife.bind(this);
 
-        if(BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE))
+        if (BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE))
             initAdView();
 
         setSupportActionBar(toolbar);
@@ -94,8 +94,8 @@ public class DetailActivity extends AppCompatActivity implements
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void setFabVisible(){
-        mFab.setVisibility(View.VISIBLE);
+    public void setFabVisible() {
+        mFab.hide();
     }
 
     @Override
@@ -104,14 +104,14 @@ public class DetailActivity extends AppCompatActivity implements
         Snackbar.make(mCoordinatorLayout, getString(R.string.annotation_saved), Snackbar.LENGTH_SHORT).show();
     }
 
-    private void initAdView(){
+    private void initAdView() {
         //Ad main
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
     }
 
-    public void expandDescription(View view){
+    public void expandDescription(View view) {
         mFragment.expandDescription(view);
     }
 
@@ -139,7 +139,7 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onLendBook(Book bookApi) {
-        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUserId, mFolderId, bookApi,null);
+        DialogUtils.alertDialogLendBook(this, mCoordinatorLayout, mFirebaseDatabaseHelper, mUserId, mFolderId, bookApi, null);
     }
 
     @Override

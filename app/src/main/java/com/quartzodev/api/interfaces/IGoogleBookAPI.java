@@ -1,10 +1,9 @@
 package com.quartzodev.api.interfaces;
 
 
-import android.support.annotation.Keep;
-
 import com.quartzodev.api.entities.google.BookResponse;
 
+import androidx.annotation.Keep;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -15,7 +14,7 @@ import retrofit2.http.Query;
 
 @Keep
 public interface IGoogleBookAPI {
-    
+
     @GET("/books/v1/volumes")
     Call<BookResponse> getBooks(@Query("q") String query, @Query("key") String apiKey);
 
