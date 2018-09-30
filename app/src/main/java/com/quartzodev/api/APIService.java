@@ -10,6 +10,7 @@ import com.quartzodev.api.strategies.GoogleImpl;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
@@ -35,8 +36,12 @@ public class APIService {
 
     private void initService() {
         // Add the interceptor to OkHttpClient
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         OkHttpClient client = builder
+                .addInterceptor(interceptor)
                 .readTimeout(60, TimeUnit.SECONDS)
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .build();

@@ -60,7 +60,7 @@ android {
 
             buildTypes.each {
                 it.buildConfigField 'String', 'GOOGLE_BOOK_API_KEY', GOOGLE_BOOK_API_KEY
-                it.buildConfigField 'String', 'GOODREADS_API_KEY', GOOGLE_BOOK_API_KEY
+                it.buildConfigField 'String', 'GOODREADS_API_KEY', GOODREADS_API_KEY
             }
         }
     }
@@ -91,6 +91,7 @@ dependencies {
     implementation 'net.danlew:android.joda:2.9.9.4'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'com.github.bumptech.glide:annotations:4.8.0'
     implementation "com.github.bumptech.glide:okhttp3-integration:4.8.0"

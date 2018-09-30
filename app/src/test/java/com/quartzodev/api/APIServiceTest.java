@@ -33,7 +33,7 @@ public class APIServiceTest {
 
         IQuery query = APIService.getInstance().getService(APIService.GOODREADS);
 
-        Book book = query.getBookByISBN("0061964360");
+        Book book = query.getBookByISBN("9780545010221");
 
         Assert.assertNotNull(book);
 
