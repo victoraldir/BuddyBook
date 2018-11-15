@@ -43,5 +43,17 @@ public class APIServiceTest {
 
     }
 
+    @Test
+    public void shouldFindBookByISBNAmazon(){
+        IQuery query = APIService.getInstance().getService(APIService.AMAZON);
+
+        Book book = query.getBookByISBN("9780545010221");
+
+        Assert.assertNotNull(book);
+
+        book = query.getBookByISBN("1133709079-");
+
+        Assert.assertNull(book);
+    }
 }
 

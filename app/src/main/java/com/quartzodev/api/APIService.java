@@ -1,9 +1,11 @@
 package com.quartzodev.api;
 
 
+import com.quartzodev.api.interfaces.IAmazonAPI;
 import com.quartzodev.api.interfaces.IGoodreadsAPI;
 import com.quartzodev.api.interfaces.IGoogleBookAPI;
 import com.quartzodev.api.interfaces.IQuery;
+import com.quartzodev.api.strategies.AmazonImpl;
 import com.quartzodev.api.strategies.GoodreadsImpl;
 import com.quartzodev.api.strategies.GoogleImpl;
 
@@ -23,12 +25,15 @@ public class APIService {
 
     public static final int GOOGLE = 1;
     public static final int GOODREADS = 2;
+    public static final int AMAZON = 3;
 
     private static final String GOOGLE_API_URL = "https://www.googleapis.com";
     private static final String GOODREADS_API_URL = "https://www.goodreads.com";
+    private static final String AMAZON_API_URL = "http://webservices.amazon.com";
     private static APIService sMinstance;
     private IGoogleBookAPI mGoogleService;
     private IGoodreadsAPI mGoodreadsService;
+    private IAmazonAPI mAmazonAPIService;
 
     private APIService() {
         initService();
@@ -63,6 +68,15 @@ public class APIService {
                 .build();
 
         mGoodreadsService = retrofitGoodReads.create(IGoodreadsAPI.class);
+
+        //Goodreads service
+        Retrofit retrofitAmazon = new Retrofit.Builder()
+                .addConverterFactory(SimpleXmlConverterFactory.create())
+                .baseUrl(AMAZON_API_URL)
+                .client(client)
+                .build();
+
+        mAmazonAPIService = retrofitGoodReads.create(IAmazonAPI.class);
     }
 
     public static APIService getInstance() {
@@ -81,7 +95,7 @@ public class APIService {
             case GOODREADS:
                 return new GoodreadsImpl(mGoodreadsService);
             default:
-                return null;
+                return new AmazonImpl(mAmazonAPIService);
 
         }
 

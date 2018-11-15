@@ -86,6 +86,7 @@ public class SearchTask extends AsyncTaskLoader<List<Book>> {
 
             Log.i(LOG, "Searching for: " + mQuery);
 
+//            Book book = APIService.getInstance().getService(APIService.AMAZON).getBookByISBN(mQuery);
             Book book = APIService.getInstance().getService(APIService.GOOGLE).getBookByISBN(mQuery);
 
             if (book == null) {

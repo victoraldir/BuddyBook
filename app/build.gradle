@@ -10,8 +10,8 @@ android {
         applicationId "com.quartzodev.buddybook"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 49
-        versionName "1.2.4.3"
+        versionCode 50
+        versionName "1.2.4.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         resConfigs "en"
@@ -72,7 +72,7 @@ android {
 }
 
 dependencies {
-    implementation "com.google.firebase:firebase-core:16.0.3"
+    implementation "com.google.firebase:firebase-core:16.0.5"
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation files('libs/super-csv-2.4.0.jar')
@@ -85,9 +85,12 @@ dependencies {
         transitive = true
     }
 
-    implementation 'com.google.android.gms:play-services-auth:16.0.0'
-    implementation 'com.google.android.gms:play-services-vision:15.0.2'
-    implementation 'com.google.android.gms:play-services-ads:15.0.1'
+    // https://mvnrepository.com/artifact/com.google.android.material/material
+    implementation 'com.google.android.material:material:1.0.0'
+
+    implementation 'com.google.android.gms:play-services-auth:16.0.1'
+    implementation 'com.google.android.gms:play-services-vision:17.0.2'
+    implementation 'com.google.android.gms:play-services-ads:17.1.1'
     implementation 'net.danlew:android.joda:2.9.9.4'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
@@ -111,9 +114,9 @@ dependencies {
 
     implementation 'androidx.annotation:annotation:1.0.0'
 
-    freeImplementation 'com.google.firebase:firebase-config:16.0.0'
+    freeImplementation 'com.google.firebase:firebase-config:16.1.0'
 
-    implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
+    implementation 'com.jakewharton:butterknife:9.0.0-rc1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
 

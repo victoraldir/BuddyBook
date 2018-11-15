@@ -23,6 +23,11 @@
             android:value="GlideModuleConfiguration" />
 
         <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/ad_app_id"/>
+
+
+        <meta-data
             android:name="io.fabric.ApiKey"
             android:value="535eaf4515793975a58e16aa0c097291ed581443" />
 

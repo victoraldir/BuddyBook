@@ -24,6 +24,8 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+-printconfiguration proguard-merge-config.txt
+
 -keep class androidx.appcompat.widget.ShareActionProvider { *; }
 -keep class androidx.appcompat.widget.SearchView { *; }
 -keep class com.quartzodev.data.**  { *; }
@@ -37,6 +39,7 @@
 #Retrofit
 -dontwarn okio.**
 -dontwarn javax.annotation.**
+-dontwarn javax.annotation.GuardedBy
 
 -dontwarn org.simpleframework.xml.stream.**
 # SimpleXMLParsing
@@ -49,6 +52,11 @@
     @org.simpleframework.xml.* *;
 }
 
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
+
+-keep class java.lang.**
+
 #glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.AppGlideModule
@@ -60,9 +68,15 @@
 # OKHttp Glide module
 -keep class com.bumptech.glide.integration.okhttp.OkHttpGlideModule
 
+-keep class com.google.**
+
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.ParametersAreNonnullByDefault
+
 #AboutLibraries
 -keep class .R
 -keep class **.R$* {
     <fields>;
 }
 
+-dontwarn com.google.**
