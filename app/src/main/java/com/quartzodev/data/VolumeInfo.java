@@ -41,17 +41,21 @@ public class VolumeInfo {
 
     public String getSearchField() {
 
-        searchField = title;
+        if(title != null) {
+            searchField = title;
 
-        if (authors != null && !authors.isEmpty()) {
-            for (String author : authors) {
-                searchField = searchField.concat("_" + author);
+            if (authors != null && !authors.isEmpty()) {
+                for (String author : authors) {
+                    searchField = searchField.concat("_" + author);
+                }
             }
+
+            searchField = searchField.concat("_" + publisher).concat("_" + isbn10).concat("_" + isbn13);
+
+            return searchField.toLowerCase();
         }
 
-        searchField = searchField.concat("_" + publisher).concat("_" + isbn10).concat("_" + isbn13);
-
-        return searchField.toLowerCase();
+        return "";
     }
 
     public String getIsbn10() {

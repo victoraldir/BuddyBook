@@ -140,8 +140,7 @@ public class DialogUtils {
 
     public static void alertDialogAddFolder(final Activity activity,
                                             final List<Folder> folders,
-                                            final FirebaseDatabaseHelper mFirebaseDatabaseHelper,
-                                            final String userId) {
+                                            final FirebaseDatabaseHelper mFirebaseDatabaseHelper) {
 
         LayoutInflater inflater = activity.getLayoutInflater();
 
@@ -182,9 +181,9 @@ public class DialogUtils {
                             Folder newFolder = new Folder(urlEditText.getText().toString());
 
                             if (activity instanceof DetailActivity) {
-                                mFirebaseDatabaseHelper.insertFolder(userId, newFolder, (DetailActivity) activity);
+                                mFirebaseDatabaseHelper.insertFolder(newFolder, (DetailActivity) activity);
                             } else {
-                                mFirebaseDatabaseHelper.insertFolder(userId, newFolder, (MainActivity) activity);
+                                mFirebaseDatabaseHelper.insertFolder(newFolder, (MainActivity) activity);
                             }
 
                             dialog.dismiss();
@@ -259,7 +258,7 @@ public class DialogUtils {
                                 menuItem.setTitle(activity.getString(R.string.action_return_lend));
                             }
 
-                            mFirebaseDatabaseHelper.updateBook(userId, folderId, book);
+                            mFirebaseDatabaseHelper.updateBook(folderId, book);
 
                             try {
                                 DetailActivity detailActivity = ((DetailActivity) activity);
@@ -308,7 +307,7 @@ public class DialogUtils {
 
                         Book updatedBook = book;
                         updatedBook.setLend(null);
-                        mFirebaseDatabaseHelper.updateBook(userId, folderId, updatedBook);
+                        mFirebaseDatabaseHelper.updateBook(folderId, updatedBook);
 
                         try {
                             ((DetailActivity) activity).loadBook(book);
@@ -403,13 +402,11 @@ public class DialogUtils {
                         customBookApi.setCustom(true);
 
                         if (folderId == null) {
-                            mFirebaseDatabaseHelper.insertBookFolder(userId,
-                                    FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,
+                            mFirebaseDatabaseHelper.insertBookFolder(FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER,
                                     customBookApi,
                                     (MainActivity) activity);
                         } else {
-                            mFirebaseDatabaseHelper.insertBookFolder(userId,
-                                    folderId,
+                            mFirebaseDatabaseHelper.insertBookFolder(folderId,
                                     customBookApi,
                                     (MainActivity) activity);
                         }

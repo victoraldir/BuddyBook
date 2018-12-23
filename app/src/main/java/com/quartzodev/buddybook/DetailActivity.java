@@ -95,7 +95,7 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     public void setFabVisible() {
-        mFab.hide();
+        mFab.show();
     }
 
     @Override

@@ -53,7 +53,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
     private LoaderManager mLoadManager;
     private Context mContext;
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
-    private String mUserId;
     private String mQuery;
     private Integer mMenuId;
     private FirebaseAuth mFirebaseAuth;
@@ -87,7 +86,6 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
             mMenuId = getArguments().getInt(ARG_MENU_ID);
         }
 
-        mUserId = mFirebaseAuth.getCurrentUser().getUid();
     }
 
     @Nullable
@@ -181,7 +179,7 @@ public class SearchResultFragment extends Fragment implements LoaderManager.Load
 
                 setLoading(true);
 
-                mFirebaseDatabaseHelper.findBookSearch(mUserId, mFolderId, new ValueEventListener() {
+                mFirebaseDatabaseHelper.findBookSearch(mFolderId, new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         List<Book> bookApis = new ArrayList<>();

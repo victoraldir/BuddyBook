@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity
 
     public void setupFab() {
         if (ConnectionUtils.isNetworkConnected(getApplication()) || FirebaseAuth.getInstance().getCurrentUser() != null) {
-            mFab.setVisibility(View.VISIBLE);
+            mFab.show();
             mFab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity
 
             mUser = User.setupUserFirstTime(firebaseUser, mContext);
 
-            mFirebaseDatabaseHelper.fetchUserById(mUser.getUid(), new ValueEventListener() {
+            mFirebaseDatabaseHelper.fetchUserById(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     updateUser(dataSnapshot);
@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity
 
             if (dataSnapshot.getValue() != null) {
 
-                mFirebaseDatabaseHelper.updateUserLastActivity(mUser.getUid());
+                mFirebaseDatabaseHelper.updateUserLastActivity();
                 loadFolderListFragment();
                 Snackbar.make(mCoordinatorLayout, getText(R.string.success_sign_in), Snackbar.LENGTH_SHORT).show();
 
@@ -296,7 +296,6 @@ public class MainActivity extends AppCompatActivity
 
                         if (databaseError == null) {
                             mFirebaseDatabaseHelper.insertDefaulFolder(
-                                    mUser.getUid(),
                                     mContext.getResources().getString(R.string.tab_my_books), new DatabaseReference.CompletionListener() {
                                         @Override
                                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -425,7 +424,7 @@ public class MainActivity extends AppCompatActivity
                 mTextViewMessage.setText(getString(R.string.no_internet));
 
                 mLoadingContainer.setVisibility(View.GONE);
-                mFab.setVisibility(View.GONE);
+                mFab.hide();
                 mProgressBar.setVisibility(View.GONE);
                 mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 mToolbar.setVisibility(View.GONE);
@@ -457,7 +456,7 @@ public class MainActivity extends AppCompatActivity
                 mTextViewMessage.setVisibility(View.VISIBLE);
                 mTextViewMessage.setText(msg);
 
-                mFab.setVisibility(View.GONE);
+                mFab.hide();
                 mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
                 mToolbar.setVisibility(View.GONE);
 
@@ -469,7 +468,7 @@ public class MainActivity extends AppCompatActivity
                 mFrameLayoutContainer.setVisibility(View.VISIBLE);
                 mLoadingContainer.setVisibility(View.GONE);
 
-                mFab.setVisibility(View.VISIBLE);
+                mFab.show();
                 mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                 mToolbar.setVisibility(View.VISIBLE);
 
@@ -709,7 +708,7 @@ public class MainActivity extends AppCompatActivity
 
                 showStatus(LOADING, getString(R.string.generating_csv));
 
-                FirebaseDatabaseHelper.getInstance().findBookSearch(mUser.getUid(), mFolderId, new ValueEventListener() {
+                FirebaseDatabaseHelper.getInstance().findBookSearch(mFolderId, new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -773,7 +772,7 @@ public class MainActivity extends AppCompatActivity
         DialogUtils.alertDialogDeleteFolder(mContext, folder, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mFirebaseDatabaseHelper.deleteFolder(mUser.getUid(), folder.getId());
+                mFirebaseDatabaseHelper.deleteFolder(folder.getId());
                 onClickListenerFolderListInteraction(null);
                 Snackbar.make(mCoordinatorLayout, getText(R.string.folder_deleted), Snackbar.LENGTH_SHORT).show();
             }
@@ -814,8 +813,7 @@ public class MainActivity extends AppCompatActivity
     public void onClickAddFolderListInteraction() {
         DialogUtils.alertDialogAddFolder(this,
                 mFolderList,
-                FirebaseDatabaseHelper.getInstance(),
-                mUser.getUid());
+                FirebaseDatabaseHelper.getInstance());
     }
 
     private void clearFragmentBackStack() {
@@ -959,7 +957,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDeleteBookClickListener(final String mFolderId, final Book book) {
 
-        mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), mFolderId, book);
+        mFirebaseDatabaseHelper.deleteBookFolder(mFolderId, book);
 
         showToolbar();
 
@@ -967,7 +965,7 @@ public class MainActivity extends AppCompatActivity
                 .setAction(getString(R.string.redo), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), mFolderId, book, (MainActivity) mContext);
+                        mFirebaseDatabaseHelper.insertBookFolder(mFolderId, book, (MainActivity) mContext);
                     }
                 }).show();
     }
@@ -988,15 +986,15 @@ public class MainActivity extends AppCompatActivity
                             @Override
                             public void onClick(View v) {
                                 if (!id.equals(folderId)) {
-                                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), folderId, book, (MainActivity) mContext);
-                                    mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), id, book);
+                                    mFirebaseDatabaseHelper.insertBookFolder(folderId, book, (MainActivity) mContext);
+                                    mFirebaseDatabaseHelper.deleteBookFolder(id, book);
                                 }
                             }
                         }).show();
 
                 if (!id.equals(folderId)) {
-                    mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book, (MainActivity) mContext);
-                    mFirebaseDatabaseHelper.deleteBookFolder(mUser.getUid(), folderId, book);
+                    mFirebaseDatabaseHelper.insertBookFolder(id, book, (MainActivity) mContext);
+                    mFirebaseDatabaseHelper.deleteBookFolder(folderId, book);
                 }
 
             }
@@ -1018,7 +1016,7 @@ public class MainActivity extends AppCompatActivity
                 Snackbar.make(mCoordinatorLayout, String.format(getString(R.string.copied_to_folder), name), Snackbar.LENGTH_LONG)
                         .show();
 
-                mFirebaseDatabaseHelper.insertBookFolder(mUser.getUid(), id, book, (MainActivity) mContext);
+                mFirebaseDatabaseHelper.insertBookFolder(id, book, (MainActivity) mContext);
 
             }
         });

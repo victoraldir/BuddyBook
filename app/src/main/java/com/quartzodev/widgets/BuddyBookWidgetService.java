@@ -44,7 +44,6 @@ public class BuddyBookWidgetService extends RemoteViewsService {
         List<Book> mData = new ArrayList<>();
         FirebaseDatabaseHelper mFirebaseDatabaseHelper;
         FirebaseAuth mFirebaseAuth;
-        private String mUserId;
         private Context mContext;
 
         public ListRemoteViewFactory(Context context) {
@@ -57,7 +56,6 @@ public class BuddyBookWidgetService extends RemoteViewsService {
             FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
 
             if (firebaseUser != null) {
-                mUserId = firebaseUser.getUid();
                 loadBookList();
             }
         }
@@ -69,9 +67,7 @@ public class BuddyBookWidgetService extends RemoteViewsService {
         }
 
         public void loadBookList() {
-            if (mUserId != null) {
-                mFirebaseDatabaseHelper.fetchLentBooks(mUserId, this);
-            }
+            mFirebaseDatabaseHelper.fetchLentBooks( this);
         }
 
         @Override

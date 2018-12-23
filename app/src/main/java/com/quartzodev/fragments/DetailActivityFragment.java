@@ -128,7 +128,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     LinearLayout mBtnLend;
 
     private String mBookJson;
-    private String mUserId;
+//    private String mUserId;
     private String mFolderListComma;
     private String mFolderId;
     private String mBookId;
@@ -157,7 +157,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUserId = getArguments().getString(DetailActivity.ARG_USER_ID);
+//        mUserId = getArguments().getString(DetailActivity.ARG_USER_ID);
         mFolderListComma = getArguments().getString(DetailActivity.ARG_FOLDER_LIST_ID);
         mBookJson = getArguments().getString(DetailActivity.ARG_BOOK_JSON);
         mFolderId = getArguments().getString(DetailActivity.ARG_FOLDER_ID);
@@ -194,7 +194,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     }
 
     public void loadAnnotationFromDb() {
-        mFirebaseDatabaseHelper.findBook(mUserId, mFolderId, mBookId, new ValueEventListener() {
+        mFirebaseDatabaseHelper.findBook(mFolderId, mBookId, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -441,7 +441,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
         String unFormatted = mFolderListComma.split(",")[which];
         String id = unFormatted.split("=")[1];
 
-        FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId, id, mBookSelected, (DetailActivity) getActivity());
+        FirebaseDatabaseHelper.getInstance().insertBookFolder(id, mBookSelected, (DetailActivity) getActivity());
         dialog.dismiss();
     }
 

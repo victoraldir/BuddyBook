@@ -159,7 +159,6 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
         outState.putString(ARG_PHOTO_PATH, currentPresenter.getBookId() == null ? mPicturePath : currentPresenter.getImagePath());
         outState.putString(ARG_BOOK_ID, currentPresenter.getBookId());
         outState.putString(ARG_FOLDER_ID, currentPresenter.getFolderId());
-        outState.putString(ARG_USER_ID, currentPresenter.getUserId());
         outState.putBoolean(ARG_FLAG_MORE, currentPresenter.getFlagFieldsOpen());
 
         super.onSaveInstanceState(outState);

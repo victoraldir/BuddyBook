@@ -41,7 +41,7 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
     RecyclerView mRecyclerView;
 
     private BookGridAdapterFirebase mAdapter;
-    private String mUserId;
+//    private String mUserId;
     private String mFolderId;
     private Integer mMenuId;
     private OnGridFragmentInteractionListener mListener;
@@ -58,7 +58,7 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString(KEY_USER_ID, mUserId);
+//        outState.putString(KEY_USER_ID, mUserId);
         outState.putString(KEY_FOLDER_ID, mFolderId);
         outState.putInt(KEY_MENU_ID, mMenuId);
         super.onSaveInstanceState(outState);
@@ -74,7 +74,7 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
 
         if (savedInstanceState != null) {
 
-            mUserId = savedInstanceState.getString(KEY_USER_ID);
+//            mUserId = savedInstanceState.getString(KEY_USER_ID);
             mFolderId = savedInstanceState.getString(KEY_FOLDER_ID);
             mMenuId = savedInstanceState.getInt(KEY_MENU_ID);
 
@@ -95,9 +95,9 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
         if (mFirebaseAuth.getCurrentUser() != null) {
 
             if (savedInstanceState != null && savedInstanceState.containsKey(KEY_USER_ID)) {
-                mUserId = savedInstanceState.getString(KEY_USER_ID);
+//                mUserId = savedInstanceState.getString(KEY_USER_ID);
             } else {
-                mUserId = mFirebaseAuth.getCurrentUser().getUid();
+//                mUserId = mFirebaseAuth.getCurrentUser().getUid();
             }
         }
     }
@@ -149,7 +149,7 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
             FirebaseRecyclerOptions<Book> options =
                     new FirebaseRecyclerOptions.Builder<Book>()
                             .setQuery(FirebaseDatabaseHelper.getInstance()
-                                            .fetchBooksFromFolder(mUserId, mFolderId, sort),
+                                            .fetchBooksFromFolder(mFolderId, sort),
                                     Book.class)
                             .build();
 
@@ -183,7 +183,7 @@ public class BookGridFragment extends Fragment implements BookGridAdapterFirebas
         FirebaseRecyclerOptions<Book> options =
                 new FirebaseRecyclerOptions.Builder<Book>()
                         .setQuery(FirebaseDatabaseHelper.getInstance()
-                                        .fetchBooksFromFolder(mUserId, mFolderId, sort),
+                                        .fetchBooksFromFolder(mFolderId, sort),
                                 Book.class)
                         .build();
 

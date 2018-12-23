@@ -43,7 +43,7 @@ public class FolderListFragment extends Fragment {
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private FirebaseAuth mFirebaseAuth;
     private FolderListAdapter mAdapter;
-    private String mUserId;
+//    private String mUserId;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -57,7 +57,7 @@ public class FolderListFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
-        outState.putString(KEY_USER_ID, mUserId);
+//        outState.putString(KEY_USER_ID, mUserId);
         super.onSaveInstanceState(outState);
     }
 
@@ -69,16 +69,16 @@ public class FolderListFragment extends Fragment {
         if (mFirebaseAuth.getCurrentUser() != null) {
 
             if (savedInstanceState != null && savedInstanceState.containsKey(KEY_USER_ID)) {
-                mUserId = savedInstanceState.getString(KEY_USER_ID);
+//                mUserId = savedInstanceState.getString(KEY_USER_ID);
             } else {
-                mUserId = mFirebaseAuth.getCurrentUser().getUid();
+//                mUserId = mFirebaseAuth.getCurrentUser().getUid();
             }
 
             if (mFirebaseDatabaseHelper == null)
                 mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
 
             if (getArguments() != null) {
-                mUserId = getArguments().getString(ARG_USER_ID);
+//                mUserId = getArguments().getString(ARG_USER_ID);
             }
         }
     }
@@ -97,7 +97,7 @@ public class FolderListFragment extends Fragment {
 
         FirebaseRecyclerOptions<Folder> options =
                 new FirebaseRecyclerOptions.Builder<Folder>()
-                        .setQuery(mFirebaseDatabaseHelper.fetchFolders(mUserId)
+                        .setQuery(mFirebaseDatabaseHelper.fetchFolders()
                                         .orderByChild("description"),
                                 Folder.class)
                         .build();

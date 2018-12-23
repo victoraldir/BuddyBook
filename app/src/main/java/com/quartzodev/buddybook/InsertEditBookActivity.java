@@ -101,13 +101,11 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
     @BindView(R.id.insert_progressbar)
     ProgressBar mProgressBar;
 
-    private String mUserId;
     private String mBookId;
     private String mFolderId;
     private String mFolderName;
     private Uri mPicturePath;
     private String mPictureChosen;
-    private Book mBookSelected;
     private Context mContext;
 
     @Override
@@ -129,7 +127,6 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
         mContext = this;
 
         mBookId = getIntent().getExtras().getString(ARG_BOOK_ID);
-        mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         mFolderId = getIntent().getExtras().getString(ARG_FOLDER_ID);
         mFolderName = getIntent().getExtras().getString(ARG_FOLDER_NAME);
 
@@ -159,7 +156,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
 
     public void loadBook() {
 
-        FirebaseDatabaseHelper.getInstance().findBook(mUserId, mFolderId, mBookId, new ValueEventListener() {
+        FirebaseDatabaseHelper.getInstance().findBook(mFolderId, mBookId, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -438,7 +435,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements View.On
             if (mFolderId == null)
                 mFolderId = FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER;
 
-            FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId, mFolderId, newBook, this);
+            FirebaseDatabaseHelper.getInstance().insertBookFolder(mFolderId, newBook, this);
 
             return true;
         }

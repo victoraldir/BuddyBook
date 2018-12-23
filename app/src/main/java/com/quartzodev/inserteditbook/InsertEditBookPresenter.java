@@ -24,7 +24,6 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
 
     @NonNull
     private final InsertEditBookContract.View mInsertEditBookView;
-    private String mUserId;
     private String mFolderId;
     private String mBookId;
     private String mImagePath;
@@ -36,7 +35,6 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
         mInsertEditBookView = view;
         mBookId = bookId;
         mFolderId = folderId;
-        mUserId = userId;
         mImagePath = imagePath;
         mFlagFieldsOpen = isMoreFieldsOpen;
         view.setPresenter(this);
@@ -44,7 +42,7 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
 
     @Override
     public void loadBook() {
-        FirebaseDatabaseHelper.getInstance().findBook(mUserId, mFolderId, mBookId, new ValueEventListener() {
+        FirebaseDatabaseHelper.getInstance().findBook(mFolderId, mBookId, new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
@@ -124,7 +122,7 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
             if (mFolderId == null)
                 mFolderId = FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER;
 
-            FirebaseDatabaseHelper.getInstance().insertBookFolder(mUserId, mFolderId, newBook, new FirebaseDatabaseHelper.OnPaidOperationListener() {
+            FirebaseDatabaseHelper.getInstance().insertBookFolder(mFolderId, newBook, new FirebaseDatabaseHelper.OnPaidOperationListener() {
                 @Override
                 public void onInsertBook(boolean success) {
                     if (success) {
@@ -189,10 +187,6 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
 
     @Override
     public void start() {
-    }
-
-    public String getUserId() {
-        return mUserId;
     }
 
     public String getFolderId() {

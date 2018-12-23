@@ -100,8 +100,7 @@ public class AnnotationActivity extends AppCompatActivity {
         Intent resultIntent = new Intent();
         mContent = mContentEditText.getText().toString().trim();
         resultIntent.putExtra(ARG_CONTENT, mContent);
-        mFirebaseDatabaseHelper.updateBookAnnotation(mFirebaseAuth.getCurrentUser().getUid(),
-                mFolderId,
+        mFirebaseDatabaseHelper.updateBookAnnotation(mFolderId,
                 mBookId,
                 mContent);
 
