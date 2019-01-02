@@ -28,6 +28,7 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
     private String mBookId;
     private String mImagePath;
     private boolean mFlagFieldsOpen;
+    private Book mEditedBook;
 
     InsertEditBookPresenter(InsertEditBookContract.View view, String userId, String folderId,
                             String bookId, String imagePath, boolean isMoreFieldsOpen) {
@@ -46,13 +47,13 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    Book book = dataSnapshot.getValue(Book.class);
-                    if (book != null && book.getVolumeInfo() != null) {
-                        if (book.getVolumeInfo().getImageLink() != null) {
-                            if(book.getVolumeInfo().getImageLink().getSmallThumbnail() != null){
-                                mImagePath = book.getVolumeInfo().getImageLink().getSmallThumbnail();
-                            }else if(book.getVolumeInfo().getImageLink().getThumbnail() != null){
-                                mImagePath = book.getVolumeInfo().getImageLink().getThumbnail();
+                    mEditedBook = dataSnapshot.getValue(Book.class);
+                    if (mEditedBook != null && mEditedBook.getVolumeInfo() != null) {
+                        if (mEditedBook.getVolumeInfo().getImageLink() != null) {
+                            if(mEditedBook.getVolumeInfo().getImageLink().getSmallThumbnail() != null){
+                                mImagePath = mEditedBook.getVolumeInfo().getImageLink().getSmallThumbnail();
+                            }else if(mEditedBook.getVolumeInfo().getImageLink().getThumbnail() != null){
+                                mImagePath = mEditedBook.getVolumeInfo().getImageLink().getThumbnail();
                             }else {
                                 mInsertEditBookView.showNoPictureAvailable();
                             }
@@ -60,7 +61,7 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
                         } else {
                             mInsertEditBookView.showNoPictureAvailable();
                         }
-                        mInsertEditBookView.showBook(book);
+                        mInsertEditBookView.showBook(mEditedBook);
                     }
                 }
             }
@@ -147,6 +148,64 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
             });
         }
 
+    }
+
+    @Override
+    public void updateBook(String title, List<String> authors, String isbn13, String isbn10, String language, String pageCount, String printType, String publisher, String description, String annotation, String imagePath) {
+        if(mBookId != null){
+
+            Book newBook = mEditedBook;
+            VolumeInfo volumeInfo = mEditedBook.getVolumeInfo();
+            ImageLink imageLink = mEditedBook.getVolumeInfo().getImageLink();
+            if(imageLink == null)
+                imageLink = new ImageLink();
+
+            newBook.setId(mBookId);
+
+            if (imagePath != null) {
+                imageLink.setThumbnail(imagePath);
+                imageLink.setSmallThumbnail(imagePath);
+            }else{
+                imageLink.setThumbnail(mImagePath);
+                imageLink.setSmallThumbnail(mImagePath);
+            }
+
+            volumeInfo.setTitle(title);
+            volumeInfo.setAuthors(authors);
+            volumeInfo.setIsbn13(isbn13);
+            volumeInfo.setIsbn10(isbn10);
+            volumeInfo.setLanguage(language);
+            volumeInfo.setPageCount(pageCount);
+            volumeInfo.setPrintType(printType);
+            volumeInfo.setPublisher(publisher);
+            volumeInfo.setDescription(description);
+
+            newBook.setAnnotation(annotation);
+
+            volumeInfo.setImageLink(imageLink);
+            newBook.setVolumeInfo(volumeInfo);
+            newBook.setCustom(true);
+
+            if (validateBook(newBook)) {
+                if (mFolderId == null)
+                    mFolderId = FirebaseDatabaseHelper.REF_MY_BOOKS_FOLDER;
+
+                FirebaseDatabaseHelper.getInstance().insertBookFolder(mFolderId, newBook, new FirebaseDatabaseHelper.OnPaidOperationListener() {
+                    @Override
+                    public void onInsertBook(boolean success) {
+                        if (success) {
+                            mInsertEditBookView.finishActivity();
+                        }
+                    }
+
+                    @Override
+                    public void onInsertFolder(boolean success) {
+
+                    }
+                });
+            }
+
+        }
     }
 
     @Override

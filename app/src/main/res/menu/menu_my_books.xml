@@ -4,6 +4,12 @@
     tools:context="com.quartzodev.buddybook.DetailActivity">
 
     <item
+        android:id="@+id/action_edit"
+        android:orderInCategory="99"
+        android:title="@string/edit"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_lend"
         android:orderInCategory="100"
         android:title="@string/action_lend"

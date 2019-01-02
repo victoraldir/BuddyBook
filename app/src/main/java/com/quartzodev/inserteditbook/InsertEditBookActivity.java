@@ -105,6 +105,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
 
     private InsertEditBookContract.Presenter mPresenter;
     private String mPicturePath;
+    private String mBookId;
 
     @Override
     protected void onResume() {
@@ -132,7 +133,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
 
     public void setupPresenter(Bundle savedInstanceState) {
 
-        String mBookId, mUserId, mFolderId;
+        String mUserId, mFolderId;
         boolean isMoreFieldsOpen = false;
 
         if (savedInstanceState != null) {
@@ -324,17 +325,33 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
 
             case R.id.action_save_book:
                 if (mInsertContainer.getVisibility() == View.VISIBLE) {
-                    mPresenter.saveBook(mTitle.getText().toString(),
-                            Collections.singletonList(mAuthor.getText().toString()),
-                            mIsbn13.getText().toString(),
-                            mIsbn10.getText().toString(),
-                            mLanguage.getText().toString(),
-                            mNumberPages.getText().toString(),
-                            mPrintType.getText().toString(),
-                            mPublisher.getText().toString(),
-                            mDescription.getText().toString(),
-                            mAnnotation.getText().toString(),
-                            mPicturePath);
+                    //TODO make it better
+                    if(mBookId == null) {
+                        mPresenter.saveBook(mTitle.getText().toString(),
+                                Collections.singletonList(mAuthor.getText().toString()),
+                                mIsbn13.getText().toString(),
+                                mIsbn10.getText().toString(),
+                                mLanguage.getText().toString(),
+                                mNumberPages.getText().toString(),
+                                mPrintType.getText().toString(),
+                                mPublisher.getText().toString(),
+                                mDescription.getText().toString(),
+                                mAnnotation.getText().toString(),
+                                mPicturePath);
+                    }else {
+                        mPresenter.updateBook(mTitle.getText().toString(),
+                                Collections.singletonList(mAuthor.getText().toString()),
+                                mIsbn13.getText().toString(),
+                                mIsbn10.getText().toString(),
+                                mLanguage.getText().toString(),
+                                mNumberPages.getText().toString(),
+                                mPrintType.getText().toString(),
+                                mPublisher.getText().toString(),
+                                mDescription.getText().toString(),
+                                mAnnotation.getText().toString(),
+                                mPicturePath);
+                    }
+
                 }
                 break;
         }

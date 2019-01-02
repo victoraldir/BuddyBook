@@ -54,6 +54,10 @@ public class InsertEditBookContract {
                       String language, String pageCount, String printType, String publisher,
                       String description, String annotation, String imagePath);
 
+        void updateBook(String title, List<String> authors, String isbn13, String isbn10,
+                      String language, String pageCount, String printType, String publisher,
+                      String description, String annotation, String imagePath);
+
         boolean validateBook(Book book);
 
         void openCamera();

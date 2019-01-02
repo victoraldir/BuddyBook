@@ -88,11 +88,11 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
                             .setTitle(mContext.getString(R.string.action_return_lend));
                 }
 
-                if (book.isCustom()) {
-                    Menu menu = holder.toolbar.getMenu();
-
-                    menu.add(0, EDIT, Menu.NONE, mContext.getString(R.string.edit));
-                }
+//                if (book.isCustom()) {
+//                    Menu menu = holder.toolbar.getMenu();
+//
+//                    menu.add(0, EDIT, Menu.NONE, mContext.getString(R.string.edit));
+//                }
             }
 
             if (book.getLend() != null)
@@ -122,7 +122,7 @@ public class BookGridAdapterFirebase extends FirebaseRecyclerAdapter<Book, BookG
                                 mListener.onLendBookClickListener(book, item);
                             }
                             break;
-                        case EDIT:
+                        case R.id.action_edit:
                             mListener.onEditListener(book);
                             break;
                     }
