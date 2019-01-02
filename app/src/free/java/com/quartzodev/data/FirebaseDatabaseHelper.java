@@ -321,7 +321,15 @@ public class FirebaseDatabaseHelper {
     }
 
     public void findBook(String folderId, String bookId, ValueEventListener valueEventListener) {
-        mDatabaseReference.child(getUserId()).child(REF_FOLDERS).child(folderId).child(REF_BOOKS).child(bookId).addListenerForSingleValueEvent(valueEventListener);
+
+        if (folderId == null)
+            folderId = REF_MY_BOOKS_FOLDER;
+
+        mDatabaseReference.child(getUserId())
+                .child(REF_FOLDERS)
+                .child(folderId).child(REF_BOOKS)
+                .child(bookId)
+                .addListenerForSingleValueEvent(valueEventListener);
     }
 
     public void updateBookAnnotation(String folderId, String bookId, String annotation) {
