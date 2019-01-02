@@ -135,6 +135,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
     private Context mContext;
     private Book mBookSelected;
     private OnDetailInteractionListener mListener;
+    private ProductDetailGridAdapter mProductDetailGridAdapter;
 
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
 
@@ -184,7 +185,7 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
 
         int numCol = 2;
 
-        ProductDetailGridAdapter mProductDetailGridAdapter = new ProductDetailGridAdapter(currentBook.getVolumeInfo(), getActivity());
+        mProductDetailGridAdapter = new ProductDetailGridAdapter(currentBook.getVolumeInfo(), getActivity());
 
         mGridProductDetails.setLayoutManager(new GridLayoutManager(mContext, numCol));
 
@@ -201,7 +202,9 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
                 if (dataSnapshot.getValue() != null) {
                     Book book = dataSnapshot.getValue(Book.class);
                     if (book != null)
-                        setAnnotation(book.getAnnotation());
+                        mProductDetailGridAdapter.swap(book.getVolumeInfo());
+//                        setAnnotation(book.getAnnotation());
+
                 }
             }
 
@@ -228,6 +231,10 @@ public class DetailActivityFragment extends Fragment implements View.OnClickList
             if (mBookSelected != null) {
                 menushareItem.setVisible(true);
                 mShareActionProvider.setShareIntent(createShareBookIntent(mBookSelected));
+            }
+
+            if(mBookId == null){
+                menu.removeItem(menu.findItem(R.id.action_edit).getItemId());
             }
         }
     }

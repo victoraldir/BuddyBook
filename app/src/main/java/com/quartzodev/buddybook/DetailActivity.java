@@ -32,6 +32,8 @@ public class DetailActivity extends AppCompatActivity implements
         DetailActivityFragment.OnDetailInteractionListener,
         FirebaseDatabaseHelper.OnPaidOperationListener {
 
+    private static final int RC_INSERT_BOOK = 7;
+
     public static final String ARG_BOOK_ID = "bookId";
     public static final String ARG_FOLDER_ID = "folderId";
     public static final String ARG_USER_ID = "userId";
@@ -50,7 +52,10 @@ public class DetailActivity extends AppCompatActivity implements
     private FirebaseDatabaseHelper mFirebaseDatabaseHelper;
     private String mUserId;
     private String mFolderId;
+    private String mBookId;
     private DetailActivityFragment mFragment;
+    private String mFolderListId;
+    private String mBookJson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +73,13 @@ public class DetailActivity extends AppCompatActivity implements
 
         mFirebaseDatabaseHelper = FirebaseDatabaseHelper.getInstance();
 
-        final String bookId = getIntent().getExtras().getString(ARG_BOOK_ID);
+        mBookId = getIntent().getExtras().getString(ARG_BOOK_ID);
         mFolderId = getIntent().getExtras().getString(ARG_FOLDER_ID);
         mUserId = getIntent().getExtras().getString(ARG_USER_ID);
-        String folderListId = getIntent().getExtras().getString(ARG_FOLDER_LIST_ID);
-        final String bookJson = getIntent().getExtras().getString(ARG_BOOK_JSON);
+        mFolderListId = getIntent().getExtras().getString(ARG_FOLDER_LIST_ID);
+        mBookJson = getIntent().getExtras().getString(ARG_BOOK_JSON);
 
-        mFragment = DetailActivityFragment.newInstance(mUserId, bookId, mFolderId, folderListId, bookJson);
+        mFragment = DetailActivityFragment.newInstance(mUserId, mBookId, mFolderId, mFolderListId, mBookJson);
 
         getSupportFragmentManager().popBackStackImmediate();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -101,7 +106,16 @@ public class DetailActivity extends AppCompatActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Snackbar.make(mCoordinatorLayout, getString(R.string.annotation_saved), Snackbar.LENGTH_SHORT).show();
+        if(RC_INSERT_BOOK == requestCode){
+
+            mFragment = DetailActivityFragment.newInstance(mUserId, mBookId, mFolderId, mFolderListId, mBookJson);
+            getSupportFragmentManager().popBackStackImmediate();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.detail_container, mFragment).commit();
+
+        }else{
+            Snackbar.make(mCoordinatorLayout, getString(R.string.annotation_saved), Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     private void initAdView() {
@@ -121,10 +135,27 @@ public class DetailActivity extends AppCompatActivity implements
             case android.R.id.home:
                 supportFinishAfterTransition();
                 return true;
+            case R.id.action_edit:
+                lauchInsertEditActivity(mBookId);
+                return true;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void lauchInsertEditActivity(String bookId) {
+
+        Intent it = new Intent(this, com.quartzodev.inserteditbook.InsertEditBookActivity.class);
+
+        if (bookId != null)
+            it.putExtra(InsertEditBookActivity.ARG_BOOK_ID, bookId);
+
+//        it.putExtra(InsertEditBookActivity.ARG_FOLDER_NAME, mFolderName);
+        it.putExtra(InsertEditBookActivity.ARG_FOLDER_ID, mFolderId);
+        it.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivityForResult(it, RC_INSERT_BOOK);
+
     }
 
     @Override

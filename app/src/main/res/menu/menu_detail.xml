@@ -4,9 +4,19 @@
     tools:context="com.quartzodev.buddybook.DetailActivity">
 
     <item
+        android:id="@+id/action_edit"
+        android:title="@string/edit"
+        android:visible="true"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_action_edit_white"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/action_share"
         android:title="@string/action_share"
         android:visible="false"
         app:actionProviderClass="androidx.appcompat.widget.ShareActionProvider"
+        android:orderInCategory="200"
         app:showAsAction="always" />
+
 </menu>

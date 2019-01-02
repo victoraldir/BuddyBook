@@ -39,6 +39,11 @@ public class ProductDetailGridAdapter extends RecyclerView.Adapter<ProductDetail
         countCellByVolumeInfo(mData);
     }
 
+    public void swap(VolumeInfo mData){
+        this.mData = mData;
+        this.notifyDataSetChanged();
+    }
+
     private void countCellByVolumeInfo(VolumeInfo volumeInfo) {
         if ((volumeInfo.getIsbn13() != null && !volumeInfo.getIsbn13().isEmpty())
                 || (volumeInfo.getIsbn10() != null && !volumeInfo.getIsbn10().isEmpty())) {

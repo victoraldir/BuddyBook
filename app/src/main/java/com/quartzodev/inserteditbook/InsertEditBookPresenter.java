@@ -10,8 +10,6 @@ import com.quartzodev.data.FirebaseDatabaseHelper;
 import com.quartzodev.data.ImageLink;
 import com.quartzodev.data.VolumeInfo;
 
-import java.io.File;
-import java.net.URI;
 import java.util.List;
 
 import androidx.annotation.NonNull;
