@@ -145,6 +145,7 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
             mBookId = getIntent().getExtras().getString(ARG_BOOK_ID);
             mUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
             mFolderId = getIntent().getExtras().getString(ARG_FOLDER_ID);
+            mPicturePath = getIntent().getExtras().getString(ARG_PHOTO_PATH);
         }
 
         mPresenter = new InsertEditBookPresenter(this, mUserId, mFolderId, mBookId, mPicturePath, isMoreFieldsOpen);

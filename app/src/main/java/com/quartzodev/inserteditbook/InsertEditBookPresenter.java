@@ -48,8 +48,15 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
                 if (dataSnapshot.getValue() != null) {
                     Book book = dataSnapshot.getValue(Book.class);
                     if (book != null && book.getVolumeInfo() != null) {
-                        if (book.getVolumeInfo().getImageLink() != null && new File(URI.create(book.getVolumeInfo().getImageLink().getSmallThumbnail()).getPath()).exists()) {
-                            mImagePath = book.getVolumeInfo().getImageLink().getSmallThumbnail();
+                        if (book.getVolumeInfo().getImageLink() != null) {
+                            if(book.getVolumeInfo().getImageLink().getSmallThumbnail() != null){
+                                mImagePath = book.getVolumeInfo().getImageLink().getSmallThumbnail();
+                            }else if(book.getVolumeInfo().getImageLink().getThumbnail() != null){
+                                mImagePath = book.getVolumeInfo().getImageLink().getThumbnail();
+                            }else {
+                                mInsertEditBookView.showNoPictureAvailable();
+                            }
+
                         } else {
                             mInsertEditBookView.showNoPictureAvailable();
                         }
@@ -100,6 +107,9 @@ public class InsertEditBookPresenter implements InsertEditBookContract.Presenter
         if (imagePath != null) {
             imageLink.setThumbnail(imagePath);
             imageLink.setSmallThumbnail(imagePath);
+        }else{
+            imageLink.setThumbnail(mImagePath);
+            imageLink.setSmallThumbnail(mImagePath);
         }
 
         volumeInfo.setTitle(title);
