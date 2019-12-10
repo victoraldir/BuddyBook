@@ -22,13 +22,15 @@
             android:name="com.quartzodev.buddybook.GlideModuleConfiguration"
             android:value="GlideModuleConfiguration" />
 
+        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
+
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/ad_app_id"/>
 
 
         <meta-data
-            android:name="io.fabric.ApiKey"
+            android:name="io.fabric.getUserId()"
             android:value="KEY_GOES_HERE" />
 
         <provider

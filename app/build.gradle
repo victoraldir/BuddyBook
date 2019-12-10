@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: com.google.gms.googleservices.GoogleServicesPlugin
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
+    compileSdkVersion 29
+    buildToolsVersion '29.0.2'
 
     defaultConfig {
         applicationId "com.quartzodev.buddybook"
         minSdkVersion 16
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 54
         versionName "1.2.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -43,7 +44,6 @@ android {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            ext.enableCrashlytics = false
         }
 
         flavorDimensions "tier"
@@ -77,14 +77,17 @@ android {
 }
 
 dependencies {
-    implementation "com.google.firebase:firebase-core:16.0.6"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
+    implementation "com.google.firebase:firebase-core:17.2.1"
+    implementation 'com.google.firebase:firebase-database:19.2.0'
+    implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta3'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation files('libs/super-csv-2.4.0.jar')
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
-    implementation 'com.firebaseui:firebase-ui-database:4.2.0'
-    implementation 'com.firebaseui:firebase-ui-auth:4.2.0'
+    implementation 'com.firebaseui:firebase-ui-database:6.1.0'
+    implementation 'com.firebaseui:firebase-ui-auth:6.1.0'
+
     implementation 'com.facebook.android:facebook-login:4.33.0'
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
         transitive = true
@@ -93,16 +96,17 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.android.material/material
     implementation 'com.google.android.material:material:1.0.0'
 
-    implementation 'com.google.android.gms:play-services-auth:16.0.1'
-    implementation 'com.google.android.gms:play-services-vision:17.0.2'
-    implementation 'com.google.android.gms:play-services-ads:17.1.2'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    implementation 'com.google.android.gms:play-services-vision:19.0.0'
+    implementation 'com.google.android.gms:play-services-ads:18.3.0'
     implementation 'net.danlew:android.joda:2.9.9.4'
-    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+    implementation 'io.github.inflationx:calligraphy3:3.1.1'
+    implementation 'io.github.inflationx:viewpump:2.0.3'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
-    implementation 'com.github.bumptech.glide:annotations:4.8.0'
-    implementation "com.github.bumptech.glide:okhttp3-integration:4.8.0"
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    implementation 'com.github.bumptech.glide:annotations:4.10.0'
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.9.0'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     implementation 'com.github.hotchemi:android-rate:1.0.1'
     implementation 'com.google.code.gson:gson:2.8.5'
@@ -117,19 +121,17 @@ dependencies {
         transitive = true
     }
 
-    implementation 'androidx.annotation:annotation:1.0.1'
+    implementation 'androidx.annotation:annotation:1.1.0'
 
-    freeImplementation 'com.google.firebase:firebase-config:16.1.2'
+    freeImplementation 'com.google.firebase:firebase-config:19.0.4'
 
-    implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+    implementation 'com.jakewharton:butterknife:10.2.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
 
     testImplementation 'junit:junit:4.12'
 
 }
-
-com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
 
 repositories {
     mavenCentral()

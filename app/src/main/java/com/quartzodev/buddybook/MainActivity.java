@@ -98,7 +98,6 @@ import butterknife.ButterKnife;
 import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
 import io.fabric.sdk.android.Fabric;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -513,8 +512,7 @@ public class MainActivity extends AppCompatActivity
                         .setIsSmartLockEnabled(false)
                         .setAvailableProviders(
                                 Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(),
-                                        new AuthUI.IdpConfig.GoogleBuilder().build(),
-                                        new AuthUI.IdpConfig.FacebookBuilder().build()))
+                                        new AuthUI.IdpConfig.GoogleBuilder().build()))
                         .build(),
                 RC_SIGN_IN);
 
@@ -1111,11 +1109,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
     };
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
 
     @Override
     public void onInsertBook(boolean success) {
