@@ -1,158 +1,36 @@
--injars /Users/victoraldir/dev/projects/BuddyBook/app/libs/super-csv-2.4.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/firebase-core-16.0.6.aar/255d43679f33115b13f02cf252688e0f/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/constraintlayout-2.0.0-alpha3.aar/5d6d10723cd688b493985e02e36c01e8/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/converter-gson-2.4.0.jar/244e002b9c146fdd6bd1a3bf478a1a84/jetified-converter-gson-2.4.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/converter-simplexml-2.4.0.jar/aaf852d207ea8ab5f29f860f2b375a7c/jetified-converter-simplexml-2.4.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/retrofit-2.4.0.jar/a129a632ec8e8090ee1aa7b25197397c/jetified-retrofit-2.4.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-database-4.2.0.aar/72d36c4116fdb17f82891c7ee05e4099/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-facebook-login-4.33.0.aar/27b8efb50f58c0da03243cc8e11d3b49/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/crashlytics-2.9.5.aar/bee696a45807539257ceb3722825134b/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/material-1.0.0.aar/cf3b10ce71e8926918bc3b329419c244/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-auth-16.0.1.aar/e8af97931f77492fdfe1e5d917ae06e6/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/play-services-vision-17.0.2.aar/8cb6a48b67212d11c2889ed2c3705c1d/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-ads-17.1.2.aar/cb3eadb65beb23a533e19db1f8fcf569/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-android.joda-2.9.9.4.aar/e48d6fb6f756a317615d84b0e350951e/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-calligraphy-2.3.0.aar/85e83aa22aeaf67de442288ff1eac46a/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/logging-interceptor-3.11.0.jar/1bd57ff8a25ae5ecdd49a33cc59402d6/jetified-logging-interceptor-3.11.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-okhttp3-integration-4.8.0.aar/a5f3d02bcc3b6254f3283a560a2f8d53/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/okhttp-3.11.0.jar/bfdc0724dfaeff57996be42de0d4f27e/jetified-okhttp-3.11.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-glide-4.8.0.aar/dfdf0c07fae659aa27db74afb7ace701/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/annotations/4.8.0/c4c9e79eb2bfeb9059fce55020c6b237402285f6/annotations-4.8.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/com.amulyakhare.textdrawable-1.0.1.aar/bb3f3e13f72e15e88df6452e1374ca27/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/android-rate-1.0.1.aar/22260b712339776a1859959930b973f4/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/gson-2.8.5.jar/4436122fd0ef7518acb22dc73bbf3f9c/jetified-gson-2.8.5.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/multidex-2.0.1.aar/564c32243a686bfa9f14f9f4c410fd6f/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/guava-26.0-android.jar/deb8d2590285c7ed654132d806d05ac3/jetified-guava-26.0-android.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-aboutlibraries-6.2.0.aar/2dbcda7c40ccab66635c47d49b87601c/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-common-4.2.0.aar/84cbf3bd20c27a34ccb89d1304492bfc/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-library-1.4.2.aar/67945ff6303bd247633c1b559c6b125a/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-facebook-common-4.33.0.aar/7460a8ebcff7644df9d8fef82096413a/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/browser-1.0.0-rc01.aar/e1f61b48984bcf3150ec401270e9de66/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-facebook-core-4.33.0.aar/351d15b8820631c30223ca6958e15660/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/iconics-core-3.1.0.aar/7af6600a8fe8c0586ee94e644d0b9cb7/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-fastadapter-3.3.0.aar/03c4eb0466b27ad67b60a67cfea1791a/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/cardview-1.0.0.aar/8378f7cc5840dc7a6bf76ec24eacb869/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/recyclerview-1.0.0.aar/c176376fbd6d3cb1ce3af4afd187d0d0/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-measurement-connector-impl-17.0.4.aar/db31ab8aafb838bf4cccecaeb68582c3/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-analytics-16.0.6.aar/37dacf0404a5c7687496bffa97c521f0/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-database-16.0.2.aar/f46ce6ab046f8f72824a7e4d0b854d7d/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-auth-16.0.3.aar/ad5f00c039e39cabb830c179a7a6ad24/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-auth-api-phone-16.0.0.aar/c5316587329de1708285cdbcc63f5179/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-auth-base-16.0.0.aar/c3bef98f09b7d71dd6f49f9771a801a8/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-vision-common-17.0.2.aar/a68e97111c80e3567f9734edbc787833/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-auth-interop-16.0.0.aar/d07c164c1a632b294a8b0151ad6e4e7a/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/play-services-flags-16.0.1.aar/f164d92d6e8c0749718fec27dedb1160/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-clearcut-16.0.0.aar/82ac93e4506f359e87930cd464170340/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-phenotype-16.0.0.aar/a09c6ea67098f36d4d2460cb2673c413/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-measurement-api-16.0.4.aar/782cad6a705afa1eea68778ad149dec6/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-analytics-impl-16.2.4.aar/71f837e1f1d8e28941f23b0c53e576d0/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-iid-17.0.3.aar/4db9dce59c84b8111700c2b68289d953/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-iid-interop-16.0.1.aar/199541850f203c2f9c2bc304c712a4c0/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-base-16.0.1.aar/c348c296693568fc61cff7bb24cc6ab7/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-common-16.0.3.aar/2f96bed437fe5fd8dba966938902b0b0/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-tasks-16.0.1.aar/bedac85f0dc7fa770ba2fba6d8a0d762/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-ads-identifier-16.0.0.aar/fdc7a0c0138802c311662035705a8eff/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-ads-lite-17.1.2.aar/4323319aa3cc4168d0f48ffdf3067e25/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/play-services-gass-17.1.2.aar/a10fd3fc67c4a0e565798c41d20c3a48/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-measurement-sdk-api-16.0.4.aar/ffc80fc4c3de6e0d4e323c0c1e82a5d5/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-measurement-base-16.0.5.aar/26d288624dce7420a7eb12a2aa4f110a/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-stats-16.0.1.aar/8f8c02c7b149412d7cb9f6c363e1b893/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-measurement-connector-17.0.1.aar/935b36a9ed8a58151f3cc3180277f660/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/firebase-database-collection-15.0.1.aar/547ec749f7e7c3171906eb1aa46f9f08/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-play-services-basement-16.1.0.aar/d877f23c4d1db3ebb79381d5c3dc6662/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/legacy-support-v4-1.0.0-rc01.aar/911fd5a717fac719a5d6c3abb7397996/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/lifecycle-extensions-2.0.0-rc01.aar/5684288488cc4622c4b260e239c56491/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/fragment-1.0.0.aar/560db0a5fcd70c544ea5c45fb3e53018/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/vectordrawable-animated-1.0.0.aar/21b1703448fb9eb35c597ef5e9ff53da/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/legacy-support-core-ui-1.0.0.aar/ddfebf944cff71463316540cfbe526f7/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/legacy-support-core-utils-1.0.0.aar/b3f0a9693f3190ac3e8277a7eefa1a6c/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/transition-1.0.0.aar/613862eda47048d8335d5765fd44df87/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-butterknife-9.0.0-SNAPSHOT.aar/30f487995a6b920b4a4ccf137c2eb7ad/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-butterknife-runtime-9.0.0-SNAPSHOT.aar/3832e8ee75e49bdaf2520bad12ec416c/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/media-1.0.0-rc01.aar/f024033b6a879eb44b0d9f4c3d871645/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/vectordrawable-1.0.0.aar/5147121087896257ebdca47f04fc6fca/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/viewpager-1.0.0.aar/5c81f3db268c30b76cf44a8c89194fe7/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/coordinatorlayout-1.0.0.aar/a047d036e16995e660424066df00ea7e/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/drawerlayout-1.0.0.aar/bbed3c974613bc7265bc732fb4fb33a8/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/slidingpanelayout-1.0.0.aar/265b7e0f5a4f07d240a704c4c49b1133/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/customview-1.0.0.aar/213b5faa9ff2fc911c7f4e917fd6ff11/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/swiperefreshlayout-1.0.0.aar/f49c52a16ad045deab8ae934e511eee0/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/asynclayoutinflater-1.0.0.aar/6f376de0e9263baad9d8a0787ffc67d6/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/loader-1.0.0.aar/1c9a04e4905fe2e98dacfc4d66a88cb5/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/core-1.0.0.aar/e79cb1e60fbb589e0e26ad9bbb006462/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-gifdecoder-4.8.0.aar/b2c14121c59af97af3e6e9a8095ffce6/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/versionedparcelable-1.0.0.aar/cd44a84ddb126e859a972484b14c35a7/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/modules-2/files-2.1/androidx.collection/collection/1.0.0/42858b26cafdaa69b6149f45dfc2894007bc2c7a/collection-1.0.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/cursoradapter-1.0.0.aar/2def24583e46e9b9938cf0d8141318c4/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/lifecycle-process-2.0.0-rc01.aar/3c07e3bc01d5f1abace3f3160cf57998/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/lifecycle-service-2.0.0-rc01.aar/983acb7566ee566c560aa64b87d7b408/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/lifecycle-runtime-2.0.0.aar/853fb8c308364054509173d7fb997e94/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/interpolator-1.0.0.aar/eaca3bbb7acf359cefb5d61e504d20e5/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/documentfile-1.0.0.aar/f1d51ec3c311c7ebe28acdbff2f46743/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/localbroadcastmanager-1.0.0.aar/888186d5660620936c268a19629b75df/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/print-1.0.0.aar/b536cc75ef9aaf605ee733f236f64230/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/lifecycle-viewmodel-2.0.0.aar/42eccebdaca87773e0fc5ce25062ec7e/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/butterknife-annotations-9.0.0-SNAPSHOT.jar/0516a15d49e23bce2daec3fe8de70210/jetified-butterknife-annotations-9.0.0-SNAPSHOT.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/lifecycle-livedata-2.0.0.aar/4c88400a068975c0cfc86196ac77cee8/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/lifecycle-livedata-core-2.0.0.aar/e704077eef00059790df7dff91892ea6/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-common/2.0.0/e070ffae07452331bc5684734fce6831d531785c/lifecycle-common-2.0.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/core-runtime-2.0.0.aar/f12625748361adb5a58e24a8cffa4093/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/modules-2/files-2.1/androidx.arch.core/core-common/2.0.0/bb21b9a11761451b51624ac428d1f1bb5deeac38/core-common-2.0.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/modules-2/files-2.1/androidx.annotation/annotation/1.0.1/2dfd8f6b2a8fc466a1ae4e329fb79cd580f6393f/annotation-1.0.1.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/modules-2/files-2.1/androidx.constraintlayout/constraintlayout-solver/2.0.0-alpha3/2a8ac731e821a10465b111f9e9f52e3e0b0d45b2/constraintlayout-solver-2.0.0-alpha3.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/crashlytics-core-2.6.4.aar/ffc0c5ea1f37316de8a78859aa39d00a/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-answers-1.4.3.aar/29373c5b71d9768ac295445e64369530/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/beta-1.2.10.aar/521a4e797bf10fe8deecdfa438cde94d/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/fabric-1.4.4.aar/a218a6952ad990d1f9b77680ea587229/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/play-services-ads-base-17.1.2.aar/673502a17539ebd39860fe3b2b22e596/jars/classes.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/joda-time-2.9.9-no-tzdb.jar/4aac57b2787bc19d97adf1ad28cc38d8/jetified-joda-time-2.9.9-no-tzdb.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/okio-1.14.0.jar/228668d825fbd5fc82050b545be6fc5a/jetified-okio-1.14.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/disklrucache/4.8.0/a7448551cb3edd61bcf3d1b1136b670e630441cf/disklrucache-4.8.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/3.0.2/25ea2e8b0c338a877313bd4672d3fe056ea78f0d/jsr305-3.0.2.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/modules-2/files-2.1/org.checkerframework/checker-compat-qual/2.5.2/dc0b20906c9e4b9724af29d11604efa574066892/checker-compat-qual-2.5.2.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/error_prone_annotations-2.1.3.jar/eae6dbac39b30e22e0c889c8e7916f70/jetified-error_prone_annotations-2.1.3.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.1/976d8d30bebc251db406f2bdb3eb01962b5685b3/j2objc-annotations-1.1.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/modules-2/files-2.1/org.codehaus.mojo/animal-sniffer-annotations/1.14/775b7e22fb10026eed3f86e8dc556dfafe35f2d5/animal-sniffer-annotations-1.14.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/simple-xml-2.7.1.jar/f197df5817727890386586f1229d9703/jetified-simple-xml-2.7.1.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-android/1.4.0/cc174c559b5177982887bf6e1b76003aebad9516/bolts-android-1.4.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/core-3.3.0.jar/f664429f85abdaa2c241de8636252dbe/jetified-core-3.3.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/bolts-applinks-1.4.0.jar/e188e8e0a0a2f22530c0aa934b208382/jetified-bolts-applinks-1.4.0.jar(**.class)
--injars /Users/victoraldir/.gradle/caches/modules-2/files-2.1/com.parse.bolts/bolts-tasks/1.4.0/d85884acf6810a3bbbecb587f239005cbc846dc4/bolts-tasks-1.4.0.jar(**.class)
--injars /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/javac/paidRelease/compilePaidReleaseJavaWithJavac/classes(**.class)
--injars /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/transforms/mergeJavaRes/paid/release/0.jar(!**.class)
--outjars /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/transforms/proguard/paid/release/0.jar
+# This is a configuration file for ProGuard.
+# http://proguard.sourceforge.net/index.html#manual/usage.html
+#
+# Starting with version 2.2 of the Android plugin for Gradle, this file is distributed together with
+# the plugin and unpacked at build-time. The files in $ANDROID_HOME are no longer maintained and
+# will be ignored by new version of the Android plugin for Gradle.
 
--libraryjars /Users/victoraldir/Library/Android/sdk/platforms/android-28/android.jar
--libraryjars /Users/victoraldir/Library/Android/sdk/build-tools/28.0.3/core-lambda-stubs.jar
--libraryjars /Users/victoraldir/Library/Android/sdk/platforms/android-28/optional/org.apache.http.legacy.jar
--libraryjars /Users/victoraldir/Library/Android/sdk/platforms/android-28/optional/android.test.mock.jar
--libraryjars /Users/victoraldir/Library/Android/sdk/platforms/android-28/optional/android.test.base.jar
--libraryjars /Users/victoraldir/Library/Android/sdk/platforms/android-28/optional/android.test.runner.jar
-
--forceprocessing
--printusage /Users/victoraldir/dev/projects/BuddyBook/app/build/outputs/mapping/paid/release/usage.txt
+# Optimization is turned off by default. Dex does not like code run
+# through the ProGuard optimize steps (and performs some
+# of these optimizations on its own).
+# Note that if you want to enable optimization, you cannot just
+# include optimization flags in your own project configuration file;
+# instead you will need to point to the
+# "proguard-android-optimize.txt" file instead of this one from your
+# project.properties file.
 -dontoptimize
--printmapping /Users/victoraldir/dev/projects/BuddyBook/app/build/outputs/mapping/paid/release/mapping.txt
+
 -dontusemixedcaseclassnames
--keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod,SourceFile,LineNumberTable,Signature,*Annotation*,Exceptions,*Annotation*,*Annotation*,*Annotation*
+-dontskipnonpubliclibraryclasses
 -verbose
--dontnote com.android.vending.licensing.ILicensingService,com.google.vending.licensing.ILicensingService,com.google.android.vending.licensing.ILicensingService,android.support.**,androidx.**,org.apache.http.**,android.net.http.**,java.lang.invoke.**,com.google.**,com.facebook.**,com.twitter.**,com.squareup.okhttp.**,okhttp3.internal.**,retrofit2.Platform
--dontwarn android.support.**,androidx.**,android.util.FloatMath,okio.**,javax.annotation.**,javax.annotation.GuardedBy,org.simpleframework.xml.stream.**,com.crashlytics.**,javax.annotation.Nullable,javax.annotation.ParametersAreNonnullByDefault,com.google.**,com.facebook.**,com.twitter.**,retrofit2.**,okhttp3.**,okio.**,com.google.gson.Gson$6,org.joda.convert.FromString,org.joda.convert.ToString,javax.annotation.Nullable,javax.annotation.ParametersAreNonnullByDefault,com.google.firebase.components.Component$Instantiation,android.security.NetworkSecurityPolicy,android.app.Notification,sun.misc.Unsafe,libcore.io.Memory,com.google.android.apps.common.proguard.UsedBy*,javax.annotation.**,org.checkerframework.**,com.google.firebase.analytics.FirebaseAnalytics,com.google.firebase.analytics.FirebaseAnalytics$Event,com.google.firebase.analytics.FirebaseAnalytics$Param
--printconfiguration /Users/victoraldir/dev/projects/BuddyBook/app/proguard-merge-config.txt
--printseeds /Users/victoraldir/dev/projects/BuddyBook/app/build/outputs/mapping/paid/release/seeds.txt
 
-
+# Preserve some attributes that may be required for reflection.
+-keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
 
 -keep public class com.google.vending.licensing.ILicensingService
-
 -keep public class com.android.vending.licensing.ILicensingService
-
 -keep public class com.google.android.vending.licensing.ILicensingService
+-dontnote com.android.vending.licensing.ILicensingService
+-dontnote com.google.vending.licensing.ILicensingService
+-dontnote com.google.android.vending.licensing.ILicensingService
 
 # For native methods, see http://proguard.sourceforge.net/manual/examples.html#native
--keepclasseswithmembers,allowshrinking class * {
+-keepclasseswithmembernames class * {
     native <methods>;
 }
 
@@ -168,12 +46,12 @@
 }
 
 # For enumeration classes, see http://proguard.sourceforge.net/manual/examples.html#enumerations
--keepclassmembers enum  * {
+-keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
 
--keepclassmembers class * extends android.os.Parcelable {
+-keepclassmembers class * implements android.os.Parcelable {
     public static final ** CREATOR;
 }
 
@@ -183,139 +61,123 @@
 
 # Preserve annotated Javascript interface methods.
 -keepclassmembers class * {
-    @android.webkit.JavascriptInterface
-    <methods>;
+    @android.webkit.JavascriptInterface <methods>;
 }
+
+# The support libraries contains references to newer platform versions.
+# Don't warn about those in case this app is linking against an older
+# platform version. We know about them, and they are safe.
+-dontnote android.support.**
+-dontnote androidx.**
+-dontwarn android.support.**
+-dontwarn androidx.**
+
+# This class is deprecated, but remains for backward compatibility.
+-dontwarn android.util.FloatMath
 
 # Understand the @Keep support annotation.
 -keep class android.support.annotation.Keep
-
 -keep class androidx.annotation.Keep
 
--keep @android.support.annotation.Keep class * {
-    <fields>;
-    <methods>;
-}
+-keep @android.support.annotation.Keep class * {*;}
+-keep @androidx.annotation.Keep class * {*;}
 
--keep @androidx.annotation.Keep class * {
-    <fields>;
-    <methods>;
+-keepclasseswithmembers class * {
+    @android.support.annotation.Keep <methods>;
 }
 
 -keepclasseswithmembers class * {
-    @android.support.annotation.Keep
-    <methods>;
+    @androidx.annotation.Keep <methods>;
 }
 
 -keepclasseswithmembers class * {
-    @androidx.annotation.Keep
-    <methods>;
+    @android.support.annotation.Keep <fields>;
 }
 
 -keepclasseswithmembers class * {
-    @android.support.annotation.Keep
-    <fields>;
+    @androidx.annotation.Keep <fields>;
 }
 
 -keepclasseswithmembers class * {
-    @androidx.annotation.Keep
-    <fields>;
+    @android.support.annotation.Keep <init>(...);
 }
 
 -keepclasseswithmembers class * {
-    @android.support.annotation.Keep
-    <init>(...);
+    @androidx.annotation.Keep <init>(...);
 }
 
--keepclasseswithmembers class * {
-    @androidx.annotation.Keep
-    <init>(...);
-}
+# These classes are duplicated between android.jar and org.apache.http.legacy.jar.
+-dontnote org.apache.http.**
+-dontnote android.net.http.**
 
--keep class androidx.appcompat.widget.ShareActionProvider {
-    <fields>;
-    <methods>;
-}
+# These classes are duplicated between android.jar and core-lambda-stubs.jar.
+-dontnote java.lang.invoke.**
 
--keep class androidx.appcompat.widget.SearchView {
-    <fields>;
-    <methods>;
-}
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in /Users/victoraldir/Library/Android/sdk/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the proguardFiles
+# directive in build.gradle.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
 
--keep class com.quartzodev.data.** {
-    <fields>;
-    <methods>;
-}
+# Add any project specific keep options here:
 
--keep class com.quartzodev.api.entities.** {
-    <fields>;
-    <methods>;
-}
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
 
--keep interface  com.quartzodev.api.interfaces.** {
-    <fields>;
-    <methods>;
-}
+# Uncomment this to preserve the line number information for
+# debugging stack traces.
+-keepattributes SourceFile,LineNumberTable
 
--keep class com.quartzodev.api.strategies.** {
-    <fields>;
-    <methods>;
-}
+# If you keep the line number information, uncomment this to
+# hide the original source file name.
+#-renamesourcefileattribute SourceFile
 
--keep class com.quartzodev.api.** {
-    <fields>;
-    <methods>;
-}
+-printconfiguration proguard-merge-config.txt
 
--keep class com.firebase.** {
-    <fields>;
-    <methods>;
-}
+-keep class androidx.appcompat.widget.ShareActionProvider { *; }
+-keep class androidx.appcompat.widget.SearchView { *; }
+-keep class com.quartzodev.data.**  { *; }
+-keep class com.quartzodev.api.entities.**  { *; }
+-keep interface com.quartzodev.api.interfaces.** {*;}
+-keep class com.quartzodev.api.strategies.**  { *; }
+-keep class com.quartzodev.api.**  { *; }
+-keep class com.firebase.**  { *; }
 
+
+#Retrofit
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+-dontwarn javax.annotation.GuardedBy
+
+-dontwarn org.simpleframework.xml.stream.**
 # SimpleXMLParsing
--keep public class org.simpleframework.** {
-    <fields>;
-    <methods>;
-}
-
--keep class org.simpleframework.xml.** {
-    <fields>;
-    <methods>;
-}
-
--keep class org.simpleframework.xml.core.** {
-    <fields>;
-    <methods>;
-}
-
--keep class org.simpleframework.xml.util.** {
-    <fields>;
-    <methods>;
-}
+-keep public class org.simpleframework.** { *; }
+-keep class org.simpleframework.xml.** { *; }
+-keep class org.simpleframework.xml.core.** { *; }
+-keep class org.simpleframework.xml.util.** { *; }
 
 -keepclassmembers class * {
-    @org.simpleframework.xml.*
-    <fields>;
-    @org.simpleframework.xml.*
-    <methods>;
+    @org.simpleframework.xml.* *;
 }
 
--keep class com.crashlytics.** {
-    <fields>;
-    <methods>;
-}
+-keep class com.crashlytics.** { *; }
+-dontwarn com.crashlytics.**
 
 -keep class java.lang.**
 
-# glide
--keep public class * extends com.bumptech.glide.module.GlideModule
-
+#glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.AppGlideModule
-
--keep public enum  com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
-    **[] $VALUES;
-    public <fields>;
-    public <methods>;
+-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
 }
 
 # OKHttp Glide module
@@ -323,599 +185,441 @@
 
 -keep class com.google.**
 
-# AboutLibraries
--keep class .R
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.ParametersAreNonnullByDefault
 
+#AboutLibraries
+-keep class .R
 -keep class **.R$* {
     <fields>;
 }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:41
--keep class androidx.core.content.FileProvider {
-    <init>(...);
-}
+-dontwarn com.google.**
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:333
--keep class androidx.lifecycle.ProcessLifecycleOwnerInitializer {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:23
+-keep class androidx.core.app.CoreComponentFactory { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:45
+-keep class androidx.core.content.FileProvider { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:346
+-keep class androidx.lifecycle.ProcessLifecycleOwnerInitializer { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:244
+-keep class com.crashlytics.android.CrashlyticsInitProvider { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:284
+-keep class com.facebook.CurrentAccessTokenExpirationBroadcastReceiver { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:217
+-keep class com.facebook.CustomTabActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:269
+-keep class com.facebook.CustomTabMainActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:212
+-keep class com.facebook.FacebookActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:279
+-keep class com.facebook.internal.FacebookInitProvider { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:152
+-keep class com.firebase.ui.auth.KickoffActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:230
+-keep class com.firebase.ui.auth.data.client.AuthUiInitProvider { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:162
+-keep class com.firebase.ui.auth.ui.credentials.CredentialSaveActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:172
+-keep class com.firebase.ui.auth.ui.email.EmailActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:197
+-keep class com.firebase.ui.auth.ui.email.EmailLinkCatcherActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:203
+-keep class com.firebase.ui.auth.ui.email.EmailLinkErrorRecoveryActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:167
+-keep class com.firebase.ui.auth.ui.email.RecoverPasswordActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:192
+-keep class com.firebase.ui.auth.ui.email.WelcomeBackEmailLinkPrompt { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:187
+-keep class com.firebase.ui.auth.ui.email.WelcomeBackPasswordPrompt { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:208
+-keep class com.firebase.ui.auth.ui.idp.AuthMethodPickerActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:157
+-keep class com.firebase.ui.auth.ui.idp.SingleSignInActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:182
+-keep class com.firebase.ui.auth.ui.idp.WelcomeBackIdpPrompt { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:177
+-keep class com.firebase.ui.auth.ui.phone.PhoneActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:335
+-keep class com.google.android.gms.ads.AdActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:341
+-keep class com.google.android.gms.ads.MobileAdsInitProvider { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:259
+-keep class com.google.android.gms.auth.api.signin.RevocationBoundService { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:250
+-keep class com.google.android.gms.auth.api.signin.internal.SignInHubActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:331
+-keep class com.google.android.gms.common.api.GoogleApiActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:296
+-keep class com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:310
+-keep class com.google.android.gms.measurement.AppMeasurementJobService { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:291
+-keep class com.google.android.gms.measurement.AppMeasurementReceiver { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:306
+-keep class com.google.android.gms.measurement.AppMeasurementService { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:236
+-keep class com.google.firebase.auth.internal.FederatedSignInActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:127
+-keep class com.google.firebase.components.ComponentDiscoveryService { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:316
+-keep class com.google.firebase.iid.FirebaseInstanceIdReceiver { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:325
+-keep class com.google.firebase.provider.FirebaseInitProvider { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:268
+-keep class com.mikepenz.aboutlibraries.ui.LibsActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:23
+-keep class com.quartzodev.app.App { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:113
+-keep class com.quartzodev.buddybook.AnnotationActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:82
+-keep class com.quartzodev.buddybook.DetailActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:55
+-keep class com.quartzodev.buddybook.MainActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:67
+-keep class com.quartzodev.buddybook.SplashActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:123
+-keep class com.quartzodev.inserteditbook.InsertEditBookActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:78
+-keep class com.quartzodev.provider.SuggestionProvider { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:90
+-keep class com.quartzodev.ui.BarcodeCaptureActivity { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:102
+-keep class com.quartzodev.widgets.BuddyBookWidgetProvider { <init>(); }
+# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:96
+-keep class com.quartzodev.widgets.BuddyBookWidgetService { <init>(); }
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_alert_dialog_title_material.xml:57
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_alert_dialog_material.xml:52
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_alert_dialog_button_bar_material.xml:43
+-keep class android.widget.Space { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:197
--keep class com.crashlytics.android.CrashlyticsInitProvider {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_select_dialog_material.xml:23
+-keep class androidx.appcompat.app.AlertController$RecycleListView { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:237
--keep class com.facebook.CurrentAccessTokenExpirationBroadcastReceiver {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_action_menu_item_layout.xml:17
+-keep class androidx.appcompat.view.menu.ActionMenuItemView { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:179
--keep class com.facebook.CustomTabActivity {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_expanded_menu_layout.xml:17
+-keep class androidx.appcompat.view.menu.ExpandedMenuView { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:222
--keep class com.facebook.CustomTabMainActivity {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_popup_menu_item_layout.xml:17
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_list_menu_item_layout.xml:17
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_cascading_menu_item_layout.xml:20
+-keep class androidx.appcompat.view.menu.ListMenuItemView { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:174
--keep class com.facebook.FacebookActivity {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_screen_toolbar.xml:27
+-keep class androidx.appcompat.widget.ActionBarContainer { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:232
--keep class com.facebook.internal.FacebookInitProvider {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_screen_toolbar.xml:43
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_action_mode_bar.xml:19
+-keep class androidx.appcompat.widget.ActionBarContextView { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:130
--keep class com.firebase.ui.auth.KickoffActivity {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_screen_toolbar.xml:17
+-keep class androidx.appcompat.widget.ActionBarOverlayLayout { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:192
--keep class com.firebase.ui.auth.data.client.AuthUiInitProvider {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_action_menu_layout.xml:17
+-keep class androidx.appcompat.widget.ActionMenuView { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:140
--keep class com.firebase.ui.auth.ui.credentials.CredentialSaveActivity {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_activity_chooser_view.xml:19
+-keep class androidx.appcompat.widget.ActivityChooserView$InnerLayout { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:150
--keep class com.firebase.ui.auth.ui.email.EmailActivity {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_alert_dialog_material.xml:18
+-keep class androidx.appcompat.widget.AlertDialogLayout { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:145
--keep class com.firebase.ui.auth.ui.email.RecoverPasswordActivity {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/2fbed290eef7b1be522792af1c1dc738/jetified-facebook-common-4.33.0/res/layout/com_facebook_smart_device_dialog_fragment.xml:47
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/2fbed290eef7b1be522792af1c1dc738/jetified-facebook-common-4.33.0/res/layout/com_facebook_device_auth_dialog_fragment.xml:45
+-keep class androidx.appcompat.widget.AppCompatImageView { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:165
--keep class com.firebase.ui.auth.ui.email.WelcomeBackPasswordPrompt {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_alert_dialog_button_bar_material.xml:26
+-keep class androidx.appcompat.widget.ButtonBarLayout { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:170
--keep class com.firebase.ui.auth.ui.idp.AuthMethodPickerActivity {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_screen_content_include.xml:19
+-keep class androidx.appcompat.widget.ContentFrameLayout { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:135
--keep class com.firebase.ui.auth.ui.idp.SingleSignInActivity {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_alert_dialog_title_material.xml:45
+-keep class androidx.appcompat.widget.DialogTitle { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:160
--keep class com.firebase.ui.auth.ui.idp.WelcomeBackIdpPrompt {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_screen_simple_overlay_action_mode.xml:23
+-keep class androidx.appcompat.widget.FitWindowsFrameLayout { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:155
--keep class com.firebase.ui.auth.ui.phone.PhoneActivity {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_screen_simple.xml:17
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_dialog_title_material.xml:22
+-keep class androidx.appcompat.widget.FitWindowsLinearLayout { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:322
--keep class com.google.android.gms.ads.AdActivity {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_search_view.xml:75
+-keep class androidx.appcompat.widget.SearchView$SearchAutoComplete { <init>(...); }
 
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:328
--keep class com.google.android.gms.ads.MobileAdsInitProvider {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:212
--keep class com.google.android.gms.auth.api.signin.RevocationBoundService {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:203
--keep class com.google.android.gms.auth.api.signin.internal.SignInHubActivity {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:312
--keep class com.google.android.gms.common.api.GoogleApiActivity {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:264
--keep class com.google.android.gms.measurement.AppMeasurementInstallReferrerReceiver {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:278
--keep class com.google.android.gms.measurement.AppMeasurementJobService {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:259
--keep class com.google.android.gms.measurement.AppMeasurementReceiver {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:274
--keep class com.google.android.gms.measurement.AppMeasurementService {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:284
--keep class com.google.firebase.auth.internal.FederatedSignInActivity {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:245
--keep class com.google.firebase.components.ComponentDiscoveryService {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:292
--keep class com.google.firebase.iid.FirebaseInstanceIdReceiver {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:304
--keep class com.google.firebase.iid.FirebaseInstanceIdService {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:317
--keep class com.google.firebase.provider.FirebaseInitProvider {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:221
--keep class com.mikepenz.aboutlibraries.ui.LibsActivity {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:23
--keep class com.quartzodev.app.App {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:109
--keep class com.quartzodev.buddybook.AnnotationActivity {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:78
--keep class com.quartzodev.buddybook.DetailActivity {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:51
--keep class com.quartzodev.buddybook.MainActivity {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:63
--keep class com.quartzodev.buddybook.SplashActivity {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:119
--keep class com.quartzodev.inserteditbook.InsertEditBookActivity {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:74
--keep class com.quartzodev.provider.SuggestionProvider {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:86
--keep class com.quartzodev.ui.BarcodeCaptureActivity {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:98
--keep class com.quartzodev.widgets.BuddyBookWidgetProvider {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/processPaidReleaseManifest/merged/AndroidManifest.xml:92
--keep class com.quartzodev.widgets.BuddyBookWidgetService {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_alert_dialog_title_material.xml:56
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_alert_dialog_material.xml:52
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_alert_dialog_button_bar_material.xml:43
--keep class android.widget.Space {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_select_dialog_material.xml:23
--keep class androidx.appcompat.app.AlertController$RecycleListView {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_action_menu_item_layout.xml:17
--keep class androidx.appcompat.view.menu.ActionMenuItemView {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_expanded_menu_layout.xml:17
--keep class androidx.appcompat.view.menu.ExpandedMenuView {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_popup_menu_item_layout.xml:17
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_list_menu_item_layout.xml:17
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_cascading_menu_item_layout.xml:20
--keep class androidx.appcompat.view.menu.ListMenuItemView {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_screen_toolbar.xml:27
--keep class androidx.appcompat.widget.ActionBarContainer {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_screen_toolbar.xml:43
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_action_mode_bar.xml:19
--keep class androidx.appcompat.widget.ActionBarContextView {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_screen_toolbar.xml:17
--keep class androidx.appcompat.widget.ActionBarOverlayLayout {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_action_menu_layout.xml:17
--keep class androidx.appcompat.widget.ActionMenuView {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_activity_chooser_view.xml:19
--keep class androidx.appcompat.widget.ActivityChooserView$InnerLayout {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_alert_dialog_material.xml:18
--keep class androidx.appcompat.widget.AlertDialogLayout {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-facebook-common-4.33.0.aar/7460a8ebcff7644df9d8fef82096413a/res/layout/com_facebook_smart_device_dialog_fragment.xml:47
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-facebook-common-4.33.0.aar/7460a8ebcff7644df9d8fef82096413a/res/layout/com_facebook_device_auth_dialog_fragment.xml:45
--keep class androidx.appcompat.widget.AppCompatImageView {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_alert_dialog_button_bar_material.xml:26
--keep class androidx.appcompat.widget.ButtonBarLayout {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_screen_content_include.xml:19
--keep class androidx.appcompat.widget.ContentFrameLayout {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_alert_dialog_title_material.xml:45
--keep class androidx.appcompat.widget.DialogTitle {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_screen_simple_overlay_action_mode.xml:23
--keep class androidx.appcompat.widget.FitWindowsFrameLayout {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_screen_simple.xml:17
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_dialog_title_material.xml:22
--keep class androidx.appcompat.widget.FitWindowsLinearLayout {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_search_view.xml:75
--keep class androidx.appcompat.widget.SearchView$SearchAutoComplete {
-    <init>(...);
-}
-
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout-v26/abc_screen_toolbar.xml:37
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout-v26/abc_screen_toolbar.xml:37
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/toolbar.xml:1
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/meta_bar_content.xml:2
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/barcode_capture.xml:16
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-aboutlibraries-6.2.0.aar/2dbcda7c40ccab66635c47d49b87601c/res/layout/activity_opensource.xml:7
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/0a057982b54383701c5b1ed8bdeaa48e/jetified-aboutlibraries-6.2.0/res/layout/activity_opensource.xml:7
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/activity_insert_book.xml:13
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/activity_detail.xml:16
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/activity_annotation.xml:14
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_screen_toolbar.xml:36
--keep class androidx.appcompat.widget.Toolbar {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_screen_toolbar.xml:36
+-keep class androidx.appcompat.widget.Toolbar { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_screen_simple_overlay_action_mode.xml:32
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_screen_simple.xml:25
--keep class androidx.appcompat.widget.ViewStubCompat {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_screen_simple_overlay_action_mode.xml:32
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_screen_simple.xml:25
+-keep class androidx.appcompat.widget.ViewStubCompat { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/browser-1.0.0-rc01.aar/e1f61b48984bcf3150ec401270e9de66/res/layout/browser_actions_context_menu_page.xml:5
--keep class androidx.browser.browseractions.BrowserActionsFallbackMenuView {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/9184beefcd365b5629d5ddca87a697ba/browser-1.0.0/res/layout/browser_actions_context_menu_page.xml:5
+-keep class androidx.browser.browseractions.BrowserActionsFallbackMenuView { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-aboutlibraries-6.2.0.aar/2dbcda7c40ccab66635c47d49b87601c/res/layout/listitem_opensource.xml:2
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/0a057982b54383701c5b1ed8bdeaa48e/jetified-aboutlibraries-6.2.0/res/layout/listitem_opensource.xml:2
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/item_book.xml:2
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-facebook-common-4.33.0.aar/7460a8ebcff7644df9d8fef82096413a/res/layout/com_facebook_smart_device_dialog_fragment.xml:22
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-facebook-common-4.33.0.aar/7460a8ebcff7644df9d8fef82096413a/res/layout/com_facebook_device_auth_dialog_fragment.xml:22
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/2fbed290eef7b1be522792af1c1dc738/jetified-facebook-common-4.33.0/res/layout/com_facebook_smart_device_dialog_fragment.xml:22
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/2fbed290eef7b1be522792af1c1dc738/jetified-facebook-common-4.33.0/res/layout/com_facebook_device_auth_dialog_fragment.xml:22
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/card_product_details.xml:2
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/card_borrowed.xml:1
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/card_book_details.xml:2
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/card_book_annotations.xml:2
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/card_actions.xml:2
--keep class androidx.cardview.widget.CardView {
-    <init>(...);
-}
+-keep class androidx.cardview.widget.CardView { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_confirmation_code_layout.xml:101
--keep class androidx.constraintlayout.widget.Barrier {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_confirmation_code_layout.xml:96
+-keep class androidx.constraintlayout.widget.Barrier { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_welcome_back_password_prompt_layout.xml:19
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_phone_layout.xml:2
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_confirmation_code_layout.xml:2
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_auth_method_picker_layout.xml:2
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_welcome_back_password_prompt_layout.xml:19
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_welcome_back_email_link_prompt_layout.xml:20
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_phone_layout.xml:2
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_confirmation_code_layout.xml:2
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_auth_method_picker_layout.xml:2
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/content_insert_book.xml:11
--keep class androidx.constraintlayout.widget.ConstraintLayout {
-    <init>(...);
-}
+-keep class androidx.constraintlayout.widget.ConstraintLayout { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/material-1.0.0.aar/cf3b10ce71e8926918bc3b329419c244/res/layout/design_bottom_sheet_dialog.xml:26
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/a86438724043cbf98670b5b3a317cd81/material-1.0.0/res/layout/design_bottom_sheet_dialog.xml:26
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/app_bar_main.xml:2
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/activity_detail.xml:2
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/activity_annotation.xml:2
--keep class androidx.coordinatorlayout.widget.CoordinatorLayout {
-    <init>(...);
-}
+-keep class androidx.coordinatorlayout.widget.CoordinatorLayout { <init>(...); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout-sw600dp-land/main_content.xml:53
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/activity_detail.xml:25
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/appcompat-1.0.0.aar/b18602b0dce18e010744cb5ab7d49995/res/layout/abc_alert_dialog_material.xml:41
--keep class androidx.core.widget.NestedScrollView {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/3eb847f35653f9bf5a630d90581cbb96/appcompat-1.1.0/res/layout/abc_alert_dialog_material.xml:41
+-keep class androidx.core.widget.NestedScrollView { <init>(...); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/activity_main.xml:2
--keep class androidx.drawerlayout.widget.DrawerLayout {
-    <init>(...);
-}
+-keep class androidx.drawerlayout.widget.DrawerLayout { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-aboutlibraries-6.2.0.aar/2dbcda7c40ccab66635c47d49b87601c/res/layout/fragment_opensource.xml:1
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/0a057982b54383701c5b1ed8bdeaa48e/jetified-aboutlibraries-6.2.0/res/layout/fragment_opensource.xml:1
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/fragment_grid_book.xml:12
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/fragment_folder_list.xml:7
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/card_product_details.xml:40
--keep class androidx.recyclerview.widget.RecyclerView {
-    <init>(...);
-}
+-keep class androidx.recyclerview.widget.RecyclerView { <init>(...); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/fragment_view_pager.xml:7
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/fragment_search.xml:7
--keep class androidx.viewpager.widget.ViewPager {
-    <init>(...);
-}
+-keep class androidx.viewpager.widget.ViewPager { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_phone_layout.xml:22
--keep class com.firebase.ui.auth.ui.phone.CountryListSpinner {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_phone_layout.xml:24
+-keep class com.firebase.ui.auth.ui.phone.CountryListSpinner { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_confirmation_code_layout.xml:47
--keep class com.firebase.ui.auth.ui.phone.SpacedEditText {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_confirmation_code_layout.xml:49
+-keep class com.firebase.ui.auth.ui.phone.SpacedEditText { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_phone_layout.xml:28
--keep class com.firebase.ui.auth.util.ui.BaselineTextInputLayout {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_phone_layout.xml:30
+-keep class com.firebase.ui.auth.util.ui.BaselineTextInputLayout { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_provider_button_phone.xml:2
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_provider_button_email.xml:2
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_provider_button_anonymous.xml:2
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_idp_button_twitter.xml:1
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_idp_button_google.xml:1
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_idp_button_github.xml:1
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_idp_button_facebook.xml:1
--keep class com.firebase.ui.auth.util.ui.SupportVectorDrawablesButton {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_provider_button_phone.xml:2
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_provider_button_email.xml:2
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_provider_button_anonymous.xml:2
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_idp_button_yahoo.xml:1
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_idp_button_twitter.xml:1
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_idp_button_microsoft.xml:1
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_idp_button_google.xml:1
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_idp_button_github.xml:1
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_idp_button_facebook.xml:1
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_idp_button_apple.xml:1
+-keep class com.firebase.ui.auth.util.ui.SupportVectorDrawablesButton { <init>(...); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/app_bar_main.xml:43
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/activity_detail.xml:48
--keep class com.google.android.gms.ads.AdView {
-    <init>(...);
-}
+-keep class com.google.android.gms.ads.AdView { <init>(...); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/barcode_capture.xml:11
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/app_bar_main.xml:11
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/activity_insert_book.xml:8
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/activity_detail.xml:11
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/activity_annotation.xml:9
--keep class com.google.android.material.appbar.AppBarLayout {
-    <init>(...);
-}
+-keep class com.google.android.material.appbar.AppBarLayout { <init>(...); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout-sw600dp-land/main_content.xml:27
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/app_bar_main.xml:32
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/activity_detail.xml:36
--keep class com.google.android.material.floatingactionbutton.FloatingActionButton {
-    <init>(...);
-}
+-keep class com.google.android.material.floatingactionbutton.FloatingActionButton { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/material-1.0.0.aar/cf3b10ce71e8926918bc3b329419c244/res/layout/design_bottom_navigation_item.xml:27
--keep class com.google.android.material.internal.BaselineLayout {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/a86438724043cbf98670b5b3a317cd81/material-1.0.0/res/layout/design_bottom_navigation_item.xml:27
+-keep class com.google.android.material.internal.BaselineLayout { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/material-1.0.0.aar/cf3b10ce71e8926918bc3b329419c244/res/layout/design_text_input_password_icon.xml:18
--keep class com.google.android.material.internal.CheckableImageButton {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/a86438724043cbf98670b5b3a317cd81/material-1.0.0/res/layout/design_text_input_password_icon.xml:18
+-keep class com.google.android.material.internal.CheckableImageButton { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/material-1.0.0.aar/cf3b10ce71e8926918bc3b329419c244/res/layout/design_navigation_item.xml:17
--keep class com.google.android.material.internal.NavigationMenuItemView {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/a86438724043cbf98670b5b3a317cd81/material-1.0.0/res/layout/design_navigation_item.xml:17
+-keep class com.google.android.material.internal.NavigationMenuItemView { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/material-1.0.0.aar/cf3b10ce71e8926918bc3b329419c244/res/layout/design_navigation_menu.xml:17
--keep class com.google.android.material.internal.NavigationMenuView {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/a86438724043cbf98670b5b3a317cd81/material-1.0.0/res/layout/design_navigation_menu.xml:17
+-keep class com.google.android.material.internal.NavigationMenuView { <init>(...); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/activity_main.xml:16
--keep class com.google.android.material.navigation.NavigationView {
-    <init>(...);
-}
+-keep class com.google.android.material.navigation.NavigationView { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/material-1.0.0.aar/cf3b10ce71e8926918bc3b329419c244/res/layout/mtrl_layout_snackbar.xml:18
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/material-1.0.0.aar/cf3b10ce71e8926918bc3b329419c244/res/layout/design_layout_snackbar.xml:18
--keep class com.google.android.material.snackbar.Snackbar$SnackbarLayout {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/a86438724043cbf98670b5b3a317cd81/material-1.0.0/res/layout/mtrl_layout_snackbar.xml:18
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/a86438724043cbf98670b5b3a317cd81/material-1.0.0/res/layout/design_layout_snackbar.xml:18
+-keep class com.google.android.material.snackbar.Snackbar$SnackbarLayout { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/material-1.0.0.aar/cf3b10ce71e8926918bc3b329419c244/res/layout/mtrl_layout_snackbar_include.xml:18
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/material-1.0.0.aar/cf3b10ce71e8926918bc3b329419c244/res/layout/design_layout_snackbar_include.xml:18
--keep class com.google.android.material.snackbar.SnackbarContentLayout {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/a86438724043cbf98670b5b3a317cd81/material-1.0.0/res/layout/mtrl_layout_snackbar_include.xml:18
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/a86438724043cbf98670b5b3a317cd81/material-1.0.0/res/layout/design_layout_snackbar_include.xml:18
+-keep class com.google.android.material.snackbar.SnackbarContentLayout { <init>(...); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/app_bar_main.xml:19
--keep class com.google.android.material.tabs.TabLayout {
-    <init>(...);
-}
+-keep class com.google.android.material.tabs.TabLayout { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_welcome_back_password_prompt_layout.xml:49
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_register_email_layout.xml:36
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_phone_layout.xml:37
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_forgot_password_layout.xml:36
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_check_email_layout.xml:35
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_welcome_back_password_prompt_layout.xml:49
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_register_email_layout.xml:37
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_phone_layout.xml:39
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_forgot_password_layout.xml:36
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_check_email_layout.xml:46
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/content_more_fields.xml:22
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/content_insert_book.xml:31
--keep class com.google.android.material.textfield.TextInputEditText {
-    <init>(...);
-}
+-keep class com.google.android.material.textfield.TextInputEditText { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_welcome_back_password_prompt_layout.xml:40
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_register_email_layout.xml:25
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_forgot_password_layout.xml:28
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_confirmation_code_layout.xml:40
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_check_email_layout.xml:24
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_welcome_back_password_prompt_layout.xml:40
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_register_email_layout.xml:25
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_forgot_password_layout.xml:28
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_confirmation_code_layout.xml:42
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_check_email_layout.xml:34
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/dialog_lend_book.xml:8
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/dialog_add_folder.xml:8
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/dialog_add_book.xml:8
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/content_more_fields.xml:17
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/content_insert_book.xml:20
--keep class com.google.android.material.textfield.TextInputLayout {
-    <init>(...);
-}
+-keep class com.google.android.material.textfield.TextInputLayout { <init>(...); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/barcode_capture.xml:25
--keep class com.quartzodev.ui.camera.CameraSourcePreview {
-    <init>(...);
-}
+-keep class com.quartzodev.ui.camera.CameraSourcePreview { <init>(...); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/barcode_capture.xml:30
--keep class com.quartzodev.ui.camera.GraphicOverlay {
-    <init>(...);
-}
+-keep class com.quartzodev.ui.camera.GraphicOverlay { <init>(...); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/item_book.xml:22
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/content_book_photo.xml:15
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/card_book_details.xml:28
--keep class com.quartzodev.views.DynamicImageView {
-    <init>(...);
-}
+-keep class com.quartzodev.views.DynamicImageView { <init>(...); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/content_annotation.xml:9
--keep class com.quartzodev.views.LinedEditText {
-    <init>(...);
-}
+-keep class com.quartzodev.views.LinedEditText { <init>(...); }
 
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout-land/fui_auth_method_picker_layout.xml:12
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_welcome_back_password_prompt_layout.xml:10
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_welcome_back_idp_prompt_layout.xml:9
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_register_email_layout.xml:10
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_phone_layout.xml:9
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_forgot_password_layout.xml:10
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_confirmation_code_layout.xml:9
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_check_email_layout.xml:10
-# Referenced at /Users/victoraldir/.gradle/caches/transforms-1/files-1.1/jetified-firebase-ui-auth-4.2.0.aar/12e4a05544448e0c78bc039ae6fd1587/res/layout/fui_auth_method_picker_layout.xml:11
--keep class me.zhanghai.android.materialprogressbar.MaterialProgressBar {
-    <init>(...);
-}
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout-land/fui_auth_method_picker_layout.xml:12
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_welcome_back_password_prompt_layout.xml:10
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_welcome_back_idp_prompt_layout.xml:9
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_welcome_back_email_link_prompt_layout.xml:11
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_register_email_layout.xml:10
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_phone_layout.xml:9
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_forgot_password_layout.xml:10
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_email_link_trouble_signing_in_layout.xml:11
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_email_link_cross_device_linking.xml:9
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_confirmation_code_layout.xml:9
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_check_email_layout.xml:10
+# Referenced at /Users/victoraldir/.gradle/caches/transforms-2/files-2.1/49faa6ff142e6f95cff46bde2481eb2d/jetified-firebase-ui-auth-6.1.0/res/layout/fui_auth_method_picker_layout.xml:11
+-keep class me.zhanghai.android.materialprogressbar.MaterialProgressBar { <init>(...); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/fragment_grid_book.xml:2
--keepclassmembers class * {
-    *** doNothing(...);
-}
+-keepclassmembers class * { *** doNothing(android.view.View); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/card_product_details.xml:49
--keepclassmembers class * {
-    *** expandDescription(...);
-}
+-keepclassmembers class * { *** expandDescription(android.view.View); }
 
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/src/main/res/layout/content_insert_book.xml:89
--keepclassmembers class * {
-    *** moreFields(...);
+-keepclassmembers class * { *** moreFields(android.view.View); }
+
+
+-dontwarn com.firebase.ui.database.paging.**
+
+# Generated keep rule for Lifecycle observer adapter.
+-if class com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter {
+    <init>(...);
+}
+-keep class com.firebase.ui.database.paging.FirebaseRecyclerPagingAdapter_LifecycleAdapter {
+    <init>(...);
 }
 
-# Keep the class names used to check for availablility
--keep,allowshrinking class com.facebook.login.LoginManager
+# Generated keep rule for Lifecycle observer adapter.
+-if class com.firebase.ui.database.FirebaseRecyclerAdapter {
+    <init>(...);
+}
+-keep class com.firebase.ui.database.FirebaseRecyclerAdapter_LifecycleAdapter {
+    <init>(...);
+}
 
--keep,allowshrinking class com.twitter.sdk.android.core.identity.TwitterAuthClient
+# Generated keep rule for Lifecycle observer adapter.
+-if class com.firebase.ui.database.FirebaseListAdapter {
+    <init>(...);
+}
+-keep class com.firebase.ui.database.FirebaseListAdapter_LifecycleAdapter {
+    <init>(...);
+}
+
+
+
+
+# 3P providers are optional
+-dontwarn com.facebook.**
+-dontwarn com.twitter.**
+# Keep the class names used to check for availablility
+-keepnames class com.facebook.login.LoginManager
+-keepnames class com.twitter.sdk.android.core.identity.TwitterAuthClient
+
+# Don't note a bunch of dynamically referenced classes
+-dontnote com.google.**
+-dontnote com.facebook.**
+-dontnote com.twitter.**
+-dontnote com.squareup.okhttp.**
+-dontnote okhttp3.internal.**
+
+# Recommended flags for Firebase Auth
+-keepattributes Signature
+-keepattributes *Annotation*
+
+# Retrofit config
+-dontnote retrofit2.Platform
+-dontwarn retrofit2.** # Also keeps Twitter at bay as long as they keep using Retrofit
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-keepattributes Exceptions
+
+# TODO remove https://github.com/google/gson/issues/1174
+-dontwarn com.google.gson.Gson$6
+# We keep all fields for every generated proto file as the runtime uses
+# reflection over them that ProGuard cannot detect. Without this keep
+# rule, fields may be removed that would cause runtime failures.
+-keepclassmembers class * extends com.google.android.gms.internal.firebase_auth.zzie {
+  <fields>;
+}
 
 # To enable ProGuard in your project, edit project.properties
 # to define the proguard.config property as described in that file.
-# 
+#
 # Add project specific ProGuard rules here.
 # By default, the flags in this file are appended to flags specified
 # in ${sdk.dir}/tools/proguard/proguard-android.txt
 # You can edit the include path and order by changing the ProGuard
 # include property in project.properties.
-# 
+#
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html
+
 # Add any project specific keep options here:
+
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
-# -keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
-# }
--keepclassmembers class * extends java.io.Serializable {
+#}
+
+-keepclassmembers class * implements java.io.Serializable {
     private static final java.io.ObjectStreamField[] serialPersistentFields;
     private void writeObject(java.io.ObjectOutputStream);
     private void readObject(java.io.ObjectInputStream);
@@ -923,314 +627,346 @@
     java.lang.Object readResolve();
 }
 
--keep,allowshrinking class com.facebook.FacebookActivity
-
--keep,allowshrinking class com.facebook.CustomTabActivity
+-keepnames class com.facebook.FacebookActivity
+-keepnames class com.facebook.CustomTabActivity
 
 -keep class com.facebook.login.Login
 
 # Copyright (C) 2015 The Android Open Source Project
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 # CoordinatorLayout resolves the behaviors of its child components with reflection.
 -keep public class * extends androidx.coordinatorlayout.widget.CoordinatorLayout$Behavior {
-    public <init>(android.content.Context,android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet);
+    public <init>();
+}
+
+# Make sure we keep annotations for CoordinatorLayout's DefaultBehavior
+-keepattributes *Annotation*
+
+# We keep all fields for every generated proto file as the runtime uses
+# reflection over them that ProGuard cannot detect. Without this keep
+# rule, fields may be removed that would cause runtime failures.
+-keepclassmembers class * extends com.google.android.gms.internal.vision.zzgs {
+  <fields>;
+}
+
+-keep public class com.google.android.gms.ads.internal.ClientApi {
+  <init>();
+}
+
+# We keep all fields for every generated proto file as the runtime uses
+# reflection over them that ProGuard cannot detect. Without this keep
+# rule, fields may be removed that would cause runtime failures.
+-keepclassmembers class * extends com.google.android.gms.internal.ads.zzdrt {
+  <fields>;
+}
+
+# Auto-generated proguard rule with obfuscated symbol
+-dontwarn com.google.android.gms.internal.ads.zzawo
+# These aren't necessary if including joda-convert, but
+# most people aren't, so it's helpful to include it.
+-dontwarn org.joda.convert.FromString
+-dontwarn org.joda.convert.ToString
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in /Developer/android-sdk-osx/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the ProGuard
+# include property in project.properties.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# Add any project specific keep options here:
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+
+-keep class io.github.inflationx.calligraphy3.* { *; }
+-keep class io.github.inflationx.calligraphy3.*$* { *; }
+
+# JSR 305 annotations are for embedding nullability information.
+-dontwarn javax.annotation.**
+
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+
+# OkHttp platform used only on JVM and when Conscrypt dependency is available.
+-dontwarn okhttp3.internal.platform.ConscryptPlatform
+
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep class * extends com.bumptech.glide.module.AppGlideModule {
+ <init>(...);
+}
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+# Uncomment for DexGuard only
+#-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+
+# To enable ProGuard in your project, edit project.properties
+# to define the proguard.config property as described in that file.
+#
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in ${sdk.dir}/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the ProGuard
+# include property in project.properties.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# Add any project specific keep options here:
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+
+-keepclassmembers class * implements java.io.Serializable {
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+
+-keepnames class com.facebook.FacebookActivity
+-keepnames class com.facebook.CustomTabActivity
+
+-keep class com.facebook.common.Common
+
+# To enable ProGuard in your project, edit project.properties
+# to define the proguard.config property as described in that file.
+#
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in ${sdk.dir}/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the ProGuard
+# include property in project.properties.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# Add any project specific keep options here:
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+
+-keepclassmembers class * implements java.io.Serializable {
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+
+-keepnames class com.facebook.FacebookActivity
+-keepnames class com.facebook.CustomTabActivity
+
+-keep class com.facebook.core.Core
+
+-keep public class com.android.vending.billing.IInAppBillingService {
+    public static com.android.vending.billing.IInAppBillingService asInterface(android.os.IBinder);
+    public android.os.Bundle getSkuDetails(int, java.lang.String, java.lang.String, android.os.Bundle);
+}
+
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.ParametersAreNonnullByDefault
+# Copyright (C) 2015 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# When layoutManager xml attribute is used, RecyclerView inflates
+#LayoutManagers' constructors using reflection.
+-keep public class * extends androidx.recyclerview.widget.RecyclerView$LayoutManager {
+    public <init>(android.content.Context, android.util.AttributeSet, int, int);
     public <init>();
 }
 
 # We keep all fields for every generated proto file as the runtime uses
 # reflection over them that ProGuard cannot detect. Without this keep
 # rule, fields may be removed that would cause runtime failures.
--keepclassmembers class * extends com.google.android.gms.internal.vision.zzfy {
-    <fields>;
+-keepclassmembers class * extends com.google.android.gms.internal.measurement.zzfd {
+  <fields>;
 }
 
 # We keep all fields for every generated proto file as the runtime uses
 # reflection over them that ProGuard cannot detect. Without this keep
 # rule, fields may be removed that would cause runtime failures.
--keepclassmembers class * extends com.google.android.gms.internal.ads.zzbrd {
-    <fields>;
+-keepclassmembers class * extends com.google.android.gms.internal.measurement.zzfd {
+  <fields>;
 }
 
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in /Developer/android-sdk-osx/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the ProGuard
-# include property in project.properties.
-# 
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-# Add any project specific keep options here:
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-# -keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-# }
--keep class uk.co.chrisjenx.calligraphy.* {
-    <fields>;
-    <methods>;
+# We keep all fields for every generated proto file as the runtime uses
+# reflection over them that ProGuard cannot detect. Without this keep
+# rule, fields may be removed that would cause runtime failures.
+-keepclassmembers class * extends com.google.android.gms.internal.measurement.zzfd {
+  <fields>;
 }
 
--keep class uk.co.chrisjenx.calligraphy.*$* {
-    <fields>;
-    <methods>;
+# We keep all fields for every generated proto file as the runtime uses
+# reflection over them that ProGuard cannot detect. Without this keep
+# rule, fields may be removed that would cause runtime failures.
+-keepclassmembers class * extends com.google.android.gms.internal.measurement.zzfd {
+  <fields>;
 }
+
+-dontwarn com.google.firebase.platforminfo.KotlinDetector
+-dontwarn com.google.firebase.components.Component$Instantiation
+-dontwarn com.google.firebase.components.Component$ComponentType
+-keep class * implements com.google.firebase.components.ComponentRegistrar
 
 # Add project specific ProGuard rules here.
 # By default, the flags in this file are appended to flags specified
 # in /opt/android-sdk/tools/proguard/proguard-android.txt
 # You can edit the include path and order by changing the proguardFiles
 # directive in build.gradle.
-# 
+#
 # For more details, see
 #   http://developer.android.com/guide/developing/tools/proguard.html
+
 # Add any project specific keep options here:
+
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
-# -keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
-# }
--keep class me.zhanghai.android.materialprogressbar.** {
-    <fields>;
-    <methods>;
-}
+#}
 
-# To enable ProGuard in your project, edit project.properties
-# to define the proguard.config property as described in that file.
-# 
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in ${sdk.dir}/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the ProGuard
-# include property in project.properties.
-# 
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-# Add any project specific keep options here:
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-# -keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-# }
--keepclassmembers class * extends java.io.Serializable {
-    private static final java.io.ObjectStreamField[] serialPersistentFields;
-    private void writeObject(java.io.ObjectOutputStream);
-    private void readObject(java.io.ObjectInputStream);
-    java.lang.Object writeReplace();
-    java.lang.Object readResolve();
-}
-
--keep,allowshrinking class com.facebook.FacebookActivity
-
--keep,allowshrinking class com.facebook.CustomTabActivity
-
--keep class com.facebook.common.Common
-
-# To enable ProGuard in your project, edit project.properties
-# to define the proguard.config property as described in that file.
-# 
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in ${sdk.dir}/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the ProGuard
-# include property in project.properties.
-# 
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
-# Add any project specific keep options here:
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-# -keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-# }
--keepclassmembers class * extends java.io.Serializable {
-    private static final java.io.ObjectStreamField[] serialPersistentFields;
-    private void writeObject(java.io.ObjectOutputStream);
-    private void readObject(java.io.ObjectInputStream);
-    java.lang.Object writeReplace();
-    java.lang.Object readResolve();
-}
-
--keep,allowshrinking class com.facebook.FacebookActivity
-
--keep,allowshrinking class com.facebook.CustomTabActivity
-
--keep class com.facebook.core.Core
-
--keep public class com.android.vending.billing.IInAppBillingService {
-    public static com.android.vending.billing.IInAppBillingService asInterface(android.os.IBinder);
-    public android.os.Bundle getSkuDetails(int,java.lang.String,java.lang.String,android.os.Bundle);
-}
+-keep class me.zhanghai.android.materialprogressbar.** { *; }
 
 # Copyright (C) 2018 The Android Open Source Project
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 # Ensure that reflectively-loaded inflater is not obfuscated. This can be
 # removed when we stop supporting AAPT1 builds.
--keep,allowshrinking class androidx.appcompat.app.AppCompatViewInflater
+-keepnames class androidx.appcompat.app.AppCompatViewInflater
 
 # aapt is not able to read app::actionViewClass and app:actionProviderClass to produce proguard
 # keep rules. Add a commonly used SearchView to the keep list until b/109831488 is resolved.
--keep class androidx.appcompat.widget.SearchView {
-    <init>(...);
-}
-
-# Copyright (C) 2015 The Android Open Source Project
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# 
-#      http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# When layoutManager xml attribute is used, RecyclerView inflates
-# LayoutManagers' constructors using reflection.
--keep public class * extends androidx.recyclerview.widget.RecyclerView$LayoutManager {
-    public <init>(android.content.Context,android.util.AttributeSet,int,int);
-    public <init>();
-}
-
+-keep class androidx.appcompat.widget.SearchView { <init>(...); }
 # We keep all fields for every generated proto file as the runtime uses
 # reflection over them that ProGuard cannot detect. Without this keep
 # rule, fields may be removed that would cause runtime failures.
--keepclassmembers class * extends com.google.android.gms.internal.measurement.zzuo {
-    <fields>;
-}
-
-# We keep all fields for every generated proto file as the runtime uses
-# reflection over them that ProGuard cannot detect. Without this keep
-# rule, fields may be removed that would cause runtime failures.
--keepclassmembers class * extends com.google.android.gms.internal.measurement.zzuo {
-    <fields>;
-}
-
-# We keep all fields for every generated proto file as the runtime uses
-# reflection over them that ProGuard cannot detect. Without this keep
-# rule, fields may be removed that would cause runtime failures.
--keepclassmembers class * extends com.google.android.gms.internal.firebase_auth.zzde {
-    <fields>;
-}
-
-# We keep all fields for every generated proto file as the runtime uses
-# reflection over them that ProGuard cannot detect. Without this keep
-# rule, fields may be removed that would cause runtime failures.
--keepclassmembers class * extends com.google.android.gms.internal.vision.zzfy {
-    <fields>;
+-keepclassmembers class * extends com.google.android.gms.internal.vision.zzgs {
+  <fields>;
 }
 
 # We keep all fields for every generated proto file as the runtime uses
 # reflection over them that ProGuard cannot detect. Without this keep
 # rule, fields may be removed that would cause runtime failures.
 -keepclassmembers class * extends com.google.android.gms.internal.clearcut.zzcg {
-    <fields>;
-}
-
-# We keep all fields for every generated proto file as the runtime uses
-# reflection over them that ProGuard cannot detect. Without this keep
-# rule, fields may be removed that would cause runtime failures.
--keepclassmembers class * extends com.google.android.gms.internal.measurement.zzuo {
-    <fields>;
-}
-
-# We keep all fields for every generated proto file as the runtime uses
-# reflection over them that ProGuard cannot detect. Without this keep
-# rule, fields may be removed that would cause runtime failures.
--keepclassmembers class * extends com.google.android.gms.internal.measurement.zzuo {
-    <fields>;
+  <fields>;
 }
 
 # b/35135904 Ensure that proguard will not strip the mResultGuardian.
 -keepclassmembers class com.google.android.gms.common.api.internal.BasePendingResult {
-    com.google.android.gms.common.api.internal.BasePendingResult$ReleasableResultGuardian mResultGuardian;
+  com.google.android.gms.common.api.internal.BasePendingResult$ReleasableResultGuardian mResultGuardian;
 }
 
-# Keep implemtations of the AdMob mediation adapter interfaces. Adapters for
+# We keep all fields for every generated proto file as the runtime uses
+# reflection over them that ProGuard cannot detect. Without this keep
+# rule, fields may be removed that would cause runtime failures.
+-keepclassmembers class * extends com.google.android.gms.internal.ads.zzdrt {
+  <fields>;
+}
+
+# Keep implementations of the AdMob mediation adapter interfaces. Adapters for
 # third party ad networks implement these interfaces and are invoked by the
 # AdMob SDK via reflection.
--keep class * extends com.google.android.gms.ads.mediation.MediationAdapter {
-    public <fields>;
-    public <methods>;
-}
 
--keep class * extends com.google.ads.mediation.MediationAdapter {
-    public <fields>;
-    public <methods>;
+-keep class * implements com.google.android.gms.ads.mediation.MediationAdapter {
+  public *;
 }
-
--keep class * extends com.google.android.gms.ads.mediation.customevent.CustomEvent {
-    public <fields>;
-    public <methods>;
+-keep class * implements com.google.ads.mediation.MediationAdapter {
+  public *;
 }
-
--keep class * extends com.google.ads.mediation.customevent.CustomEvent {
-    public <fields>;
-    public <methods>;
+-keep class * implements com.google.android.gms.ads.mediation.customevent.CustomEvent {
+  public *;
 }
-
--keep class * extends com.google.android.gms.ads.mediation.rtb.RtbAdapter {
-    public <fields>;
-    public <methods>;
+-keep class * implements com.google.ads.mediation.customevent.CustomEvent {
+  public *;
+}
+-keep class * extends com.google.android.gms.ads.mediation.MediationAdNetworkAdapter {
+  public *;
+}
+-keep class * extends com.google.android.gms.ads.mediation.Adapter {
+  public *;
 }
 
 # We keep all fields for every generated proto file as the runtime uses
 # reflection over them that ProGuard cannot detect. Without this keep
 # rule, fields may be removed that would cause runtime failures.
--keepclassmembers class * extends com.google.android.gms.internal.ads.zzbrd {
-    <fields>;
+-keepclassmembers class * extends com.google.android.gms.internal.ads.zzdrt {
+  <fields>;
 }
 
 # We keep all fields for every generated proto file as the runtime uses
 # reflection over them that ProGuard cannot detect. Without this keep
 # rule, fields may be removed that would cause runtime failures.
--keepclassmembers class * extends com.google.android.gms.internal.ads.zzbrd {
-    <fields>;
+-keepclassmembers class * extends com.google.android.gms.internal.measurement.zzfd {
+  <fields>;
 }
 
 # We keep all fields for every generated proto file as the runtime uses
 # reflection over them that ProGuard cannot detect. Without this keep
 # rule, fields may be removed that would cause runtime failures.
--keepclassmembers class * extends com.google.android.gms.internal.measurement.zzuo {
-    <fields>;
-}
-
-# We keep all fields for every generated proto file as the runtime uses
-# reflection over them that ProGuard cannot detect. Without this keep
-# rule, fields may be removed that would cause runtime failures.
--keepclassmembers class * extends com.google.android.gms.internal.measurement.zzuo {
-    <fields>;
+-keepclassmembers class * extends com.google.android.gms.internal.measurement.zzfd {
+  <fields>;
 }
 
 # Proguard flags for consumers of the Google Play services SDK
 # https://developers.google.com/android/guides/setup#add_google_play_services_to_your_project
+
 # Keep SafeParcelable NULL value, needed for reflection by DowngradeableSafeParcel
 -keepclassmembers public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
     public static final *** NULL;
@@ -1239,180 +975,170 @@
 # Needed for Parcelable/SafeParcelable classes & their creators to not get renamed, as they are
 # found via reflection.
 -keep class com.google.android.gms.common.internal.ReflectedParcelable
-
--keep,allowshrinking class * extends com.google.android.gms.common.internal.ReflectedParcelable
-
--keepclassmembers class * extends android.os.Parcelable {
-    public static final *** CREATOR;
+-keepnames class * implements com.google.android.gms.common.internal.ReflectedParcelable
+-keepclassmembers class * implements android.os.Parcelable {
+  public static final *** CREATOR;
 }
 
 # Keep the classes/members we need for client functionality.
--keep @interface  android.support.annotation.Keep
-
+-keep @interface androidx.annotation.Keep
 -keep @androidx.annotation.Keep class *
-
 -keepclasseswithmembers class * {
-    @androidx.annotation.Keep
-    <fields>;
+  @androidx.annotation.Keep <fields>;
 }
-
 -keepclasseswithmembers class * {
-    @androidx.annotation.Keep
-    <methods>;
+  @androidx.annotation.Keep <methods>;
 }
 
 # Keep the names of classes/members we need for client functionality.
--keep @interface  com.google.android.gms.common.annotation.KeepName
-
--keep,allowshrinking @com.google.android.gms.common.annotation.KeepName class *
-
--keepclassmembers,allowshrinking class * {
-    @com.google.android.gms.common.annotation.KeepName
-    <fields>;
-    @com.google.android.gms.common.annotation.KeepName
-    <methods>;
+-keep @interface com.google.android.gms.common.annotation.KeepName
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+-keepclassmembernames class * {
+  @com.google.android.gms.common.annotation.KeepName *;
 }
 
 # Keep Dynamite API entry points
--keep @interface  com.google.android.gms.common.util.DynamiteApi
-
+-keep @interface com.google.android.gms.common.util.DynamiteApi
 -keep @com.google.android.gms.common.util.DynamiteApi public class * {
-    public <fields>;
-    public <methods>;
+  public <fields>;
+  public <methods>;
 }
 
-# Copyright (C) 2016 The Android Open Source Project
-# 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# 
-#      http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-# keep setters in VectorDrawables so that animations can still work.
--keepclassmembers class androidx.vectordrawable.graphics.drawable.VectorDrawableCompat$* {
-    void set*(***);
-    *** get*();
-}
+# Needed when building against pre-Marshmallow SDK.
+-dontwarn android.security.NetworkSecurityPolicy
 
+# Needed when building against Marshmallow SDK.
+-dontwarn android.app.Notification
+
+# Protobuf has references not on the Android boot classpath
+-dontwarn sun.misc.Unsafe
+-dontwarn libcore.io.Memory
+
+# Internal Google annotations for generating Proguard keep rules.
+-dontwarn com.google.android.apps.common.proguard.UsedBy*
+
+# Annotations referenced by the SDK but whose definitions are contained in
+# non-required dependencies.
+-dontwarn javax.annotation.**
+-dontwarn org.checkerframework.**
 # Copyright (C) 2017 The Android Open Source Project
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 # Keep a field in transition that is used to keep a reference to weakly-referenced object
 -keepclassmembers class androidx.transition.ChangeBounds$* extends android.animation.AnimatorListenerAdapter {
-    androidx.transition.ChangeBounds$ViewBounds mViewBounds;
+  androidx.transition.ChangeBounds$ViewBounds mViewBounds;
 }
 
 # Retain generated class which implement Unbinder.
--keep public class * extends butterknife.Unbinder {
-    public <init>(**,android.view.View);
-}
+-keep public class * implements butterknife.Unbinder { public <init>(**, android.view.View); }
 
 # Prevent obfuscation of types which use ButterKnife annotations since the simple name
 # is used to reflectively look up the generated ViewBinding.
 -keep class butterknife.*
-
--keepclasseswithmembers,allowshrinking class * {
-    @butterknife.*
-    <methods>;
-}
-
--keepclasseswithmembers,allowshrinking class * {
-    @butterknife.*
-    <fields>;
-}
+-keepclasseswithmembernames class * { @butterknife.* <methods>; }
+-keepclasseswithmembernames class * { @butterknife.* <fields>; }
 
 # Copyright (C) 2017 The Android Open Source Project
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 # Prevent Parcelable objects from being removed or renamed.
--keep class android.support.v4.media.** extends android.os.Parcelable {
+-keep class android.support.v4.media.** implements android.os.Parcelable {
     public static final android.os.Parcelable$Creator *;
 }
 
 # Prevent Parcelable objects from being removed or renamed.
--keep class androidx.media.** extends android.os.Parcelable {
+-keep class androidx.media.** implements android.os.Parcelable {
     public static final android.os.Parcelable$Creator *;
 }
-
 # Copyright (C) 2016 The Android Open Source Project
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #      http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 # CoordinatorLayout resolves the behaviors of its child components with reflection.
 -keep public class * extends androidx.coordinatorlayout.widget.CoordinatorLayout$Behavior {
-    public <init>(android.content.Context,android.util.AttributeSet);
+    public <init>(android.content.Context, android.util.AttributeSet);
     public <init>();
+}
+
+# Make sure we keep annotations for CoordinatorLayout's DefaultBehavior and ViewPager's DecorView
+-keepattributes *Annotation*
+
+# Copyright (C) 2016 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# keep setters in VectorDrawables so that animations can still work.
+-keepclassmembers class androidx.vectordrawable.graphics.drawable.VectorDrawableCompat$* {
+   void set*(***);
+   *** get*();
 }
 
 # aapt2 is not (yet) keeping FQCNs defined in the appComponentFactory <application> attribute
 -keep class androidx.core.app.CoreComponentFactory
 
--keep public class * extends androidx.versionedparcelable.VersionedParcelable
-
--keep public class android.support.**Parcelizer {
-    <fields>;
-    <methods>;
-}
-
--keep public class androidx.**Parcelizer {
-    <fields>;
-    <methods>;
-}
-
+-keep public class * implements androidx.versionedparcelable.VersionedParcelable
+-keep public class android.support.**Parcelizer { *; }
+-keep public class androidx.**Parcelizer { *; }
 -keep public class androidx.versionedparcelable.ParcelImpl
 
--keepclassmembers enum  androidx.lifecycle.Lifecycle$Event {
+-keepattributes *Annotation*
+
+-keepclassmembers enum androidx.lifecycle.Lifecycle$Event {
     <fields>;
 }
 
--keep !interface  * extends androidx.lifecycle.LifecycleObserver
+-keep !interface * implements androidx.lifecycle.LifecycleObserver {
+}
 
--keep class * extends androidx.lifecycle.GeneratedAdapter {
+-keep class * implements androidx.lifecycle.GeneratedAdapter {
     <init>(...);
 }
 
 -keepclassmembers class ** {
-    @androidx.lifecycle.OnLifecycleEvent
-    <fields>;
-    @androidx.lifecycle.OnLifecycleEvent
-    <methods>;
+    @androidx.lifecycle.OnLifecycleEvent *;
 }
-
 -keepclassmembers,allowobfuscation class * extends androidx.lifecycle.ViewModel {
     <init>();
 }
@@ -1421,33 +1147,55 @@
     <init>(android.app.Application);
 }
 
+# Copyright (C) 2019 The Android Open Source Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+-keepclassmembers,allowobfuscation class * implements androidx.savedstate.SavedStateRegistry$AutoRecreated {
+    <init>();
+}
+
+-keep,allowobfuscation @interface androidx.annotation.Keep
+-keep @androidx.annotation.Keep class * {*;}
+
+-keepclasseswithmembers class * {
+    @androidx.annotation.Keep <methods>;
+}
+
+-keepclasseswithmembers class * {
+    @androidx.annotation.Keep <fields>;
+}
+
+-keepclasseswithmembers class * {
+    @androidx.annotation.Keep <init>(...);
+}
+
+# Answers Proguard Config
+-dontwarn com.google.firebase.analytics.FirebaseAnalytics
+-dontwarn com.google.firebase.analytics.FirebaseAnalytics$Event
+-dontwarn com.google.firebase.analytics.FirebaseAnalytics$Param
 # Fabric Proguard Config
--keep class com.google.android.gms.common.GooglePlayServicesUtil {
-    <fields>;
-    <methods>;
-}
-
--keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {
-    <fields>;
-    <methods>;
-}
-
--keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {
-    <fields>;
-    <methods>;
-}
-
--keep class com.google.android.gms.measurement.AppMeasurement$OnEventListener {
-    <fields>;
-    <methods>;
-}
-
+-keep class com.google.android.gms.common.GooglePlayServicesUtil {*;}
+-keep class com.google.android.gms.ads.identifier.AdvertisingIdClient {*;}
+-keep class com.google.android.gms.ads.identifier.AdvertisingIdClient$Info {*;}
+-keep class com.google.android.gms.measurement.AppMeasurement$OnEventListener {*;}
 -keep class com.google.android.gms.measurement.AppMeasurement {
-    static com.google.android.gms.measurement.AppMeasurement getInstance(android.content.Context,java.lang.String,java.lang.String);
+    static com.google.android.gms.measurement.AppMeasurement getInstance(android.content.Context, java.lang.String, java.lang.String);
     void registerOnMeasurementEventListener(com.google.android.gms.measurement.AppMeasurement$OnEventListener);
 }
-
 -keep class com.google.firebase.FirebaseApp {
     static com.google.firebase.FirebaseApp getInstance();
     boolean isDataCollectionDefaultEnabled();
 }
+
+-ignorewarnings
