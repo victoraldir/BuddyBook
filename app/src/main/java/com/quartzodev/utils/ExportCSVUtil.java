@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 
+import androidx.core.content.FileProvider;
+
 import com.quartzodev.buddybook.R;
 import com.quartzodev.data.Book;
 
@@ -23,8 +25,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import androidx.core.content.FileProvider;
 
 /**
  * Created by victoraldir on 10/03/2018.

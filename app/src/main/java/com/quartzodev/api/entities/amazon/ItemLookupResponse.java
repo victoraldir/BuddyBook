@@ -1,7 +1,5 @@
 package com.quartzodev.api.entities.amazon;
 
-import org.simpleframework.xml.Element;
-
 import java.util.List;
 
 

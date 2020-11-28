@@ -4,10 +4,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.quartzodev.buddybook.R;
-
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.quartzodev.buddybook.R;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

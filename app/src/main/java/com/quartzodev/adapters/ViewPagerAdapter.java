@@ -3,11 +3,11 @@ package com.quartzodev.adapters;
 import android.os.Parcelable;
 import android.view.ViewGroup;
 
-import java.util.List;
-
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
+import java.util.List;
 
 /**
  * Created by victoraldir on 24/03/2017.

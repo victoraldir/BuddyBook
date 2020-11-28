@@ -1,10 +1,10 @@
 package com.quartzodev.api.entities.google;
 
+import androidx.annotation.Keep;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
-
-import androidx.annotation.Keep;
 
 /**
  * Created by victoraldir on 12/04/2017.

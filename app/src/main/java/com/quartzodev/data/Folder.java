@@ -2,9 +2,9 @@ package com.quartzodev.data;
 
 import android.os.Parcel;
 
-import java.util.Map;
-
 import androidx.annotation.Keep;
+
+import java.util.Map;
 
 /**
  * Created by victoraldir on 26/03/2017.

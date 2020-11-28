@@ -2,6 +2,9 @@ package com.quartzodev.app;
 
 import android.content.Context;
 
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
+
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.FirebaseApp;
 import com.quartzodev.buddybook.BuildConfig;
@@ -9,11 +12,6 @@ import com.quartzodev.buddybook.R;
 import com.quartzodev.utils.Constants;
 
 import net.danlew.android.joda.JodaTimeAndroid;
-
-import androidx.multidex.MultiDex;
-import androidx.multidex.MultiDexApplication;
-
-import io.github.inflationx.calligraphy3.CalligraphyConfig;
 
 
 /**

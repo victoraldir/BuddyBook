@@ -1,14 +1,12 @@
 package com.quartzodev.api.strategies;
 
 import com.quartzodev.api.entities.amazon.ItemLookupResponse;
-import com.quartzodev.api.interfaces.BaseAPI;
 import com.quartzodev.api.interfaces.IAmazonAPI;
 import com.quartzodev.api.interfaces.IQuery;
 import com.quartzodev.data.Book;
 import com.quartzodev.data.VolumeInfo;
 import com.quartzodev.utils.Signatures;
 
-import java.io.IOException;
 import java.util.List;
 
 public class AmazonImpl implements IQuery{

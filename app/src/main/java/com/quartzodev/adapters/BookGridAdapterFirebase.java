@@ -5,13 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -27,8 +28,6 @@ import com.quartzodev.utils.TextUtils;
 import com.quartzodev.views.DynamicImageView;
 
 import java.util.List;
-
-import androidx.appcompat.widget.Toolbar;
 
 /**
  * Created by victoraldir on 18/04/2017.

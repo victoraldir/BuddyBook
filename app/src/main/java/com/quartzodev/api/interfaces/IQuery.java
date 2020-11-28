@@ -1,10 +1,10 @@
 package com.quartzodev.api.interfaces;
 
+import androidx.annotation.Keep;
+
 import com.quartzodev.data.Book;
 
 import java.util.List;
-
-import androidx.annotation.Keep;
 
 /**
  * Created by victoraldir on 15/06/2017.

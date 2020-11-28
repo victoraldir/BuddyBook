@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.quartzodev.buddybook.DetailActivity;
@@ -26,8 +28,6 @@ import com.quartzodev.data.VolumeInfo;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 /**
  * Created by victoraldir on 28/03/2017.

@@ -24,12 +24,12 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
 
+import androidx.annotation.RequiresPermission;
+import androidx.core.app.ActivityCompat;
+
 import com.google.android.gms.common.images.Size;
 
 import java.io.IOException;
-
-import androidx.annotation.RequiresPermission;
-import androidx.core.app.ActivityCompat;
 
 public class CameraSourcePreview extends ViewGroup {
 

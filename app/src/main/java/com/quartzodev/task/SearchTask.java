@@ -3,13 +3,13 @@ package com.quartzodev.task;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.loader.content.AsyncTaskLoader;
+
 import com.quartzodev.api.APIService;
 import com.quartzodev.data.Book;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.loader.content.AsyncTaskLoader;
 
 /**
  * Created by victoraldir on 14/05/2017.

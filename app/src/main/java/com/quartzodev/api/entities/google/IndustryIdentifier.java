@@ -1,8 +1,8 @@
 package com.quartzodev.api.entities.google;
 
-import com.google.gson.annotations.SerializedName;
-
 import androidx.annotation.Keep;
+
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by victoraldir on 22/06/2017.

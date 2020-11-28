@@ -4,9 +4,9 @@ package com.quartzodev.data;
  * Created by victoraldir on 14/06/2017.
  */
 
-import java.util.List;
-
 import androidx.annotation.Keep;
+
+import java.util.List;
 
 /**
  * Created by victoraldir on 12/04/2017.
