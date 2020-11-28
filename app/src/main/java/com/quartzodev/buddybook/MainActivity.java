@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity
 
         setupFab();
 
-        if (BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) initAdView();
+//        if (BuildConfig.FLAVOR.equals(Constants.FLAVOR_FREE)) initAdView();
 
         checkUserIsLoged();
     }
@@ -250,12 +250,12 @@ public class MainActivity extends AppCompatActivity
         return mFab;
     }
 
-    private void initAdView() {
-        //Ad main
-        AdView mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-    }
+//    private void initAdView() {
+//        //Ad main
+//        AdView mAdView = findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
+//    }
 
     public void onSignedIn(final FirebaseUser firebaseUser) {
 

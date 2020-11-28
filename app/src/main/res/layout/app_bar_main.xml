@@ -34,18 +34,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginBottom="@dimen/fab_margin_bottom"
+        android:layout_marginBottom="@dimen/fab_margin_bottom_main"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginRight="@dimen/fab_margin"
         android:contentDescription="@string/btn_scan_book_cd"
         app:srcCompat="@mipmap/ic_barcode_scan_white" />
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/ad_bottom_books_main" />
+<!--    <com.google.android.gms.ads.AdView-->
+<!--        android:id="@+id/adView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom|center_horizontal"-->
+<!--        ads:adSize="BANNER"-->
+<!--        ads:adUnitId="@string/ad_bottom_books_main" />-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
