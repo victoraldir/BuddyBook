@@ -8,8 +8,6 @@ import android.text.Selection;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.google.firebase.auth.FirebaseAuth;
 import com.quartzodev.data.FirebaseDatabaseHelper;
 
@@ -17,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 
 
 public class AnnotationActivity extends AppCompatActivity {
@@ -44,7 +41,6 @@ public class AnnotationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics(), new Answers());
         setContentView(R.layout.activity_annotation);
 
         ButterKnife.bind(this);

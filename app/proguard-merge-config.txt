@@ -205,7 +205,7 @@
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:244
 -keep class com.crashlytics.android.CrashlyticsInitProvider { <init>(); }
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:284
--keep class com.facebook.CurrentAccessTokenExpirationBroadcastReceiver { <init>(); }
+-keep class com..CurrentAccessTokenExpirationBroadcastReceiver { <init>(); }
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:217
 -keep class com.facebook.CustomTabActivity { <init>(); }
 # Referenced at /Users/victoraldir/dev/projects/BuddyBook/app/build/intermediates/merged_manifests/paidRelease/AndroidManifest.xml:269

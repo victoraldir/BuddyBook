@@ -70,10 +70,8 @@ public class FirebaseDatabaseHelper {
 
     private void initRemoteConfig() {
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
-        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
-                .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                .build();
-        mFirebaseRemoteConfig.setConfigSettings(configSettings);
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder().build();
+        mFirebaseRemoteConfig.setConfigSettingsAsync(configSettings);
         fetchRemoteConfig();
     }
 
@@ -81,15 +79,11 @@ public class FirebaseDatabaseHelper {
 
         long cacheExpiration = 3600;
 
-        if (mFirebaseRemoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
-            cacheExpiration = 0;
-        }
-
         mFirebaseRemoteConfig.fetch(cacheExpiration)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        mFirebaseRemoteConfig.activateFetched();
+                        mFirebaseRemoteConfig.fetchAndActivate();
                         applyRetrievedConfig();
                     }
                 }).addOnFailureListener(new OnFailureListener() {

@@ -25,8 +25,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.quartzodev.buddybook.GlideApp;
@@ -47,7 +45,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
 
 import static com.google.gson.internal.$Gson$Preconditions.checkNotNull;
 
@@ -116,7 +113,6 @@ public class InsertEditBookActivity extends AppCompatActivity implements InsertE
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics(), new Answers());
         setContentView(R.layout.activity_insert_book);
         ButterKnife.bind(this);
 

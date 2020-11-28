@@ -29,11 +29,6 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/ad_app_id"/>
 
-
-        <meta-data
-            android:name="io.fabric.getUserId()"
-            android:value="KEY_GOES_HERE" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
